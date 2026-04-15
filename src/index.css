@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta de colores ITEC */
+  --color-itec-bg: #0C1014;
+  --color-itec-text: #e5e6eA;
+  --color-itec-red: #55000f;
+  --color-itec-red-skye: #fb2c36;
+  --color-itec-blue: #004093;
+  --color-itec-blue-skye: #004bad;
+  --color-itec-blue-blur: #004093;
+  --color-itec-gray: #2b2b2b;
+  
+  /* Variantes sutiles para fondos de tarjetas */
+  --color-itec-surface: #1e1e1e;
+  --color-itec-sidebar: #0C1014;
+}
+
+body {
+  background-color: var(--color-itec-bg);
+  color: var(--color-itec-text);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Scrollbar personalizado estilo YouTube oscuro */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #474747;
+  border-radius: 10px;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #71717a;
+}
+
+/* ==========================================================================
+   OCULTAR SCROLLBARS GLOBALES (Pero mantener funcionalidad de scroll)
+   ========================================================================== */
+
+/* Para Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* Para Internet Explorer y Edge */
+* {
+  -ms-overflow-style: none;
+}
+
+/* Para Chrome, Safari y navegadores basados en WebKit */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Si tenías una clase .custom-scrollbar de antes, la reseteamos también */
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* src/index.css */
+
+/* Efecto de ruido estático (Grain) para superponer a los blurs */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
