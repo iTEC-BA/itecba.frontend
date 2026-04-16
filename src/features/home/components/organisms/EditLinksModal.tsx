@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { linksService, type CampusLink } from '../../services/linksService';
-import { Icons } from '../../../../components/atoms/Icons';
+import { Icons } from '../../../../components/ui/Icons';
 import { Input } from '../../../../components/atoms/Input';
 import { Button } from '../../../../components/atoms/Button';
 

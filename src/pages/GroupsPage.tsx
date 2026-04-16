@@ -1,12 +1,12 @@
 import React, { Suspense, useState } from 'react';
 import { DashboardLayout } from '@/components/templates/DashboardLayout';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 
 import { useAuth } from '@/context/AuthContext';
 import { GroupFilters } from '@features/groups/components/organisms/GroupFilters';
 import { SpecialtyGrid } from '@features/groups/components/organisms/SpecialtyGrid';
 import { GroupResults } from '@features/groups/components/organisms/GroupResults';
-import { PageHeader } from '@/components/molecules/PageHeader';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 import { useApprovedGroups, usePendingGroups } from '@features/groups/hooks/useGroups';

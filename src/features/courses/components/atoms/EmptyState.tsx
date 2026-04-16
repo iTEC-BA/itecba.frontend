@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 
 export const EmptyState: React.FC = () => (
   <div className="bg-slate-900/30 border border-white/5 border-dashed rounded-[2.5rem] p-16 text-center shadow-2xl flex flex-col items-center justify-center relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4">

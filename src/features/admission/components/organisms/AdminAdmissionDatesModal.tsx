@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import type { AdmissionEvent } from '../../hooks/useAdmissionDates';

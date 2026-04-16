@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Sidebar } from "../organisms/Sidebar";
 import { ChatbotWidget } from "../organisms/ChatbotWidget"; // <-- IMPORTAR AQUÍ
-import { BackgroundBlur } from "../atoms/BackgroundBlur"; // <-- 1. Importar el componente
+import { BackgroundBlur } from "../ui/BackgroundBlur"; // <-- 1. Importar el componente
 import logoItec from "../../assets/logo.png"; // <-- IMPORTA
-import { Icons } from "../atoms/Icons";
+import { Icons } from "../ui/Icons";
 // Agrega esta importación arriba:
 import { GlobalAnnouncement } from '../organisms/GlobalAnnouncement';
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CourseCard } from '../molecules/CourseCard';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 import type { CourseData } from '../../services/coursesService';
 
 export interface CourseWithLocalProgress extends CourseData {
@@ -49,7 +49,7 @@ export const CourseGrid: React.FC<Props> = ({ courses, isLoading, isAdmin, onDel
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-6 duration-700">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {safeCourses.map((curso) => {
         const cursoId = curso.id || (curso as any)._id;
         // Hardcoded rules del legacy
@@ -74,7 +74,7 @@ export const CourseGrid: React.FC<Props> = ({ courses, isLoading, isAdmin, onDel
                 className="cursor-pointer absolute top-3 left-3 z-30 bg-red-600/90 hover:bg-red-500 text-white w-9 h-9 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95 border border-red-400/50"
                 title="Eliminar curso permanentemente"
               >
-                <span className="text-sm">🗑️</span>
+                <span className="text-sm">X</span>
               </button>
             )}
           </div>

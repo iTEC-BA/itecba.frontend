@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icons } from '@/components/atoms/Icons'; 
+import { Icons } from '@/components/ui/Icons'; 
 import type { CalculatedSubject } from '../../hooks/useProgress';
 
 interface Props {

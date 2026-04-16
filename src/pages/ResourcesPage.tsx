@@ -1,11 +1,11 @@
 import React, { useState, useMemo, Suspense } from 'react';
+import { PageHeader } from '../components/ui/PageHeader';
 import { DashboardLayout } from '../components/templates/DashboardLayout';
 import { Button } from '../components/atoms/Button';
 import { useAuth } from '../context/AuthContext';
 
 import { ResourceFilters } from '../features/resources/components/organisms/ResourceFilters';
 import { ResourcesTable } from '../features/resources/components/organisms/ResourcesTable';
-import { PageHeader } from '../components/molecules/PageHeader';
 
 // Importamos los hooks de caché
 import { useResources, usePendingResources } from '../features/resources/hooks/useResources';

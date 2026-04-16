@@ -1,8 +1,8 @@
 import React, { useState, Suspense } from "react";
 import { DashboardLayout } from "@/components/templates/DashboardLayout";
-import { PageHeader } from "@/components/molecules/PageHeader";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useAuth } from "@/context/AuthContext";
-import { Icons } from "@/components/atoms/Icons";
+import { Icons } from "@/components/ui/Icons";
 
 import { useCourses, useDeleteCourse } from "@features/courses/hooks/useCourses"; 
 import { useCourseSearch } from "@features/courses/hooks/useCourseSearch";

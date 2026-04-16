@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Icons } from "../../../../components/atoms/Icons";
+import { Icons } from "../../../../components/ui/Icons";
 import { SearchResultItem } from "../../../../components/molecules/SearchResultItem";
 
 import { coursesService, type CourseData } from "../../../courses/services/coursesService";

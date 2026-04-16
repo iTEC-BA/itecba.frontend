@@ -3,9 +3,9 @@ import { DashboardLayout } from "../components/templates/DashboardLayout";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { useAuth } from "../context/AuthContext";
 
+import { PageHeader } from "@/components/ui/PageHeader";
 import { ChatInterface } from "@features/faqs/components/organisms/ChatInterface";
 import { ImportantDatesWidget } from "@features/faqs/components/organisms/ImportantDatesWidget";
-import { PageHeader } from "@/components/molecules/PageHeader";
 
 export const FaqsPage: React.FC = () => {
   usePageTitle("Preguntas Frecuentes");

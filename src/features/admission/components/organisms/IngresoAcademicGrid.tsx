@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 import type { MaterialLink, SiuLink } from '../../types/ingresoLinks';
 
 interface Props { materials: MaterialLink[]; siuLinks: SiuLink[]; }

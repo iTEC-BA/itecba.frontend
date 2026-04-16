@@ -32,8 +32,12 @@ export const useAddGroupForm = () => {
   }, [form.carrera, form.nivel]);
 
   const handleCarreraChange = (val: string) => {
-    setForm({ ...form, carrera: val, nivel: '', materia: '' });
+    setForm({ ...form, carrera: val});
   };
 
-  return { form, setForm, materiasDisponibles, handleCarreraChange };
+  const handleNivelChange = (val: string) =>{
+    setForm({ ...form, nivel: val});
+  }
+
+  return { form, setForm, materiasDisponibles, handleCarreraChange, handleNivelChange};
 };

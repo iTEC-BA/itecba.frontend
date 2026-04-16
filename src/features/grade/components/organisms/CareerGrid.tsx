@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 import { CareerCard } from '../molecules/CareerCard';
 import { useCareers, type CareerOption } from '../../hooks/useCareers';
 import { PLANES_DB } from '../../types/correlativas'; // Lo usamos para validar disponibilidad del mapa

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { DashboardLayout } from "../components/templates/DashboardLayout";
 import { useAuth } from "../context/AuthContext";
-import { Icons } from "../components/atoms/Icons";
+import { Icons } from "../components/ui/Icons";
 import { TarjeTec } from "../features/profile/components/organisms/TarjeTec";
 import { Input } from "../components/atoms/Input";
 import { Button } from "../components/atoms/Button";

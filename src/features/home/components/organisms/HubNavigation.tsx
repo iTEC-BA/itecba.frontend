@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Icons } from "../../../../components/atoms/Icons";
+import { Icons } from "../../../../components/ui/Icons";
 
 export const HubNavigation: React.FC = () => {
   return (

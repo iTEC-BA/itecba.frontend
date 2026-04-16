@@ -1,6 +1,6 @@
 import React from 'react';
 import logoItec from '../../assets/logo.png';
-import { Icons } from '../atoms/Icons';
+import { Icons } from '../ui/Icons';
 import { SidebarItem } from '../molecules/SidebarItem';
 import { useAuth } from '../../context/AuthContext'; 
 
@@ -52,9 +52,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeMobile }) => {
           <nav className="flex flex-col gap-1 flex-1">
             <SidebarItem path="/" icon={getIcon("home")} label="Home" onClick={closeMobile} />
             
-            <SidebarItem path="/recursos" icon={getIcon("compass")} label="Recursos" onClick={closeMobile} />
+            <SidebarItem path="/recursos" icon={getIcon("folder")} label="Recursos" onClick={closeMobile} />
             <SidebarItem path="/cursos" icon={getIcon("play")} label="Cursos" onClick={closeMobile} />
-            <SidebarItem path="/chat" icon={getIcon("message")} label="Preguntas Frecuentes" badge={2} onClick={closeMobile} />
+            <SidebarItem path="/chat" icon={getIcon("info")} label="Preguntas Frecuentes" onClick={closeMobile} />
             <SidebarItem path="/grupos" icon={getIcon("users")} label="Grupos de WA" onClick={closeMobile} />
             <SidebarItem path="/grado" icon={getIcon("degree")} label="Grado" onClick={closeMobile} />            
             <SidebarItem path="/ingreso" icon={getIcon("entry")} label="Ingreso" onClick={closeMobile} />

@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query'; // 🔴 Importamos el ma
 
 // Importaciones con Alias
 import { DashboardLayout } from '@/components/templates/DashboardLayout';
-import { Icons } from '@/components/atoms/Icons'; 
+import { Icons } from '@/components/ui/Icons'; 
 import { useAuth } from '@/context/AuthContext';
 
 import { CourseVideoPlayer } from '@features/courses/components/organisms/CourseVideoPlayer';

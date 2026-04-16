@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '../../../../components/atoms/Icons';
+import { Icons } from '../../../../components/ui/Icons';
 import { Button } from '../../../../components/atoms/Button';
 import type { ResourceData } from '../../services/resourcesService';
 

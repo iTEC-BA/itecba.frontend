@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { adminService, type AnnouncementData } from '../../services/adminService';
-import { Icons } from '../atoms/Icons';
+import { Icons } from '../ui/Icons';
 
 export const GlobalAnnouncement: React.FC = () => {
   const [announcements, setAnnouncements] = useState<AnnouncementData[]>([]);

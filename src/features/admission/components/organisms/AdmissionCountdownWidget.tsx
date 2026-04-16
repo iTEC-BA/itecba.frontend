@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 import type { AdmissionEvent } from '../../hooks/useAdmissionDates';
 
 interface Props {

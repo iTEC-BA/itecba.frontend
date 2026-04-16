@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '../atoms/Button';
-import { Icons } from '../atoms/Icons'; 
+import { Icons } from '../ui/Icons'; 
 import logoItec from '../../assets/logo.png'; 
 
 interface Message {

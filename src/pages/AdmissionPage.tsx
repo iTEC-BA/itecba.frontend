@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DashboardLayout } from "@/components/templates/DashboardLayout";
-import { PageHeader } from "@/components/molecules/PageHeader";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useAuth } from "@/context/AuthContext";
 

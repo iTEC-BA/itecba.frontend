@@ -1,5 +1,5 @@
 import React, { useState, Suspense, useMemo } from 'react';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 
 const AddDateModal = React.lazy(() => import('./AddDateModal').then(m => ({ default: m.AddDateModal })));
 

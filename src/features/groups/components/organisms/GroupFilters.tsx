@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from '@/components/atoms/Input';
-import { Icons } from '@/components/atoms/Icons';
+import { Icons } from '@/components/ui/Icons';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '../../types/groups';
 import { CustomSelect } from '@/components/molecules/CustomSelect';
 import { AutocompleteInput } from '@/components/molecules/AutocompleteInput';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../components/templates/DashboardLayout';
-import { Icons } from '../components/atoms/Icons';
+import { Icons } from '../components/ui/Icons';
 import { usePageTitle } from '../hooks/usePageTitle';
 
 export const ErrorPage: React.FC = () => {

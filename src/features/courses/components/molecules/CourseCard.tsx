@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProgressBar } from '../atoms/ProgressBar';
-import { Icons } from "@/components/atoms/Icons";
+import { Icons } from "@/components/ui/Icons";
 
 interface CourseCardProps {
   title: string;
@@ -14,7 +14,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ title, description, prog
   const isCompleted = progress === 100;
 
   return (
-    <div className="  rounded-[1.5rem] p-4 flex flex-col gap-4 hover:-translate-y-2 hover:bg-slate-900/50 transition-all duration-500 ease-out h-full relative overflow-hidden cursor-pointer group">
+    <div className=" flex flex-col gap-4 hover:-translate-y-2 hover:bg-slate-900/50 transition-all duration-250 ease-out h-full relative overflow-hidden cursor-pointer group">
       
       {/* Etiqueta Oficial Premium */}
       {isOficial && (
@@ -34,7 +34,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ title, description, prog
         
         {/* Play Glassmorphism */}
         <div className="absolute inset-0 bg-slate-950/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 z-10">
-          <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-blue-600 text-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(14,165,233,0.5)] transform scale-50 group-hover:scale-100 transition-transform duration-500 ease-out">
+          <div className="w-16 h-16 bg-gradient-to-br from-sky-700 to-blue-800 text-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(14,165,233,0.5)] transform scale-50 group-hover:scale-100 transition-transform duration-200 ease-out">
             <div className="w-7 h-7 ml-1"><Icons type="playFill" /></div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, Suspense } from "react";
-import { Icons } from "../components/atoms/Icons";
+import { Icons } from "../components/ui/Icons";
+import { PageHeader } from "../components/ui/PageHeader";
 import { DashboardLayout } from "../components/templates/DashboardLayout";
-import { PageHeader } from "../components/molecules/PageHeader";
 import { CareerGrid } from "@/features/grade/components/organisms/CareerGrid";
 import { PLANES_DB } from "@/features/grade/types/correlativas";
 import { usePageTitle } from "@/hooks/usePageTitle";

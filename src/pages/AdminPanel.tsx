@@ -6,7 +6,7 @@ import { Button } from '../components/atoms/Button';
 import { adminService, type AnnouncementData } from '../services/adminService';
 import type { User } from '../context/AuthContext';
 import { useAuth } from '../context/AuthContext';
-import { Icons } from '../components/atoms/Icons';
+import { Icons } from '../components/ui/Icons';
 
 export const AdminPanel: React.FC = () => {
   const { isAdmin } = useAuth();
