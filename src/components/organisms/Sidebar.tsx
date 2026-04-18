@@ -13,7 +13,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeMobile }) => {
   const { user, isAuthenticated, isAdmin } = useAuth(); 
 
   const getIcon = (type: string) => (
-    <div className="w-6 h-6 shrink-0">
+    <div className="w-5 h-5 shrink-0">
       <Icons type={type} />
     </div>
   );
@@ -49,7 +49,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeMobile }) => {
             </span>
           </div>
           
-          <nav className="flex flex-col gap-1 flex-1">
+          <nav className="flex flex-col gap-0.5 flex-1">
             <SidebarItem path="/" icon={getIcon("home")} label="Home" onClick={closeMobile} />
             
             <SidebarItem path="/recursos" icon={getIcon("folder")} label="Recursos" onClick={closeMobile} />

@@ -51,7 +51,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, path, bad
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 border-2 border-itec-bg rounded-full"></span>
             )}
             {typeof badge === 'number' && badge > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-itec-bg flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full border-2 border-itec-bg flex items-center justify-center">
                 {badge}
               </span>
             )}
