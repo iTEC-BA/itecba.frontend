@@ -46,7 +46,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
           </span>
         </div>
         <div className="opacity-80 shadow-xl">
-          <span className="bg-red-500 text-white text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-full border border-white/20 shadow-[0_4px_10px_rgba(0,64,147,0.5)] truncate max-w-[100px] sm:max-w-none inline-block align-bottom">
+          <span className="bg-red-500 text-white text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-full border border-white/20 shadow-[0_4px_10px_rgba(0,64,147,0.5)]">
             {user.specialty}
           </span>
         </div>
@@ -57,7 +57,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
         <div className="min-w-0 pr-2">
           {/* El número de teléfono / legajo se adapta */}
           <p className="font-mono text-lg sm:text-2xl md:text-3xl text-gray-200 tracking-widest sm:tracking-[0.25em] mb-1 sm:mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] truncate">
-            {user.phone ? user.phone.replace(/(.{5})(?!$)/g, "$1 ") : ''}
+            {user.legajo ? user.legajo.replace(/(.{7})(?!$)/g, "$1 ") : ''}
           </p>
           <div className="flex flex-col">
             <p className="text-[8px] sm:text-[10px] text-gray-500 uppercase tracking-widest sm:tracking-[0.4em] font-bold mb-0.5">
