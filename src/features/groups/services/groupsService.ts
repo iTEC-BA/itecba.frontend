@@ -12,13 +12,16 @@ export interface GroupData {
   submittedBy?: string;
 }
 
-const API_URL = 'http://127.0.0.1:5001/api/groups'; // Verifica que este sea tu puerto real
-
+// En groupsService.ts
+const API_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api/groups` 
+  : 'http://127.0.0.1:5001/api/groups';
+  
 // Obtenemos el token de seguridad de Firebase Auth
-const getToken = async () => {
+const getToken = async (requireAuth = true) => {
   const token = await auth.currentUser?.getIdToken();
-  if (!token) throw new Error("Debes iniciar sesión");
-  return token;
+  if (!token && requireAuth) throw new Error("Debes iniciar sesión para esta acción");
+  return token || null;
 };
 
 export const groupsService = {
@@ -31,7 +34,7 @@ export const groupsService = {
   },
 
   getPendingGroups: async (): Promise<GroupData[]> => {
-    const token = await getToken();
+    const token = await getToken(true);
     const res = await fetch(`${API_URL}/pending`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -54,13 +57,16 @@ export const groupsService = {
   },
 
   submitNewGroup: async (groupData: Omit<GroupData, 'id'>, isAdmin: boolean): Promise<string> => {
-    const token = await getToken();
+    const token = await getToken(false);
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
+      headers,
       body: JSON.stringify(groupData)
     });
     const data = await res.json();

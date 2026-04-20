@@ -22,6 +22,7 @@ export const GroupsPage: React.FC = () => {
   const { data: allGroups = [], isLoading: isLoadingGroups } = useApprovedGroups();
   const { data: pendingGroups = [] } = usePendingGroups(isAdmin);
   const pendingCount = (pendingGroups || []).length;
+  console.log("📡 Grupos que llegaron del Backend:", allGroups);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);

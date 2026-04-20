@@ -52,7 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeMobile }) => {
           <nav className="flex flex-col gap-0.5 flex-1">
             <SidebarItem path="/" icon={getIcon("home")} label="Home" onClick={closeMobile} />
             
-            <SidebarItem path="/recursos" icon={getIcon("folder")} label="Recursos" onClick={closeMobile} />
+            <SidebarItem path="/recursos" icon={getIcon("folder")} label="Recursos" onClick={closeMobile} disabled={true} />
             <SidebarItem path="/cursos" icon={getIcon("play")} label="Cursos" onClick={closeMobile} />
             <SidebarItem path="/chat" icon={getIcon("info")} label="Preguntas Frecuentes" onClick={closeMobile} />
             <SidebarItem path="/grupos" icon={getIcon("users")} label="Grupos de WA" onClick={closeMobile} />

@@ -44,20 +44,33 @@ export const useGroupSearch = (allGroups: GroupData[]) => {
   };
 
   const filteredResults = useMemo(() => {
+    // Si el usuario aún no inició la búsqueda, no hay resultados que calcular
     if (!hasSearched) return [];
-    
+
     const searchMateria = normalizeString(materia);
     const searchComision = normalizeString(comision);
-    
-    return (allGroups || []).filter(g => {
-      const isHomogeneaCompatibility = (carrera !== 'homogeneas' && g.carrera === 'homogeneas' && normalizeString(g.materia) === searchMateria);
+
+    return (allGroups || []).filter(group => {
+      // Normalización Defensiva
+      // Las bases de datos pueden devolver variaciones (mayúsculas, números). Estandarizamos todo a string y minúsculas.
+      const groupCarrera = String(group.carrera || '').toLowerCase().trim();
+      const groupNivel = String(group.nivel || '').trim();
+      const groupMateria = normalizeString(group.materia || '');
+      const groupComision = normalizeString(group.comision || '');
+
+      // Reglas de Pertenencia de Especialidad
+      const coincideCarreraExacta = carrera === '' || groupCarrera === carrera;
+      const esMateriaHomogeneaCompartida = carrera !== 'homogeneas' && groupCarrera === 'homogeneas';
       
-      const matchCarrera = carrera === '' || g.carrera === carrera || isHomogeneaCompatibility;
-      const matchNivel = nivel === '' || g.nivel === nivel;
-      const matchMateria = materia === '' || normalizeString(g.materia).includes(searchMateria);
-      const matchComision = comision === '' || normalizeString(g.comision).includes(searchComision);
-      
-      return matchCarrera && matchNivel && matchMateria && matchComision;
+      // Evaluación de Condiciones Individuales
+      const cumpleCarrera = coincideCarreraExacta || esMateriaHomogeneaCompartida;
+      const cumpleNivel = nivel === '' || groupNivel === nivel;
+      const cumpleMateria = searchMateria === '' || groupMateria.includes(searchMateria);
+      const cumpleComision = searchComision === '' || groupComision.includes(searchComision);
+
+      // Decisión Final
+      // El grupo sobrevive al filtro única y exclusivamente si pasa todas las validaciones
+      return cumpleCarrera && cumpleNivel && cumpleMateria && cumpleComision;
     });
   }, [allGroups, hasSearched, carrera, nivel, materia, comision]);
 
