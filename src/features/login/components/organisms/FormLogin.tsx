@@ -1,44 +1,66 @@
-import { DashboardLayout } from "@/components/templates/DashboardLayout"
-import logoItec from '../assets/logo.png'; 
+import React from "react";
+import logoItec from "../../../../assets/logo.png";
 import { useAuth } from "@/context/AuthContext";
+import { Icons } from "@/components/ui/Icons";
+import { DashboardLayout } from "@/components/templates/DashboardLayout";
+import LoadingState from "@/components/atoms/LoadingState";
 
-function FormLogin() {
-  const { user, loginWithGoogle, logout, isAuthenticated, loading, isAdmin } = useAuth();
-  
-    if (loading) {
+const FormLogin: React.FC = () => {
+  const { loginWithGoogle, isAuthenticated, loading } = useAuth();
+
+  if (loading) {
     return (
       <DashboardLayout>
-        <div className="flex h-[70vh] items-center justify-center">
-          <div className="w-12 h-12 border-4 border-itec-gray border-t-itec-blue rounded-full animate-spin"></div>
-        </div>
+        <LoadingState />
       </DashboardLayout>
     );
   }
+
   if (!isAuthenticated) {
     return (
-      <DashboardLayout>
-        <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 relative z-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-itec-blue/20 blur-[100px] pointer-events-none rounded-full"></div>
-          
-          <div className="bg-itec-surface border border-itec-gray rounded-3xl p-10 max-w-md w-full text-center shadow-2xl relative z-10">
-            <div className="w-33 h-33 rounded-2xl flex items-center justify-center mx-auto mb-6">
-               <img src={logoItec} alt="Logo" className="w-33 h-33 object-contain" />
-            </div>
-            <h1 className="text-3xl font-bold mb-2">Portal ITEC</h1>
-            <p className="text-gray-400 text-sm mb-8">Accedé a tus beneficios y apuntes usando tu cuenta de la facultad.</p>
-            
-            <button 
-              onClick={loginWithGoogle}
-              className="w-full bg-itec-red hover:bg-itec-red/50 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 transition-colors shadow-lg cursor-pointer"
-            >
-              <div className="w-5 h-5"><Icons type="google" /></div>
-              Iniciar sesión con @frba
-            </button>
-          </div>
+      <div className="bg-slate-900/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 sm:p-12 w-full text-center shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)] relative group overflow-hidden">
+
+        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-inner relative group-hover:shadow-sky-500/10 transition-shadow duration-500">
+          <img
+            src={logoItec}
+            alt="Logo ITEC"
+            className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500 relative z-10"
+          />
         </div>
-      </DashboardLayout>
+
+        <h2 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">
+          Portal ITEC
+        </h2>
+        <p className="text-slate-400 text-sm mb-10 leading-relaxed px-2">
+          Accedé a tus beneficios, apuntes y credencial usando tu cuenta de la
+          facultad.
+        </p>
+
+        <button
+          onClick={loginWithGoogle}
+          className="w-full bg-itec-red-skye hover:bg-itec-red text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 shadow-[0_0_20px_rgba(212,19,19,0.15)] hover:shadow-[0_0_30px_rgba(212,19,19,0.35)] hover:-translate-y-1 border border-white/10 hover:border-white/20 cursor-pointer relative overflow-hidden"
+        >
+          <div className="w-6 h-6">
+            <Icons type="google" />
+          </div>
+          Iniciar sesión con @frba
+        </button>
+
+        <div className="mt-8 flex items-center justify-center gap-2 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span>
+          Plataforma exclusiva UTN.BA
+        </div>
+      </div>
     );
   }
-}
 
-export default FormLogin
+  return (
+    <div className="flex h-64 items-center justify-center w-full bg-slate-900/50 rounded-3xl border border-white/5">
+      <p className="text-slate-400 font-medium animate-pulse">
+        Entrando a tu campus...
+      </p>
+    </div>
+  );
+};
+
+export default FormLogin;

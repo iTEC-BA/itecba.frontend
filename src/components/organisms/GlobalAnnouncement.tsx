@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query'; // 🟢 1. Importamos React Query
 import { adminService, type AnnouncementData } from '../../services/adminService';
 import { Icons } from '../ui/Icons';
 
@@ -6,32 +7,28 @@ export const GlobalAnnouncement: React.FC = () => {
   const [announcements, setAnnouncements] = useState<AnnouncementData[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
+  // 🛡️ 2. Hacemos la petición a través de useQuery para CACHEARLA
+  const { data: activeNews = [] } = useQuery({
+    queryKey: ['announcements', 'active'],
+    queryFn: () => adminService.getActiveAnnouncements(),
+    staleTime: 1000 * 60 * 15, // La respuesta se guarda por 15 minutos.
+    retry: 1,
+  });
+
+  // solo "reacciona" cuando la data llega de la caché o del servidor
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const activeNews = await adminService.getActiveAnnouncements();
-        if (activeNews.length > 0) {
-          // Filtrar noticias que el usuario ya cerró previamente
-          const dismissedIds = JSON.parse(localStorage.getItem('itec_dismissed_news') || '[]');
-          const newNews = activeNews.filter(news => !dismissedIds.includes(news.id));
-          
-          if (newNews.length > 0) {
-            setAnnouncements(newNews);
-            setIsVisible(true);
-          }
-        }
-      } catch (error) {
-        // Ahora sí te dirá el motivo real (ej: "Failed to fetch")
-        console.error("Error buscando avisos globales:", error);
+    if (activeNews.length > 0) {
+      const dismissedIds = JSON.parse(localStorage.getItem('itec_dismissed_news') || '[]');
+      const newNews = activeNews.filter(news => !dismissedIds.includes(news.id));
+      
+      if (newNews.length > 0) {
+        setAnnouncements(newNews);
+        setTimeout(() => setIsVisible(true), 1200);
       }
-    };
-    
-    // Pequeño delay de cortesía
-    setTimeout(() => { fetchNews(); }, 1200);
-  }, []);
+    }
+  }, [activeNews]);
 
   const handleClose = () => {
-    // Guarda todos los IDs en el localStorage para no volver a mostrarlos
     const dismissedIds = JSON.parse(localStorage.getItem('itec_dismissed_news') || '[]');
     const newDismissed = [...new Set([...dismissedIds, ...announcements.map(a => a.id)])];
     localStorage.setItem('itec_dismissed_news', JSON.stringify(newDismissed));

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Sidebar } from "../organisms/Sidebar";
-import { ChatbotWidget } from "../organisms/ChatbotWidget"; // <-- IMPORTAR AQUÍ
-import { BackgroundBlur } from "../ui/BackgroundBlur"; // <-- 1. Importar el componente
-import logoItec from "../../assets/logo.png"; // <-- IMPORTA
+import { ChatbotWidget } from "../organisms/ChatbotWidget"; 
+import { BackgroundBlur } from "../ui/BackgroundBlur"; 
+import logoItec from "../../assets/logo.png"; 
 import { Icons } from "../ui/Icons";
 // Agrega esta importación arriba:
 import { GlobalAnnouncement } from '../organisms/GlobalAnnouncement';

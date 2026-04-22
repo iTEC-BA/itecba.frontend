@@ -24,6 +24,21 @@ export default {
         // Asegúrate de usar una fuente sans-serif limpia como Inter o Roboto
         sans: ["Inter", "sans-serif"],
       },
+      // Agregamos los Keyframes para las animaciones del Loading universal
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        blink: {
+          "0%, 100%": { opacity: "0.2" },
+          "50%": { opacity: "1" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 0.3s ease-out forwards",
+        blink: "blink 0.8s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

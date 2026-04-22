@@ -25,6 +25,7 @@
 
     /* --- ALIAS DE RUTAS AQUÍ --- */
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["src/*"],
       "@features/*": ["src/features/*"],

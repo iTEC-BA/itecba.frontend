@@ -1,21 +1,23 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import LoadingState from '../atoms/LoadingState';
 
-export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+export const ProtectedRoute: React.FC = () => {
+  const { user, loading } = useAuth(); // Asumiendo que tu AuthContext retorna esto
+  const location = useLocation();
 
   if (loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-itec-bg">
-        <div className="w-12 h-12 border-4 border-itec-gray border-t-itec-blue rounded-full animate-spin"></div>
-      </div>
-    );
+    // Evita parpadeos si Firebase/Supabase está comprobando la sesión
+    return <LoadingState />;
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/perfil" replace />;
+  if (!user) {
+    // Si no está logueado, lo mandamos al login y guardamos a dónde quería ir
+    // para redirigirlo de vuelta cuando inicie sesión.
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <>{children}</>;
+  // Si está logueado, renderiza la ruta hija (ej: ProfilePage, ResourcesPage)
+  return <Outlet />;
 };
