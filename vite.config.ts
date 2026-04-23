@@ -16,8 +16,13 @@ export default defineConfig({
       // Mapea el alias '@' a la carpeta 'src'
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       // (Opcional) Puedes crear alias más específicos para tu nueva arquitectura
+      '@components': fileURLToPath(new URL('./src/components/', import.meta.url)),
+      '@templates': fileURLToPath(new URL('./src/components/templates/', import.meta.url)),
+      '@ui': fileURLToPath(new URL('./src/components/ui', import.meta.url)),
+      '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
+      // Agregar las features de las funcionalidades de cada pagina.
       '@features': fileURLToPath(new URL('./src/features', import.meta.url)),
-      '@shared': fileURLToPath(new URL('./src/shared', import.meta.url))
+      '@features/about': fileURLToPath(new URL('./src/features/about', import.meta.url))
     }
   }
 })
