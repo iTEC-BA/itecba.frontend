@@ -45,7 +45,7 @@ export const CoursePlaylist: React.FC<Props> = ({
     <div className="bg-itec-surface/40 border border-white/5 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col h-[450px] md:h-auto md:max-h-[650px] animate-fade-in relative group">
       
       {/* Resplandor decorativo de fondo */}
-      <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-orange-500/10 rounded-full blur-[60px] pointer-events-none transition-opacity group-hover:bg-orange-500/20"></div>
+      <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-blue-500/10 rounded-full blur-[60px] pointer-events-none transition-opacity group-hover:bg-blue-500/20"></div>
 
       {/* HEADER DE LA PLAYLIST */}
       <div className="p-6 md:p-8 border-b border-white/5 bg-white/[0.01] shrink-0 relative z-10">
@@ -69,7 +69,7 @@ export const CoursePlaylist: React.FC<Props> = ({
               className={`h-full rounded-full transition-all duration-700 ease-out ${
                 progressPercent === 100 
                   ? 'bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.6)]' 
-                  : 'bg-gradient-to-r from-orange-500 to-amber-400 shadow-[0_0_15px_rgba(249,115,22,0.5)]'
+                  : 'bg-gradient-to-r from-blue-500 to-sky-400 shadow-[0_0_15px_rgba(249,115,22,0.5)]'
               }`}
               style={{ width: `${progressPercent}%` }}
             ></div>
@@ -100,10 +100,10 @@ export const CoursePlaylist: React.FC<Props> = ({
                   isWatched 
                     ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
                     : isActive
-                      ? 'bg-orange-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]'
+                      ? 'bg-sky-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]'
                       : 'bg-black/50 text-gray-500 border border-white/10 group-hover/item:text-gray-300 group-hover/item:border-white/20'
                 }`}>
-                  <div className="w-4 h-4">
+                  <div className="w-5 h-5">
                     {isWatched ? <Icons type="check" /> : <Icons type="play" />}
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export const CoursePlaylist: React.FC<Props> = ({
                   </h4>
                   {video.duration && (
                     <p className={`text-[9px] uppercase tracking-widest mt-1.5 font-bold ${
-                      isActive ? 'text-orange-400' : 'text-gray-600'
+                      isActive ? 'text-sky-500' : 'text-gray-600'
                     }`}>
                       {video.duration}
                     </p>
@@ -127,7 +127,7 @@ export const CoursePlaylist: React.FC<Props> = ({
 
                 {/* Indicador visual lateral si está activo */}
                 {isActive && (
-                  <div className="w-1 h-8 bg-orange-500 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
+                  <div className="w-1 h-8 bg-sky-700 rounded-full shadow-[0_0_10px_rgba(22,123,249,0.8)]"></div>
                 )}
               </button>
             );

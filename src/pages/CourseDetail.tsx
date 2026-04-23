@@ -11,7 +11,9 @@ import { CoursePlaylist } from '@features/courses/components/organisms/CoursePla
 import { useCourseById, useDeleteCourse } from '@features/courses/hooks/useCourses';
 import { useResources } from '@features/resources/hooks/useResources'; 
 
-const CourseMaterialModal = React.lazy(() => import('@features/courses/components/organisms/CourseMaterialModal').then(m => ({ default: m.CourseMaterialModal })));
+// 🟢 Importaciones diferidas de los Modales
+const CourseResourcesModal = React.lazy(() => import('@features/courses/components/organisms/CourseResourcesModal').then(m => ({ default: m.CourseResourcesModal })));
+const CourseAddResourceModal = React.lazy(() => import('@features/courses/components/organisms/CourseAddResourceModal').then(m => ({ default: m.CourseAddResourceModal })));
 
 export const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>(); 
@@ -22,12 +24,14 @@ export const CourseDetail: React.FC = () => {
   const { data: allResources = [] } = useResources();
   const deleteCourseMutation = useDeleteCourse();
 
+  // 🟢 Estados Separados para Visualización y Creación
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  
   const [watchedVideos, setWatchedVideos] = useState<Set<string>>(new Set());
   const [copySuccess, setCopySuccess] = useState(false);
 
-  // 🟢 EFECTO: Cargar progreso al montar
   useEffect(() => {
     if (course && user) {
       try {
@@ -38,7 +42,6 @@ export const CourseDetail: React.FC = () => {
     }
   }, [course, user]);
 
-  // 🟢 LÓGICA: Marcar video como visto
   const handleToggleWatched = (videoId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!course || !user) return;
@@ -96,7 +99,7 @@ export const CourseDetail: React.FC = () => {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[70vh]">
-           <div className="bg-itec-surface/40 border border-white/5 p-10 rounded-[2rem] text-center max-w-md shadow-2xl">
+           <div className="bg-itec-surface/40 backdrop-blur-xl border border-white/5 p-10 rounded-[2rem] text-center max-w-md shadow-2xl">
              <span className="text-5xl block mb-6 opacity-80">🔍</span>
              <h2 className="text-xl font-bold text-white mb-2">Curso no encontrado</h2>
              <p className="text-sm text-gray-400 mb-8 leading-relaxed">El material que intentas visualizar no existe o ha sido retirado de la plataforma.</p>
@@ -119,7 +122,7 @@ export const CourseDetail: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <Link to="/cursos" className="inline-flex items-center gap-2 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors w-fit group outline-none">
             <div className="w-5 h-5 group-hover:-translate-x-1 transition-transform"><Icons type="play" /></div>
-            Volver
+            Catálogo Principal
           </Link>
           
           {isAdmin && (
@@ -128,12 +131,12 @@ export const CourseDetail: React.FC = () => {
                 to={`/cursos/editar/${course.id || (course as any)._id}`}
                 className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all outline-none"
               >
-                <span>⚙️</span> Configurar
+                Editar
               </Link>
               <button 
                 onClick={handleDelete}
                 disabled={deleteCourseMutation.isPending}
-                className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all outline-none border border-red-500/20 hover:border-red-500"
+                className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all outline-none border border-red-500/20 hover:border-red-500 cursor-pointer"
               >
                 {deleteCourseMutation.isPending ? 'BORRANDO...' : 'ELIMINAR'}
               </button>
@@ -166,7 +169,7 @@ export const CourseDetail: React.FC = () => {
               relatedResourcesCount={relatedResources.length}
               copySuccess={copySuccess}
               onToggleWatched={handleToggleWatched}
-              onOpenMaterialModal={() => setIsMaterialModalOpen(true)}
+              onOpenMaterialModal={() => setIsViewModalOpen(true)} // 🟢 ABRE MODAL DE VISUALIZACIÓN
               onShare={handleShare}
             />
           </div>
@@ -180,15 +183,15 @@ export const CourseDetail: React.FC = () => {
               watchedVideos={watchedVideos} 
             />
 
-            {/* Widget de Material Extra (Premium) */}
-            <div className="bg-itec-surface/40 border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl">
+            {/* Widget de Material Extra */}
+            <div className="bg-itec-surface/40 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-white font-bold text-sm tracking-wide">
                   <span className="text-orange-500 mr-2 text-lg">📚</span> Material Extra
                 </h3>
                 {isAdmin && (
                   <button 
-                    onClick={() => setIsMaterialModalOpen(true)}
+                    onClick={() => setIsAddModalOpen(true)} // 🟢 ABRE MODAL DE CREACIÓN
                     className="text-[9px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1.5 rounded-lg border border-white/10 transition-colors font-bold uppercase tracking-widest outline-none"
                   >
                     + Vincular PDF
@@ -207,9 +210,12 @@ export const CourseDetail: React.FC = () => {
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 text-orange-500 flex items-center justify-center shrink-0 border border-orange-500/20">
                         📄
                       </div>
-                      <div className="overflow-hidden">
+                      <div className="overflow-hidden flex-1">
                         <h4 className="text-xs font-bold text-white truncate group-hover:text-orange-400 transition-colors">{res.title}</h4>
                         <p className="text-[10px] text-gray-500 truncate mt-0.5">{res.materia}</p>
+                      </div>
+                      <div className="text-gray-600 group-hover:text-white transition-colors w-4 h-4 shrink-0">
+                        <Icons type="external-link" />
                       </div>
                     </a>
                   ))}
@@ -225,11 +231,22 @@ export const CourseDetail: React.FC = () => {
         </div>
       </div>
 
-      {isMaterialModalOpen && (
+      {/* 🟢 RENDERIZADO CONDICIONAL DE MODALES (Aislados y Optimizados) */}
+      {isViewModalOpen && (
         <Suspense fallback={null}>
-          <CourseMaterialModal 
-            isOpen={isMaterialModalOpen} 
-            onClose={() => setIsMaterialModalOpen(false)} 
+          <CourseResourcesModal 
+            isOpen={isViewModalOpen} 
+            onClose={() => setIsViewModalOpen(false)} 
+            resources={relatedResources}
+          />
+        </Suspense>
+      )}
+
+      {isAddModalOpen && (
+        <Suspense fallback={null}>
+          <CourseAddResourceModal 
+            isOpen={isAddModalOpen} 
+            onClose={() => setIsAddModalOpen(false)} 
             courseTitle={course.title}
             materia={course.materia}
           />
