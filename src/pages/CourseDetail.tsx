@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query'; // 🔴 Importamos el manejador de caché
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
-// Importaciones con Alias
 import { DashboardLayout } from '@/components/templates/DashboardLayout';
 import { Icons } from '@/components/ui/Icons'; 
 import { useAuth } from '@/context/AuthContext';
@@ -10,202 +8,233 @@ import { useAuth } from '@/context/AuthContext';
 import { CourseVideoPlayer } from '@features/courses/components/organisms/CourseVideoPlayer';
 import { CoursePlaylist } from '@features/courses/components/organisms/CoursePlaylist';
 
-// 🔴 Importamos tus hooks de React Query
-import { useCourseById } from '@features/courses/hooks/useCourses';
-import type { Video } from "@features/courses/services/coursesService";
-// Asumiendo que crearás este hook para resources, si no, lo cambias por tu service normal
+import { useCourseById, useDeleteCourse } from '@features/courses/hooks/useCourses';
 import { useResources } from '@features/resources/hooks/useResources'; 
 
-// Lazy Loading de Modales
-const AddCourseModal = React.lazy(() => import('@features/courses/components/organisms/AddCourseModal').then(m => ({ default: m.AddCourseModal })));
 const CourseMaterialModal = React.lazy(() => import('@features/courses/components/organisms/CourseMaterialModal').then(m => ({ default: m.CourseMaterialModal })));
 
 export const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>(); 
-  const { isAdmin } = useAuth();
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { user, isAdmin } = useAuth();
 
-  // 1. 🔴 REEMPLAZO DEL USEEFFECT: Usamos React Query para traer el curso y los recursos
   const { data: course, isLoading: isCourseLoading } = useCourseById(id || '');
-  const { data: allResources = [], isLoading: isResourcesLoading } = useResources();
+  const { data: allResources = [] } = useResources();
+  const deleteCourseMutation = useDeleteCourse();
 
-  // Estados locales (Solo UI y Progreso)
-  const [activeVideo, setActiveVideo] = useState<Video | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [watchedVideos, setWatchedVideos] = useState<Set<string>>(new Set());
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
+  const [watchedVideos, setWatchedVideos] = useState<Set<string>>(new Set());
   const [copySuccess, setCopySuccess] = useState(false);
 
-  // 2. 🔴 Lógica de Progreso Local y Video Inicial
-  // Este useEffect solo se encarga de leer el localStorage y setear el video activo
-  // No hace llamadas a la API.
+  // 🟢 EFECTO: Cargar progreso al montar
   useEffect(() => {
-    if (course && course.videos && course.videos.length > 0) {
-      const savedData = localStorage.getItem(`itec_course_${id}`);
-      let lastVideoId = null;
-
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        setWatchedVideos(new Set(parsed.watched || []));
-        lastVideoId = parsed.lastVideo;
-      }
-
-      if (lastVideoId) {
-        const last = course.videos.find((v: any) => v.id === lastVideoId || v._id === lastVideoId);
-        setActiveVideo(last || course.videos[0]);
-      } else {
-        setActiveVideo(course.videos[0]);
-      }
+    if (course && user) {
+      try {
+        const key = `itec_course_progress_${user.uid}_${course.id || (course as any)._id}`;
+        const stored = localStorage.getItem(key);
+        if (stored) setWatchedVideos(new Set(JSON.parse(stored)));
+      } catch (e) { console.error("Error cargando progreso:", e); }
     }
-  }, [course, id]); // Depende de que React Query termine de cargar 'course'
+  }, [course, user]);
 
-  // Filtrado de recursos relacionados
-  const relatedResources = useMemo(() => {
-    if (!course) return [];
-    
-    const courseId = course.id || (course as any)._id || "";
-    const cleanCourseTitle = course.title.toLowerCase().replace('curso de ', '').trim();
-
-    return allResources.filter((res: any) => {
-      const rSubj = res.materia.toLowerCase();
-      const isMatch = cleanCourseTitle.includes(rSubj) || rSubj.includes(cleanCourseTitle);
-      const isIngreso = courseId.includes('seminario') && res.carrera === 'ingreso';
-
-      return isMatch || isIngreso;
-    }); 
-  }, [course, allResources]);
-
-  const handleVideoSelect = (video: Video) => {
-    setActiveVideo(video);
-    setWatchedVideos(prev => {
-      const newSet = new Set(prev);
-      const vidId = video.id || (video as any)._id;
-      newSet.add(vidId);
-      localStorage.setItem(`itec_course_${id}`, JSON.stringify({ watched: Array.from(newSet), lastVideo: vidId }));
-      return newSet;
-    });
-  };
-
-  const toggleWatchedStatus = (videoId: string, e: React.MouseEvent) => {
+  // 🟢 LÓGICA: Marcar video como visto
+  const handleToggleWatched = (videoId: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!course || !user) return;
+    
     setWatchedVideos(prev => {
       const newSet = new Set(prev);
       if (newSet.has(videoId)) newSet.delete(videoId);
       else newSet.add(videoId);
-      localStorage.setItem(`itec_course_${id}`, JSON.stringify({ watched: Array.from(newSet), lastVideo: activeVideo?.id || (activeVideo as any)?._id }));
+      
+      try {
+        const key = `itec_course_progress_${user.uid}_${course.id || (course as any)._id}`;
+        localStorage.setItem(key, JSON.stringify(Array.from(newSet)));
+      } catch (err) { console.error("Error guardando progreso:", err); }
+      
       return newSet;
     });
   };
 
-  const handleShare = async () => {
-    const shareUrl = window.location.href;
-    if (navigator.share) {
-      try { await navigator.share({ title: `ITEC UTN BA - ${course?.title}`, url: shareUrl }); } 
-      catch (error) { console.error('Error al compartir', error); }
-    } else {
-      navigator.clipboard.writeText(shareUrl);
+  const handleShare = () => {
+    try {
+      navigator.clipboard.writeText(window.location.href);
       setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
+      setTimeout(() => setCopySuccess(false), 3000);
+    } catch (err) {
+      console.error('Failed to copy!', err);
     }
   };
 
-  // Estados de carga (Controlados por React Query)
-  if (isCourseLoading || isResourcesLoading) {
+  const relatedResources = useMemo(() => {
+    if (!course || !allResources.length) return [];
+    const cleanCourseTitle = course.title.toLowerCase().replace('curso de ', '').trim();
+    return allResources.filter((r: any) => r.materia === course.materia || r.title.toLowerCase().includes(cleanCourseTitle));
+  }, [course, allResources]);
+
+  const handleDelete = () => {
+    if (window.confirm("🔴 ¿Estás seguro de que quieres eliminar este curso permanentemente?")) {
+      deleteCourseMutation.mutate(course?.id || (course as any)?._id || '', {
+        onSuccess: () => navigate('/cursos')
+      });
+    }
+  };
+
+  if (isCourseLoading) {
     return (
       <DashboardLayout>
-        <div className="flex justify-center items-center h-[60vh]">
-           <div className="w-12 h-12 border-4 border-itec-gray border-t-itec-blue rounded-full animate-spin"></div>
+        <div className="flex flex-col items-center justify-center h-[70vh] gap-5">
+          <div className="w-10 h-10 border-4 border-white/10 border-t-orange-500 rounded-full animate-spin"></div>
+          <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase animate-pulse">Preparando entorno...</p>
         </div>
       </DashboardLayout>
     );
   }
 
-  if (!course || !activeVideo) {
+  if (!course) {
     return (
       <DashboardLayout>
-        <div className="text-center py-20 bg-itec-surface border border-itec-gray rounded-xl">
-          <span className="text-5xl block mb-4">😕</span>
-          <h2 className="text-2xl font-bold text-white mb-2">Curso no encontrado</h2>
-          <Link to="/cursos" className="bg-itec-blue hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-medium transition-colors inline-block mt-4">Volver a Mis Cursos</Link>
+        <div className="flex items-center justify-center h-[70vh]">
+           <div className="bg-itec-surface/40 border border-white/5 p-10 rounded-[2rem] text-center max-w-md shadow-2xl">
+             <span className="text-5xl block mb-6 opacity-80">🔍</span>
+             <h2 className="text-xl font-bold text-white mb-2">Curso no encontrado</h2>
+             <p className="text-sm text-gray-400 mb-8 leading-relaxed">El material que intentas visualizar no existe o ha sido retirado de la plataforma.</p>
+             <Link to="/cursos" className="bg-white text-black font-bold px-8 py-3.5 rounded-xl transition-transform hover:scale-[0.98] outline-none inline-block text-xs uppercase tracking-widest shadow-lg">
+               Volver al Catálogo
+             </Link>
+           </div>
         </div>
       </DashboardLayout>
     );
   }
 
-  const currentProgress = Math.round((watchedVideos.size / (course.videos?.length || 1)) * 100);
+  const currentVideo = (course.videos && course.videos.length > 0) ? course.videos[currentVideoIndex] : undefined;
 
   return (
     <DashboardLayout>
-    
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Link to="/cursos" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-sm font-medium bg-itec-surface px-3 py-1.5 rounded-lg border border-itec-gray">
-              <div className="w-4 h-4"><Icons type="arrowLeft" /></div> Volver
-            </Link>
-            <span className="text-gray-600">/</span>
-            <span className="text-gray-600 text-sm font-bold truncate">{course.title}</span>
-          </div>
-
+      <div className="max-w-[1300px] mx-auto pb-24 pt-6 px-4 lg:px-6 xl:px-0 animate-fade-in">
+        
+        {/* Controles Superiores */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <Link to="/cursos" className="inline-flex items-center gap-2 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors w-fit group outline-none">
+            <div className="w-5 h-5 group-hover:-translate-x-1 transition-transform"><Icons type="play" /></div>
+            Volver
+          </Link>
+          
           {isAdmin && (
-            <button
-              onClick={() => setIsEditModalOpen(true)}
-              className="bg-itec-surface hover:bg-itec-gray border border-itec-gray text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors flex items-center gap-2 w-fit"
-            >
-              <span>✏️</span> Editar Curso
-            </button>
+            <div className="flex items-center gap-2">
+              <Link 
+                to={`/cursos/editar/${course.id || (course as any)._id}`}
+                className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all outline-none"
+              >
+                <span>⚙️</span> Configurar
+              </Link>
+              <button 
+                onClick={handleDelete}
+                disabled={deleteCourseMutation.isPending}
+                className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all outline-none border border-red-500/20 hover:border-red-500"
+              >
+                {deleteCourseMutation.isPending ? 'BORRANDO...' : 'ELIMINAR'}
+              </button>
+            </div>
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+        {/* Título Principal */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-md shadow-sm">
+              {course.materia}
+            </span>
+            <span className="bg-white/5 text-gray-400 border border-white/10 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-md">
+              {course.categoria}
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2 leading-tight">{course.title}</h1>
+        </div>
+
+        {/* Layout Principal: 2 Columnas */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          
+          {/* Columna Izquierda (Video Player) */}
+          <div className="lg:col-span-2 w-full">
             <CourseVideoPlayer 
               course={course}
-              activeVideo={activeVideo}
+              activeVideo={currentVideo} 
               watchedVideos={watchedVideos}
               relatedResourcesCount={relatedResources.length}
               copySuccess={copySuccess}
-              onToggleWatched={toggleWatchedStatus}
+              onToggleWatched={handleToggleWatched}
               onOpenMaterialModal={() => setIsMaterialModalOpen(true)}
               onShare={handleShare}
             />
           </div>
 
-          <div className="lg:col-span-1">
+          {/* Columna Derecha (Sidebar: Playlist y Recursos) */}
+          <div className="lg:col-span-1 flex flex-col gap-8 w-full">
             <CoursePlaylist 
-              course={course}
-              activeVideo={activeVideo}
-              watchedVideos={watchedVideos}
-              currentProgress={currentProgress}
-              onVideoSelect={handleVideoSelect}
+              videos={course.videos} 
+              currentIndex={currentVideoIndex} 
+              onSelectVideo={setCurrentVideoIndex}
+              watchedVideos={watchedVideos} 
             />
+
+            {/* Widget de Material Extra (Premium) */}
+            <div className="bg-itec-surface/40 border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-white font-bold text-sm tracking-wide">
+                  <span className="text-orange-500 mr-2 text-lg">📚</span> Material Extra
+                </h3>
+                {isAdmin && (
+                  <button 
+                    onClick={() => setIsMaterialModalOpen(true)}
+                    className="text-[9px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1.5 rounded-lg border border-white/10 transition-colors font-bold uppercase tracking-widest outline-none"
+                  >
+                    + Vincular PDF
+                  </button>
+                )}
+              </div>
+              
+              {relatedResources.length === 0 ? (
+                <div className="border border-dashed border-white/5 rounded-2xl p-6 text-center opacity-60">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">No hay archivos vinculados</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {relatedResources.slice(0, 4).map((res: any) => (
+                    <a key={res.id} href={res.driveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-3 bg-white/[0.02] hover:bg-white/[0.06] border border-white/5 rounded-2xl transition-all group outline-none shadow-sm">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 text-orange-500 flex items-center justify-center shrink-0 border border-orange-500/20">
+                        📄
+                      </div>
+                      <div className="overflow-hidden">
+                        <h4 className="text-xs font-bold text-white truncate group-hover:text-orange-400 transition-colors">{res.title}</h4>
+                        <p className="text-[10px] text-gray-500 truncate mt-0.5">{res.materia}</p>
+                      </div>
+                    </a>
+                  ))}
+                  {relatedResources.length > 4 && (
+                    <Link to="/recursos" className="text-[10px] text-center text-gray-400 hover:text-white mt-4 font-bold uppercase tracking-widest block transition-colors outline-none bg-white/5 hover:bg-white/10 py-3 rounded-xl border border-white/5">
+                      Ver todo el catálogo
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
+      </div>
 
-      <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60" />}>
-        {isMaterialModalOpen && (
+      {isMaterialModalOpen && (
+        <Suspense fallback={null}>
           <CourseMaterialModal 
             isOpen={isMaterialModalOpen} 
             onClose={() => setIsMaterialModalOpen(false)} 
-            relatedResources={relatedResources} 
-          />
-        )}
-        
-      {isAdmin && isEditModalOpen && (
-        <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60" />}>
-          <AddCourseModal 
-            isOpen={isEditModalOpen} 
-            onClose={() => setIsEditModalOpen(false)} 
-            existingCourse={course}
-            onCourseAdded={(updatedCourse) => {
-              // 3. 🔴 Al editar, le decimos a React Query que vuelva a buscar los datos
-              queryClient.invalidateQueries({ queryKey: ['course', id] });
-              queryClient.invalidateQueries({ queryKey: ['courses'] });
-              setIsEditModalOpen(false);
-            }}
+            courseTitle={course.title}
+            materia={course.materia}
           />
         </Suspense>
       )}
-      </Suspense>
 
     </DashboardLayout>
   );

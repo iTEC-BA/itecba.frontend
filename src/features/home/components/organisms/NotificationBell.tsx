@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { adminService, type AnnouncementData } from '@/features/admin/services/adminService';
+import { adminService} from '@/features/admin/services/adminService';
 
 // Helper seguro
 const safeParseJSON = (key: string, fallback: any) => {
@@ -66,7 +66,7 @@ export const NotificationBell: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={toggleDropdown}
-        className="relative p-2.5 bg-itec-surface/50 border border-white/5 rounded-xl hover:bg-white/5 transition-colors outline-none flex items-center justify-center"
+        className="relative p-2.5 bg-itec-surface/50 border border-white/5 rounded-xl hover:bg-white/5 transition-colors outline-none flex items-center justify-center cursor-pointer"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -81,7 +81,7 @@ export const NotificationBell: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-itec-surface/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-[100] animate-in slide-in-from-top-2 fade-in">
+        <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-itec-surface/90 border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-[100] animate-in slide-in-from-top-2 fade-in">
           <div className="p-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
             <h3 className="text-white font-bold tracking-wide">Notificaciones</h3>
             <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Activas</span>
@@ -103,7 +103,7 @@ export const NotificationBell: React.FC = () => {
                   } catch(e){}
 
                   return (
-                    <div key={news.id} className="p-4 hover:bg-white/[0.03] transition-colors relative group">
+                    <div key={news.id} className="p-4 hover:bg-white/[0.03] transition-colors relative group cursor-pointer">
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
                           {news.isCritical && <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,1)]"></span>}

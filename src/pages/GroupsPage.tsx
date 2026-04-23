@@ -43,7 +43,7 @@ export const GroupsPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <button 
               onClick={() => setIsAddModalOpen(true)} 
-              className="cursor-pointer bg-slate-900/80 backdrop-blur border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-slate-300 hover:text-emerald-400 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95"
+              className="cursor-pointer bg-slate-900/80 border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-slate-300 hover:text-emerald-400 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95"
             >
               <div className="w-4 h-4"><Icons type="plus" /></div>
               Aportar Grupo

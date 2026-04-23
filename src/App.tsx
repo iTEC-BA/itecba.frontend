@@ -5,6 +5,7 @@ import LoadingState from "./components/atoms/LoadingState";
 import { ProtectedRoute } from "./components/templates/ProtectedRoute";
 
 // Carga Diferida (Code Splitting)
+const CourseEditDetail = lazy(() => import("./pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
 const Dashboard = lazy(() => import("./pages/Dashboard").then(m => ({ default: m.Dashboard })));
 const CoursesPage = lazy(() => import("./pages/CoursesPage").then(m => ({ default: m.CoursesPage })));
 const CourseDetail = lazy(() => import("./pages/CourseDetail").then(m => ({ default: m.CourseDetail })));
@@ -41,6 +42,7 @@ export const App: React.FC = () => {
 
             {/* RUTAS PRIVADAS (Protegidas por un Outlet) */}
             <Route element={<ProtectedRoute />}>
+              <Route path="/cursos/editar/:id" element={<CourseEditDetail />} />
               <Route path="/recursos" element={<ResourcesPage />} />
               <Route path="/progreso" element={<ProgressPage />} />
               <Route path="/perfil" element={<ProfilePage />} />
