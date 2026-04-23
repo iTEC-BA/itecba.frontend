@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DashboardLayout } from "../components/templates/DashboardLayout";
-import { useAuth } from "../context/AuthContext";
-import { LoadingState } from "../components/atoms/LoadingState"; // O el spinner que prefieras usar
+import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { useAuth } from "@context/AuthContext";
+import { LoadingState } from "@components/atoms/LoadingState"; // O el spinner que prefieras usar
 
-import { TarjeTec } from "../features/profile/components/organisms/TarjeTec";
-import { ProfileForm } from "../features/profile/components/organisms/ProfileForm";
-import { ProfileHeader } from "../features/profile/components/organisms/ProfileHeader";
-import { BenefitsGrid } from "../features/profile/components/organisms/BenefitsGrid";
-import { ProfileStatsWidget } from "../features/profile/components/organisms/ProfileStatsWidget";
+import { TarjeTec } from "@features/profile/components/organisms/TarjeTec";
+import { ProfileForm } from "@features/profile/components/organisms/ProfileForm";
+import { ProfileHeader } from "@features/profile/components/organisms/ProfileHeader";
+import { BenefitsGrid } from "@features/profile/components/organisms/BenefitsGrid";
+import { ProfileStatsWidget } from "@features/profile/components/organisms/ProfileStatsWidget";
+import { usePageTitle } from "@hooks/usePageTitle";
 
 export const ProfilePage: React.FC = () => {
+  usePageTitle("Perfil")
   const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
   const { username } = useParams(); 
@@ -51,13 +53,10 @@ export const ProfilePage: React.FC = () => {
 <DashboardLayout>
       <div className="max-w-5xl mx-auto pb-12 relative z-10">
         <ProfileHeader />
-        
         <div className="mb-12 flex flex-col md:flex-row gap-4">
           {user && <TarjeTec user={user} />}
           <ProfileStatsWidget />
         </div>
-        
-        
         <BenefitsGrid />
       </div>
     </DashboardLayout>

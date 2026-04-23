@@ -1,13 +1,17 @@
 import React from 'react';
-import { DashboardLayout } from '@/components/templates/DashboardLayout';
-import { ProgressDashboard } from '@features/progress/components/organisms/ProgressDashboard';
-import { useProgress } from '@features/progress/hooks/useProgress';
-import { useAuth } from '@/context/AuthContext';
 import { Link } from 'react-router-dom';
 
+import { useAuth } from '@context/AuthContext';
+import { usePageTitle } from '@hooks/usePageTitle';
+
+import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { ProgressDashboard } from '@features/progress/components/organisms/ProgressDashboard';
+import { useProgress } from '@features/progress/hooks/useProgress';
+
 export const ProgressPage: React.FC = () => {
+  usePageTitle("Progreso de Carrera");
   const { user } = useAuth();
-  // Agregamos la desestructuración de removeCareer
+
   const { data, isLoading, isError, updateSubjectStatus, switchCareer, removeCareer } = useProgress();
 
   if (!user) {

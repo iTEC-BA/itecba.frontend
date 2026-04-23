@@ -1,26 +1,27 @@
 import React, { useState, Suspense } from "react";
-import { DashboardLayout } from "@/components/templates/DashboardLayout";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { useAuth } from "@/context/AuthContext";
-import { Icons } from "@/components/ui/Icons";
+import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { PageHeader } from "@components/ui/PageHeader";
+import { useAuth } from "@context/AuthContext";
+import { Icons } from "@components/ui/Icons";
 
 import { useCourses, useDeleteCourse } from "@features/courses/hooks/useCourses"; 
 import { useCourseSearch } from "@features/courses/hooks/useCourseSearch";
 import { CourseGrid } from "@features/courses/components/organisms/CourseGrid";
 import { CourseFilters } from "@features/courses/components/molecules/CourseFilters";
+import { usePageTitle } from "@hooks/usePageTitle";
 
 const AddCourseModal = React.lazy(() =>
   import("@features/courses/components/organisms/AddCourseModal").then((m) => ({ default: m.AddCourseModal }))
 );
 
 export const CoursesPage: React.FC = () => {
+  usePageTitle("Cursos");
+
   const { isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: dbCourses = [], isLoading } = useCourses();
   const deleteCourseMutation = useDeleteCourse();
-
-  // 🟢 Lógica encapsulada
   const { filters, filteredCourses } = useCourseSearch(dbCourses);
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DashboardLayout } from '@/components/templates/DashboardLayout';
-import { Icons } from '@/components/ui/Icons';
-import { Button } from '@/components/atoms/Button';
+import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { Icons } from '@components/ui/Icons';
+import { Button } from '@components/atoms/Button';
 
 // Hooks de React Query
 import { useCourseById, useUpdateCourse } from '@features/courses/hooks/useCourses';
