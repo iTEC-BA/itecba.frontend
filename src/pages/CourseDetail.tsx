@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
-import { DashboardLayout } from '@/components/templates/DashboardLayout';
-import { Icons } from '@/components/ui/Icons'; 
-import { useAuth } from '@/context/AuthContext';
+// Componentes Globales
+import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { Icons } from '@components/ui/Icons'; 
+import { useAuth } from '@context/AuthContext';
 
+// Componentes de courses
 import { CourseVideoPlayer } from '@features/courses/components/organisms/CourseVideoPlayer';
 import { CoursePlaylist } from '@features/courses/components/organisms/CoursePlaylist';
 
+// Hooks
 import { useCourseById, useDeleteCourse } from '@features/courses/hooks/useCourses';
 import { useResources } from '@features/resources/hooks/useResources'; 
 
-// 🟢 Importaciones diferidas de los Modales
+// Lazy, carga retrasada
 const CourseResourcesModal = React.lazy(() => import('@features/courses/components/organisms/CourseResourcesModal').then(m => ({ default: m.CourseResourcesModal })));
 const CourseAddResourceModal = React.lazy(() => import('@features/courses/components/organisms/CourseAddResourceModal').then(m => ({ default: m.CourseAddResourceModal })));
 
@@ -24,7 +27,7 @@ export const CourseDetail: React.FC = () => {
   const { data: allResources = [] } = useResources();
   const deleteCourseMutation = useDeleteCourse();
 
-  // 🟢 Estados Separados para Visualización y Creación
+  // Estados Separados para Visualización y Creación
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

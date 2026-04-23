@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { DashboardLayout } from '../components/templates/DashboardLayout';
-import { useAuth } from '../context/AuthContext';
-import { UserManagement } from '../features/admin/components/organisms/UserManagement';
-import { NewsManagement } from '../features/admin/components/organisms/NewsManagement';
+import React, { useState, lazy } from 'react';
+import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { useAuth } from '@context/AuthContext';
+
+const UserManagement = lazy(() => import("@features/admin/components/organisms/UserManagement").then(m => ({ default: m.UserManagement })));
+const NewsManagement = lazy(() => import("@features/admin/components/organisms/NewsManagement").then(m => ({ default: m.NewsManagement })));
+
 
 export const AdminPanel: React.FC = () => {
   const { isAdmin } = useAuth();

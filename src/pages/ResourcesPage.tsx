@@ -1,22 +1,22 @@
 import React, { useState, useMemo, Suspense } from 'react';
-import { PageHeader } from '../components/ui/PageHeader';
-import { DashboardLayout } from '../components/templates/DashboardLayout';
-import { Button } from '../components/atoms/Button';
-import { useAuth } from '../context/AuthContext';
+import { PageHeader } from '@components/ui/PageHeader';
+import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { Button } from '@components/atoms/Button';
+import { useAuth } from '@context/AuthContext';
 
-import { ResourceFilters } from '../features/resources/components/organisms/ResourceFilters';
-import { ResourcesTable } from '../features/resources/components/organisms/ResourcesTable';
+import { ResourceFilters } from '@features/resources/components/organisms/ResourceFilters';
+import { ResourcesTable } from '@features/resources/components/organisms/ResourcesTable';
 
 // Importamos los hooks de caché
-import { useResources, usePendingResources } from '../features/resources/hooks/useResources';
+import { useResources, usePendingResources } from '@features/resources/hooks/useResources';
 
-const AddResourceModal = React.lazy(() => import('../features/resources/components/organisms/AddResourceModal').then(m => ({ default: m.AddResourceModal })));
-const AdminPendingResourcesModal = React.lazy(() => import('../features/resources/components/organisms/AdminPendingResourcesModal').then(m => ({ default: m.AdminPendingResourcesModal })));
+const AddResourceModal = React.lazy(() => import('@features/resources/components/organisms/AddResourceModal').then(m => ({ default: m.AddResourceModal })));
+const AdminPendingResourcesModal = React.lazy(() => import('@features/resources/components/organisms/AdminPendingResourcesModal').then(m => ({ default: m.AdminPendingResourcesModal })));
 
 export const ResourcesPage: React.FC = () => {
   const { isAdmin } = useAuth();
 
-  //  Adiós useEffects. Hola caché.
+  //  React Query: Para usar la cache del usuario
   const { data: rawResources = [], isLoading } = useResources();
   const { data: pendingResources = [] } = usePendingResources(isAdmin);
   const pendingCount = pendingResources.length;
@@ -35,12 +35,9 @@ export const ResourcesPage: React.FC = () => {
     setSearchQuery(''); setCarrera(''); setNivel(''); setMateria('');
   };
 
-  // Ordenamos los recursos recientes primero y luego filtramos
   const filteredResources = useMemo(() => {
-    // 1. Ordenar (Lo que antes hacías en el .then del fetch)
     const sorted = [...rawResources].sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-    
-    // 2. Filtrar
+
     return sorted.filter(r => {
       const matchText = searchQuery === '' || r.title.toLowerCase().includes(searchQuery.toLowerCase());
       const matchCarrera = carrera === '' || r.carrera === carrera;
@@ -93,16 +90,14 @@ export const ResourcesPage: React.FC = () => {
           <AddResourceModal 
             isOpen={isAddModalOpen} 
             onClose={() => setIsAddModalOpen(false)} 
-            isAdmin={isAdmin} 
-            // 🔴 ELIMINADO: onResourceAdded (El invalidateQueries lo hace solo)
+            isAdmin={isAdmin}
           />
         )}
         
         {isAdminModalOpen && isAdmin && (
           <AdminPendingResourcesModal 
             isOpen={isAdminModalOpen} 
-            onClose={() => setIsAdminModalOpen(false)} 
-            // 🔴 ELIMINADO: onResourceApproved
+            onClose={() => setIsAdminModalOpen(false)}
           />
         )}
       </Suspense>

@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { DashboardLayout } from "@/components/templates/DashboardLayout";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { usePageTitle } from "@/hooks/usePageTitle";
-import { useAuth } from "@/context/AuthContext";
+import { PageHeader } from "@components/ui/PageHeader";
+import { usePageTitle } from "@hooks/usePageTitle";
+import { useAuth } from "@context/AuthContext";
 
 // Hooks y Datos
-import { INGRESO_DATA } from "@/features/admission/types/ingresoLinks";
-import { useAdmissionProgress } from "@/features/admission/hooks/useAdmissionProgress";
-import { useAdmissionDates } from "@/features/admission/hooks/useAdmissionDates"; // 🟢 NUEVO
+import { INGRESO_DATA } from "@features/admission/types/ingresoLinks";
+import { useAdmissionProgress } from "@features/admission/hooks/useAdmissionProgress";
+import { useAdmissionDates } from "@features/admission/hooks/useAdmissionDates";
 
 // Componentes
-import { IngresoHighlightActions } from "@/features/admission/components/organisms/IngresoHighlightActions";
-import { IngresoSocialGrid } from "@/features/admission/components/organisms/IngresoSocialGrid";
-import { IngresoAcademicGrid } from "@/features/admission/components/organisms/IngresoAcademicGrid";
-import { IngresoStepsWidget } from "@/features/admission/components/organisms/IngresoStepsWidget";
-import { AdmissionCountdownWidget } from "@/features/admission/components/organisms/AdmissionCountdownWidget";
-import { AdminAdmissionDatesModal } from "@/features/admission/components/organisms/AdminAdmissionDatesModal"; // 🟢 NUEVO
+import { IngresoHighlightActions } from "@features/admission/components/organisms/IngresoHighlightActions";
+import { IngresoSocialGrid } from "@features/admission/components/organisms/IngresoSocialGrid";
+import { IngresoAcademicGrid } from "@features/admission/components/organisms/IngresoAcademicGrid";
+import { IngresoStepsWidget } from "@features/admission/components/organisms/IngresoStepsWidget";
+import { AdmissionCountdownWidget } from "@features/admission/components/organisms/AdmissionCountdownWidget";
+import { AdminAdmissionDatesModal } from "@features/admission/components/organisms/AdminAdmissionDatesModal"; // 🟢 NUEVO
 
 export const AdmissionPage: React.FC = () => {
   usePageTitle("Ingreso UTN | ITEC");

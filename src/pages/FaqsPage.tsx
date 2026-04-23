@@ -1,9 +1,9 @@
 import React from "react";
-import { DashboardLayout } from "../components/templates/DashboardLayout";
-import { usePageTitle } from "../hooks/usePageTitle";
-import { useAuth } from "../context/AuthContext";
+import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { usePageTitle } from "@hooks/usePageTitle";
+import { useAuth } from "@context/AuthContext";
 
-import { PageHeader } from "@/components/ui/PageHeader";
+import { PageHeader } from "@components/ui/PageHeader";
 import { ChatInterface } from "@features/faqs/components/organisms/ChatInterface";
 import { ImportantDatesWidget } from "@features/faqs/components/organisms/ImportantDatesWidget";
 
@@ -20,7 +20,7 @@ export const FaqsPage: React.FC = () => {
         colorTheme="teal"
       />
       
-      {/* 🔴 NUEVO LAYOUT: Grid para separar Chat y Calendario en Desktop */}
+      {/* Grid para separar Chat y Calendario en Desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
         
         {/* Columna Izquierda: Chat (Ocupa 2/3 en Desktop) */}
