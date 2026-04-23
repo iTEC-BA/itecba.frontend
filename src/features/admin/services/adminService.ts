@@ -6,8 +6,9 @@ export interface AnnouncementData {
   id: string;
   title: string;
   message: string;
-  expiresAt: Timestamp | any;
-  createdAt: Timestamp | any;
+  isCritical: boolean;
+  expiresAt: any;
+  createdAt: any;
 }
 
 const API_URL_ANNOUNCEMENTS = 'http://127.0.0.1:5001/api/announcements';
@@ -42,41 +43,59 @@ export const adminService = {
   getActiveAnnouncements: async (): Promise<AnnouncementData[]> => {
     try {
       const res = await fetch(`${API_URL_ANNOUNCEMENTS}/active`);
-      if (!res.ok) throw new Error("Error fetching announcements");
+      if (!res.ok) throw new Error(`Status ${res.status}`);
       const data = await res.json();
-      if (!data || !Array.isArray(data)) return [];
+      
+      if (!data || !Array.isArray(data)) {
+        console.warn("⚠️ getActiveAnnouncements no devolvió un array:", data);
+        return [];
+      }
 
       return data.map((a: any) => ({
-        ...a, id: a._id,
-        expiresAt: { toDate: () => new Date(a.expiresAt || Date.now()) },
-        createdAt: { toDate: () => new Date(a.createdAt || Date.now()) }
+        ...a, 
+        id: a._id || a.id, // Seguridad extra por si viene como id o _id
+        isCritical: Boolean(a.isCritical),
+        expiresAt: a.expiresAt ? { toDate: () => new Date(a.expiresAt) } : { toDate: () => new Date() },
+        createdAt: a.createdAt ? { toDate: () => new Date(a.createdAt) } : { toDate: () => new Date() }
       }));
     } catch (error) {
+      console.error("❌ Error al obtener avisos:", error);
       return []; 
     }
   },
 
-  createAnnouncement: async (title: string, message: string, hoursActive: number): Promise<string> => {
-    const token = await getToken();
-    const res = await fetch(API_URL_ANNOUNCEMENTS, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ title: title.trim(), message: message.trim(), hoursActive })
-    });
+  createAnnouncement: async (title: string, message: string, hoursActive: number, isCritical: boolean): Promise<string> => {
+    try {
+      const token = await getToken();
+      const res = await fetch(API_URL_ANNOUNCEMENTS, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ title: title.trim(), message: message.trim(), hoursActive, isCritical })
+      });
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.error || `Error del Backend`);
+      if (!res.ok) {
+        const err = await res.json().catch(()=>({}));
+        throw new Error(err.error || `Error HTTP: ${res.status}`);
+      }
+      
+      const data = await res.json();
+      return data._id;
+    } catch (error) {
+      console.error("❌ Error en createAnnouncement (Frontend):", error);
+      throw error;
     }
-    const data = await res.json();
-    return data._id;
   },
-
+  
   deleteAnnouncement: async (id: string): Promise<void> => {
-    const token = await getToken();
-    await fetch(`${API_URL_ANNOUNCEMENTS}/${id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    try {
+      const token = await getToken();
+      await fetch(`${API_URL_ANNOUNCEMENTS}/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    } catch (error) {
+      console.error("❌ Error al borrar aviso:", error);
+      throw error;
+    }
   }
 };

@@ -17,7 +17,7 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
           <h3 className="text-white font-bold">Personal Autorizado</h3>
           <p className="text-gray-500 text-xs mt-1">Usuarios con nivel de Administrador.</p>
         </div>
-        <span className="bg-itecBlue/10 text-itecBlue text-xs font-bold px-3 py-1 rounded-full border border-itecBlue/20">
+        <span className="bg-itecBlue/10 text-itecBlue text-xs font-bold px-3 py-1">
           {admins.length} Activos
         </span>
       </div>

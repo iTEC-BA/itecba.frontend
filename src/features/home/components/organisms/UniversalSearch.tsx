@@ -5,6 +5,7 @@ import { SearchResultItem } from "../../../../components/molecules/SearchResultI
 import { coursesService, type CourseData } from "../../../courses/services/coursesService";
 import { groupsService, type GroupData } from "../../../groups/services/groupsService";
 import { resourcesService, type ResourceData } from "../../../resources/services/resourcesService";
+import { NotificationBell } from "./NotificationBell";
 
 export const UniversalSearch: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,7 +93,7 @@ export const UniversalSearch: React.FC = () => {
   }, []);
 
   return (
-    <header className="flex justify-between items-center mb-8 relative flex-col gap-4 lg:flex-row z-50">
+    <header className="flex justify-between items-center mb-8 relative flex-col gap-4 lg:flex-row z-50 w-full">
       <div className="relative w-full max-w-2xl" ref={searchRef}>
         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5">
           <Icons type="search" />
@@ -199,6 +200,7 @@ export const UniversalSearch: React.FC = () => {
           </div>
         )}
       </div>
+      <NotificationBell />
     </header>
   );
 };

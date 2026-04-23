@@ -28,7 +28,7 @@ export const App: React.FC = () => {
       <BrowserRouter>
         <Suspense fallback={<LoadingState />}>
           <Routes>
-            {/* 🟢 RUTAS PÚBLICAS (Accesibles sin login) */}
+            {/* RUTAS PÚBLICAS (Accesibles sin login) */}
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cursos" element={<CoursesPage />} />
@@ -37,11 +37,11 @@ export const App: React.FC = () => {
             <Route path="/ingreso" element={<AdmissionPage />} />
             <Route path="/grado" element={<GradePage />} />
             <Route path="/nosotros" element={<AboutPage />} />
+            <Route path="/grupos" element={<GroupsPage />} />
 
-            {/* 🔴 RUTAS PRIVADAS (Protegidas por un Outlet) */}
+            {/* RUTAS PRIVADAS (Protegidas por un Outlet) */}
             <Route element={<ProtectedRoute />}>
               <Route path="/recursos" element={<ResourcesPage />} />
-              <Route path="/grupos" element={<GroupsPage />} />
               <Route path="/progreso" element={<ProgressPage />} />
               <Route path="/perfil" element={<ProfilePage />} />
               <Route path="/perfil/:username" element={<ProfilePage />} />

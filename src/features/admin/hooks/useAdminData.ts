@@ -12,7 +12,7 @@ export const useAdminData = () => {
   });
 
   // 2. Obtener Lista de Avisos
-  const { data: announcements = [], isLoading: isLoadingAnnouncements } = useQuery({
+const { data: announcements = [], isLoading: isLoadingAnnouncements, isError: isErrorAnnouncements } = useQuery({
     queryKey: ['adminAnnouncements'],
     queryFn: adminService.getActiveAnnouncements,
   });
@@ -32,23 +32,27 @@ export const useAdminData = () => {
     },
   });
 
-  // 5. Mutación: Crear Aviso
-  const createAnnouncementMutation = useMutation({
-    mutationFn: ({ title, message, hours }: { title: string, message: string, hours: number }) =>
-      adminService.createAnnouncement(title, message, hours),
+const createAnnouncementMutation = useMutation({
+    mutationFn: ({ title, message, hours, isCritical }: { title: string, message: string, hours: number, isCritical: boolean }) =>
+      adminService.createAnnouncement(title, message, hours, isCritical),
     onSuccess: () => {
+      console.log("✅ Aviso creado con éxito. Refrescando caché...");
       queryClient.invalidateQueries({ queryKey: ['adminAnnouncements'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements', 'active'] }); // Refresca el home también
     },
+    onError: (err) => {
+      console.error("❌ Mutación fallida (Crear Aviso):", err);
+      alert("Hubo un error al crear el aviso. Revisa la consola.");
+    }
   });
 
-  // 6. Mutación: Borrar Aviso
   const deleteAnnouncementMutation = useMutation({
     mutationFn: (id: string) => adminService.deleteAnnouncement(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminAnnouncements'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements', 'active'] });
     },
   });
-
   return {
     admins,
     isLoadingAdmins,

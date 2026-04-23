@@ -60,10 +60,9 @@ export const AdminPanel: React.FC = () => {
           </div>
         </header>
 
-        {/* Vista Dinámica */}
-        <main className="transition-all duration-500 ease-in-out">
+        <div className="transition-all duration-500 ease-in-out">
           {activeTab === 'users' ? <UserManagement /> : <NewsManagement />}
-        </main>
+        </div>
 
       </div>
     </DashboardLayout>

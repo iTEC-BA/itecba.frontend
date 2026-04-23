@@ -19,7 +19,6 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {/* 🔴 ENVUELVE LA APP */}
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>

@@ -5,7 +5,7 @@ import { BackgroundBlur } from "../ui/BackgroundBlur";
 import logoItec from "../../assets/logo.png"; 
 import { Icons } from "../ui/Icons";
 // Agrega esta importación arriba:
-import { GlobalAnnouncement } from '../organisms/GlobalAnnouncement';
+import { GlobalAnnouncement } from '../../features/admin/components/atoms/GlobalAnnouncement';
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
