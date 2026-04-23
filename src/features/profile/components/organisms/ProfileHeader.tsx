@@ -6,7 +6,7 @@ export const ProfileHeader: React.FC = () => {
   const { user, logout } = useAuth();
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 bg-slate-900/50 border border-white/5 rounded-3xl p-6 backdrop-blur-sm gap-6">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 bg-slate-900/50 border border-white/5 rounded-3xl p-6 gap-6">
       <div className="flex items-center gap-6">
         {user?.photoURL ? (
             <div className="w-20 h-20 rounded-2xl bg-slate-800 border border-white/10 p-1 shrink-0 shadow-xl">

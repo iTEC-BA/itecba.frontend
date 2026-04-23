@@ -34,13 +34,13 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
 
       {/* Stickers Decorativos */}
       <div className="flex flex-wrap gap-2 sm:gap-3 my-2 sm:my-0 relative z-10">
-        <span className="bg-sky-500/10 text-sky-400 text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-md border border-sky-500/20 backdrop-blur-sm">
+        <span className="bg-sky-500/10 text-sky-400 text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-md border border-sky-500/20">
           UTN.BA
         </span>
-        <span className="bg-emerald-500/10 text-emerald-400 text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-md border border-emerald-500/20 backdrop-blur-sm">
+        <span className="bg-emerald-500/10 text-emerald-400 text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-md border border-emerald-500/20">
           TECH
         </span>
-        <span className="bg-indigo-500/10 text-indigo-400 text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-md border border-indigo-500/20 backdrop-blur-sm">
+        <span className="bg-indigo-500/10 text-indigo-400 text-[8px] sm:text-[10px] font-bold uppercase py-1 px-2 sm:px-3 rounded-md border border-indigo-500/20">
           {user.specialty || 'Ingeniería'}
         </span>
       </div>

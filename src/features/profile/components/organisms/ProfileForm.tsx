@@ -38,7 +38,7 @@ export const ProfileForm: React.FC = () => {
 
   return (
     <div className="max-w-xl mx-auto pt-10 relative z-10">
-      <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden">
+      <div className="bg-slate-900/80 border border-white/10 rounded-[2.5rem] p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden">
         {/* Destellos de fondo */}
         <div className="absolute -top-20 -right-20 w-48 h-48 bg-sky-500/20 blur-[100px] rounded-full pointer-events-none"></div>
         <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none"></div>
