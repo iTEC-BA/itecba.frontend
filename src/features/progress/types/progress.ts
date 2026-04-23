@@ -1,4 +1,14 @@
-export type SubjectStatus = 'aprobada' | 'regular' | 'cursando' | 'disponible' | 'bloqueada';
+export type SubjectStatus = 
+  | 'aprobada' 
+  | 'habilitada_rendir' 
+  | 'regular_bloqueada' 
+  | 'cursando'
+  | 'habilitada_cursar' 
+  | 'bloqueada';
+
+export interface SubjectMetrics {
+  weeklyHours?: number;
+}
 
 export interface Subject {
   id: string;
@@ -7,14 +17,29 @@ export interface Subject {
   level: number;
   status: SubjectStatus;
   grade?: number;
-  year?: number;
-  correlativesToApprove?: string[]; // IDs de materias que necesita tener aprobadas
-  correlativesToRegularize?: string[]; // IDs de materias que necesita tener regulares
+  yearRegularized?: number;
+  yearApproved?: number;
+  metrics?: SubjectMetrics;
+  reqCursada: string[];
+  reqAprobada: string[];
+}
+
+export interface ProgressMetrics {
+  total: number;
+  aprobadas: number;
+  regulares: number;
+  cursando: number;
+  porcentajeAvance: number;
+  promedio: string;
+  horasSemanales: number;
+  nivelEstres: 'Bajo' | 'Manejable' | 'Alto' | 'Crítico';
+  vencimientosProximos: Subject[];
 }
 
 export interface CareerProgress {
+  activeCareerId: string;
+  enrolledCareers: string[];
   careerName: string;
-  averageGrade: number;
-  totalProgress: number; // 0 to 100
+  metrics: ProgressMetrics;
   subjects: Subject[];
 }

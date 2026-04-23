@@ -1,22 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
-import { CAREERS_DATA, type SubjectDef } from '@/data/carreras';
+import { CAREERS_DATA } from '@/data/carreras';
+import { calculateSubjectStatus, calculateStressLevel } from '../utils/academicLogic';
+import type { ProgressMetrics, Subject, CareerProgress } from '../types/progress';
 
-export type CalculatedSubject = SubjectDef & {
-  status: 'aprobada' | 'regular' | 'disponible' | 'bloqueada';
-  grade?: number;
-  year?: number;
-};
-
-export interface ProgressMetrics {
-  total: number;
-  aprobadas: number;
-  regulares: number;
-  porcentajeAprobadas: number;
-  porcentajeRegulares: number;
-}
-
-// Mapa de nombres para la UI
 export const CAREER_NAMES: Record<string, string> = {
   sistemas: 'Ingeniería en Sistemas de Información',
   mecanica: 'Ingeniería Mecánica',
@@ -37,35 +24,26 @@ export const useProgress = () => {
   const loadUserData = () => {
     const stored = localStorage.getItem(storageKey);
     if (stored) {
-      const parsed = JSON.parse(stored);
-      // Migración automática si viene de la versión anterior (1 sola carrera)
-      if (parsed.careerId && !parsed.enrolledCareers) {
-        return {
-          activeCareer: parsed.careerId,
-          enrolledCareers: [parsed.careerId],
-          progress: {
-            [parsed.careerId]: {
-              passedIds: parsed.passedIds || [],
-              regularIds: parsed.regularIds || [],
-              grades: parsed.grades || {},
-              years: parsed.years || {}
-            }
+      try {
+        const parsed = JSON.parse(stored);
+        if (!parsed.enrolledCareers || parsed.enrolledCareers.length === 0) parsed.enrolledCareers = [parsed.activeCareer || parsed.careerId || 'sistemas'];
+        if (!parsed.activeCareer) parsed.activeCareer = parsed.enrolledCareers[0];
+        if (!parsed.progress) {
+          parsed.progress = {
+            [parsed.activeCareer]: { passedIds: parsed.passedIds || [], regularIds: parsed.regularIds || [], cursandoIds: [], grades: parsed.grades || {}, years: parsed.years || {} }
           }
-        };
-      }
-      return parsed;
+        }
+        return parsed;
+      } catch (e) { console.error("Error parseando data", e); }
     }
-    // Estado inicial por defecto
     return {
       activeCareer: 'sistemas',
       enrolledCareers: ['sistemas'],
-      progress: {
-        'sistemas': { passedIds: [], regularIds: [], grades: {}, years: {} }
-      }
+      progress: { 'sistemas': { passedIds: [], regularIds: [], cursandoIds: [], grades: {}, years: {} } }
     };
   };
 
-  const query = useQuery({
+  const query = useQuery<CareerProgress>({
     queryKey: ['progress', user?.uid],
     queryFn: () => {
       const userData = loadUserData();
@@ -74,106 +52,117 @@ export const useProgress = () => {
       
       if (!careerDef) throw new Error("Carrera no encontrada");
 
-      const progressData = userData.progress[activeCareerId] || { passedIds: [], regularIds: [], grades: {}, years: {} };
+      const pData = userData.progress[activeCareerId] || {};
+      const passedIds = pData.passedIds || [];
+      const regularIds = pData.regularIds || [];
+      const cursandoIds = pData.cursandoIds || [];
+      const grades = pData.grades || {};
+      const years = pData.years || {};
 
-      let totalGrade = 0;
-      let gradedSubjectsCount = 0;
+      let totalGrade = 0, gradedCount = 0, horasCursada = 0;
+      const vencimientos: Subject[] = [];
 
-      const calculatedSubjects: CalculatedSubject[] = careerDef.map((subject) => {
-        let status: CalculatedSubject['status'] = 'bloqueada';
+      const subjects: Subject[] = careerDef.map((sub: any) => {
+        const status = calculateSubjectStatus(sub, passedIds, regularIds, cursandoIds);
+        const yearReg = years[sub.id];
 
-        if (progressData.passedIds.includes(subject.id)) {
-          status = 'aprobada';
-          if (progressData.grades[subject.id]) {
-            totalGrade += Number(progressData.grades[subject.id]);
-            gradedSubjectsCount++;
-          }
-        } else if (progressData.regularIds.includes(subject.id)) {
-          status = 'regular';
-        } else {
-          // Lógica de correlativas
-          const hasCursadas = subject.reqCursada.every((reqId: string) => 
-            progressData.passedIds.includes(reqId) || progressData.regularIds.includes(reqId)
-          );
-          const hasAprobadas = subject.reqAprobada.every((reqId: string) => 
-            progressData.passedIds.includes(reqId)
-          );
-
-          if (hasCursadas && hasAprobadas) status = 'disponible';
+        if (status.includes('regular') && yearReg && (new Date().getFullYear() - yearReg >= 3)) {
+          vencimientos.push({ ...sub, status, yearRegularized: yearReg } as Subject);
         }
 
-        return {
-          ...subject,
-          status,
-          grade: progressData.grades[subject.id],
-          year: progressData.years[subject.id]
-        };
+        const weeklyHours = sub.weeklyHours || (sub.level > 2 ? 6 : 4);
+        if (status === 'cursando') horasCursada += weeklyHours;
+
+        if (status === 'aprobada' && grades[sub.id]) {
+          totalGrade += Number(grades[sub.id]);
+          gradedCount++;
+        }
+
+        return { ...sub, status, grade: grades[sub.id], yearRegularized: yearReg, metrics: { weeklyHours } } as Subject;
       });
 
       const metrics: ProgressMetrics = {
         total: careerDef.length,
-        aprobadas: progressData.passedIds.length,
-        regulares: progressData.regularIds.length,
-        porcentajeAprobadas: (progressData.passedIds.length / careerDef.length) * 100,
-        porcentajeRegulares: (progressData.regularIds.length / careerDef.length) * 100,
+        aprobadas: passedIds.length,
+        regulares: regularIds.length,
+        cursando: cursandoIds.length,
+        porcentajeAvance: careerDef.length > 0 ? Math.round((passedIds.length / careerDef.length) * 100) : 0,
+        promedio: gradedCount > 0 ? (totalGrade / gradedCount).toFixed(2) : '-',
+        horasSemanales: horasCursada,
+        nivelEstres: calculateStressLevel(horasCursada),
+        vencimientosProximos: vencimientos
       };
 
-      const averageGrade = gradedSubjectsCount > 0 ? (totalGrade / gradedSubjectsCount).toFixed(2) : '0.00';
-
-      return {
-        activeCareerId,
-        enrolledCareers: userData.enrolledCareers,
-        careerName: CAREER_NAMES[activeCareerId] || 'Carrera Desconocida',
-        averageGrade,
-        totalProgress: Math.round(metrics.porcentajeAprobadas),
-        metrics,
-        subjects: calculatedSubjects
-      };
+      return { activeCareerId, enrolledCareers: userData.enrolledCareers, careerName: CAREER_NAMES[activeCareerId] || 'Carrera Desconocida', metrics, subjects };
     },
     enabled: !!user,
   });
 
-  // Mutación para cambiar el estado de una materia
   const updateSubjectStatus = useMutation({
-    mutationFn: async ({ id, newStatus, grade, year }: { id: string, newStatus: string, grade?: number, year?: number }) => {
-      const userData = loadUserData();
-      const p = userData.progress[userData.activeCareer];
+    mutationFn: async ({ id, status, grade, year }: { id: string, status: string, grade?: number, year?: number }) => {
+      const uData = loadUserData();
+      const p = uData.progress[uData.activeCareer];
+      
+      p.passedIds = (p.passedIds || []).filter((x: string) => x !== id);
+      p.regularIds = (p.regularIds || []).filter((x: string) => x !== id);
+      p.cursandoIds = (p.cursandoIds || []).filter((x: string) => x !== id);
+      p.grades = p.grades || {};
+      p.years = p.years || {};
 
-      p.passedIds = p.passedIds.filter((item: string) => item !== id);
-      p.regularIds = p.regularIds.filter((item: string) => item !== id);
+      if (status === 'aprobada') p.passedIds.push(id);
+      if (status === 'regular' || status === 'habilitada_rendir' || status === 'regular_bloqueada') p.regularIds.push(id);
+      if (status === 'cursando') p.cursandoIds.push(id);
 
-      if (newStatus === 'aprobada') p.passedIds.push(id);
-      if (newStatus === 'regular') p.regularIds.push(id);
-
-      if (newStatus === 'disponible') {
+      if (status === 'aprobada') {
+        if (grade !== undefined) p.grades[id] = grade;
+        if (year !== undefined) p.years[id] = year;
+      } else if (status.includes('regular')) {
+        delete p.grades[id];
+        if (year !== undefined) p.years[id] = year;
+      } else {
         delete p.grades[id];
         delete p.years[id];
-      } else {
-        if (grade !== undefined) p.grades[id] = grade;
-        else delete p.grades[id]; // Si es regular, nos aseguramos de borrar la nota
-        if (year !== undefined) p.years[id] = year;
       }
 
-      localStorage.setItem(storageKey, JSON.stringify(userData));
+      localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
   });
 
-  // Mutación para agregar/cambiar de carrera
   const switchCareer = useMutation({
     mutationFn: async (careerId: string) => {
-      const userData = loadUserData();
-      if (!userData.enrolledCareers.includes(careerId)) {
-        userData.enrolledCareers.push(careerId);
-        userData.progress[careerId] = { passedIds: [], regularIds: [], grades: {}, years: {} };
-      }
-      userData.activeCareer = careerId;
-      localStorage.setItem(storageKey, JSON.stringify(userData));
+      const uData = loadUserData();
+      if (!uData.enrolledCareers.includes(careerId)) uData.enrolledCareers.push(careerId);
+      if (!uData.progress[careerId]) uData.progress[careerId] = { passedIds: [], regularIds: [], cursandoIds: [], grades: {}, years: {} };
+      uData.activeCareer = careerId;
+      localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
   });
 
-  return { ...query, updateSubjectStatus: updateSubjectStatus.mutate, switchCareer: switchCareer.mutate };
+  // NUEVA MUTACIÓN: Eliminar Carrera
+  const removeCareer = useMutation({
+    mutationFn: async (careerId: string) => {
+      const uData = loadUserData();
+      uData.enrolledCareers = uData.enrolledCareers.filter((id: string) => id !== careerId);
+      
+      if (uData.enrolledCareers.length === 0) {
+        // Siempre debe haber al menos una carrera, por defecto sistemas
+        uData.enrolledCareers = ['sistemas'];
+        uData.activeCareer = 'sistemas';
+        if (!uData.progress['sistemas']) uData.progress['sistemas'] = { passedIds: [], regularIds: [], cursandoIds: [], grades: {}, years: {} };
+      } else if (uData.activeCareer === careerId) {
+        // Si eliminamos la carrera activa, cambiamos a la primera disponible
+        uData.activeCareer = uData.enrolledCareers[0];
+      }
+
+      localStorage.setItem(storageKey, JSON.stringify(uData));
+      return true;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
+  });
+
+  return { ...query, updateSubjectStatus: updateSubjectStatus.mutate, switchCareer: switchCareer.mutate, removeCareer: removeCareer.mutate };
 };
