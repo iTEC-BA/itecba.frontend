@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Icons } from "../../../../components/ui/Icons";
-import { SearchResultItem } from "../../../../components/molecules/SearchResultItem";
+import { Icons } from "@components/ui/Icons";
+import { SearchResultItem } from "@components/molecules/SearchResultItem";
 
-import { coursesService, type CourseData } from "../../../courses/services/coursesService";
-import { groupsService, type GroupData } from "../../../groups/services/groupsService";
-import { resourcesService, type ResourceData } from "../../../resources/services/resourcesService";
+import { coursesService, type CourseData } from "@features/courses/services/coursesService";
+import { groupsService, type GroupData } from "@features/groups/services/groupsService";
+import { resourcesService, type ResourceData } from "@features/resources/services/resourcesService";
 import { NotificationBell } from "./NotificationBell";
 
 export const UniversalSearch: React.FC = () => {

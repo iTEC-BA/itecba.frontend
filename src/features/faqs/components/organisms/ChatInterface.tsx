@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
+import { useAuth } from '@context/AuthContext';
+import { Icons } from '@components/ui/Icons';
 import { ChatMessage } from '../molecules/ChatMessage';
 import { ChatInput } from '../molecules/ChatInput';
-import { Icons } from '@/components/ui/Icons';
-import { useAuth } from '../../../../context/AuthContext';
 import { useChatbot } from '../../hooks/useChatbot';
 
 export interface Message {

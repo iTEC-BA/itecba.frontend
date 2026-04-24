@@ -1,6 +1,6 @@
 import React from "react";
+import { Icons } from "@components/ui/Icons";
 import { ProgressBar } from "../atoms/ProgressBar";
-import { Icons } from "@/components/ui/Icons";
 
 interface CourseCardProps {
   title: string;

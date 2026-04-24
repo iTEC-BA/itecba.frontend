@@ -1,5 +1,5 @@
 import React from 'react';
-import { ESPECIALIDADES_DB } from '@/data/specialties';
+import { ESPECIALIDADES_DB } from '@data/specialties';
 
 interface Props {
   onSpecialtyClick: (val: string) => void;

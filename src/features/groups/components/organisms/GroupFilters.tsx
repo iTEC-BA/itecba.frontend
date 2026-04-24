@@ -1,9 +1,9 @@
 import React from 'react';
-import { Input } from '@/components/atoms/Input';
-import { Icons } from '@/components/ui/Icons';
+import { Input } from '@components/atoms/Input';
+import { Icons } from '@components/ui/Icons';
+import { CustomSelect } from '@components/molecules/CustomSelect';
+import { AutocompleteInput } from '@components/molecules/AutocompleteInput';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '../../types/groups';
-import { CustomSelect } from '@/components/molecules/CustomSelect';
-import { AutocompleteInput } from '@/components/molecules/AutocompleteInput';
 
 interface Props {
   // 🟢 Tipado Estricto de la interfaz (Soluciona el error)

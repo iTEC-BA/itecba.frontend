@@ -1,5 +1,5 @@
 import React from 'react';
-import type { User } from '@/context/AuthContext';
+import type { User } from '@context/AuthContext';
 
 interface Props {
   user: User;

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/atoms/Button';
-import { Icons } from '@/components/ui/Icons';
+import { Button } from '@components/atoms/Button';
+import { Icons } from '@components/ui/Icons';
 
 interface Props {
   onSendMessage: (text: string, forceAI?: boolean) => void;

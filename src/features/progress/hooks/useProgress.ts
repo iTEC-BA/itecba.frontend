@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/context/AuthContext';
-import { CAREERS_DATA } from '@/data/carreras';
+import { useAuth } from '@context/AuthContext';
+import { CAREERS_DATA } from '@data/carreras';
 import { calculateSubjectStatus, calculateStressLevel } from '../utils/academicLogic';
 import type { ProgressMetrics, Subject, CareerProgress } from '../types/progress';
 

@@ -1,7 +1,7 @@
 import React from 'react';
+import { Icons } from '@components/ui/Icons';
 import { type GroupData } from '../../services/groupsService';
 import { usePendingGroups, useApprovePendingGroup, useRejectPendingGroup } from '../../hooks/useGroups';
-import { Icons } from '@/components/ui/Icons';
 
 interface Props {
   isOpen: boolean;

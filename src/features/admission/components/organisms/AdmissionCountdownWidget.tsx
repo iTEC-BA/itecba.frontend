@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Icons } from '@/components/ui/Icons';
+import { Icons } from '@components/ui/Icons';
 import type { AdmissionEvent } from '../../hooks/useAdmissionDates';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onManageClick }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // 🟢 LÓGICA BLINDADA: Nos aseguramos de que events exista antes de filtrar
+  // Nos aseguramos de que events exista antes de filtrar
   const nextEvent = useMemo(() => {
     if (!events || !Array.isArray(events)) return null;
 

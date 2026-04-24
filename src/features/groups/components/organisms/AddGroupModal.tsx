@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input } from '@/components/atoms/Input';
-import { Select } from '@/components/atoms/Select';
-import { Button } from '@/components/atoms/Button';
-import { Icons } from '@/components/ui/Icons';
+import { Input } from '@components/atoms/Input';
+import { Select } from '@components/atoms/Select';
+import { Button } from '@components/atoms/Button';
+import { Icons } from '@components/ui/Icons';
+import { useAuth } from '@context/AuthContext';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '../../types/groups';
 import { groupsService, type GroupData } from '../../services/groupsService';
-import { useAuth } from '@/context/AuthContext';
 import { useSubmitGroup } from '../../hooks/useGroups';
 import { useAddGroupForm } from '../../hooks/useAddGroupForm';
 

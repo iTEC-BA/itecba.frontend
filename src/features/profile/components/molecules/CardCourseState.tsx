@@ -1,4 +1,4 @@
-import { Icons } from '../../../../components/ui/Icons';
+import { Icons } from '@components/ui/Icons';
 export default function CardCourseState() {
   return (
 

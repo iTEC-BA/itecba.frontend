@@ -4,7 +4,7 @@ export interface MainLink { id: string; title: string; subtitle: string; url: st
 export interface MaterialLink { id: string; title: string; subtitle: string; url: string; emoji: string; }
 export interface SiuLink { id: string; title: string; subtitle: string; url: string; }
 
-// 🟢 NUEVO TIPO: Pasos del Ingreso
+// Pasos del Ingreso
 export interface AdmissionStep { id: string; stepNumber: number; title: string; description: string; status: 'done' | 'current' | 'pending'; }
 
 export interface IngresoDataProps {
@@ -12,7 +12,7 @@ export interface IngresoDataProps {
   mainLinks: MainLink[];
   materials: MaterialLink[];
   siuLinks: SiuLink[];
-  steps: AdmissionStep[]; // 🟢 NUEVO
+  steps: AdmissionStep[];
 }
 
 // 2. Base de Datos
@@ -37,7 +37,6 @@ export const INGRESO_DATA: IngresoDataProps = {
     { id: 'siu1', title: 'SIU GUARANÍ ASPIRANTES', subtitle: 'Únicamente si ya estás inscripto', url: 'https://guarani.frba.utn.edu.ar/autogestion/aspirantes/' },
     { id: 'siu2', title: 'SIU PREINSCRIPCIÓN', subtitle: 'Para anotarte por primera vez', url: 'https://guarani.frba.utn.edu.ar/preinscripcion/utn/acceso/' }
   ],
-  // 🟢 NUEVA DATA: Hoja de ruta del ingresante
   steps: [
     { id: 'st1', stepNumber: 1, title: 'Preinscripción Online', description: 'Completar el formulario en el SIU y elegir turno.', status: 'done' },
     { id: 'st2', stepNumber: 2, title: 'Entrega de Documentación', description: 'Llevar DNI y Título Secundario a la sede.', status: 'done' },
