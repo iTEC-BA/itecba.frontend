@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Icons } from '@/components/ui/Icons';
+import { Icons } from '@components/ui/Icons';
 
 interface Props {
   role: 'user' | 'model';

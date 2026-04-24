@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icons } from '../../../../components/ui/Icons';
+import { Icons } from '@components/ui/Icons';
 import { BENEFITS_DATA } from '../../types/profileData';
 
 export const BenefitsGrid: React.FC = () => {

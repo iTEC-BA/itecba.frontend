@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { adminService} from '@/features/admin/services/adminService';
+import { adminService} from '@features/admin/services/adminService';
 
 // Helper seguro
 const safeParseJSON = (key: string, fallback: any) => {

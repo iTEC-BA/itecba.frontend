@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { CAREERS_DATA } from '@/data/carreras';
+import { CAREERS_DATA } from '@data/carreras';
 
 export interface CareerOption {
   id: string;

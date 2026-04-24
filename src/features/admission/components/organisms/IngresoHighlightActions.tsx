@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '@/components/ui/Icons';
+import { Icons } from '@components/ui/Icons';
 import type { ActionLink } from '../../types/ingresoLinks';
 
 interface Props { actions: ActionLink[]; }

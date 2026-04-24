@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Input } from '@/components/atoms/Input';
+import { useState, useEffect, type ChangeEvent, type FC } from 'react';
+import { Input } from '@components/atoms/Input';
 
-export const MATERIAS_UTN = [
+
+const MATERIAS_UTN: string[] = [
   "Análisis Matemático",
   "Álgebra y Geometría Analítica",
   "Sistemas y Procesos de Negocio",
@@ -26,7 +27,7 @@ interface Props {
   setCategoria: (val: string) => void;
 }
 
-export const CourseGeneralData: React.FC<Props> = ({
+export const CourseGeneralData: FC<Props> = ({
   title, setTitle,
   image, setImage,
   desc, setDesc,
@@ -41,7 +42,7 @@ export const CourseGeneralData: React.FC<Props> = ({
     }
   }, [materia]);
 
-  const handleMateriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleMateriaChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (value === "Otra...") {
       setIsCustomMateria(true);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Icons } from '@components/ui/Icons';
 import { CourseCard } from '../molecules/CourseCard';
-import { Icons } from '@/components/ui/Icons';
 import type { CourseData } from '../../services/coursesService';
 
 export interface CourseWithLocalProgress extends CourseData {

@@ -1,7 +1,7 @@
 import React from "react";
-import { Icons } from "../../../../components/ui/Icons";
-import logoItec from "../../../../assets/logo.png";
-import type { User } from "../../../../context/AuthContext";
+import { Icons } from "@components/ui/Icons";
+import logoItec from "@assets/logo.png";
+import type { User } from "@context/AuthContext";
 
 export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
   return (

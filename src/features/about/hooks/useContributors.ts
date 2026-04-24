@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import type { User } from '@/context/AuthContext';
+import { db } from '@lib/firebase';
+import type { User } from '@context/AuthContext';
 
 export const useContributors = () => {
   const [team, setTeam] = useState<User[]>([]);

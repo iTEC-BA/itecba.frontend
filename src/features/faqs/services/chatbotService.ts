@@ -1,4 +1,4 @@
-import { FAQ_DATABASE, FALLBACK_ANSWER } from '../types/faqs';
+import { FAQ_DATABASE } from '../types/faqs';
 import type { Message } from '../components/organisms/ChatInterface';
 
 const normalizeText = (text: string) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, "").trim();

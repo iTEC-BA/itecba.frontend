@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { adminService } from "@/services/adminService";
-import type { User } from "@/context/AuthContext";
+import { adminService } from "../services/adminService";
+import type { User } from "@context/AuthContext";
 
 export const useAdminUsers = (isAdmin: boolean) => {
   // Estado de Admins

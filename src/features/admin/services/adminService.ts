@@ -1,6 +1,6 @@
-import { db, auth } from '@/lib/firebase';
 import { collection, getDocs, doc, updateDoc, Timestamp, query, where, limit } from 'firebase/firestore';
-import type { User } from '@/context/AuthContext';
+import { db, auth } from '@lib/firebase';
+import type { User } from '@context/AuthContext';
 
 export interface AnnouncementData {
   id: string;

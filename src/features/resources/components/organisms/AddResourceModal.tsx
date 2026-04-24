@@ -1,19 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input } from '../../../../components/atoms/Input';
-import { Select } from '../../../../components/atoms/Select';
-import { Button } from '../../../../components/atoms/Button';
-import { Icons } from '../../../../components/ui/Icons';
-import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '../../../groups/types/groups';
-import { useAuth } from '../../../../context/AuthContext';
+import { Input } from '@components/atoms/Input';
+import { Select } from '@components/atoms/Select';
+import { Button } from '@components/atoms/Button';
+import { Icons } from '@components/ui/Icons';
+import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '@features/groups/types/groups';
+import { useAuth } from '@context/AuthContext';
 
-// 🟢 NUEVO: Importamos la mutación
+// Importamos la mutación
 import { useSubmitResource } from '../../hooks/useResources';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   isAdmin: boolean;
-  // 🔴 BORRADO: onResourceAdded
 }
 
 const TIPOS_ARCHIVO = [
@@ -34,7 +33,7 @@ const FORMATOS_ARCHIVO = [
 export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) => {
   const { user, isAuthenticated, loginWithGoogle, addPoints } = useAuth();
   
-  const submitMutation = useSubmitResource(); // 🟢 Instanciamos mutación
+  const submitMutation = useSubmitResource();
 
   const [form, setForm] = useState({ title: '', carrera: '', nivel: '', materia: '', tipo: 'Apunte', formato: 'PDF', link: '' });
   const [error, setError] = useState('');
@@ -44,7 +43,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) 
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const isPending = submitMutation.isPending; // 🟢 Reemplaza isSubmitting
+  const isPending = submitMutation.isPending;
 
   const materiasDisponibles = (form.carrera && form.nivel && MATERIAS_POR_CARRERA[form.carrera] && MATERIAS_POR_CARRERA[form.carrera][form.nivel])
     ? MATERIAS_POR_CARRERA[form.carrera][form.nivel] : [];

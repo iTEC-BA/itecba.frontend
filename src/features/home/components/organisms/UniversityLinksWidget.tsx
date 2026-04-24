@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { Icons } from '../../../../components/ui/Icons';
+import { Icons } from '@components/ui/Icons';
 import { linksService, type CampusLink } from '../../services/linksService';
 
 // 🔴 LAZY LOADING: El modal no se descarga hasta que sea estrictamente necesario

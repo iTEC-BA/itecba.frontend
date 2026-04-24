@@ -1,7 +1,5 @@
 import React from 'react';
 import type { ResourceData } from '../../services/resourcesService';
-
-// Importamos los hooks de pendiente, aceptar y rechazar
 import { usePendingResources, useApprovePendingResource, useRejectPendingResource } from '../../hooks/useResources';
 
 interface Props {

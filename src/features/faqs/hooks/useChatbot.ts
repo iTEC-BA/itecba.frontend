@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import type { Message } from '../components/organisms/ChatInterface'; 
 import { chatbotService } from '../services/chatbotService';
 import { ITEC_FOOTER } from '../types/faqs';
-import type { Message } from '../components/organisms/ChatInterface'; 
 
 const WELCOME_MESSAGE: Message = { 
   role: 'model', 

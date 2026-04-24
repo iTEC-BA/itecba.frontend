@@ -1,7 +1,8 @@
 import React from 'react';
-import { Icons } from '@/components/ui/Icons';
-import { useContributors } from '../../hooks/useContributors';
 import { useNavigate } from 'react-router-dom';
+
+import { Icons } from '@components/ui/Icons';
+import { useContributors } from '../../hooks/useContributors';
 
 export const ContributorsWidget: React.FC = () => {
   const { team, isLoading } = useContributors();

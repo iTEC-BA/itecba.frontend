@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Icons } from '@/components/ui/Icons';
-import { Button } from '@/components/atoms/Button';
-import { Input } from '@/components/atoms/Input';
+import { Icons } from '@components/ui/Icons';
+import { Button } from '@components/atoms/Button';
+import { Input } from '@components/atoms/Input';
 import type { AdmissionEvent } from '../../hooks/useAdmissionDates';
 
 interface Props {
