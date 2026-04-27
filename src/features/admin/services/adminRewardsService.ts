@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 export const adminRewardsService = {
   createReward: async (rewardData: Partial<Reward>, token: string): Promise<Reward> => {
-    const response = await fetch(`${API_URL}/rewards/create`, { // Updated to /create
+    const response = await fetch(`${API_URL}/rewards/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

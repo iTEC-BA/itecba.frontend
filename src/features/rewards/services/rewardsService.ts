@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 export const rewardsService = {
   getAvailableRewards: async (token: string): Promise<Reward[]> => {
-    const response = await fetch(`${API_URL}/rewards/list`, { 
+    const response = await fetch(`${API_URL}/rewards/list`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Error fetching rewards');
@@ -12,14 +12,16 @@ export const rewardsService = {
   },
 
   redeemReward: async (payload: RedemptionPayload, rewardId: string, token: string) => {
-    const response = await fetch(`${API_URL}/rewards/redeem`, { 
+    const response = await fetch(`${API_URL}/rewards/redeem`, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}` 
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ rewardId, payload }) 
+      // ENVIAMOS rewardId y payload en la raíz del body
+      body: JSON.stringify({ rewardId, payload })
     });
+    
     if (!response.ok) throw new Error('Error al canjear el beneficio');
     return response.json();
   }

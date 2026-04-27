@@ -1,29 +1,26 @@
+// src/features/admin/components/organisms/RewardsManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { Button } from '@components/atoms/Button';
 import { Input } from '@components/atoms/Input';
 import { Icons } from '@components/ui/Icons';
-import { useAuth } from '@context/AuthContext';
 import { Reward, RewardType } from '@features/rewards/types/rewards';
 import { rewardsService } from '@features/rewards/services/rewardsService';
 import { adminRewardsService } from '../../services/adminRewardsService';
 import { getAuth } from 'firebase/auth';
 
 export const RewardsManagement: React.FC = () => {
-  const { user } = useAuth();
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    pointsCost: 100,
-    type: 'mentorship' as RewardType,
-    icon: 'star'
-  });
+  const initialFormState = {
+    title: '', description: '', pointsCost: 100, type: 'mentorship' as RewardType, icon: 'star'
+  };
+  const [formData, setFormData] = useState(initialFormState);
 
   const fetchRewards = async () => {
+    setIsLoading(true);
     try {
       const auth = getAuth();
       const token = await auth.currentUser?.getIdToken();
@@ -51,8 +48,8 @@ export const RewardsManagement: React.FC = () => {
       if (token) {
         await adminRewardsService.createReward(formData, token);
         setIsModalOpen(false);
-        setFormData({ title: '', description: '', pointsCost: 100, type: 'mentorship', icon: 'star' });
-        fetchRewards(); // Recargar la lista
+        setFormData(initialFormState);
+        await fetchRewards(); // Refrescar vista
       }
     } catch (error) {
       console.error("Error al guardar:", error);
@@ -63,7 +60,6 @@ export const RewardsManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header del Tab */}
       <div className="flex justify-between items-center bg-[#1e1e1e] border border-[#333] p-5 rounded-xl">
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -78,33 +74,32 @@ export const RewardsManagement: React.FC = () => {
         </Button>
       </div>
 
-      {/* Lista de Beneficios */}
       {isLoading ? (
         <div className="animate-pulse h-40 bg-[#252525] rounded-xl border border-[#333]"></div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {rewards.map((reward: any) => ( // Cast to any to access _id safely if it's not in the type
-            <div 
-              key={reward.id || reward._id} // USE BOTH AS FALLBACK
-              className="bg-[#252525] border border-[#333] rounded-xl p-5 flex flex-col hover:border-itec-blue/50 transition-colors"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-md bg-[#1a1a1a] flex items-center justify-center text-itec-blue">
-                  <Icons type={reward.icon as any} className="w-4 h-4" />
+          {rewards.map((reward: any) => {
+            const uniqueKey = reward._id || reward.id; // Clave única segura
+            return (
+              <div key={uniqueKey} className="bg-[#252525] border border-[#333] rounded-xl p-5 flex flex-col hover:border-itec-blue/50 transition-colors">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-md bg-[#1a1a1a] flex items-center justify-center text-itec-blue">
+                    <Icons type={reward.icon as any} className="w-4 h-4" />
+                  </div>
+                  <h3 className="text-white font-semibold flex-1 truncate">{reward.title}</h3>
                 </div>
-                <h3 className="text-white font-semibold flex-1 truncate">{reward.title}</h3>
+                <p className="text-sm text-gray-400 mb-4 line-clamp-2 flex-1">{reward.description}</p>
+                <div className="flex justify-between items-center pt-3 border-t border-[#333]">
+                  <span className="text-xs px-2 py-1 bg-[#1a1a1a] rounded text-gray-300 capitalize">{reward.type.replace('_', ' ')}</span>
+                  <span className="text-itec-blue font-bold">{reward.pointsCost} pts</span>
+                </div>
               </div>
-              <p className="text-sm text-gray-400 mb-4 line-clamp-2 flex-1">{reward.description}</p>
-              <div className="flex justify-between items-center pt-3 border-t border-[#333]">
-                <span className="text-xs px-2 py-1 bg-[#1a1a1a] rounded text-gray-300 capitalize">{reward.type.replace('_', ' ')}</span>
-                <span className="text-itec-blue font-bold">{reward.pointsCost} pts</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      {/* Modal de Creación */}
+      {/* MODAL MANTIENE SU ESTRUCTURA ORIGINAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="bg-[#1e1e1e] border border-[#333] rounded-xl w-full max-w-lg p-6 shadow-2xl">
@@ -121,7 +116,7 @@ export const RewardsManagement: React.FC = () => {
                 <Input 
                   type="text" required fullWidth 
                   value={formData.title}
-                  placeholder="Ej: Mentoría de Arquitectura Web"
+                  placeholder="Ej: Mentoría Web"
                   onChange={(e) => setFormData({...formData, title: e.target.value})} 
                 />
               </div>
@@ -140,7 +135,7 @@ export const RewardsManagement: React.FC = () => {
                 <div>
                   <label className="block text-sm text-gray-400 mb-1">Costo en Puntos</label>
                   <Input 
-                    type="number" required fullWidth 
+                    type="number" required fullWidth min="1"
                     value={formData.pointsCost.toString()}
                     onChange={(e) => setFormData({...formData, pointsCost: Number(e.target.value)})} 
                   />
@@ -160,11 +155,11 @@ export const RewardsManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Ícono (Nombre del componente Icons)</label>
+                <label className="block text-sm text-gray-400 mb-1">Ícono (Nombre exacto en UI/Icons)</label>
                 <Input 
                   type="text" required fullWidth 
                   value={formData.icon}
-                  placeholder="Ej: star, users, bookmark, message, lightning"
+                  placeholder="Ej: star, users, bookmark"
                   onChange={(e) => setFormData({...formData, icon: e.target.value})} 
                 />
               </div>
