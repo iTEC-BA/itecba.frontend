@@ -4,11 +4,11 @@ import { useAuth } from '@context/AuthContext';
 
 const UserManagement = lazy(() => import("@features/admin/components/organisms/UserManagement").then(m => ({ default: m.UserManagement })));
 const NewsManagement = lazy(() => import("@features/admin/components/organisms/NewsManagement").then(m => ({ default: m.NewsManagement })));
-
+const RewardsManagement = lazy(() => import("@features/admin/components/organisms/RewardsManagement").then(m => ({ default: m.RewardsManagement })));
 
 export const AdminPanel: React.FC = () => {
   const { isAdmin } = useAuth();
-  const [activeTab, setActiveTab] = useState<'users' | 'news'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards'>('users');
 
   if (!isAdmin) {
     return (
@@ -38,10 +38,10 @@ export const AdminPanel: React.FC = () => {
           </div>
 
           {/* Segmented Control (Pestañas estilo iOS/SaaS) */}
-          <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner w-fit">
+          <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner w-fit overflow-x-auto">
             <button 
               onClick={() => setActiveTab('users')} 
-              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none ${
+              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
                 activeTab === 'users' 
                   ? 'bg-itec-surface text-white shadow-md border border-white/10' 
                   : 'text-gray-500 hover:text-gray-300'
@@ -51,7 +51,7 @@ export const AdminPanel: React.FC = () => {
             </button>
             <button 
               onClick={() => setActiveTab('news')} 
-              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none ${
+              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
                 activeTab === 'news' 
                   ? 'bg-itec-surface text-white shadow-md border border-white/10' 
                   : 'text-gray-500 hover:text-gray-300'
@@ -59,11 +59,23 @@ export const AdminPanel: React.FC = () => {
             >
               Avisos Web
             </button>
+            <button 
+              onClick={() => setActiveTab('rewards')} 
+              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
+                activeTab === 'rewards' 
+                  ? 'bg-itec-surface text-white shadow-md border border-white/10' 
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              Beneficios
+            </button>
           </div>
         </header>
 
         <div className="transition-all duration-500 ease-in-out">
-          {activeTab === 'users' ? <UserManagement /> : <NewsManagement />}
+          {activeTab === 'users' && <UserManagement />}
+          {activeTab === 'news' && <NewsManagement />}
+          {activeTab === 'rewards' && <RewardsManagement />}
         </div>
 
       </div>

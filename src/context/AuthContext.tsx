@@ -106,15 +106,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Función para sumar puntos en tiempo real
-  const addPoints = async (pointsToAdd: number) => {
+// Función para sumar/restar puntos en tiempo real
+  const addPoints = async (pointsToAdd: number, updateDatabase: boolean = false) => {
     if (!auth.currentUser) return;
-    try {
-      const docRef = doc(db, 'users', auth.currentUser.uid);
-      await updateDoc(docRef, { points: increment(pointsToAdd) }); // Suma en la base de datos
-      setUser((prev) => prev ? { ...prev, points: (prev.points || 0) + pointsToAdd } : prev); // Suma en la pantalla
-    } catch (error) {
-      console.error("Error agregando puntos:", error);
+    
+    // Solo actualizamos la DB desde el front si se indica expresamente.
+    // En el caso de recompensas, el Backend ya hizo el descuento.
+    if (updateDatabase) {
+      try {
+        const docRef = doc(db, 'users', auth.currentUser.uid);
+        await updateDoc(docRef, { points: increment(pointsToAdd) });
+      } catch (error) {
+        console.error("Error actualizando puntos en DB:", error);
+      }
     }
+    
+    // Siempre actualizamos la interfaz para que el usuario lo vea
+    setUser((prev) => prev ? { ...prev, points: (prev.points || 0) + pointsToAdd } : prev);
   };
 
   const logoutUser = () => signOut(auth);

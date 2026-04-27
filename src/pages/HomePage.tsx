@@ -4,10 +4,10 @@ import { DashboardLayout } from "@components/templates/DashboardLayout";
 import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
 import { HubNavigation } from "@features/home/components/organisms/HubNavigation";
 
-// Componentes modulares
 import { WelcomeWidget } from "@features/home/components/organisms/WelcomeWidget";
 import { UniversityLinksWidget } from "@features/home/components/organisms/UniversityLinksWidget";
 import { NewsWidget } from "@features/home/components/organisms/NewsWidget";
+import { RewardsWidget } from "@features/rewards/components/organisms/RewardsWidget"; // <-- NUEVO
 import { usePageTitle } from "@hooks/usePageTitle";
 
 export const HomePage: React.FC = () => {
@@ -18,6 +18,9 @@ export const HomePage: React.FC = () => {
     <DashboardLayout>
       <UniversalSearch />
       <WelcomeWidget userName={user?.name} />
+      
+      <RewardsWidget />
+      
       <UniversityLinksWidget isAdmin={isAdmin} />
       <HubNavigation />
       <NewsWidget />
