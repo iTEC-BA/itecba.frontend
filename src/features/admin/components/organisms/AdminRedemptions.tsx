@@ -13,12 +13,23 @@ export const AdminRedemptions: React.FC = () => {
 
   useEffect(() => {
     const fetchRedemptions = async () => {
-      const token = await getAuth().currentUser?.getIdToken();
-      if (token) {
-        const data = await adminRedemptionsService.getAllRedemptions(token);
-        setRedemptions(data);
+      try {
+        const token = await getAuth().currentUser?.getIdToken();
+        if (token) {
+          const data = await adminRedemptionsService.getAllRedemptions(token);
+          if (Array.isArray(data)) {
+            setRedemptions(data);
+          } else {
+            console.error("El backend no devolvió un arreglo de canjes:", data);
+            setRedemptions([]);
+          }
+        }
+      } catch (error) {
+        console.error("Error al cargar el historial:", error);
+        setRedemptions([]); // Previene el crash si el fetch lanza excepción
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     fetchRedemptions();
   }, []);
@@ -28,15 +39,20 @@ export const AdminRedemptions: React.FC = () => {
     if (!selectedUser) return;
     const token = await getAuth().currentUser?.getIdToken();
     if (token) {
-      await adminRedemptionsService.sendMessage({
-        userId: selectedUser.uid,
-        userEmail: selectedUser.email,
-        subject: messageData.subject,
-        content: messageData.content
-      }, token);
-      setSelectedUser(null);
-      setMessageData({ subject: '', content: '' });
-      alert("Mensaje enviado y notificado por correo");
+      try {
+        await adminRedemptionsService.sendMessage({
+          userId: selectedUser.uid,
+          userEmail: selectedUser.email,
+          subject: messageData.subject,
+          content: messageData.content
+        }, token);
+        setSelectedUser(null);
+        setMessageData({ subject: '', content: '' });
+        alert("Mensaje enviado y notificado por correo");
+      } catch (error) {
+        console.error("Error al enviar mensaje:", error);
+        alert("Hubo un error al enviar el mensaje.");
+      }
     }
   };
 
@@ -49,7 +65,11 @@ export const AdminRedemptions: React.FC = () => {
           </h2>
         </div>
         
-        {isLoading ? <div className="p-8 text-center text-gray-500">Cargando...</div> : (
+        {isLoading ? (
+           <div className="p-8 text-center text-gray-500 animate-pulse">Cargando historial...</div> 
+        ) : redemptions.length === 0 ? (
+           <div className="p-8 text-center text-gray-500">No hay canjes registrados aún.</div>
+        ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-300">
               <thead className="bg-[#1a1a1a] text-xs uppercase font-semibold text-gray-400 border-b border-[#333]">
@@ -81,20 +101,26 @@ export const AdminRedemptions: React.FC = () => {
         )}
       </div>
 
-      {/* Modal Enviar Mensaje */}
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="bg-[#1e1e1e] border border-[#333] rounded-xl w-full max-w-md p-6 shadow-2xl">
-            <h2 className="text-xl font-bold text-white mb-4">Enviar mensaje a {selectedUser.email}</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-white">Mensaje Directo</h2>
+              <button onClick={() => setSelectedUser(null)} className="text-gray-400 hover:text-white">
+                <Icons type="close" className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-400 mb-4">Para: <span className="text-white font-medium">{selectedUser.email}</span></p>
+            
             <form onSubmit={handleSendMessage} className="space-y-4">
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Asunto</label>
-                <input required type="text" className="w-full bg-[#0a0a0a] border border-[#333] text-white px-4 py-2 rounded-lg"
+                <input required type="text" className="w-full bg-[#0a0a0a] border border-[#333] text-white px-4 py-2 rounded-lg focus:outline-none focus:border-itec-blue transition-colors"
                   value={messageData.subject} onChange={(e) => setMessageData({...messageData, subject: e.target.value})} />
               </div>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Mensaje (Se enviará por Mail y Buzón)</label>
-                <textarea required rows={4} className="w-full bg-[#0a0a0a] border border-[#333] text-white px-4 py-2 rounded-lg resize-none"
+                <textarea required rows={5} className="w-full bg-[#0a0a0a] border border-[#333] text-white px-4 py-2 rounded-lg resize-none focus:outline-none focus:border-itec-blue transition-colors"
                   value={messageData.content} onChange={(e) => setMessageData({...messageData, content: e.target.value})} />
               </div>
               <div className="flex gap-3 pt-4">
