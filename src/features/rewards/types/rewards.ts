@@ -16,3 +16,22 @@ export interface RedemptionPayload {
   time?: string;
   notes?: string;
 }
+
+export interface RedemptionRecord {
+  _id: string;
+  userId: string;
+  userEmail: string;
+  rewardTitle: string;
+  pointsCost: number;
+  payload: any;
+  status: string;
+  createdAt: string;
+}
+
+export interface InboxMessage {
+  _id: string;
+  subject: string;
+  content: string;
+  isRead: boolean;
+  createdAt: string;
+}

@@ -2,13 +2,16 @@ import React, { useState, lazy } from 'react';
 import { DashboardLayout } from '@components/templates/DashboardLayout';
 import { useAuth } from '@context/AuthContext';
 
+// Importaciones Lazy
 const UserManagement = lazy(() => import("@features/admin/components/organisms/UserManagement").then(m => ({ default: m.UserManagement })));
 const NewsManagement = lazy(() => import("@features/admin/components/organisms/NewsManagement").then(m => ({ default: m.NewsManagement })));
 const RewardsManagement = lazy(() => import("@features/admin/components/organisms/RewardsManagement").then(m => ({ default: m.RewardsManagement })));
+const AdminRedemptions = lazy(() => import("@features/admin/components/organisms/AdminRedemptions").then(m => ({ default: m.AdminRedemptions }))); // <-- NUEVO
 
 export const AdminPanel: React.FC = () => {
   const { isAdmin } = useAuth();
-  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards'>('users');
+  // Agregamos 'redemptions' a los tabs
+  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards' | 'redemptions'>('users');
 
   if (!isAdmin) {
     return (
@@ -69,6 +72,14 @@ export const AdminPanel: React.FC = () => {
             >
               Beneficios
             </button>
+            <button 
+              onClick={() => setActiveTab('redemptions')} 
+              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
+                activeTab === 'redemptions' ? 'bg-itec-surface text-white shadow-md border border-white/10' : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              Historial de Canjes
+            </button>
           </div>
         </header>
 
@@ -76,6 +87,7 @@ export const AdminPanel: React.FC = () => {
           {activeTab === 'users' && <UserManagement />}
           {activeTab === 'news' && <NewsManagement />}
           {activeTab === 'rewards' && <RewardsManagement />}
+          {activeTab === 'redemptions' && <AdminRedemptions />}
         </div>
 
       </div>

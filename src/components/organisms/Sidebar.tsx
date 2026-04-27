@@ -65,6 +65,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeMobile }) => {
           {isAuthenticated &&(
             <div className="my-4 pt-4 border-t border-itec-gray">
               <SidebarItem 
+                path="/beneficios" 
+                icon={getIcon("star")} 
+                label="Beneficios" 
+                onClick={closeMobile} 
+              />
+              <SidebarItem 
                 path="/progreso" 
                 icon={getIcon("bookmark")} 
                 label="Progreso" 
