@@ -30,7 +30,7 @@ export const InboxWidget: React.FC = () => {
   return (
     <div className="bg-[#1e1e1e] border border-[#333] rounded-xl p-6">
       <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
-        <Icons type="file-text" className="w-5 h-5 text-itec-blue" /> Mi Buzón de Avisos
+        <Icons type="message" className="w-5 h-5 " /> Mi Buzón de Avisos
       </h2>
       <div className="space-y-3">
         {messages.length === 0 ? (

@@ -14,7 +14,8 @@ export const RewardsPage: React.FC = () => {
         <PageHeader 
           title="Club de Beneficios" 
           description="Canjea tus puntos acumulados y revisa los avisos de la administración." 
-          colorTheme="purple"
+          colorTheme="yellow"
+          iconType='star'
         />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2">

@@ -1,12 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '@components/ui/Icons';
 import { useContributors } from '../../hooks/useContributors';
 
 export const ContributorsWidget: React.FC = () => {
   const { team, isLoading } = useContributors();
-  const navigate = useNavigate();
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-6 duration-700 pb-10">
@@ -63,22 +61,24 @@ export const ContributorsWidget: React.FC = () => {
           <div className="w-full md:w-auto shrink-0">
             <div className="bg-gradient-to-br from-gray-800 to-black p-[1px] rounded-3xl shadow-2xl">
               <div className="bg-itec-bg rounded-3xl p-6 md:p-8 flex flex-col items-center text-center h-full border border-white/5 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-300 to-red-800"></div>
                 
                 <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mb-4 border border-red-500/20">
-                  <Icons type="file" ></Icons>
+                  <div className='w-5 h-5'>
+                  <Icons type="instagram" ></Icons>
+                  </div>
                 </div>
                 
-                <h4 className="text-white font-bold mb-2">Sé parte del proyecto</h4>
+                <h4 className="text-white font-bold mb-2">Se parte de iTEC</h4>
                 <p className="text-xs text-gray-400 max-w-[200px] mb-6 leading-relaxed">
-                  Ayudanos a crecer subiendo tus apuntes o sumando tu grupo de WhatsApp a la comunidad.
+                  Ayudanos a crecer subiendo historias o sumando ideas, para mejorar la facultad cada dia.
                 </p>
-                <button 
-                  onClick={() => navigate('/recursos')} 
+                <a 
+                  href='https://ig.me/m/itecba'
                   className="w-full py-3 px-6 bg-white text-black hover:bg-gray-200 hover:scale-[1.02] rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95 flex items-center justify-center gap-2"
                 >
-                  Compartir un Apunte
-                </button>
+                  Quiero ser parte!
+                </a>
               </div>
             </div>
           </div>
