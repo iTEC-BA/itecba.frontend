@@ -1,6 +1,6 @@
 import React from "react";
 import tarjeTEC from "@assets/TarjeTec/iTEC-tarjeta.svg";
-import styles from "@/features/profile/styles/TarjeTec.module.css"
+import styles from "@/styles/TarjeTec.module.css"
 import type { User } from "@context/AuthContext";
 
 export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
