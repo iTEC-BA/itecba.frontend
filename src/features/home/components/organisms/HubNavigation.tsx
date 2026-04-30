@@ -2,76 +2,61 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Icons } from "@components/ui/Icons";
 
+interface NavItem {
+  title: string;
+  description: string;
+  href: string;
+  icon: string;
+  color: "blue" | "orange" | "green" | "purple" | "yellow" | "pink";
+}
+
+const NAVIGATION_ITEMS: NavItem[] = [
+  { title: "Clases y Cursos", description: "Videos de apoyo", href: "/cursos", icon: "play", color: "blue" },
+  { title: "Aportes", description: "Resúmenes y Finales", href: "/explore", icon: "compass", color: "orange" },
+  { title: "Comunidades WA", description: "Grupos por comisión", href: "/grupos", icon: "users", color: "green" },
+  { title: "Ingreso UTN", description: "TIVU y Módulo B", href: "/ingreso", icon: "entry", color: "purple" },
+  { title: "Grado (Planes 23)", description: "Planes y correlativas", href: "/grado", icon: "degree", color: "yellow" },
+  { title: "Sobre ✳️TEC", description: "Valores y Contacto", href: "/nosotros", icon: "heart", color: "pink" },
+];
+
 export const HubNavigation: React.FC = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8 relative z-10">
-      
-      {/* 1. Clases y Cursos (Azul) */}
-      <Link to="/cursos" className="bg-itec-box border border-itec-gray rounded-xl p-3.5 flex items-center gap-3 hover:border-itec-blue hover:bg-blue-500/5 transition-all group">
-        <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform shrink-0">
-          <div className="w-5 h-5"><Icons type="play" /></div>
-        </div>
-        <div>
-          <h3 className="font-bold text-itec-texttext-[13px]">Clases y Cursos</h3>
-          <p className="text-[11px] text-gray-500">Videos de apoyo</p>
-        </div>
-      </Link>
+    <nav className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8 relative z-10">
+      {NAVIGATION_ITEMS.map((item) => (
+        <NavCard key={item.href} {...item} />
+      ))}
+    </nav>
+  );
+};
 
-      {/* 2. Aportes (Naranja) */}
-      <Link to="/explore" className="bg-itec-box border border-itec-gray rounded-xl p-3.5 flex items-center gap-3 hover:border-orange-500 hover:bg-orange-500/5 transition-all group">
-        <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400 group-hover:scale-105 transition-transform shrink-0">
-          <div className="w-5 h-5"><Icons type="compass" /></div>
-        </div>
-        <div>
-          <h3 className="font-bold text-itec-texttext-[13px]">Aportes</h3>
-          <p className="text-[11px] text-gray-500">Resúmenes y Finales</p>
-        </div>
-      </Link>
+// Sub-componente expresivo
+const NavCard: React.FC<NavItem> = ({ title, description, href, icon, color }) => {
+  // Mapeo de colores dinámicos para Tailwind
+  const colorVariants = {
+    blue: "hover:border-itec-blue hover:bg-blue-500/5 text-blue-400 bg-blue-500/10",
+    orange: "hover:border-orange-500 hover:bg-orange-500/5 text-orange-400 bg-orange-500/10",
+    green: "hover:border-green-500 hover:bg-green-500/5 text-green-400 bg-green-500/10",
+    purple: "hover:border-purple-500 hover:bg-purple-500/5 text-purple-400 bg-purple-500/10",
+    yellow: "hover:border-yellow-500 hover:bg-yellow-500/5 text-yellow-400 bg-yellow-500/10",
+    pink: "hover:border-pink-500 hover:bg-pink-500/5 text-pink-400 bg-pink-500/10",
+  };
 
-      {/* 3. Comunidades WA (Verde) */}
-      <Link to="/grupos" className="bg-itec-box border border-itec-gray rounded-xl p-3.5 flex items-center gap-3 hover:border-green-500 hover:bg-green-500/5 transition-all group">
-        <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center text-green-400 group-hover:scale-105 transition-transform shrink-0">
-          <div className="w-5 h-5"><Icons type="users" /></div>
-        </div>
-        <div>
-          <h3 className="font-bold text-itec-texttext-[13px]">Comunidades WA</h3>
-          <p className="text-[11px] text-gray-500">Grupos por comisión</p>
-        </div>
-      </Link>
+  const [hoverBorder, iconColors] = colorVariants[color].split(" text-");
 
-      {/* 4. Ingreso UTN (Morado) */}
-      <Link to="/ingreso" className="bg-itec-box border border-itec-gray rounded-xl p-3.5 flex items-center gap-3 hover:border-purple-500 hover:bg-purple-500/5 transition-all group">
-        <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform shrink-0">
-          <div className="w-5 h-5"><Icons type="entry" /></div>
+  return (
+    <Link 
+      to={href} 
+      className={`bg-itec-box border border-itec-gray/10 rounded-xl p-3.5 flex items-center gap-3 transition-all group ${hoverBorder}`}
+    >
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform text-${iconColors}`}>
+        <div className="w-5 h-5">
+          <Icons type={icon} />
         </div>
-        <div>
-          <h3 className="font-bold text-itec-texttext-[13px]">Ingreso UTN</h3>
-          <p className="text-[11px] text-gray-500">TIVU y Módulo B</p>
-        </div>
-      </Link>
-
-      {/* 5. Grado (Amarillo) */}
-      <Link to="/grado" className="bg-itec-box border border-itec-gray rounded-xl p-3.5 flex items-center gap-3 hover:border-yellow-500 hover:bg-yellow-500/5 transition-all group">
-        <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-400 group-hover:scale-105 transition-transform shrink-0">
-          <div className="w-5 h-5"><Icons type="degree" /></div>
-        </div>
-        <div>
-          <h3 className="font-bold text-itec-texttext-[13px]">Grado (Planes 23)</h3>
-          <p className="text-[11px] text-gray-500">Planes y correlativas</p>
-        </div>
-      </Link>
-
-      {/* 6. Sobre TEC (Rosa) */}
-      <Link to="/nosotros" className="bg-itec-box border border-itec-gray rounded-xl p-3.5 flex items-center gap-3 hover:border-pink-500 hover:bg-pink-500/5 transition-all group">
-        <div className="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-400 group-hover:scale-105 transition-transform shrink-0">
-          <div className="w-5 h-5"><Icons type="heart" /></div>
-        </div>
-        <div>
-          <h3 className="font-bold text-itec-texttext-[13px]">Sobre ✳️TEC</h3>
-          <p className="text-[11px] text-gray-500">Valores y Contacto</p>
-        </div>
-      </Link>
-
-    </div>
+      </div>
+      <div>
+        <h3 className="font-bold text-itec-text text-[13px]">{title}</h3>
+        <p className="text-[11px] text-gray-500">{description}</p>
+      </div>
+    </Link>
   );
 };

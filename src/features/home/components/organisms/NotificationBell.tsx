@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { adminService} from '@features/admin/services/adminService';
 
-const safeParseJSON = (key: string, fallback: any) => {
+const safeParseJSON = <T,>(key: string, fallback: T): T => {
   try {
     const item = localStorage.getItem(key);
     return item ? JSON.parse(item) : fallback;
@@ -27,7 +27,7 @@ export const NotificationBell: React.FC = () => {
   useEffect(() => {
     try {
       if (Array.isArray(activeNews) && activeNews.length > 0) {
-        const seenIds = safeParseJSON('itec_seen_notifications', []);
+        const seenIds = safeParseJSON<string[]>('itec_seen_notifications', []);
         const unread = activeNews.filter(news => news?.id && !seenIds.includes(news.id));
         setUnreadCount(unread.length);
       } else {
@@ -73,15 +73,15 @@ export const NotificationBell: React.FC = () => {
         </svg>
 
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-itec-texttext-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-itec-bg shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-bounce-short">
+          <span className="absolute -top-1 -right-1 bg-red-500 text-itec-text text-xs font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-itec-bg shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-bounce-short">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-itec-box/90 border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-[100] animate-in slide-in-from-top-2 fade-in">
-          <div className="p-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+        <div className="absolute right-0 w-80 sm:w-96 bg-itec-box border border-itec-box/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-100 animate-in slide-in-from-top-2 fade-in">
+          <div className="p-4 border-b border-white/5 flex items-center justify-between bg-itec-box/20">
             <h3 className="text-itec-textfont-bold tracking-wide">Notificaciones</h3>
             <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Activas</span>
           </div>
@@ -104,7 +104,7 @@ export const NotificationBell: React.FC = () => {
                   }
 
                   return (
-                    <div key={news.id} className="p-4 hover:bg-white/[0.03] transition-colors relative group cursor-pointer">
+                    <div key={news.id} className="p-4 hover:bg-white/3 transition-colors relative group cursor-pointer">
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
                           {news.isCritical && <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,1)]"></span>}

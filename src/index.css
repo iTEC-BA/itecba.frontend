@@ -2,24 +2,26 @@
 
 @theme {
   /* Paleta de colores ITEC */
-  /* --color-itec-bg: #0C1014; */
-  --color-itec-bg: #ffffff;
+  --color-itec-bg: #0C1014;
+  /* --color-itec-bg: #ffffff; */
   --color-itec-text: #e5e6eA;
+  /* --color-itec-text: #e5e6eA; */
   --color-itec-red: #b71234;
   --color-itec-red-skye: #b92532;
   --color-itec-blue: #032a5e;
   --color-itec-blue-skye: #004aad;
   --color-itec-blue-blur: #032a5e;
-  --color-itec-gray: #555555;
+  --color-itec-gray: #888888;
 
   /* colores de texto */
   --color-itec-title: #004093;
-  --color-itec-text: #000000;
+  --color-itec-text: #ffffff;
   --color-itec-text-reverse: #ffffff;
   --color-itec-description: #555555;
 
   /* color de secciones */
   --color-itec-groups: #008854;
+  --color-itec-rewards: #f0b100;
 
   /* Variantes sutiles para fondos de tarjetas */
   --color-itec-box: #0C1014;

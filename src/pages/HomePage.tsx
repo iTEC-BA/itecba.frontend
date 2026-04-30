@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "@context/AuthContext";
 import { MainLayout } from "@/components/templates/MainLayout";
-import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
+// import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
 import { HubNavigation } from "@features/home/components/organisms/HubNavigation";
 
 import { WelcomeWidget } from "@features/home/components/organisms/WelcomeWidget";
@@ -16,11 +16,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <MainLayout>
-      <UniversalSearch />
       <WelcomeWidget userName={user?.name} />
-      
-      <RewardsWidget />
-      
       <UniversityLinksWidget isAdmin={isAdmin} />
       <HubNavigation />
       <NewsWidget />

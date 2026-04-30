@@ -1,54 +1,43 @@
-import React, { useState } from "react";
-import { Sidebar } from "../organisms/Sidebar";
-// import { ChatbotWidget } from "../organisms/ChatbotWidget"; 
-// import { BackgroundBlur } from "../ui/BackgroundBlur"; 
-import logoItec from "../../assets/logo.png"; 
-import { Icons } from "../ui/Icons";
-// Agrega esta importación arriba:
-import { GlobalAnnouncement } from '../../features/admin/components/atoms/GlobalAnnouncement';
+import { Suspense } from "react";
+import { SidebarPrimo } from "../organisms/SidebarPrimo";
+import { TopNavbar } from "../organisms/TopNavbar";
+import { LoadingState } from "../atoms/LoadingState";
+import RewardsPointsItem from "@/features/rewards/components/molecules/RewardsPointsItem";
+import { RewardsWidget } from "@/features/rewards/components/organisms/RewardsWidget";
+
 export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   return (
-    <div className="flex h-screen w-full bg-itec-bg text-itec-text overflow-hidden relative isolate">
-      {/* <BackgroundBlur /> */}
+    <div className="flex flex-col w-full h-screen bg-itec-background text-itec-text overflow-hidden">
+      {/* 1. Header Fijo (Buscador y Notificaciones) */}
+      <TopNavbar />
 
-      <Sidebar
-        isOpen={isMobileMenuOpen}
-        closeMobile={() => setIsMobileMenuOpen(false)}
-      />
+      {/* 2. Contenedor Inferior de 3 Columnas */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Columna Izquierda: Menú Principal */}
+        <SidebarPrimo />
 
-      <main className="flex-1 overflow-y-auto flex flex-col md:pl-20 transition-all duration-300 relative z-0">
-        {/* TOP BAR MOBILE (Solo visible en celular) */}
-        <div className="md:hidden flex items-center justify-between p-4 border-b border-[#262626] bg-[#000000] sticky top-0 z-50">
-          <div className="font-bold text-xl flex items-center gap-2 text-white">
-            <img
-              src={logoItec}
-              alt="ITEC Logo"
-              className="w-8 h-8 object-contain"
-            />
-            ITEC UTN
+        {/* Columna Central: Feed Estilo Facebook */}
+        <main className="flex-1 h-full overflow-y-auto scroll-smooth">
+          <div className="mx-auto w-full min-h-full py-6 px-4">
+            <Suspense fallback={<LoadingState />}>{children}</Suspense>
           </div>
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="p-2 text-itec-texthover:bg-white/10 rounded-lg transition"
-          >
-            {/* SOLUCIÓN: Envolvemos el ícono en un div de 24x24px (w-6 h-6) */}
-            <div className="w-6 h-6">
-              <Icons type="burger" />
+        </main>
+
+        {/* Columna Derecha: Sidebar Derecho (Contactos, Cumpleaños) */}
+        <aside className="w-62 w-max-56 h-full hidden lg:block p-4 overflow-y-auto bg-itec-sidebar">
+          <div className="flex flex-col gap-4">
+            <div>
+              <h3 className="font-semibold text-itec-text/60">Tus puntos:</h3>
+              <RewardsPointsItem>iTECs</RewardsPointsItem>
             </div>
-          </button>
-        </div>
-
-        {/* Contenido inyectado de la página */}
-        <div className="p-4 md:p-8 w-full 2xl:max-w-7xl mx-auto">{children}</div>
-      </main>
-
-      {/* AÑADIR EL CHATBOT AQUÍ */}
-      <GlobalAnnouncement />
-      {/* <ChatbotWidget /> */}
+            <div>
+              <RewardsWidget />
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 };

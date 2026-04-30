@@ -35,7 +35,7 @@ export const App: React.FC = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cursos" element={<CoursesPage />} />
             <Route path="/cursos/:id" element={<CourseDetail />} />
-            <Route path="/chat" element={<FaqsPage />} />
+            <Route path="/faqs" element={<FaqsPage />} />
             <Route path="/ingreso" element={<AdmissionPage />} />
             <Route path="/grado" element={<GradePage />} />
             <Route path="/nosotros" element={<AboutPage />} />

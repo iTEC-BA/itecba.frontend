@@ -9,7 +9,7 @@ export const WelcomeWidget: React.FC<Props> = ({ userName }) => {
 
   return (
     <section className="mb-6">
-      <h1 className="text-2xl md:text-4xl font-bold mb-1 text-white">
+      <h1 className="text-2xl md:text-4xl font-bold mb-1 text-itec-text">
         ¡Hola, <span className="text-itec-red-skye">{firstName}</span>! 👋
       </h1>
       <p className="text-itec-text text-sm">Tu progreso en la UTN BA, en un solo lugar.</p>
