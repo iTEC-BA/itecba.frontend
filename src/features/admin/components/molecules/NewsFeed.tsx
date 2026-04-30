@@ -22,7 +22,7 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
   return (
     <div className="space-y-4">
       {announcements.map(a => (
-        <div key={a.id} className="bg-itec-surface/40 border border-white/5 p-5 rounded-3xl relative group hover:border-orange-500/30 transition-all shadow-lg">
+        <div key={a.id} className="bg-itec-box/40 border border-white/5 p-5 rounded-3xl relative group hover:border-orange-500/30 transition-all shadow-lg">
           <button 
             onClick={() => deleteMutation.mutate(a.id)} 
             disabled={deleteMutation.isPending}
@@ -33,9 +33,9 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
           </button>
           <div className="flex items-center gap-2 mb-2">
             <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
-            <h4 className="text-white font-bold text-sm pr-8">{a.title}</h4>
+            <h4 className="text-itec-textfont-bold text-sm pr-8">{a.title}</h4>
           </div>
-          <p className="text-gray-400 text-xs leading-relaxed mb-4">{a.message}</p>
+          <p className="text-itec-text text-xs leading-relaxed mb-4">{a.message}</p>
           <div className="flex items-center">
             <span className="text-[9px] text-gray-500 uppercase font-bold tracking-widest bg-black/40 px-2.5 py-1 rounded-lg border border-white/5">
               Vence: {a.expiresAt.toDate().toLocaleDateString()}

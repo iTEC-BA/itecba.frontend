@@ -51,7 +51,7 @@ export const ProgressDashboard: React.FC<Props> = ({ data, onUpdateStatus, onSwi
         {data.enrolledCareers.map(careerId => {
           const isActive = data.activeCareerId === careerId;
           return (
-            <div key={careerId} className={`flex items-center rounded-lg border transition-all ${isActive ? 'bg-itec-primary border-itec-primary text-white shadow-lg shadow-itec-primary/20' : 'bg-transparent border-itec-gray text-gray-400 hover:border-gray-500 hover:text-white'}`}>
+            <div key={careerId} className={`flex items-center rounded-lg border transition-all ${isActive ? 'bg-itec-primary border-itec-primary text-itec-textshadow-lg shadow-itec-primary/20' : 'bg-transparent border-itec-gray text-itec-text hover:border-gray-500 hover:text-white'}`}>
               <button onClick={() => onSwitchCareer(careerId)} className="px-4 py-2 text-sm font-semibold outline-none">
                 {CAREER_NAMES[careerId]}
               </button>
@@ -66,7 +66,7 @@ export const ProgressDashboard: React.FC<Props> = ({ data, onUpdateStatus, onSwi
         {availableCareersToAdd.length > 0 && (
           <select 
             onChange={(e) => { if(e.target.value) onSwitchCareer(e.target.value) }}
-            className="px-4 py-2 rounded-lg text-sm font-medium bg-transparent text-gray-400 border border-itec-gray border-dashed hover:border-itecBlue hover:text-itecBlue transition-all outline-none cursor-pointer"
+            className="px-4 py-2 rounded-lg text-sm font-medium bg-transparent text-itec-text border border-itec-gray border-dashed hover:border-itecBlue hover:text-itecBlue transition-all outline-none cursor-pointer"
             value=""
           >
             <option value="" disabled>+ Cursar otra Carrera</option>
@@ -113,7 +113,7 @@ export const ProgressDashboard: React.FC<Props> = ({ data, onUpdateStatus, onSwi
               onClick={() => setActiveLevel(lvl)}
               className={`px-6 py-3 text-sm font-bold uppercase tracking-widest rounded-t-xl transition-all outline-none whitespace-nowrap
                 ${activeLevel === lvl 
-                  ? 'bg-itec-gray/20 text-white border-b-2 border-itecBlue' 
+                  ? 'bg-itec-gray/20 text-itec-textborder-b-2 border-itecBlue' 
                   : 'bg-transparent text-gray-500 hover:bg-itec-gray/10 hover:text-gray-300 border-b-2 border-transparent'
                 }
               `}

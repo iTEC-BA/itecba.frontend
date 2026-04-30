@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from 'react';
-import { DashboardLayout } from '@/components/templates/DashboardLayout';
+import { MainLayout } from '@/components/templates/MainLayout';
 import { Icons } from '@/components/ui/Icons';
 
 import { useAuth } from '@/context/AuthContext';
@@ -27,11 +27,11 @@ export const GroupsPage: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
 
-  // 🟢 Hook que encapsula toda la lógica de negocio y filtros
+  // Hook que encapsula toda la lógica de negocio y filtros
   const { filters, filteredResults, hasSearched, handleSpecialtyClick } = useGroupSearch(allGroups);
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-7xl mx-auto w-full pb-10">
         
         <PageHeader 
@@ -43,7 +43,7 @@ export const GroupsPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <button 
               onClick={() => setIsAddModalOpen(true)} 
-              className="cursor-pointer bg-slate-900/80 border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-slate-300 hover:text-emerald-400 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95"
+              className="cursor-pointer text-itec-text border hover:bg-itec-box hover:text-itec-text-reverse px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95"
             >
               <div className="w-4 h-4"><Icons type="plus" /></div>
               Aportar Grupo
@@ -52,13 +52,13 @@ export const GroupsPage: React.FC = () => {
             {isAdmin && (
               <button 
                 onClick={() => setIsAdminModalOpen(true)} 
-                className="cursor-pointer relative bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-95 hover:-translate-y-0.5"
+                className="cursor-pointer relative border border-itec-groups hover:bg-itec-groups hover:text-itec-text-reverse px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-95 hover:-translate-y-0.5"
               >
                 Panel Admin
                 {pendingCount > 0 && (
                   <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-6 w-6 bg-red-500 text-white text-[10px] items-center justify-center font-bold shadow-lg border-2 border-emerald-500">
+                    <span className="relative inline-flex rounded-full h-6 w-6 bg-red-500 text-itec-texttext-[10px] items-center justify-center font-bold shadow-lg border-2 border-emerald-500">
                       {pendingCount > 9 ? '+9' : pendingCount}
                     </span>
                   </span>
@@ -77,7 +77,7 @@ export const GroupsPage: React.FC = () => {
                <div className="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
                <Icons type="whatsapp" className="w-8 h-8 text-emerald-500" />
             </div>
-            <p className="text-white font-bold text-lg mb-1">Sincronizando base de datos...</p>
+            <p className="text-itec-textfont-bold text-lg mb-1">Sincronizando base de datos...</p>
             <p className="text-slate-500 text-sm">Conectando con la red estudiantil</p>
           </div>
         ) : hasSearched ? (
@@ -109,6 +109,6 @@ export const GroupsPage: React.FC = () => {
           />
         )}
       </Suspense>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

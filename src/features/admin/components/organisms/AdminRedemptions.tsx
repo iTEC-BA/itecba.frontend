@@ -60,7 +60,7 @@ export const AdminRedemptions: React.FC = () => {
     <div className="space-y-6">
       <div className="bg-[#1e1e1e] border border-[#333] rounded-xl overflow-hidden">
         <div className="p-5 border-b border-[#333]">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <h2 className="text-xl font-bold text-itec-textflex items-center gap-2">
             <Icons type="star" className="w-5 h-5 text-itec-blue" /> Historial de Canjes
           </h2>
         </div>
@@ -72,7 +72,7 @@ export const AdminRedemptions: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-300">
-              <thead className="bg-[#1a1a1a] text-xs uppercase font-semibold text-gray-400 border-b border-[#333]">
+              <thead className="bg-[#1a1a1a] text-xs uppercase font-semibold text-itec-text border-b border-[#333]">
                 <tr>
                   <th className="px-6 py-4">Usuario</th>
                   <th className="px-6 py-4">Beneficio Canjeado</th>
@@ -85,7 +85,7 @@ export const AdminRedemptions: React.FC = () => {
                 {redemptions.map((red) => (
                   <tr key={red._id} className="hover:bg-[#252525] transition-colors">
                     <td className="px-6 py-4">{red.userEmail}</td>
-                    <td className="px-6 py-4 text-white font-medium">{red.rewardTitle}</td>
+                    <td className="px-6 py-4 text-itec-textfont-medium">{red.rewardTitle}</td>
                     <td className="px-6 py-4 text-itec-blue">{red.pointsCost} pts</td>
                     <td className="px-6 py-4">{new Date(red.createdAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4">
@@ -106,21 +106,21 @@ export const AdminRedemptions: React.FC = () => {
           <div className="bg-[#1e1e1e] border border-[#333] rounded-xl w-full max-w-md p-6 shadow-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-white">Mensaje Directo</h2>
-              <button onClick={() => setSelectedUser(null)} className="text-gray-400 hover:text-white">
+              <button onClick={() => setSelectedUser(null)} className="text-itec-text hover:text-white">
                 <Icons type="close" className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-sm text-gray-400 mb-4">Para: <span className="text-white font-medium">{selectedUser.email}</span></p>
+            <p className="text-sm text-itec-text mb-4">Para: <span className="text-itec-textfont-medium">{selectedUser.email}</span></p>
             
             <form onSubmit={handleSendMessage} className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Asunto</label>
-                <input required type="text" className="w-full bg-[#0a0a0a] border border-[#333] text-white px-4 py-2 rounded-lg focus:outline-none focus:border-itec-blue transition-colors"
+                <label className="block text-sm text-itec-text mb-1">Asunto</label>
+                <input required type="text" className="w-full bg-[#0a0a0a] border border-[#333] text-itec-textpx-4 py-2 rounded-lg focus:outline-none focus:border-itec-blue transition-colors"
                   value={messageData.subject} onChange={(e) => setMessageData({...messageData, subject: e.target.value})} />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Mensaje (Se enviará por Mail y Buzón)</label>
-                <textarea required rows={5} className="w-full bg-[#0a0a0a] border border-[#333] text-white px-4 py-2 rounded-lg resize-none focus:outline-none focus:border-itec-blue transition-colors"
+                <label className="block text-sm text-itec-text mb-1">Mensaje (Se enviará por Mail y Buzón)</label>
+                <textarea required rows={5} className="w-full bg-[#0a0a0a] border border-[#333] text-itec-textpx-4 py-2 rounded-lg resize-none focus:outline-none focus:border-itec-blue transition-colors"
                   value={messageData.content} onChange={(e) => setMessageData({...messageData, content: e.target.value})} />
               </div>
               <div className="flex gap-3 pt-4">

@@ -41,10 +41,10 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled, canUseAI, 
             onChange={(e) => setInput(e.target.value)}
             disabled={disabled}
             placeholder="Escribe tu consulta aquí..."
-            className="w-full bg-itec-bg border border-itec-gray text-white pl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-teal-500 text-sm transition-all shadow-inner disabled:opacity-50"
+            className="w-full bg-itec-bg border border-itec-gray text-itec-textpl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-teal-500 text-sm transition-all shadow-inner disabled:opacity-50"
           />
         </div>
-        <Button type="submit" disabled={!input.trim() || disabled} className="rounded-xl px-5 py-3.5 bg-teal-600 hover:bg-teal-500 border-none text-white disabled:opacity-50 shadow-lg">
+        <Button type="submit" disabled={!input.trim() || disabled} className="rounded-xl px-5 py-3.5 bg-teal-600 hover:bg-teal-500 border-none text-itec-textdisabled:opacity-50 shadow-lg">
           <div className="w-5 h-5"><Icons type="send" /></div>
         </Button>
       </form>
@@ -59,7 +59,7 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled, canUseAI, 
               !canUseAI 
                 ? 'bg-transparent text-gray-500 cursor-not-allowed'
                 : input.trim() && !disabled 
-                  ? 'bg-purple-500/20 text-purple-400 hover:bg-purple-500 hover:text-white border border-purple-500/30 cursor-pointer shadow-[0_0_10px_rgba(168,85,247,0.2)]' 
+                  ? 'bg-purple-500/20 text-purple-400 hover:bg-purple-500 hover:text-itec-textborder border-purple-500/30 cursor-pointer shadow-[0_0_10px_rgba(168,85,247,0.2)]' 
                   : 'bg-transparent text-gray-500 cursor-not-allowed border border-transparent'
             }`}
           >

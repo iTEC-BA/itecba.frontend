@@ -19,7 +19,7 @@ export const CourseResourcesModal: React.FC<Props> = ({ isOpen, onClose, resourc
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-itec-surface/90 backdrop-blur-2xl border border-white/10 rounded-[2rem] w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95">
+      <div className="bg-itec-box/90 backdrop-blur-2xl border border-white/10 rounded-[2rem] w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95">
         
         {/* Header Modal */}
         <div className="p-6 md:p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02] shrink-0">
@@ -28,11 +28,11 @@ export const CourseResourcesModal: React.FC<Props> = ({ isOpen, onClose, resourc
               <span className="text-2xl drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]">📚</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Archivos de la Clase</h2>
-              <p className="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-0.5">Recursos Disponibles</p>
+              <h2 className="text-xl font-bold text-itec-texttracking-tight">Archivos de la Clase</h2>
+              <p className="text-[10px] text-itec-text font-medium uppercase tracking-widest mt-0.5">Recursos Disponibles</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-white bg-white/5 hover:bg-white/10 border border-transparent hover:border-white/10 rounded-full p-2 transition-all outline-none">
+          <button onClick={onClose} className="text-gray-500 hover:text-itec-textbg-white/5 hover:bg-white/10 border border-transparent hover:border-white/10 rounded-full p-2 transition-all outline-none">
             <div className="w-5 h-5"><Icons type="close" /></div>
           </button>
         </div>
@@ -53,10 +53,10 @@ export const CourseResourcesModal: React.FC<Props> = ({ isOpen, onClose, resourc
                     <span className="text-xl">📄</span>
                   </div>
                   <div className="overflow-hidden flex-1">
-                    <h4 className="text-sm font-bold text-white truncate group-hover:text-red-400 transition-colors">{res.title}</h4>
+                    <h4 className="text-sm font-bold text-itec-texttruncate group-hover:text-red-400 transition-colors">{res.title}</h4>
                     <p className="text-[10px] text-gray-500 truncate mt-1">{res.materia}</p>
                   </div>
-                  <div className="text-gray-600 group-hover:text-white transition-colors w-5 h-5 shrink-0 bg-white/5 p-1 rounded-full group-hover:bg-white/10">
+                  <div className="text-gray-600 group-hover:text-itec-texttransition-colors w-5 h-5 shrink-0 bg-white/5 p-1 rounded-full group-hover:bg-white/10">
                     <Icons type="external-link" />
                   </div>
                 </a>

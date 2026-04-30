@@ -95,7 +95,7 @@ export const UniversalSearch: React.FC = () => {
   return (
     <header className="flex justify-between items-center mb-8 relative flex-col gap-4 lg:flex-row z-50 w-full">
       <div className="relative w-full max-w-2xl" ref={searchRef}>
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-itec-text-reverse w-5 h-5">
           <Icons type="search" />
         </div>
         
@@ -112,11 +112,11 @@ export const UniversalSearch: React.FC = () => {
             setIsSearchOpen(true);
             fetchSearchDataIfNeeded(); // 🚀 O pedimos los datos si hace clic en el input
           }}
-          className="bg-itec-surface border border-itec-gray text-white pl-12 pr-4 py-3 rounded-2xl w-full focus:outline-none focus:border-itec-blue transition-colors shadow-lg"
+          className="bg-itec-box border border-itec-gray text-itec-text-reverse pl-12 pr-4 py-3 rounded-2xl w-full focus:outline-none transition-colors shadow-lg"
         />
 
         {isSearchOpen && searchQuery.trim() && (
-          <div className="absolute top-full mt-2 w-full bg-itec-surface border border-itec-gray rounded-xl shadow-2xl overflow-hidden max-h-[70vh] flex flex-col z-40">
+          <div className="absolute top-full mt-2 w-full bg-itec-box border border-itec-gray rounded-xl shadow-2xl overflow-hidden max-h-[70vh] flex flex-col z-40">
             <div className="overflow-y-auto p-4 custom-scrollbar flex flex-col gap-6">
               
               {isLoading ? (

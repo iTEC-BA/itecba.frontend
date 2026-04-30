@@ -34,7 +34,7 @@ export const CoursePlaylist: React.FC<Props> = ({
   // UI: Estado Vacío
   if (total === 0) {
     return (
-      <div className="bg-itec-surface/40 border border-white/5 rounded-3xl p-10 shadow-2xl flex flex-col items-center justify-center text-gray-500 min-h-[300px]">
+      <div className="bg-itec-box/40 border border-white/5 rounded-3xl p-10 shadow-2xl flex flex-col items-center justify-center text-gray-500 min-h-[300px]">
          <span className="text-4xl mb-4 opacity-50">📭</span>
          <p className="text-xs uppercase tracking-widest font-bold">Sin lecciones publicadas</p>
       </div>
@@ -42,7 +42,7 @@ export const CoursePlaylist: React.FC<Props> = ({
   }
 
   return (
-    <div className="bg-itec-surface/40 border border-white/5 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col h-[450px] md:h-auto md:max-h-[650px] animate-fade-in relative group">
+    <div className="bg-itec-box/40 border border-white/5 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col h-[450px] md:h-auto md:max-h-[650px] animate-fade-in relative group">
       
       {/* Resplandor decorativo de fondo */}
       <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-blue-500/10 rounded-full blur-[60px] pointer-events-none transition-opacity group-hover:bg-blue-500/20"></div>
@@ -50,8 +50,8 @@ export const CoursePlaylist: React.FC<Props> = ({
       {/* HEADER DE LA PLAYLIST */}
       <div className="p-6 md:p-8 border-b border-white/5 bg-white/[0.01] shrink-0 relative z-10">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-bold text-sm tracking-wide">Contenido del Curso</h3>
-          <span className="bg-white/5 border border-white/10 text-gray-400 text-[10px] font-bold px-3 py-1 rounded-full tracking-widest uppercase">
+          <h3 className="text-itec-textfont-bold text-sm tracking-wide">Contenido del Curso</h3>
+          <span className="bg-white/5 border border-white/10 text-itec-text text-[10px] font-bold px-3 py-1 rounded-full tracking-widest uppercase">
             {watchedCount} / {total} Completados
           </span>
         </div>
@@ -100,7 +100,7 @@ export const CoursePlaylist: React.FC<Props> = ({
                   isWatched 
                     ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
                     : isActive
-                      ? 'bg-sky-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]'
+                      ? 'bg-sky-500 text-itec-textshadow-[0_0_15px_rgba(249,115,22,0.4)]'
                       : 'bg-black/50 text-gray-500 border border-white/10 group-hover/item:text-gray-300 group-hover/item:border-white/20'
                 }`}>
                   <div className="w-5 h-5">
@@ -111,7 +111,7 @@ export const CoursePlaylist: React.FC<Props> = ({
                 {/* Textos */}
                 <div className="flex-1 overflow-hidden pr-2">
                   <h4 className={`text-xs font-bold line-clamp-2 leading-snug transition-colors ${
-                    isActive ? 'text-white' : isWatched ? 'text-gray-400' : 'text-gray-300 group-hover/item:text-white'
+                    isActive ? 'text-white' : isWatched ? 'text-itec-text' : 'text-gray-300 group-hover/item:text-white'
                   }`}>
                     <span className="text-gray-500 mr-1">{index + 1}.</span> 
                     {video.title || 'Lección sin título'}

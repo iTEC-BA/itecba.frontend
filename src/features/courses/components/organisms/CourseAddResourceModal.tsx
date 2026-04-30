@@ -67,21 +67,21 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 animate-fade-in">
-      <div className="bg-itec-surface/95 border border-white/10 rounded-[2rem] w-full max-w-md shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col animate-in zoom-in-95 relative group">
+      <div className="bg-itec-box/95 border border-white/10 rounded-[2rem] w-full max-w-md shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col animate-in zoom-in-95 relative group">
         
         {/* Resplandor decorativo */}
         <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-orange-500/10 rounded-full blur-[60px] pointer-events-none transition-opacity group-hover:bg-orange-500/20"></div>
 
         {/* Cabecera */}
         <div className="p-6 md:p-8 border-b border-white/5 relative bg-white/[0.01] z-10">
-          <button onClick={onClose} className="absolute top-6 right-6 text-gray-500 hover:text-white bg-white/5 hover:bg-white/10 rounded-full p-2 transition-colors outline-none">
+          <button onClick={onClose} className="absolute top-6 right-6 text-gray-500 hover:text-itec-textbg-white/5 hover:bg-white/10 rounded-full p-2 transition-colors outline-none">
             <div className="w-5 h-5"><Icons type="close" /></div>
           </button>
           <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-500 flex items-center justify-center text-3xl mb-5 shadow-inner">
             📎
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight leading-tight">Vincular Archivo</h2>
-          <p className="text-xs text-gray-400 mt-1.5 font-medium leading-relaxed">
+          <h2 className="text-2xl font-bold text-itec-texttracking-tight leading-tight">Vincular Archivo</h2>
+          <p className="text-xs text-itec-text mt-1.5 font-medium leading-relaxed">
             Se publicará en el catálogo general y en <span className="text-orange-400 font-bold">{courseTitle}</span>
           </p>
         </div>
@@ -96,20 +96,20 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
           )}
           
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Nombre del Archivo</label>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-itec-text pl-1">Nombre del Archivo</label>
             <input 
               type="text" required placeholder="Ej: Diapositivas Clase 1" 
               value={title} onChange={e => setTitle(e.target.value)} 
-              className="w-full bg-black/30 border border-white/10 rounded-xl py-3.5 px-4 text-white text-sm focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none transition-colors" 
+              className="w-full bg-black/30 border border-white/10 rounded-xl py-3.5 px-4 text-itec-texttext-sm focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none transition-colors" 
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Enlace de Descarga (Drive, PDF)</label>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-itec-text pl-1">Enlace de Descarga (Drive, PDF)</label>
             <input 
               type="url" required placeholder="https://drive.google.com/..." 
               value={driveUrl} onChange={e => setDriveUrl(e.target.value)} 
-              className="w-full bg-black/30 border border-white/10 rounded-xl py-3.5 px-4 text-white text-sm focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none transition-colors" 
+              className="w-full bg-black/30 border border-white/10 rounded-xl py-3.5 px-4 text-itec-texttext-sm focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none transition-colors" 
             />
           </div>
           

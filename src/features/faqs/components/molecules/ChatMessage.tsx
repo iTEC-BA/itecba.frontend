@@ -42,8 +42,8 @@ export const ChatMessage: React.FC<Props> = ({ role, text, timestamp }) => {
         <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
           <div className={`px-5 py-3.5 text-[14px] shadow-sm relative ${
             isUser 
-              ? 'bg-itec-blue text-white rounded-2xl rounded-br-sm' 
-              : 'bg-itec-surface border border-itec-gray text-gray-200 rounded-2xl rounded-bl-sm'
+              ? 'bg-itec-blue text-itec-textrounded-2xl rounded-br-sm' 
+              : 'bg-itec-box border border-itec-gray text-gray-200 rounded-2xl rounded-bl-sm'
           }`}>
             {isUser ? (
               <p className="leading-relaxed">{text}</p>

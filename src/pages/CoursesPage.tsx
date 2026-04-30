@@ -1,5 +1,5 @@
 import React, { useState, Suspense } from "react";
-import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { MainLayout } from "@/components/templates/MainLayout";
 import { PageHeader } from "@components/ui/PageHeader";
 import { useAuth } from "@context/AuthContext";
 import { Icons } from "@components/ui/Icons";
@@ -36,7 +36,7 @@ export const CoursesPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-7xl mx-auto pb-10 relative z-10">
         
         <PageHeader
@@ -74,6 +74,6 @@ export const CoursesPage: React.FC = () => {
           />
         </Suspense>
       )}
-    </DashboardLayout>
+    </MainLayout>
   );
 };

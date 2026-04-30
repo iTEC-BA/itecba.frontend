@@ -21,7 +21,7 @@ export const GroupCard: React.FC<Props> = ({ group }) => {
         <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-2 drop-shadow-sm">
           Nivel {group.nivel === '0' ? 'Ingreso' : group.nivel}
         </span>
-        <h4 className="font-bold text-slate-200 text-sm mb-2 pr-6 leading-snug group-hover:text-white transition-colors">{group.materia}</h4>
+        <h4 className="font-bold text-slate-200 text-sm mb-2 pr-6 leading-snug group-hover:text-itec-texttransition-colors">{group.materia}</h4>
         <p className="text-xs text-slate-400 flex items-center gap-2">
           Comisión: 
           <strong className="text-emerald-100 bg-slate-800 border border-white/5 px-2 py-0.5 rounded-md font-mono text-[11px]">
@@ -34,7 +34,7 @@ export const GroupCard: React.FC<Props> = ({ group }) => {
         href={group.link} 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="mt-6 relative z-10 flex items-center justify-center gap-2 w-full bg-slate-800/80 hover:bg-emerald-600 border border-white/5 hover:border-emerald-500 text-slate-300 hover:text-white py-2.5 rounded-xl text-xs font-bold transition-all duration-300 active:scale-95 shadow-sm"
+        className="mt-6 relative z-10 flex items-center justify-center gap-2 w-full bg-slate-800/80 hover:bg-emerald-600 border border-white/5 hover:border-emerald-500 text-slate-300 hover:text-itec-textpy-2.5 rounded-xl text-xs font-bold transition-all duration-300 active:scale-95 shadow-sm"
       >
         Unirme al Grupo
       </a>

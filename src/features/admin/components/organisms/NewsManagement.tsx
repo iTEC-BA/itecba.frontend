@@ -13,7 +13,7 @@ export const NewsManagement: React.FC = () => {
       </div>
       <div className="lg:col-span-6">
         <div className="mb-4 pl-2 flex justify-between items-center">
-          <h3 className="text-white font-bold text-sm uppercase tracking-widest">Feed de Avisos</h3>
+          <h3 className="text-itec-textfont-bold text-sm uppercase tracking-widest">Feed de Avisos</h3>
           <span className="text-xs text-orange-400 font-bold">{announcements.length} Activos</span>
         </div>
         <NewsFeed 

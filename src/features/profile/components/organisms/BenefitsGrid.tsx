@@ -14,7 +14,7 @@ export const BenefitsGrid: React.FC = () => {
   return (
     <div className="bg-slate-900/30 border border-white/5 rounded-[2rem] p-6 md:p-8">
       <div className="mb-8">
-        <h2 className="text-2xl font-black text-white mb-1">Catálogo de Beneficios</h2>
+        <h2 className="text-2xl font-black text-itec-textmb-1">Catálogo de Beneficios</h2>
         <p className="text-slate-400 text-sm">Navegá por las categorías y descubrí tus ventajas.</p>
       </div>
       

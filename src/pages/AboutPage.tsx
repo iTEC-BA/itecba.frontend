@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { MainLayout } from '@/components/templates/MainLayout';
 import { PageHeader } from '@components/ui/PageHeader';
 import { usePageTitle } from '@hooks/usePageTitle';
 
@@ -10,7 +10,7 @@ export const AboutPage: React.FC = () => {
   usePageTitle("Sobre Nosotros | ITEC");
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-6xl mx-auto pb-10">
         <PageHeader 
           title="Sobre Nosotros" 
@@ -21,6 +21,6 @@ export const AboutPage: React.FC = () => {
         <AboutProjectWidget />
         <ContributorsWidget />
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

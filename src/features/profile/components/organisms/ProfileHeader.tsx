@@ -18,7 +18,7 @@ export const ProfileHeader: React.FC = () => {
             </div>
         )}
         <div>
-          <h1 className="text-3xl font-black text-white mb-2 tracking-tight">{user?.name}</h1>
+          <h1 className="text-3xl font-black text-itec-textmb-2 tracking-tight">{user?.name}</h1>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400 font-medium">
             <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="users" /></div>{user?.specialty}</span>
             <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="documentFill" /></div>{user?.dni}</span>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DashboardLayout } from "@/components/templates/DashboardLayout";
+import { MainLayout } from "@/components/templates/MainLayout";
 import { PageHeader } from "@components/ui/PageHeader";
 import { usePageTitle } from "@hooks/usePageTitle";
 import { useAuth } from "@context/AuthContext";
@@ -29,7 +29,7 @@ export const AdmissionPage: React.FC = () => {
   if (!isLoaded) return null;
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-7xl mx-auto pb-10">
         
         <PageHeader
@@ -83,6 +83,6 @@ export const AdmissionPage: React.FC = () => {
         />
       )}
 
-    </DashboardLayout>
+    </MainLayout>
   );
 };

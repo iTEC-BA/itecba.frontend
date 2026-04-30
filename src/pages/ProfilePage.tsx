@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { MainLayout } from "@/components/templates/MainLayout";
 import { useAuth } from "@context/AuthContext";
 import { LoadingState } from "@components/atoms/LoadingState"; // O el spinner que prefieras usar
 
@@ -33,24 +33,24 @@ export const ProfilePage: React.FC = () => {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      <MainLayout>
         <LoadingState />
-      </DashboardLayout>
+      </MainLayout>
     );
   }
 
   // Vista 1: Necesita llenar sus datos
   if (isAuthenticated && !hasCard) {
     return (
-      <DashboardLayout>
+      <MainLayout>
         <ProfileForm />
-      </DashboardLayout>
+      </MainLayout>
     );
   }
 
   // Vista 2: Perfil Completo
   return (
-<DashboardLayout>
+<MainLayout>
       <div className="max-w-5xl mx-auto pb-12 relative z-10">
         <ProfileHeader />
         <div className="mb-12 flex flex-col md:flex-row gap-4">
@@ -59,6 +59,6 @@ export const ProfilePage: React.FC = () => {
         </div>
         <BenefitsGrid />
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

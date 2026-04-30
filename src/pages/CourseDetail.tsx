@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
 // Componentes Globales
-import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { MainLayout } from '@/components/templates/MainLayout';
 import { Icons } from '@components/ui/Icons'; 
 import { useAuth } from '@context/AuthContext';
 
@@ -89,41 +89,41 @@ export const CourseDetail: React.FC = () => {
 
   if (isCourseLoading) {
     return (
-      <DashboardLayout>
+      <MainLayout>
         <div className="flex flex-col items-center justify-center h-[70vh] gap-5">
           <div className="w-10 h-10 border-4 border-white/10 border-t-orange-500 rounded-full animate-spin"></div>
           <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase animate-pulse">Preparando entorno...</p>
         </div>
-      </DashboardLayout>
+      </MainLayout>
     );
   }
 
   if (!course) {
     return (
-      <DashboardLayout>
+      <MainLayout>
         <div className="flex items-center justify-center h-[70vh]">
-           <div className="bg-itec-surface/40 backdrop-blur-xl border border-white/5 p-10 rounded-[2rem] text-center max-w-md shadow-2xl">
+           <div className="bg-itec-box/40 backdrop-blur-xl border border-white/5 p-10 rounded-[2rem] text-center max-w-md shadow-2xl">
              <span className="text-5xl block mb-6 opacity-80">🔍</span>
-             <h2 className="text-xl font-bold text-white mb-2">Curso no encontrado</h2>
-             <p className="text-sm text-gray-400 mb-8 leading-relaxed">El material que intentas visualizar no existe o ha sido retirado de la plataforma.</p>
+             <h2 className="text-xl font-bold text-itec-textmb-2">Curso no encontrado</h2>
+             <p className="text-sm text-itec-text mb-8 leading-relaxed">El material que intentas visualizar no existe o ha sido retirado de la plataforma.</p>
              <Link to="/cursos" className="bg-white text-black font-bold px-8 py-3.5 rounded-xl transition-transform hover:scale-[0.98] outline-none inline-block text-xs uppercase tracking-widest shadow-lg">
                Volver al Catálogo
              </Link>
            </div>
         </div>
-      </DashboardLayout>
+      </MainLayout>
     );
   }
 
   const currentVideo = (course.videos && course.videos.length > 0) ? course.videos[currentVideoIndex] : undefined;
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-[1300px] mx-auto pb-24 pt-6 px-4 lg:px-6 xl:px-0 animate-fade-in">
         
         {/* Controles Superiores */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <Link to="/cursos" className="inline-flex items-center gap-2 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors w-fit group outline-none">
+          <Link to="/cursos" className="inline-flex items-center gap-2 text-gray-500 hover:text-itec-texttext-[10px] font-bold uppercase tracking-widest transition-colors w-fit group outline-none">
             <div className="w-5 h-5 group-hover:-translate-x-1 transition-transform"><Icons type="play" /></div>
             Catálogo Principal
           </Link>
@@ -132,14 +132,14 @@ export const CourseDetail: React.FC = () => {
             <div className="flex items-center gap-2">
               <Link 
                 to={`/cursos/editar/${course.id || (course as any)._id}`}
-                className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all outline-none"
+                className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-itec-texttext-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all outline-none"
               >
                 Editar
               </Link>
               <button 
                 onClick={handleDelete}
                 disabled={deleteCourseMutation.isPending}
-                className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all outline-none border border-red-500/20 hover:border-red-500 cursor-pointer"
+                className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-itec-texttext-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all outline-none border border-red-500/20 hover:border-red-500 cursor-pointer"
               >
                 {deleteCourseMutation.isPending ? 'BORRANDO...' : 'ELIMINAR'}
               </button>
@@ -153,11 +153,11 @@ export const CourseDetail: React.FC = () => {
             <span className="bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-md shadow-sm">
               {course.materia}
             </span>
-            <span className="bg-white/5 text-gray-400 border border-white/10 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-md">
+            <span className="bg-white/5 text-itec-text border border-white/10 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-md">
               {course.categoria}
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2 leading-tight">{course.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-itec-texttracking-tight mb-2 leading-tight">{course.title}</h1>
         </div>
 
         {/* Layout Principal: 2 Columnas */}
@@ -187,9 +187,9 @@ export const CourseDetail: React.FC = () => {
             />
 
             {/* Widget de Material Extra */}
-            <div className="bg-itec-surface/40 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl">
+            <div className="bg-itec-box/40 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-white font-bold text-sm tracking-wide">
+                <h3 className="text-itec-textfont-bold text-sm tracking-wide">
                   <span className="text-orange-500 mr-2 text-lg">📚</span> Material Extra
                 </h3>
                 {isAdmin && (
@@ -214,16 +214,16 @@ export const CourseDetail: React.FC = () => {
                         📄
                       </div>
                       <div className="overflow-hidden flex-1">
-                        <h4 className="text-xs font-bold text-white truncate group-hover:text-orange-400 transition-colors">{res.title}</h4>
+                        <h4 className="text-xs font-bold text-itec-texttruncate group-hover:text-orange-400 transition-colors">{res.title}</h4>
                         <p className="text-[10px] text-gray-500 truncate mt-0.5">{res.materia}</p>
                       </div>
-                      <div className="text-gray-600 group-hover:text-white transition-colors w-4 h-4 shrink-0">
+                      <div className="text-gray-600 group-hover:text-itec-texttransition-colors w-4 h-4 shrink-0">
                         <Icons type="external-link" />
                       </div>
                     </a>
                   ))}
                   {relatedResources.length > 4 && (
-                    <Link to="/recursos" className="text-[10px] text-center text-gray-400 hover:text-white mt-4 font-bold uppercase tracking-widest block transition-colors outline-none bg-white/5 hover:bg-white/10 py-3 rounded-xl border border-white/5">
+                    <Link to="/recursos" className="text-[10px] text-center text-itec-text hover:text-itec-textmt-4 font-bold uppercase tracking-widest block transition-colors outline-none bg-white/5 hover:bg-white/10 py-3 rounded-xl border border-white/5">
                       Ver todo el catálogo
                     </Link>
                   )}
@@ -256,6 +256,6 @@ export const CourseDetail: React.FC = () => {
         </Suspense>
       )}
 
-    </DashboardLayout>
+    </MainLayout>
   );
 };

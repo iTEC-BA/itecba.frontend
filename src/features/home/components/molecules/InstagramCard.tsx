@@ -29,7 +29,7 @@ export const InstagramCard: React.FC<InstagramCardProps> = ({
           className="absolute top-0 left-0 w-full h-full object-cover opacity-90 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500"
         />
         {/* Icono de Instagram en la esquina superior derecha */}
-        <div className="absolute top-2.5 right-2.5 w-8 h-8 text-white bg-black/50 p-1 rounded-md  shadow-md transition-opacity group-hover:opacity-100">
+        <div className="absolute top-2.5 right-2.5 w-8 h-8 text-itec-textbg-black/50 p-1 rounded-md  shadow-md transition-opacity group-hover:opacity-100">
           <Icons type="instagram" />
         </div>
       </div>

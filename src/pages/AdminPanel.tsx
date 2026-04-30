@@ -1,5 +1,5 @@
 import React, { useState, lazy } from 'react';
-import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { MainLayout } from '@/components/templates/MainLayout';
 import { useAuth } from '@context/AuthContext';
 
 // Importaciones Lazy
@@ -15,29 +15,29 @@ export const AdminPanel: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <DashboardLayout>
+      <MainLayout>
         <div className="flex items-center justify-center h-[70vh]">
-          <div className="text-center p-12 bg-itec-surface/50 border border-red-500/10 rounded-[2rem] max-w-md shadow-2xl">
+          <div className="text-center p-12 bg-itec-box/50 border border-red-500/10 rounded-[2rem] max-w-md shadow-2xl">
             <span className="text-5xl block mb-6 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]">🔒</span>
-            <h2 className="text-xl font-bold text-white mb-2 tracking-wide">Acceso Restringido</h2>
-            <p className="text-gray-400 text-sm leading-relaxed">No tienes los privilegios necesarios para acceder a la configuración global del sistema.</p>
+            <h2 className="text-xl font-bold text-itec-textmb-2 tracking-wide">Acceso Restringido</h2>
+            <p className="text-itec-text text-sm leading-relaxed">No tienes los privilegios necesarios para acceder a la configuración global del sistema.</p>
           </div>
         </div>
-      </DashboardLayout>
+      </MainLayout>
     );
   }
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-[1100px] mx-auto pb-20 pt-8 px-6 lg:px-0 animate-fade-in">
         
         {/* Encabezado Clean */}
         <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-itec-texttracking-tight mb-2">
               Panel de Administración
             </h1>
-            <p className="text-gray-400 text-sm font-medium">Control de accesos y comunicaciones globales.</p>
+            <p className="text-itec-text text-sm font-medium">Control de accesos y comunicaciones globales.</p>
           </div>
 
           {/* Segmented Control (Pestañas estilo iOS/SaaS) */}
@@ -46,7 +46,7 @@ export const AdminPanel: React.FC = () => {
               onClick={() => setActiveTab('users')} 
               className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
                 activeTab === 'users' 
-                  ? 'bg-itec-surface text-white shadow-md border border-white/10' 
+                  ? 'bg-itec-box text-itec-textshadow-md border border-white/10' 
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
@@ -56,7 +56,7 @@ export const AdminPanel: React.FC = () => {
               onClick={() => setActiveTab('news')} 
               className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
                 activeTab === 'news' 
-                  ? 'bg-itec-surface text-white shadow-md border border-white/10' 
+                  ? 'bg-itec-box text-itec-textshadow-md border border-white/10' 
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
@@ -66,7 +66,7 @@ export const AdminPanel: React.FC = () => {
               onClick={() => setActiveTab('rewards')} 
               className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
                 activeTab === 'rewards' 
-                  ? 'bg-itec-surface text-white shadow-md border border-white/10' 
+                  ? 'bg-itec-box text-itec-textshadow-md border border-white/10' 
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
@@ -75,7 +75,7 @@ export const AdminPanel: React.FC = () => {
             <button 
               onClick={() => setActiveTab('redemptions')} 
               className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
-                activeTab === 'redemptions' ? 'bg-itec-surface text-white shadow-md border border-white/10' : 'text-gray-500 hover:text-gray-300'
+                activeTab === 'redemptions' ? 'bg-itec-box text-itec-textshadow-md border border-white/10' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               Historial de Canjes
@@ -91,6 +91,6 @@ export const AdminPanel: React.FC = () => {
         </div>
 
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

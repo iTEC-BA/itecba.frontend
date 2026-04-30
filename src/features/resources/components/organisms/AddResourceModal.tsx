@@ -106,10 +106,10 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) 
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-itec-surface border border-itec-gray rounded-3xl w-full max-w-xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-200 my-8">
-        <button onClick={onClose} disabled={isPending} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-itec-bg border border-itec-gray text-gray-500 hover:text-white transition-colors">✖</button>
-        <h2 className="text-2xl font-bold text-white mb-2">Aportar Archivo</h2>
-        <p className="text-sm text-gray-400 mb-6">Sube material y gana <strong className="text-yellow-500">+1 Punto ITEC</strong>.</p>
+      <div className="bg-itec-box border border-itec-gray rounded-3xl w-full max-w-xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-200 my-8">
+        <button onClick={onClose} disabled={isPending} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-itec-bg border border-itec-gray text-gray-500 hover:text-itec-texttransition-colors">✖</button>
+        <h2 className="text-2xl font-bold text-itec-textmb-2">Aportar Archivo</h2>
+        <p className="text-sm text-itec-text mb-6">Sube material y gana <strong className="text-yellow-500">+1 Punto ITEC</strong>.</p>
 
         {success ? (
           <div className="text-center py-10 animate-in fade-in zoom-in">
@@ -122,8 +122,8 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) 
             {!isAuthenticated && (
               <div className="bg-gradient-to-r from-orange-500/20 to-transparent border border-orange-500/30 rounded-xl p-4 mb-2 flex items-center justify-between gap-4 shadow-lg">
                 <div>
-                  <h4 className="text-[13px] font-bold text-white mb-1">¿Querés ganar puntos?</h4>
-                  <p className="text-[11px] text-gray-400 leading-tight">Iniciá sesión para acumular Puntos ITEC y publicar al instante.</p>
+                  <h4 className="text-[13px] font-bold text-itec-textmb-1">¿Querés ganar puntos?</h4>
+                  <p className="text-[11px] text-itec-text leading-tight">Iniciá sesión para acumular Puntos ITEC y publicar al instante.</p>
                 </div>
                 <button type="button" onClick={loginWithGoogle} className="shrink-0 bg-white text-black text-[11px] font-bold py-2 px-3 rounded-lg flex items-center gap-2">
                   <div className="w-4 h-4 text-blue-600"><Icons type="google" /></div> Ingresar
@@ -153,7 +153,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) 
               {showDropdown && materiasDisponibles.length > 0 && (
                 <ul className="absolute z-50 w-full mt-2 bg-itec-sidebar border border-itec-gray rounded-xl shadow-2xl max-h-40 overflow-y-auto custom-scrollbar">
                   {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
-                    <li key={m} onClick={() => { setForm({...form, materia: m}); setShowDropdown(false); }} className="px-4 py-2 text-sm text-gray-300 hover:bg-itec-blue hover:text-white cursor-pointer border-b border-itec-gray/50">{m}</li>
+                    <li key={m} onClick={() => { setForm({...form, materia: m}); setShowDropdown(false); }} className="px-4 py-2 text-sm text-gray-300 hover:bg-itec-blue hover:text-itec-textcursor-pointer border-b border-itec-gray/50">{m}</li>
                   ))}
                 </ul>
               )}
@@ -178,8 +178,8 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) 
             {error && <p className="text-itec-red-skye text-xs font-bold bg-itec-red/10 p-2 rounded">{error}</p>}
 
             <div className="pt-4 flex justify-end gap-3">
-              <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="bg-itec-bg border-none text-gray-400">Cancelar</Button>
-              <Button type="submit" variant="primary" disabled={isPending} className="bg-orange-600 hover:bg-orange-500 border-none text-white font-bold">{isPending ? 'Subiendo...' : 'Publicar y Ganar Puntos'}</Button>
+              <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="bg-itec-bg border-none text-itec-text">Cancelar</Button>
+              <Button type="submit" variant="primary" disabled={isPending} className="bg-orange-600 hover:bg-orange-500 border-none text-itec-textfont-bold">{isPending ? 'Subiendo...' : 'Publicar y Ganar Puntos'}</Button>
             </div>
           </form>
         )}

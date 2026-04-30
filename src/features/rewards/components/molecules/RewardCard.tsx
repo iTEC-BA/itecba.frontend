@@ -23,10 +23,10 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, userPoints, onSe
         <div className="w-10 h-10 bg-[#1a1a1a] rounded-lg text-itec-blue shadow-inner flex items-center justify-center">
           <Icons type={reward.icon} className="w-6 h-6" />
         </div>
-        <h3 className="text-lg font-semibold text-white leading-tight">{reward.title}</h3>
+        <h3 className="text-lg font-semibold text-itec-textleading-tight">{reward.title}</h3>
       </div>
       
-      <p className="text-sm text-gray-400 flex-grow mb-6 relative z-10">{reward.description}</p>
+      <p className="text-sm text-itec-text flex-grow mb-6 relative z-10">{reward.description}</p>
       
       <div className="mt-auto relative z-10 space-y-4">
         {/* Progress Bar visual de puntos */}
@@ -39,7 +39,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, userPoints, onSe
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <span className={`font-bold text-lg leading-none ${canAfford ? 'text-white' : 'text-gray-400'}`}>
+            <span className={`font-bold text-lg leading-none ${canAfford ? 'text-white' : 'text-itec-text'}`}>
               {reward.pointsCost} <span className="text-xs font-normal">pts</span>
             </span>
             {!canAfford && (

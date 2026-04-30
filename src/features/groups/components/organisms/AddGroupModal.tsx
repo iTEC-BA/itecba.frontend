@@ -99,18 +99,18 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, exist
     <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
       <div className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg shadow-2xl p-8 relative">
         
-        <button onClick={onClose} disabled={isPending} className="cursor-pointer absolute top-4 right-4 text-gray-400 hover:text-white transition-colors disabled:opacity-50">
+        <button onClick={onClose} disabled={isPending} className="cursor-pointer absolute top-4 right-4 text-itec-text hover:text-itec-texttransition-colors disabled:opacity-50">
           <Icons type="close" className="w-5 h-5" />
         </button>
 
-        <h2 className="text-2xl font-bold text-white mb-1">Aportar Grupo</h2>
-        <p className="text-sm text-gray-400 mb-6">Completá los datos para sumar a la comunidad.</p>
+        <h2 className="text-2xl font-bold text-itec-textmb-1">Aportar Grupo</h2>
+        <p className="text-sm text-itec-text mb-6">Completá los datos para sumar a la comunidad.</p>
 
         {success ? (
           <div className="text-center py-10 animate-in fade-in duration-300">
             <span className="text-5xl block mb-4">✅</span>
-            <h3 className="text-xl font-bold text-white mb-2">{successInfo.title}</h3>
-            <p className="text-gray-400 text-sm">{successInfo.desc}</p>
+            <h3 className="text-xl font-bold text-itec-textmb-2">{successInfo.title}</h3>
+            <p className="text-itec-text text-sm">{successInfo.desc}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -118,8 +118,8 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, exist
             {!isAuthenticated && (
               <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h4 className="text-sm font-bold text-white mb-1">Iniciá sesión para publicar directo</h4>
-                  <p className="text-xs text-gray-400">Sumá puntos para tu TarjeTEC publicando sin revisión.</p>
+                  <h4 className="text-sm font-bold text-itec-textmb-1">Iniciá sesión para publicar directo</h4>
+                  <p className="text-xs text-itec-text">Sumá puntos para tu TarjeTEC publicando sin revisión.</p>
                 </div>
                 <button type="button" onClick={loginWithGoogle} className="cursor-pointer shrink-0 bg-white hover:bg-gray-200 text-black text-xs font-bold py-2.5 px-4 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
                   <div className="w-4 h-4 text-blue-600"><Icons type="google" /></div> Acceder
@@ -159,7 +159,7 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, exist
                   {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
                     <li 
                       key={m} onClick={() => { setForm({...form, materia: m}); setShowDropdown(false); }} 
-                      className="cursor-pointer px-4 py-3 text-sm text-gray-300 hover:bg-green-600 hover:text-white border-b border-gray-700 last:border-0 whitespace-normal break-words leading-tight transition-colors"
+                      className="cursor-pointer px-4 py-3 text-sm text-gray-300 hover:bg-green-600 hover:text-itec-textborder-b border-gray-700 last:border-0 whitespace-normal break-words leading-tight transition-colors"
                     >
                       {m}
                     </li>
@@ -195,7 +195,7 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, exist
 
             <div className="pt-4 flex justify-end gap-3">
               <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="cursor-pointer bg-gray-800 border-gray-700 hover:bg-gray-700 text-gray-300">Cancelar</Button>
-              <Button type="submit" variant="primary" disabled={isPending} className="cursor-pointer bg-green-600 hover:bg-green-500 border-none text-white shadow-md min-w-32 active:scale-95">
+              <Button type="submit" variant="primary" disabled={isPending} className="cursor-pointer bg-green-600 hover:bg-green-500 border-none text-itec-textshadow-md min-w-32 active:scale-95">
                 {isPending ? 'Procesando...' : 'Aportar Grupo'}
               </Button>
             </div>

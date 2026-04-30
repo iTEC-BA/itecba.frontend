@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Sidebar } from "../organisms/Sidebar";
-import { ChatbotWidget } from "../organisms/ChatbotWidget"; 
-import { BackgroundBlur } from "../ui/BackgroundBlur"; 
+// import { ChatbotWidget } from "../organisms/ChatbotWidget"; 
+// import { BackgroundBlur } from "../ui/BackgroundBlur"; 
 import logoItec from "../../assets/logo.png"; 
 import { Icons } from "../ui/Icons";
 // Agrega esta importación arriba:
 import { GlobalAnnouncement } from '../../features/admin/components/atoms/GlobalAnnouncement';
-export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
+export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="flex h-screen w-full bg-itec-bg text-itec-text overflow-hidden relative isolate">
-      <BackgroundBlur />
-      {/* Sidebar recibe su estado */}
+      {/* <BackgroundBlur /> */}
+
       <Sidebar
         isOpen={isMobileMenuOpen}
         closeMobile={() => setIsMobileMenuOpen(false)}
@@ -33,7 +33,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-2 text-white hover:bg-white/10 rounded-lg transition"
+            className="p-2 text-itec-texthover:bg-white/10 rounded-lg transition"
           >
             {/* SOLUCIÓN: Envolvemos el ícono en un div de 24x24px (w-6 h-6) */}
             <div className="w-6 h-6">
@@ -48,7 +48,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
 
       {/* AÑADIR EL CHATBOT AQUÍ */}
       <GlobalAnnouncement />
-      <ChatbotWidget />
+      {/* <ChatbotWidget /> */}
     </div>
   );
 };

@@ -45,12 +45,12 @@ export const SubjectTableRow: React.FC<Props> = ({ sub, allSubjects, onActionCli
     <tr className={`hover:bg-itec-gray/10 transition-colors group ${isBloqueada ? 'bg-black/10' : ''}`}>
       <td className="px-5 py-4 text-center font-mono text-xs text-gray-500">{sub.code || '-'}</td>
       <td className="px-5 py-4">
-        <div className={`font-semibold text-sm ${isBloqueada ? 'text-gray-400' : 'text-itec-text'}`}>{sub.name}</div>
+        <div className={`font-semibold text-sm ${isBloqueada ? 'text-itec-text' : 'text-itec-text'}`}>{sub.name}</div>
         {sub.grade !== undefined && (
           <div className="text-xs text-green-400 font-mono mt-1 font-bold">Nota: {sub.grade}</div>
         )}
       </td>
-      <td className="px-5 py-4 text-xs text-gray-400">
+      <td className="px-5 py-4 text-xs text-itec-text">
         <div className="flex flex-col gap-1">
           {sub.reqCursada?.length > 0 && <div><span className="font-semibold text-gray-500">Cursada:</span> {sub.reqCursada.map(id => allSubjects.find(s => s.id === id)?.name).join(', ')}</div>}
           {sub.reqAprobada?.length > 0 && <div><span className="font-semibold text-gray-500">Final:</span> {sub.reqAprobada.map(id => allSubjects.find(s => s.id === id)?.name).join(', ')}</div>}

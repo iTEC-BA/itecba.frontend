@@ -1,6 +1,6 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import { PageHeader } from '@components/ui/PageHeader';
-import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { MainLayout } from '@/components/templates/MainLayout';
 import { Button } from '@components/atoms/Button';
 import { useAuth } from '@context/AuthContext';
 
@@ -48,23 +48,23 @@ export const ResourcesPage: React.FC = () => {
   }, [rawResources, searchQuery, carrera, nivel, materia]);
 
   return (
-    <DashboardLayout>
+    <MainLayout>
         <PageHeader 
           title="Explorar Aportes"
           description="Resúmenes, parciales y guías compartidas por la comunidad de LA UTN."
           iconType="documentFill"
           colorTheme="orange"
          >
-           <Button variant="secondary" onClick={() => setIsAddModalOpen(true)} className="text-xs bg-orange-600/20 text-orange-500 border-none hover:bg-orange-600 hover:text-white transition-all">
+           <Button variant="secondary" onClick={() => setIsAddModalOpen(true)} className="text-xs bg-orange-600/20 text-orange-500 border-none hover:bg-orange-600 hover:text-itec-texttransition-all">
              + Aportar Archivo (+1 Punto)
            </Button>
            {isAdmin && (
-            <Button variant="primary" onClick={() => setIsAdminModalOpen(true)} className="relative text-xs bg-itec-surface border-itec-gray hover:bg-itec-gray transition-all shadow-lg">
+            <Button variant="primary" onClick={() => setIsAdminModalOpen(true)} className="relative text-xs bg-itec-box border-itec-gray hover:bg-itec-gray transition-all shadow-lg">
               Moderar Archivos
               {pendingCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-5 w-5 bg-orange-500 text-white text-[10px] items-center justify-center font-bold">{pendingCount}</span>
+                  <span className="relative inline-flex rounded-full h-5 w-5 bg-orange-500 text-itec-texttext-[10px] items-center justify-center font-bold">{pendingCount}</span>
                 </span>
               )}
             </Button>
@@ -102,6 +102,6 @@ export const ResourcesPage: React.FC = () => {
         )}
       </Suspense>
 
-    </DashboardLayout>
+    </MainLayout>
   );
 };

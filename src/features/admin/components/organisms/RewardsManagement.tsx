@@ -62,11 +62,11 @@ export const RewardsManagement: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center bg-[#1e1e1e] border border-[#333] p-5 rounded-xl">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <h2 className="text-xl font-bold text-itec-textflex items-center gap-2">
             <Icons type="star" className="w-5 h-5 text-itec-blue" />
             Gestión de Beneficios
           </h2>
-          <p className="text-sm text-gray-400 mt-1">Administra los beneficios canjeables por puntos.</p>
+          <p className="text-sm text-itec-text mt-1">Administra los beneficios canjeables por puntos.</p>
         </div>
         <Button variant="primary" onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
           <Icons type="plus" className="w-4 h-4" />
@@ -86,9 +86,9 @@ export const RewardsManagement: React.FC = () => {
                   <div className="w-8 h-8 rounded-md bg-[#1a1a1a] flex items-center justify-center text-itec-blue">
                     <Icons type={reward.icon as any} className="w-4 h-4" />
                   </div>
-                  <h3 className="text-white font-semibold flex-1 truncate">{reward.title}</h3>
+                  <h3 className="text-itec-textfont-semibold flex-1 truncate">{reward.title}</h3>
                 </div>
-                <p className="text-sm text-gray-400 mb-4 line-clamp-2 flex-1">{reward.description}</p>
+                <p className="text-sm text-itec-text mb-4 line-clamp-2 flex-1">{reward.description}</p>
                 <div className="flex justify-between items-center pt-3 border-t border-[#333]">
                   <span className="text-xs px-2 py-1 bg-[#1a1a1a] rounded text-gray-300 capitalize">{reward.type.replace('_', ' ')}</span>
                   <span className="text-itec-blue font-bold">{reward.pointsCost} pts</span>
@@ -105,14 +105,14 @@ export const RewardsManagement: React.FC = () => {
           <div className="bg-[#1e1e1e] border border-[#333] rounded-xl w-full max-w-lg p-6 shadow-2xl">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-white">Agregar Beneficio</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white">
+              <button onClick={() => setIsModalOpen(false)} className="text-itec-text hover:text-white">
                 <Icons type="close" className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Título del beneficio</label>
+                <label className="block text-sm text-itec-text mb-1">Título del beneficio</label>
                 <Input 
                   type="text" required fullWidth 
                   value={formData.title}
@@ -122,7 +122,7 @@ export const RewardsManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Descripción</label>
+                <label className="block text-sm text-itec-text mb-1">Descripción</label>
                 <textarea 
                   className="w-full bg-[#0a0a0a] border border-[#262626] text-itec-text px-4 py-2 rounded-lg focus:outline-none focus:border-itec-blue resize-none"
                   rows={3} required
@@ -133,7 +133,7 @@ export const RewardsManagement: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">Costo en Puntos</label>
+                  <label className="block text-sm text-itec-text mb-1">Costo en Puntos</label>
                   <Input 
                     type="number" required fullWidth min="1"
                     value={formData.pointsCost.toString()}
@@ -141,7 +141,7 @@ export const RewardsManagement: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">Tipo de Canje</label>
+                  <label className="block text-sm text-itec-text mb-1">Tipo de Canje</label>
                   <select 
                     className="w-full bg-[#0a0a0a] border border-[#262626] text-itec-text px-4 py-[10px] rounded-lg focus:outline-none focus:border-itec-blue appearance-none"
                     value={formData.type}
@@ -155,7 +155,7 @@ export const RewardsManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Ícono (Nombre exacto en UI/Icons)</label>
+                <label className="block text-sm text-itec-text mb-1">Ícono (Nombre exacto en UI/Icons)</label>
                 <Input 
                   type="text" required fullWidth 
                   value={formData.icon}

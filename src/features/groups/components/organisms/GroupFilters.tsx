@@ -43,7 +43,7 @@ export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
         <div className="p-2 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400 shadow-sm">
           <Icons type="search" className="w-5 h-5" />
         </div>
-        <h3 className="text-white font-bold text-lg">Radar de Grupos</h3>
+        <h3 className="text-itec-textfont-bold text-lg">Radar de Grupos</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8 relative z-10">
@@ -104,7 +104,7 @@ export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
             className={`cursor-pointer px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg w-full md:w-auto ${
               isSearchDisabled 
                 ? 'bg-slate-800 text-slate-500 border border-white/5 cursor-not-allowed' 
-                : 'bg-emerald-600 hover:bg-emerald-500 text-white hover:scale-[1.02] active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                : 'bg-emerald-600 hover:bg-emerald-500 text-itec-texthover:scale-[1.02] active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
             }`}
           >
             {isLoading ? (

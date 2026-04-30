@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { adminService} from '@features/admin/services/adminService';
 
-// Helper seguro
 const safeParseJSON = (key: string, fallback: any) => {
   try {
     const item = localStorage.getItem(key);
     return item ? JSON.parse(item) : fallback;
-  } catch (error) {
+  } catch {
     return fallback;
   }
 };
@@ -66,7 +65,7 @@ export const NotificationBell: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={toggleDropdown}
-        className="relative p-2.5 bg-itec-surface/50 border border-white/5 rounded-xl hover:bg-white/5 transition-colors outline-none flex items-center justify-center cursor-pointer"
+        className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-white/5 transition-colors outline-none flex items-center justify-center cursor-pointer"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -74,16 +73,16 @@ export const NotificationBell: React.FC = () => {
         </svg>
 
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-itec-bg shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-bounce-short">
+          <span className="absolute -top-1 -right-1 bg-red-500 text-itec-texttext-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-itec-bg shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-bounce-short">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-itec-surface/90 border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-[100] animate-in slide-in-from-top-2 fade-in">
+        <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-itec-box/90 border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-[100] animate-in slide-in-from-top-2 fade-in">
           <div className="p-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-            <h3 className="text-white font-bold tracking-wide">Notificaciones</h3>
+            <h3 className="text-itec-textfont-bold tracking-wide">Notificaciones</h3>
             <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Activas</span>
           </div>
 
@@ -96,11 +95,13 @@ export const NotificationBell: React.FC = () => {
             ) : (
               <div className="flex flex-col divide-y divide-white/5">
                 {activeNews.map(news => {
-                  if (!news) return null; // Fallback
+                  if (!news) return null;
                   let dateObj = new Date();
                   try {
                     dateObj = news.createdAt?.toDate ? news.createdAt.toDate() : new Date(news.createdAt || Date.now());
-                  } catch(e){}
+                  } catch (e) {
+                    console.error('❌ Error obteniendo fecha de notificación', e);
+                  }
 
                   return (
                     <div key={news.id} className="p-4 hover:bg-white/[0.03] transition-colors relative group cursor-pointer">
@@ -115,7 +116,7 @@ export const NotificationBell: React.FC = () => {
                           {dateObj.toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-itec-text line-clamp-2 leading-relaxed">
                         {news.message}
                       </p>
                     </div>

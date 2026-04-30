@@ -105,7 +105,7 @@ export const GlobalAnnouncement: React.FC = () => {
 
   return (
     <div className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-[9999] w-[calc(100%-3rem)] sm:w-[420px] flex flex-col gap-4 pointer-events-none drop-shadow-2xl">
-      <div className={`bg-itec-surface/95 border border-itec-gray/50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)] overflow-hidden pointer-events-auto transform transition-all duration-300 ease-out ${isExiting ? 'opacity-0 translate-x-8' : 'opacity-100 translate-x-0 animate-fade-in'}`}>
+      <div className={`bg-itec-box/95 border border-itec-gray/50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)] overflow-hidden pointer-events-auto transform transition-all duration-300 ease-out ${isExiting ? 'opacity-0 translate-x-8' : 'opacity-100 translate-x-0 animate-fade-in'}`}>
         <div className="h-[3px] w-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500"></div>
         <button onClick={handleDismissAll} className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 bg-white/5 hover:bg-white/10 p-1.5 rounded-full transition-all outline-none" title="Descartar todos">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -124,16 +124,16 @@ export const GlobalAnnouncement: React.FC = () => {
               </div>
             </div>
             {announcements.length > 1 && (
-              <span className="bg-black/40 border border-itec-gray/40 text-gray-400 text-[10px] font-bold px-2.5 py-1 rounded-md">
+              <span className="bg-black/40 border border-itec-gray/40 text-itec-text text-[10px] font-bold px-2.5 py-1 rounded-md">
                 {currentIndex + 1} / {announcements.length}
               </span>
             )}
           </div>
           <div className="mb-6">
-            <h4 className="text-lg font-black text-white mb-2 leading-snug">
+            <h4 className="text-lg font-black text-itec-textmb-2 leading-snug">
               {currentAnnouncement.title || 'Sin Título'}
             </h4>
-            <p className="text-sm text-gray-400 leading-relaxed font-medium">
+            <p className="text-sm text-itec-text leading-relaxed font-medium">
               {currentAnnouncement.message || 'Sin Mensaje'}
             </p>
           </div>

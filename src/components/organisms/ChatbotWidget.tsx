@@ -73,9 +73,9 @@ export const ChatbotWidget: React.FC = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {isOpen && (
-        <div className="bg-itec-surface border border-itec-gray rounded-2xl w-80 sm:w-87.5 h-112.5 shadow-2xl flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-5">
+        <div className="bg-itec-box border border-itec-gray rounded-2xl w-80 sm:w-87.5 h-112.5 shadow-2xl flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-5">
           
-          <div className="bg-itec-blue text-white p-4 flex justify-between items-center">
+          <div className="bg-itec-blue text-itec-textp-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
               <img src={logoItec} alt="Bot Logo" className="w-8 h-8 object-contain bg-white rounded-full p-0.5 shadow-md" />
               <div>
@@ -83,7 +83,7 @@ export const ChatbotWidget: React.FC = () => {
                 <p className="text-[10px] text-blue-200 uppercase tracking-widest">Servidor Activo</p>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-white hover:bg-blue-800 p-1 rounded transition-colors">
+            <button onClick={() => setIsOpen(false)} className="text-itec-texthover:bg-blue-800 p-1 rounded transition-colors">
               <div className="w-5 h-5">
                  <Icons type="close" />
               </div>
@@ -94,7 +94,7 @@ export const ChatbotWidget: React.FC = () => {
             {messages.map((msg, index) => (
               <div key={index} className={`max-w-[85%] p-3.5 rounded-2xl text-[14px] ${
                 msg.role === 'user' 
-                  ? 'bg-itec-blue text-white self-end rounded-tr-sm shadow-md' 
+                  ? 'bg-itec-blue text-itec-textself-end rounded-tr-sm shadow-md' 
                   : 'bg-itec-sidebar text-itec-text border border-itec-gray self-start rounded-tl-sm shadow-md'
               }`}>
                 {msg.role === 'user' ? (
@@ -117,7 +117,7 @@ export const ChatbotWidget: React.FC = () => {
               </div>
             ))}
             {isLoading && (
-              <div className="bg-itec-sidebar text-gray-400 p-3.5 rounded-2xl text-sm self-start rounded-tl-sm w-16 flex justify-center border border-itec-gray shadow-md">
+              <div className="bg-itec-sidebar text-itec-text p-3.5 rounded-2xl text-sm self-start rounded-tl-sm w-16 flex justify-center border border-itec-gray shadow-md">
                 <span className="animate-pulse font-bold tracking-widest">...</span>
               </div>
             )}
@@ -132,7 +132,7 @@ export const ChatbotWidget: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 disabled={isLoading}
                 placeholder="Escribe tu duda..."
-                className="flex-1 bg-itec-surface border border-itec-gray text-white px-3 py-2.5 rounded-xl focus:outline-none focus:border-itec-blue disabled:opacity-50 text-sm transition-colors"
+                className="flex-1 bg-itec-box border border-itec-gray text-itec-textpx-3 py-2.5 rounded-xl focus:outline-none focus:border-itec-blue disabled:opacity-50 text-sm transition-colors"
               />
               <Button type="submit" disabled={isLoading || !input.trim()} className="px-4 rounded-xl flex items-center justify-center">
                  <div className="w-[18px] h-[18px]">
@@ -146,7 +146,7 @@ export const ChatbotWidget: React.FC = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-12 h-12 rounded-full shadow-lg transition-transform hover:scale-105 flex items-center justify-center cursor-pointer border border-white/10 ${isOpen ? 'bg-itec-sidebar text-gray-400 hover:bg-itec-gray' : 'bg-itec-blue text-white hover:bg-blue-700'}`}
+        className={`w-12 h-12 rounded-full shadow-lg transition-transform hover:scale-105 flex items-center justify-center cursor-pointer border border-white/10 ${isOpen ? 'bg-itec-sidebar text-itec-text hover:bg-itec-gray' : 'bg-itec-blue text-itec-texthover:bg-blue-700'}`}
       >
         <div className={isOpen ? "w-6 h-6" : "w-7 h-7"}>
            <Icons type={isOpen ? "close" : "message"} />

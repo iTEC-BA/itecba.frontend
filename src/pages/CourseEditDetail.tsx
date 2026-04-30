@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { MainLayout } from '@/components/templates/MainLayout';
 import { Icons } from '@components/ui/Icons';
 import { Button } from '@components/atoms/Button';
 
@@ -96,27 +96,27 @@ export const CourseEditDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <DashboardLayout>
+      <MainLayout>
         <div className="flex items-center justify-center h-[70vh]">
           <div className="w-10 h-10 border-4 border-itec-gray border-t-itecBlue rounded-full animate-spin"></div>
         </div>
-      </DashboardLayout>
+      </MainLayout>
     );
   }
 
   if (isError || !course) {
     return (
-      <DashboardLayout>
+      <MainLayout>
         <div className="flex flex-col items-center justify-center h-[70vh]">
           <h2 className="text-xl font-bold text-red-400 mb-2">Error al cargar el curso</h2>
-          <button onClick={() => navigate('/cursos')} className="text-sm text-gray-400 underline hover:text-white">Volver al catálogo</button>
+          <button onClick={() => navigate('/cursos')} className="text-sm text-itec-text underline hover:text-white">Volver al catálogo</button>
         </div>
-      </DashboardLayout>
+      </MainLayout>
     );
   }
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-[1000px] mx-auto pb-24 pt-6 px-4 xl:px-0 animate-fade-in">
          
          {/* HEADER Y NAVEGACIÓN */}
@@ -124,15 +124,15 @@ export const CourseEditDetail: React.FC = () => {
            <div>
              <button 
                 onClick={() => navigate(-1)} 
-                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4 text-[10px] font-bold tracking-widest uppercase outline-none"
+                className="flex items-center gap-2 text-itec-text hover:text-itec-texttransition-colors mb-4 text-[10px] font-bold tracking-widest uppercase outline-none"
              >
                <div className="w-3 h-3"><Icons type="chevron-left" /></div>
                Cancelar y Volver
              </button>
-             <h1 className="text-3xl md:text-4xl font-black text-white flex items-center gap-3 tracking-tight">
+             <h1 className="text-3xl md:text-4xl font-black text-itec-textflex items-center gap-3 tracking-tight">
                <span className="text-itecBlue">✏️</span> Configurar Curso
              </h1>
-             <p className="text-gray-400 text-sm mt-1 font-medium">Modifica los detalles académicos y el plan de estudios.</p>
+             <p className="text-itec-text text-sm mt-1 font-medium">Modifica los detalles académicos y el plan de estudios.</p>
            </div>
            
            <Button 
@@ -152,7 +152,7 @@ export const CourseEditDetail: React.FC = () => {
          )}
 
          {/* CONTENEDOR GLASSMORPHISM PREMIUM */}
-         <div className="bg-itec-surface/40 border border-white/5 rounded-[2rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group">
+         <div className="bg-itec-box/40 border border-white/5 rounded-[2rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group">
             {/* Efecto de Luz de fondo */}
             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-itecBlue/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-itecBlue/20 transition-colors duration-700"></div>
             
@@ -182,6 +182,6 @@ export const CourseEditDetail: React.FC = () => {
             </div>
          </div>
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

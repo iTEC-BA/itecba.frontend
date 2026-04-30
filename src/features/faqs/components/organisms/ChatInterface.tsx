@@ -27,7 +27,7 @@ export const ChatInterface: React.FC = () => {
   }, [messages, isTyping]);
 
   return (
-    <div className="bg-itec-surface border border-itec-gray rounded-3xl shadow-2xl flex flex-col h-[650px] relative overflow-hidden animate-in fade-in duration-500">
+    <div className="bg-itec-box border border-itec-gray rounded-3xl shadow-2xl flex flex-col h-[650px] relative overflow-hidden animate-in fade-in duration-500">
       
       {/* HEADER */}
       <div className="px-6 py-4 border-b border-itec-gray bg-itec-sidebar flex items-center justify-between shrink-0 z-10 shadow-sm">
@@ -37,13 +37,13 @@ export const ChatInterface: React.FC = () => {
              <img src="/logo.png" alt="ITEC Logo" className="w-full h-full object-contain rounded-full" onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }} />
           </div>
           <div>
-            <h2 className="font-bold text-white text-lg leading-tight">ITEC Bot</h2>
+            <h2 className="font-bold text-itec-texttext-lg leading-tight">ITEC Bot</h2>
             <p className="text-[11px] text-teal-400 font-medium uppercase tracking-widest flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span> En línea
             </p>
           </div>
         </div>
-        <button onClick={clearChat} title="Limpiar chat" className="w-8 h-8 flex items-center justify-center rounded-full bg-itec-bg border border-itec-gray text-gray-400 hover:text-white hover:bg-itec-gray transition-colors">
+        <button onClick={clearChat} title="Limpiar chat" className="w-8 h-8 flex items-center justify-center rounded-full bg-itec-bg border border-itec-gray text-itec-text hover:text-itec-texthover:bg-itec-gray transition-colors">
           <Icons type="close" className="w-4 h-4" />
         </button>
       </div>
@@ -61,7 +61,7 @@ export const ChatInterface: React.FC = () => {
                 {msg.suggestions.map((sug, i) => (
                   <button 
                     key={i} onClick={() => handleSendMessage(sug)}
-                    className="bg-itec-sidebar border border-itec-gray text-teal-400 hover:bg-teal-600 hover:border-teal-500 hover:text-white transition-all px-4 py-2 rounded-xl text-[11px] md:text-xs shadow-sm font-medium"
+                    className="bg-itec-sidebar border border-itec-gray text-teal-400 hover:bg-teal-600 hover:border-teal-500 hover:text-itec-texttransition-all px-4 py-2 rounded-xl text-[11px] md:text-xs shadow-sm font-medium"
                   >
                     {sug}
                   </button>
@@ -75,7 +75,7 @@ export const ChatInterface: React.FC = () => {
         {messages.length === 1 && (
           <div className="flex flex-wrap gap-2 justify-start mt-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {INITIAL_SUGGESTIONS.map((sug, i) => (
-              <button key={i} onClick={() => handleSendMessage(sug)} className="bg-itec-bg border border-itec-gray text-gray-300 hover:border-teal-500 hover:text-white transition-all px-4 py-2.5 rounded-xl text-xs shadow-sm hover:shadow-teal-500/10">
+              <button key={i} onClick={() => handleSendMessage(sug)} className="bg-itec-bg border border-itec-gray text-gray-300 hover:border-teal-500 hover:text-itec-texttransition-all px-4 py-2.5 rounded-xl text-xs shadow-sm hover:shadow-teal-500/10">
                 {sug}
               </button>
             ))}
@@ -89,7 +89,7 @@ export const ChatInterface: React.FC = () => {
               <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mb-1 overflow-hidden p-1 shadow-sm bg-white">
                  <img src="/logo.png" alt="ITEC Logo" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }} />
               </div>
-              <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-itec-surface border border-itec-gray flex gap-1.5 items-center h-[42px] shadow-sm">
+              <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-itec-box border border-itec-gray flex gap-1.5 items-center h-[42px] shadow-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-teal-500/70 animate-bounce" style={{ animationDelay: '0ms' }}></span>
                 <span className="w-1.5 h-1.5 rounded-full bg-teal-500/70 animate-bounce" style={{ animationDelay: '150ms' }}></span>
                 <span className="w-1.5 h-1.5 rounded-full bg-teal-500/70 animate-bounce" style={{ animationDelay: '300ms' }}></span>

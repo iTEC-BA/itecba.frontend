@@ -56,19 +56,19 @@ export const CareerGraph: React.FC<CareerGraphProps> = ({ planData }) => {
     <div className="w-full h-full bg-[#0C1014] rounded-2xl overflow-hidden border border-itec-gray relative shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
       
       {/* LEYENDA FLOTANTE */}
-      <div className="absolute bottom-6 right-6 z-20 bg-itec-surface border border-itec-gray p-4 rounded-xl shadow-2xl flex flex-col gap-2">
-        <h4 className="text-xs font-bold text-white mb-1 uppercase tracking-widest">Leyenda</h4>
+      <div className="absolute bottom-6 right-6 z-20 bg-itec-box border border-itec-gray p-4 rounded-xl shadow-2xl flex flex-col gap-2">
+        <h4 className="text-xs font-bold text-itec-textmb-1 uppercase tracking-widest">Leyenda</h4>
         <div className="flex items-center gap-2">
-           <div className="w-6 h-0.5 bg-blue-500"></div><span className="text-[10px] text-gray-400">Regularizar (Cursar)</span>
+           <div className="w-6 h-0.5 bg-blue-500"></div><span className="text-[10px] text-itec-text">Regularizar (Cursar)</span>
         </div>
         <div className="flex items-center gap-2">
-           <div className="w-6 h-0.5 bg-red-500 border border-dashed border-transparent" style={{borderTopStyle: 'dashed'}}></div><span className="text-[10px] text-gray-400">Aprobar (Final)</span>
+           <div className="w-6 h-0.5 bg-red-500 border border-dashed border-transparent" style={{borderTopStyle: 'dashed'}}></div><span className="text-[10px] text-itec-text">Aprobar (Final)</span>
         </div>
       </div>
 
       <div className="absolute top-6 left-6 z-10 pointer-events-none">
-        <h2 className="text-2xl font-bold text-white drop-shadow-md">{planData.name}</h2>
-        <p className="text-gray-400 text-sm">Mapa de correlatividades. Arrastra el lienzo o haz scroll para hacer Zoom.</p>
+        <h2 className="text-2xl font-bold text-itec-textdrop-shadow-md">{planData.name}</h2>
+        <p className="text-itec-text text-sm">Mapa de correlatividades. Arrastra el lienzo o haz scroll para hacer Zoom.</p>
       </div>
 
       <ReactFlow
@@ -77,7 +77,7 @@ export const CareerGraph: React.FC<CareerGraphProps> = ({ planData }) => {
         fitView fitViewOptions={{ padding: 0.1 }} minZoom={0.1}
       >
         <Background color="#2b2b2b" gap={24} size={2} />
-        <Controls className="bg-itec-surface border border-itec-gray fill-white" showInteractive={false} />
+        <Controls className="bg-itec-box border border-itec-gray fill-white" showInteractive={false} />
       </ReactFlow>
     </div>
   );

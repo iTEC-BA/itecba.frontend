@@ -34,13 +34,13 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
-      <div className="bg-itec-surface border border-itec-gray rounded-3xl w-full max-w-md shadow-2xl p-6 relative">
+      <div className="bg-itec-box border border-itec-gray rounded-3xl w-full max-w-md shadow-2xl p-6 relative">
         <button onClick={onClose} className="absolute top-5 right-5 text-gray-500 hover:text-white">
           <Icons type="close" className="w-4 h-4" />
         </button>
 
-        <h2 className="text-xl font-bold text-white mb-1">Fechas de Ingreso</h2>
-        <p className="text-xs text-gray-400 mb-6">Agrega los eventos para el reloj de cuenta regresiva.</p>
+        <h2 className="text-xl font-bold text-itec-textmb-1">Fechas de Ingreso</h2>
+        <p className="text-xs text-itec-text mb-6">Agrega los eventos para el reloj de cuenta regresiva.</p>
 
         {/* Lista de Eventos Actuales */}
         <div className="mb-6 max-h-40 overflow-y-auto custom-scrollbar space-y-2 pr-2">
@@ -51,7 +51,7 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
               <div key={ev.id} className="bg-itec-bg border border-itec-gray p-3 rounded-xl flex justify-between items-center">
                 <div>
                   <p className="text-sm font-bold text-white">{ev.eventName}</p>
-                  <p className="text-[10px] text-gray-400">{new Date(ev.targetDate).toLocaleString()}</p>
+                  <p className="text-[10px] text-itec-text">{new Date(ev.targetDate).toLocaleString()}</p>
                 </div>
                 <button onClick={() => onDelete(ev.id!)} className="text-red-500 hover:text-red-400 p-2">
                   <Icons type="close" className="w-3 h-3" />
@@ -77,12 +77,12 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
               type="datetime-local" 
               value={targetDate}
               onChange={e => setTargetDate(e.target.value)}
-              className="w-full bg-itec-surface border border-itec-gray text-white px-4 py-2 rounded-xl focus:outline-none focus:border-purple-500 text-sm"
+              className="w-full bg-itec-box border border-itec-gray text-itec-textpx-4 py-2 rounded-xl focus:outline-none focus:border-purple-500 text-sm"
             />
             <Button 
               type="submit" 
               disabled={isSubmitting || !eventName || !targetDate} 
-              className="w-full bg-purple-600 hover:bg-purple-500 border-none text-white text-sm py-2"
+              className="w-full bg-purple-600 hover:bg-purple-500 border-none text-itec-texttext-sm py-2"
             >
               {isSubmitting ? 'Guardando...' : 'Agregar Evento'}
             </Button>

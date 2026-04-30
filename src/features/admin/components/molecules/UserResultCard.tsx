@@ -22,7 +22,7 @@ export const UserResultCard: React.FC<Props> = ({ user, isUpdating, onToggleRole
         />
         <div>
           <h3 className="text-xl font-bold text-white">{user.name}</h3>
-          <p className="text-sm text-gray-400 font-mono mt-1">{user.email}</p>
+          <p className="text-sm text-itec-text font-mono mt-1">{user.email}</p>
           <div className="mt-2">
             <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-md border ${
               isAdmin 
@@ -41,7 +41,7 @@ export const UserResultCard: React.FC<Props> = ({ user, isUpdating, onToggleRole
           disabled={isUpdating}
           className={`w-full md:w-auto px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-lg outline-none ${
             isAdmin 
-              ? 'bg-itec-surface border border-itec-gray text-white hover:border-red-500 hover:text-red-400' 
+              ? 'bg-itec-box border border-itec-gray text-itec-texthover:border-red-500 hover:text-red-400' 
               : 'bg-orange-600 hover:bg-orange-500 text-white'
           } ${isUpdating ? 'opacity-50 cursor-not-allowed' : ''}`}
         >

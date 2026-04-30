@@ -44,7 +44,7 @@ export const ResourceFilters: React.FC<Props> = ({
   }, []);
 
   return (
-    <div className="bg-itec-surface border border-itec-gray rounded-2xl p-6 shadow-xl mb-8">
+    <div className="bg-itec-box border border-itec-gray rounded-2xl p-6 shadow-xl mb-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="lg:col-span-2">
           <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Buscar por Título</label>
@@ -71,7 +71,7 @@ export const ResourceFilters: React.FC<Props> = ({
           {showMateriaDropdown && materiasSearchDisponibles.length > 0 && (
             <ul className="absolute z-50 w-full mt-1 bg-itec-sidebar border border-itec-gray rounded-lg shadow-2xl max-h-48 overflow-y-auto custom-scrollbar">
               {materiasSearchDisponibles.filter(m => m.toLowerCase().includes(materia.toLowerCase())).map(m => (
-                <li key={m} onClick={() => { setMateria(m); setShowMateriaDropdown(false); }} className="px-3 py-2 text-sm text-gray-300 hover:bg-orange-500 hover:text-white cursor-pointer border-b border-itec-gray/50">{m}</li>
+                <li key={m} onClick={() => { setMateria(m); setShowMateriaDropdown(false); }} className="px-3 py-2 text-sm text-gray-300 hover:bg-orange-500 hover:text-itec-textcursor-pointer border-b border-itec-gray/50">{m}</li>
               ))}
             </ul>
           )}
@@ -80,7 +80,7 @@ export const ResourceFilters: React.FC<Props> = ({
       
       {(searchQuery || carrera || nivel || materia) && (
          <div className="flex justify-end mt-4 pt-4 border-t border-itec-gray">
-           <Button variant="secondary" onClick={onClear} className="text-xs py-1.5 bg-itec-red/10 text-itec-red-skye border-itec-red/30 hover:bg-itec-red hover:text-white transition-colors">
+           <Button variant="secondary" onClick={onClear} className="text-xs py-1.5 bg-itec-red/10 text-itec-red-skye border-itec-red/30 hover:bg-itec-red hover:text-itec-texttransition-colors">
              Limpiar Filtros
            </Button>
          </div>

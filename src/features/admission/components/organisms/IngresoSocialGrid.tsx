@@ -43,10 +43,10 @@ export const IngresoSocialGrid: React.FC<Props> = ({ links }) => {
             key={link.id} 
             href={link.url} 
             target="_blank" rel="noopener noreferrer" 
-            className={`bg-itec-surface border border-itec-gray ${link.hoverClass} p-4 rounded-xl flex flex-col items-center text-center group transition-all hover:-translate-y-1 shadow-md`}
+            className={`bg-itec-box border border-itec-gray ${link.hoverClass} p-4 rounded-xl flex flex-col items-center text-center group transition-all hover:-translate-y-1 shadow-md`}
           >
             {renderIcon(link.iconType, link.colorClass)}
-            <h4 className="font-bold text-white text-sm mb-0.5">{link.title}</h4>
+            <h4 className="font-bold text-itec-texttext-sm mb-0.5">{link.title}</h4>
             <span className="text-[10px] text-gray-500">{link.subtitle}</span>
           </a>
         ))}

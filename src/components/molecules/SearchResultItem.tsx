@@ -17,7 +17,7 @@ export const SearchResultItem: React.FC<Props> = ({ type, title, subtitle, link,
       case 'curso': return { bg: 'bg-blue-500/20', text: 'text-blue-400', icon: 'play' };
       case 'aporte': return { bg: 'bg-orange-500/20', text: 'text-orange-400', icon: 'documentFill' };
       case 'grupo': return { bg: 'bg-green-500/20', text: 'text-green-400', icon: 'users' };
-      default: return { bg: 'bg-gray-500/20', text: 'text-gray-400', icon: 'search' };
+      default: return { bg: 'bg-gray-500/20', text: 'text-itec-text', icon: 'search' };
     }
   };
 
@@ -29,8 +29,8 @@ export const SearchResultItem: React.FC<Props> = ({ type, title, subtitle, link,
         <div className="w-5 h-5"><Icons type={style.icon as any} /></div>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-white truncate">{title}</p>
-        <p className="text-[11px] text-gray-400 truncate">{subtitle}</p>
+        <p className="text-sm font-bold text-itec-texttruncate">{title}</p>
+        <p className="text-[11px] text-itec-text truncate">{subtitle}</p>
       </div>
     </>
   );

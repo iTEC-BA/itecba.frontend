@@ -54,10 +54,10 @@ export const CourseVideoListEditor: React.FC<Props> = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-itec-gray pb-2">
         <div>
           <h3 className="text-lg font-bold text-white">Contenido del curso</h3>
-          <p className="text-[11px] text-gray-400">Pista: Mantén presionado el ícono ⋮⋮ para reordenar los videos.</p>
+          <p className="text-[11px] text-itec-text">Pista: Mantén presionado el ícono ⋮⋮ para reordenar los videos.</p>
         </div>
 
-        <div className="flex bg-itec-surface border border-itec-gray rounded-full p-1">
+        <div className="flex bg-itec-box border border-itec-gray rounded-full p-1">
           <button type="button" onClick={() => setMode('manual')} className={`px-4 py-1 rounded-full text-[11px] font-bold uppercase transition-colors ${mode === 'manual' ? 'bg-itec-gray text-white' : 'text-gray-500 hover:text-gray-300'}`}>
             Manual
           </button>
@@ -70,9 +70,9 @@ export const CourseVideoListEditor: React.FC<Props> = ({
       {mode === 'youtube' && (
         <div className="flex flex-col sm:flex-row gap-2 pb-4">
           <div className="flex-1">
-             <Input fullWidth placeholder="Pega el link de la Playlist aquí..." value={playlistUrl} onChange={(e: any) => setPlaylistUrl(e.target.value)} className="bg-itec-surface border-red-500/30 text-sm py-2 focus:border-red-500" />
+             <Input fullWidth placeholder="Pega el link de la Playlist aquí..." value={playlistUrl} onChange={(e: any) => setPlaylistUrl(e.target.value)} className="bg-itec-box border-red-500/30 text-sm py-2 focus:border-red-500" />
           </div>
-          <Button type="button" onClick={onFetchPlaylist} disabled={isFetching || !playlistUrl} className="bg-red-600 hover:bg-red-700 border-none text-white px-6 w-full sm:w-auto shrink-0 py-2">
+          <Button type="button" onClick={onFetchPlaylist} disabled={isFetching || !playlistUrl} className="bg-red-600 hover:bg-red-700 border-none text-itec-textpx-6 w-full sm:w-auto shrink-0 py-2">
             {isFetching ? 'Extrayendo...' : 'Extraer Videos'}
           </Button>
         </div>
@@ -86,13 +86,13 @@ export const CourseVideoListEditor: React.FC<Props> = ({
             onDragStart={() => handleDragStart(index)}
             onDragOver={handleDragOver}
             onDrop={() => handleDrop(index)}
-            className={`flex items-center gap-2 p-2 rounded-xl bg-itec-surface/30 hover:bg-itec-surface border border-transparent hover:border-itec-gray/50 transition-all group ${draggedIndex === index ? 'opacity-40 scale-[0.98] border-dashed border-itec-gray' : ''}`}
+            className={`flex items-center gap-2 p-2 rounded-xl bg-itec-box/30 hover:bg-itec-box border border-transparent hover:border-itec-gray/50 transition-all group ${draggedIndex === index ? 'opacity-40 scale-[0.98] border-dashed border-itec-gray' : ''}`}
           >
-            <div className="cursor-grab active:cursor-grabbing text-gray-500 hover:text-white px-2 py-2 flex items-center justify-center">
+            <div className="cursor-grab active:cursor-grabbing text-gray-500 hover:text-itec-textpx-2 py-2 flex items-center justify-center">
               <span className="text-xl leading-none font-bold">⋮⋮</span>
             </div>
             
-            <div className="w-6 h-6 rounded-full bg-itec-bg border border-itec-gray flex items-center justify-center shrink-0 text-gray-400 group-hover:text-white group-hover:border-itec-blue transition-colors">
+            <div className="w-6 h-6 rounded-full bg-itec-bg border border-itec-gray flex items-center justify-center shrink-0 text-itec-text group-hover:text-itec-textgroup-hover:border-itec-blue transition-colors">
               <span className="text-[10px] font-bold">{index + 1}</span>
             </div>
 
@@ -104,7 +104,7 @@ export const CourseVideoListEditor: React.FC<Props> = ({
                   value={video.title} 
                   onChange={(e) => updateVideo(index, 'title', e.target.value)} 
                   title="Clic para editar el título"
-                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-sm text-white focus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-600 font-medium transition-all"
+                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-sm text-itec-textfocus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-600 font-medium transition-all"
                 />
               </div>
               <div className="sm:col-span-3">
@@ -113,7 +113,7 @@ export const CourseVideoListEditor: React.FC<Props> = ({
                   placeholder="ID: dQw4w9WgXcQ" 
                   value={video.youtubeId} 
                   onChange={(e) => updateVideo(index, 'youtubeId', e.target.value)} 
-                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-[11px] text-gray-400 font-mono focus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-700 transition-all"
+                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-[11px] text-itec-text font-mono focus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-700 transition-all"
                 />
               </div>
               <div className="sm:col-span-2 flex justify-end">
@@ -122,7 +122,7 @@ export const CourseVideoListEditor: React.FC<Props> = ({
                   placeholder="00:00" 
                   value={video.duration} 
                   onChange={(e) => updateVideo(index, 'duration', e.target.value)} 
-                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-xs text-gray-400 text-right focus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-600 transition-all"
+                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-xs text-itec-text text-right focus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-600 transition-all"
                 />
               </div>
             </div>
@@ -134,8 +134,8 @@ export const CourseVideoListEditor: React.FC<Props> = ({
         ))}
       </div>
 
-      <button type="button" onClick={addVideoRow} className="mt-4 text-gray-400 hover:text-white text-sm font-medium flex items-center gap-2 transition-colors py-2">
-        <div className="w-6 h-6 rounded-full bg-itec-surface border border-itec-gray flex items-center justify-center">
+      <button type="button" onClick={addVideoRow} className="mt-4 text-itec-text hover:text-itec-texttext-sm font-medium flex items-center gap-2 transition-colors py-2">
+        <div className="w-6 h-6 rounded-full bg-itec-box border border-itec-gray flex items-center justify-center">
           <Icons type="plus" className="w-3 h-3" />
         </div>
         Añadir nuevo video

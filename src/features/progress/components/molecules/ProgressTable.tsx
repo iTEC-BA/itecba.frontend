@@ -13,11 +13,11 @@ export const ProgressTable: React.FC<Props> = ({ subjects, allSubjects, onAction
   if (subjects.length === 0) return null;
 
   return (
-    <div className="bg-itec-surface border border-itec-gray/50 rounded-b-xl rounded-tr-xl overflow-hidden shadow-lg animate-fade-in">
+    <div className="bg-itec-box border border-itec-gray/50 rounded-b-xl rounded-tr-xl overflow-hidden shadow-lg animate-fade-in">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[850px]">
           <thead>
-            <tr className="bg-itec-bg/80 border-b border-itec-gray text-xs uppercase tracking-widest text-gray-400">
+            <tr className="bg-itec-bg/80 border-b border-itec-gray text-xs uppercase tracking-widest text-itec-text">
               <th className="px-5 py-4 font-bold w-16 text-center">Cód</th>
               <th className="px-5 py-4 font-bold w-64">Materia</th>
               <th className="px-5 py-4 font-bold w-48">Correlativas Req.</th>

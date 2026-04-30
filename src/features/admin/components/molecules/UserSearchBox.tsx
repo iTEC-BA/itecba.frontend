@@ -26,8 +26,8 @@ export const UserSearchBox: React.FC<Props> = ({ searchMutation, toggleMutation 
   };
 
   return (
-    <div className="bg-itec-surface/40 border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-      <h3 className="text-white font-bold mb-1">Buscar Usuario</h3>
+    <div className="bg-itec-box/40 border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+      <h3 className="text-itec-textfont-bold mb-1">Buscar Usuario</h3>
       <p className="text-gray-500 text-xs mb-6">Encuentra un alumno por su correo para modificar sus permisos.</p>
 
       <form onSubmit={handleSubmit} className="relative flex items-center max-w-md">
@@ -37,12 +37,12 @@ export const UserSearchBox: React.FC<Props> = ({ searchMutation, toggleMutation 
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="correo@frba.utn.edu.ar"
-          className="w-full bg-black/30 border border-white/10 rounded-2xl py-3.5 pl-10 pr-24 text-white text-sm focus:border-itecBlue focus:ring-1 focus:ring-itecBlue/50 outline-none transition-all"
+          className="w-full bg-black/30 border border-white/10 rounded-2xl py-3.5 pl-10 pr-24 text-itec-texttext-sm focus:border-itecBlue focus:ring-1 focus:ring-itecBlue/50 outline-none transition-all"
         />
         <button 
           type="submit" 
           disabled={searchMutation.isPending || !email}
-          className="absolute right-2 bg-itecBlue hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded-xl transition-colors disabled:opacity-50"
+          className="absolute right-2 bg-itecBlue hover:bg-blue-600 text-itec-texttext-xs font-bold py-2 px-4 rounded-xl transition-colors disabled:opacity-50"
         >
           {searchMutation.isPending ? '...' : 'Buscar'}
         </button>
@@ -57,7 +57,7 @@ export const UserSearchBox: React.FC<Props> = ({ searchMutation, toggleMutation 
           <div className="flex items-center gap-3">
             <img src={searchMutation.data.photoURL || `https://ui-avatars.com/api/?name=${searchMutation.data.name}`} alt="avatar" className="w-10 h-10 rounded-full border border-white/10" />
             <div>
-              <p className="text-white text-sm font-bold">{searchMutation.data.name}</p>
+              <p className="text-itec-texttext-sm font-bold">{searchMutation.data.name}</p>
               <p className="text-gray-500 text-[10px]">{searchMutation.data.email}</p>
             </div>
           </div>

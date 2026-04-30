@@ -18,11 +18,11 @@ export const PageHeader: React.FC<Props> = ({ title, description, iconType, imag
       case 'purple': return 'bg-purple-500/10 text-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.3)] border-purple-500/20';
       case 'orange': return 'bg-orange-500/10 text-orange-400 shadow-[0_0_30px_rgba(249,115,22,0.3)] border-orange-500/20';
       case 'blue': return 'bg-blue-500/10 text-blue-400 shadow-[0_0_30px_rgba(59,130,246,0.3)] border-blue-500/20';
-      case 'green': return 'bg-green-500/10 text-green-400 shadow-[0_0_30px_rgba(34,197,94,0.3)] border-green-500/20';
+      case 'green': return 'bg-itec-groups text-itec-text-reverse shadow-[0_0_30px_rgba(34,197,94,0.3)] border-green-500/20';
       case 'yellow': return 'bg-yellow-500/10 text-yellow-400 shadow-[0_0_30px_rgba(234,179,8,0.3)] border-yellow-500/20';
       case 'teal': return 'bg-teal-500/10 text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.3)] border-teal-500/20';
       case 'red': return 'bg-red-500/10 text-red-400 shadow-[0_0_30px_rgba(239,68,68,0.3)] border-red-500/20';
-      default: return 'bg-gray-500/10 text-gray-400 shadow-[0_0_30px_rgba(156,163,175,0.3)] border-gray-500/20';
+      default: return 'bg-gray-500/10 text-itec-text shadow-[0_0_30px_rgba(156,163,175,0.3)] border-gray-500/20';
     }
   };
 
@@ -53,8 +53,8 @@ export const PageHeader: React.FC<Props> = ({ title, description, iconType, imag
         </div>
       )}
       <div className='flex flex-col items-center mx-auto xl:items-start xl:mx-2'>
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">{title}</h1>
-        <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+        <h1 className="text-3xl md:text-4xl font-bold text-itec-textmb-2 tracking-tight">{title}</h1>
+        <p className="text-itec-text text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
           {description}
         </p>
       </div>

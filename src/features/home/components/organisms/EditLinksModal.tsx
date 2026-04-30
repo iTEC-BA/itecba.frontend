@@ -62,10 +62,10 @@ export const EditLinksModal: React.FC<Props> = ({ isOpen, onClose, onLinksUpdate
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
-      <div className="bg-itec-surface border border-itec-gray rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="bg-itec-box border border-itec-gray rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh]">
         
         <div className="p-5 border-b border-itec-gray flex justify-between items-center bg-itec-bg rounded-t-2xl shrink-0">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-bold text-itec-textflex items-center gap-2">
             <span className="text-orange-500">⚙️</span> Gestionar Links Universitarios
           </h2>
           <button onClick={onClose} className="text-gray-500 hover:text-white"><Icons type="close" className="w-5 h-5" /></button>
@@ -79,15 +79,15 @@ export const EditLinksModal: React.FC<Props> = ({ isOpen, onClose, onLinksUpdate
             <div className="grid grid-cols-12 gap-3">
               <div className="col-span-2">
                 <label className="block text-[10px] text-gray-500 mb-1">Emoji</label>
-                <Input fullWidth value={form.icon} onChange={e => setForm({...form, icon: e.target.value})} className="bg-itec-surface text-center" />
+                <Input fullWidth value={form.icon} onChange={e => setForm({...form, icon: e.target.value})} className="bg-itec-box text-center" />
               </div>
               <div className="col-span-10 md:col-span-5">
                 <label className="block text-[10px] text-gray-500 mb-1">Título</label>
-                <Input fullWidth placeholder="Ej: Mapa Sede..." value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="bg-itec-surface" />
+                <Input fullWidth placeholder="Ej: Mapa Sede..." value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="bg-itec-box" />
               </div>
               <div className="col-span-12 md:col-span-5">
                 <label className="block text-[10px] text-gray-500 mb-1">URL / Link</label>
-                <Input fullWidth placeholder="https://..." value={form.url} onChange={e => setForm({...form, url: e.target.value})} className="bg-itec-surface" />
+                <Input fullWidth placeholder="https://..." value={form.url} onChange={e => setForm({...form, url: e.target.value})} className="bg-itec-box" />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
@@ -106,13 +106,13 @@ export const EditLinksModal: React.FC<Props> = ({ isOpen, onClose, onLinksUpdate
                     <div className="flex items-center gap-3 overflow-hidden pr-4">
                       <span className="text-xl">{link.icon}</span>
                       <div className="truncate">
-                        <p className="text-sm font-bold text-white truncate">{link.title}</p>
+                        <p className="text-sm font-bold text-itec-texttruncate">{link.title}</p>
                         <p className="text-[10px] text-gray-500 truncate">{link.url}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0">
-                      <button onClick={() => handleEdit(link)} className="p-2 bg-itec-surface hover:bg-itec-blue text-gray-400 hover:text-white rounded-md transition-colors"><Icons type="edit" className="w-3.5 h-3.5" /></button>
-                      <button onClick={() => handleDelete(link.id!)} className="p-2 bg-itec-surface hover:bg-red-500 text-gray-400 hover:text-white rounded-md transition-colors"><Icons type="trash" className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => handleEdit(link)} className="p-2 bg-itec-box hover:bg-itec-blue text-itec-text hover:text-itec-textrounded-md transition-colors"><Icons type="edit" className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => handleDelete(link.id!)} className="p-2 bg-itec-box hover:bg-red-500 text-itec-text hover:text-itec-textrounded-md transition-colors"><Icons type="trash" className="w-3.5 h-3.5" /></button>
                     </div>
                   </div>
                 ))}

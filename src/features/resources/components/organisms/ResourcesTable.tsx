@@ -20,7 +20,7 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <div className="w-10 h-10 border-4 border-itec-gray border-t-orange-500 rounded-full animate-spin"></div>
-        <p className="text-gray-400 mt-4 text-sm font-medium">Cargando aportes de la comunidad...</p>
+        <p className="text-itec-text mt-4 text-sm font-medium">Cargando aportes de la comunidad...</p>
       </div>
     );
   }
@@ -28,13 +28,13 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
   return (
     <div className="animate-in fade-in duration-500">
       <div className="flex justify-between items-center mb-4 px-1">
-        <h3 className="text-sm font-bold text-white uppercase tracking-widest">
+        <h3 className="text-sm font-bold text-itec-textuppercase tracking-widest">
           Mostrando {resources.length} Aporte{resources.length !== 1 ? 's' : ''}
         </h3>
       </div>
 
       {resources.length > 0 ? (
-        <div className="bg-itec-surface border border-itec-gray rounded-2xl overflow-hidden shadow-2xl">
+        <div className="bg-itec-box border border-itec-gray rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead className="bg-itec-bg border-b border-itec-gray">
@@ -50,11 +50,11 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
                   <tr key={res.id} className="border-b border-itec-gray/30 hover:bg-itec-gray/30 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-itec-sidebar border border-itec-gray flex items-center justify-center shrink-0 text-gray-400 group-hover:text-orange-400 transition-colors">
+                        <div className="w-10 h-10 rounded-lg bg-itec-sidebar border border-itec-gray flex items-center justify-center shrink-0 text-itec-text group-hover:text-orange-400 transition-colors">
                           <div className="w-5 h-5"><Icons type="documentFill" /></div>
                         </div>
                         <div>
-                          <p className="text-white font-bold text-sm truncate max-w-[250px] sm:max-w-sm">{res.title}</p>
+                          <p className="text-itec-textfont-bold text-sm truncate max-w-[250px] sm:max-w-sm">{res.title}</p>
                           <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1.5">
                             Formato: {getFormatIcon(res.formato)}
                           </p>
@@ -75,7 +75,7 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
                         <a 
                           href={res.link} 
                           target="_blank" rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center p-2.5 bg-itec-bg hover:bg-itec-sidebar border border-itec-gray text-gray-300 hover:text-white rounded-xl transition-all"
+                          className="inline-flex items-center justify-center p-2.5 bg-itec-bg hover:bg-itec-sidebar border border-itec-gray text-gray-300 hover:text-itec-textrounded-xl transition-all"
                           title="Ver Archivo"
                         >
                           <div className="w-4 h-4"><Icons type="externalLink" /></div>
@@ -83,7 +83,7 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
                         <a 
                           href={res.link} 
                           target="_blank" rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-2 bg-itec-bg hover:bg-orange-600 border border-itec-gray hover:border-orange-500 text-gray-300 hover:text-white py-2 px-4 rounded-xl text-xs font-bold transition-all shadow-sm"
+                          className="inline-flex items-center justify-center gap-2 bg-itec-bg hover:bg-orange-600 border border-itec-gray hover:border-orange-500 text-gray-300 hover:text-itec-textpy-2 px-4 rounded-xl text-xs font-bold transition-all shadow-sm"
                         >
                           <div className="w-4 h-4"><Icons type="download" /></div>
                           Descargar
@@ -97,7 +97,7 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
           </div>
         </div>
       ) : (
-        <div className="text-center bg-itec-surface border border-itec-gray rounded-xl p-16">
+        <div className="text-center bg-itec-box border border-itec-gray rounded-xl p-16">
           <span className="text-5xl block mb-4 opacity-50">📂</span>
           <p className="text-gray-300 text-lg font-bold mb-2">No se encontraron resultados</p>
           <p className="text-gray-500 mb-6 text-sm">No hay apuntes que coincidan con la materia o filtro aplicado.</p>

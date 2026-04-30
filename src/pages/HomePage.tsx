@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth } from "@context/AuthContext";
-import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { MainLayout } from "@/components/templates/MainLayout";
 import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
 import { HubNavigation } from "@features/home/components/organisms/HubNavigation";
 
@@ -15,7 +15,7 @@ export const HomePage: React.FC = () => {
   const { user, isAdmin } = useAuth();
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <UniversalSearch />
       <WelcomeWidget userName={user?.name} />
       
@@ -24,6 +24,6 @@ export const HomePage: React.FC = () => {
       <UniversityLinksWidget isAdmin={isAdmin} />
       <HubNavigation />
       <NewsWidget />
-    </DashboardLayout>
+    </MainLayout>
   );
 };

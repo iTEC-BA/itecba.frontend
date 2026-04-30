@@ -15,7 +15,7 @@ export default function CardCourseState() {
           <p className="text-xs text-slate-400">Unidad 3: Integrales Múltiples</p>
         </div>
 
-        <button className="mt-6 w-full bg-slate-800 hover:bg-orange-500 text-white text-sm font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+        <button className="mt-6 w-full bg-slate-800 hover:bg-orange-500 text-itec-texttext-sm font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
           <div className="w-4 h-4"><Icons type="playFill" /></div>
           Retomar Clase
         </button>

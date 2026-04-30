@@ -64,7 +64,7 @@ export const UniversityLinksWidget: React.FC<Props> = ({ isAdmin }) => {
               href={link.url}
               target={link.url.startsWith('/') ? "_self" : "_blank"}
               rel="noopener noreferrer"
-              className="bg-itec-surface border border-itec-gray hover:border-gray-400 rounded-full px-3 py-1.5 flex items-center gap-1.5 text-[11px] font-medium text-gray-300 hover:text-white transition-colors"
+              className="bg-itec-box border border-itec-gray hover:border-gray-400 rounded-full px-3 py-1.5 flex items-center gap-1.5 text-[11px] font-medium text-gray-300 hover:text-itec-texttransition-colors"
             >
               <span>{link.icon}</span> {link.title}
             </a>

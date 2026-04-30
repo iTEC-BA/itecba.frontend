@@ -11,10 +11,10 @@ interface Props {
 
 export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmail, toggleMutation }) => {
   return (
-    <div className="bg-itec-surface/40 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+    <div className="bg-itec-box/40 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
       <div className="p-6 md:p-8 border-b border-white/5 flex items-center justify-between">
         <div>
-          <h3 className="text-white font-bold">Personal Autorizado</h3>
+          <h3 className="text-itec-textfont-bold">Personal Autorizado</h3>
           <p className="text-gray-500 text-xs mt-1">Usuarios con nivel de Administrador.</p>
         </div>
         <span className="bg-itecBlue/10 text-itecBlue text-xs font-bold px-3 py-1">
@@ -45,10 +45,10 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
                     <td className="px-8 py-4 flex items-center gap-4">
                       <div className="relative">
                         <img src={admin.photoURL || `https://ui-avatars.com/api/?name=${admin.name}`} className="w-10 h-10 rounded-full border border-white/10" alt="avatar" />
-                        <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-itec-surface rounded-full"></div>
+                        <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-itec-box rounded-full"></div>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-white flex items-center gap-2">
+                        <p className="text-sm font-bold text-itec-textflex items-center gap-2">
                           {admin.name} 
                           {isMe && <span className="bg-white/10 text-gray-300 text-[9px] px-1.5 py-0.5 rounded">TÚ</span>}
                         </p>
@@ -62,7 +62,7 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
                         className={`text-xs font-bold px-4 py-2 rounded-xl transition-all outline-none ${
                           isSuperAdmin 
                             ? 'text-gray-600 cursor-not-allowed' 
-                            : 'text-gray-400 hover:text-red-400 hover:bg-red-500/10'
+                            : 'text-itec-text hover:text-red-400 hover:bg-red-500/10'
                         }`}
                       >
                         {isSuperAdmin ? 'Inamovible' : 'Revocar'}

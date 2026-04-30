@@ -141,15 +141,15 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
     <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
       <div className="bg-itec-bg border border-itec-gray rounded-3xl w-full max-w-3xl max-h-[90vh] shadow-2xl relative flex flex-col overflow-hidden">
 
-        <button onClick={onClose} disabled={isPending} className="absolute top-5 right-5 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-itec-surface border border-itec-gray text-gray-500 hover:text-white transition-colors disabled:opacity-50">
+        <button onClick={onClose} disabled={isPending} className="absolute top-5 right-5 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-itec-box border border-itec-gray text-gray-500 hover:text-itec-texttransition-colors disabled:opacity-50">
           <Icons type="close" className="w-4 h-4" />
         </button>
 
         <div className="p-8 pb-4 shrink-0">
-          <h2 className="text-2xl font-bold text-white mb-1">
+          <h2 className="text-2xl font-bold text-itec-textmb-1">
             {existingCourse ? 'Editar Curso' : 'Creador de Cursos'}
           </h2>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-itec-text">
             {existingCourse ? 'Modifica la información o reordena los videos.' : 'Agrega o importa contenido para los estudiantes.'}
           </p>
         </div>
@@ -180,8 +180,8 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
 
           </div>
 
-          <div className="p-6 border-t border-itec-gray bg-itec-surface flex justify-end gap-3 shrink-0">
-            <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="bg-itec-bg border-itec-gray text-gray-400 hover:text-white">
+          <div className="p-6 border-t border-itec-gray bg-itec-box flex justify-end gap-3 shrink-0">
+            <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="bg-itec-bg border-itec-gray text-itec-text hover:text-white">
               Cancelar
             </Button>
             {/* Usamos isPending en el botón */}

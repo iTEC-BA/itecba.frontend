@@ -27,7 +27,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({ reward, onClose, onCon
       <div className="bg-[#1e1e1e] border border-[#333] rounded-xl w-full max-w-md p-6 shadow-2xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-white">Configurar Canje</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <button onClick={onClose} className="text-itec-text hover:text-white">
             <Icons type="close" className="w-5 h-5" />
           </button>
         </div>
@@ -42,7 +42,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({ reward, onClose, onCon
             <>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">Fecha preferida</label>
+                  <label className="block text-sm text-itec-text mb-1">Fecha preferida</label>
                   <Input 
                     type="date" 
                     required 
@@ -51,7 +51,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({ reward, onClose, onCon
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">Hora preferida</label>
+                  <label className="block text-sm text-itec-text mb-1">Hora preferida</label>
                   <Input 
                     type="time" 
                     required 
@@ -61,7 +61,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({ reward, onClose, onCon
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Temas a tratar / Dudas específicas</label>
+                <label className="block text-sm text-itec-text mb-1">Temas a tratar / Dudas específicas</label>
                 <textarea 
                   className="w-full bg-[#0a0a0a] border border-[#262626] text-itec-text px-4 py-2 rounded-lg focus:outline-none focus:border-itec-blue"
                   rows={3}
@@ -75,7 +75,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({ reward, onClose, onCon
 
           {/* Campo universal de contacto */}
           <div>
-            <label className="block text-sm text-gray-400 mb-1">
+            <label className="block text-sm text-itec-text mb-1">
               {reward.type === 'group_access' ? 'Tu número de WhatsApp (con código de área)' : 'Email o Teléfono de contacto'}
             </label>
             <Input 

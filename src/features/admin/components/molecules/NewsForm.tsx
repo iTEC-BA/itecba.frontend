@@ -22,13 +22,13 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
   };
 
   return (
-    <div className="bg-itec-surface border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl relative overflow-hidden group">
+    <div className="bg-itec-box border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl relative overflow-hidden group">
       <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-[80px] pointer-events-none transition-opacity group-hover:bg-orange-500/10"></div>
       <div className="relative z-10">
         <div className="flex items-center gap-4 mb-8">
           <div>
-            <h3 className="text-xl font-bold text-white tracking-tight">Redactar Aviso</h3>
-            <p className="text-xs text-gray-400 font-medium mt-0.5">Comunica novedades a todos los alumnos.</p>
+            <h3 className="text-xl font-bold text-itec-texttracking-tight">Redactar Aviso</h3>
+            <p className="text-xs text-itec-text font-medium mt-0.5">Comunica novedades a todos los alumnos.</p>
           </div>
         </div>
         
@@ -36,21 +36,21 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
           
           {/* Título */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 pl-1">Título del Comunicado</label>
+            <label className="text-[11px] font-bold uppercase tracking-widest text-itec-text pl-1">Título del Comunicado</label>
             <input 
               type="text" required placeholder="Ej: Apertura de inscripciones 2026" 
               value={form.title} onChange={e => setForm({...form, title: e.target.value})} 
-              className="w-full bg-white/5 hover:bg-white/[0.07] border border-white/10 rounded-xl py-3.5 px-4 text-white text-sm focus:bg-white/10 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none transition-all placeholder-gray-500" 
+              className="w-full bg-white/5 hover:bg-white/[0.07] border border-white/10 rounded-xl py-3.5 px-4 text-itec-texttext-sm focus:bg-white/10 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none transition-all placeholder-gray-500" 
             />
           </div>
 
           {/* Mensaje */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 pl-1">Cuerpo del Mensaje</label>
+            <label className="text-[11px] font-bold uppercase tracking-widest text-itec-text pl-1">Cuerpo del Mensaje</label>
             <textarea 
               required placeholder="Detalla la información aquí..."
               value={form.message} onChange={e => setForm({...form, message: e.target.value})} 
-              className="w-full bg-white/5 hover:bg-white/[0.07] border border-white/10 rounded-xl p-4 text-white text-sm focus:bg-white/10 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none min-h-[140px] resize-none transition-all placeholder-gray-500 custom-scrollbar" 
+              className="w-full bg-white/5 hover:bg-white/[0.07] border border-white/10 rounded-xl p-4 text-itec-texttext-sm focus:bg-white/10 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 outline-none min-h-[140px] resize-none transition-all placeholder-gray-500 custom-scrollbar" 
             />
           </div>
 
@@ -61,7 +61,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
               <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Tiempo Visible</label>
               <select 
                 value={form.hours} onChange={e => setForm({...form, hours: e.target.value})} 
-                className="w-full bg-transparent text-white text-sm font-semibold outline-none cursor-pointer appearance-none p-2"
+                className="w-full bg-transparent text-itec-texttext-sm font-semibold outline-none cursor-pointer appearance-none p-2"
               >
                 <option value="5" className="bg-itec-bg ">5 Horas</option>
                 <option value="12" className="bg-itec-bg">12 Horas</option>
@@ -101,7 +101,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
           <Button 
             type="submit" 
             disabled={createMutation.isPending} 
-            className="w-full py-4 rounded-xl font-black tracking-wide bg-orange-500 hover:bg-orange-600 text-white border-none mt-4 shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_25px_rgba(249,115,22,0.4)] transition-all outline-none"
+            className="w-full py-4 rounded-xl font-black tracking-wide bg-orange-500 hover:bg-orange-600 text-itec-textborder-none mt-4 shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_25px_rgba(249,115,22,0.4)] transition-all outline-none"
           >
             {createMutation.isPending ? 'PUBLICANDO AVISO...' : 'PUBLICAR EN LA PLATAFORMA'}
           </Button>

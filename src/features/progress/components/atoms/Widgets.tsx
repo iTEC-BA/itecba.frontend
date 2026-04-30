@@ -8,7 +8,7 @@ export const MetricCard = ({ title, value, subtitle, icon, highlight }: any) => 
       {icon}
     </div>
     <div className="flex justify-between items-start mb-6 relative z-10">
-      <span className="text-gray-400 text-xs font-bold uppercase tracking-widest">{title}</span>
+      <span className="text-itec-text text-xs font-bold uppercase tracking-widest">{title}</span>
     </div>
     <div className="relative z-10">
       <span className={`text-4xl font-black ${highlight ? highlight : 'text-itec-text'}`}>{value}</span>

@@ -42,17 +42,17 @@ export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onM
   }, [nextEvent]);
 
   return (
-    <div className="bg-itec-surface border border-purple-500/20 rounded-3xl p-6 shadow-[0_0_20px_rgba(168,85,247,0.05)] relative overflow-hidden mb-6 animate-in fade-in duration-500 group">
+    <div className="bg-itec-box border border-purple-500/20 rounded-3xl p-6 shadow-[0_0_20px_rgba(168,85,247,0.05)] relative overflow-hidden mb-6 animate-in fade-in duration-500 group">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-600/50 to-purple-400/50"></div>
       <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full group-hover:bg-purple-500/10 transition-all duration-700"></div>
 
       <div className="relative z-10 flex items-start justify-between mb-5">
         <div>
-          <h3 className="text-white font-bold text-sm flex items-center gap-2 mb-1">
+          <h3 className="text-itec-textfont-bold text-sm flex items-center gap-2 mb-1">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_5px_rgba(168,85,247,0.8)]"></span>
             Próximo Evento
           </h3>
-          <p className="text-gray-400 text-xs font-medium">
+          <p className="text-itec-text text-xs font-medium">
             {nextEvent ? nextEvent.eventName : 'Sin eventos programados'}
           </p>
         </div>
@@ -60,7 +60,7 @@ export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onM
         {isAdmin && (
           <button 
             onClick={onManageClick}
-            className="w-7 h-7 rounded-lg bg-itec-bg border border-itec-gray flex items-center justify-center text-gray-400 hover:text-purple-400 hover:border-purple-500/30 transition-all"
+            className="w-7 h-7 rounded-lg bg-itec-bg border border-itec-gray flex items-center justify-center text-itec-text hover:text-purple-400 hover:border-purple-500/30 transition-all"
             title="Gestionar Fechas"
           >
             <Icons type="edit" className="w-3.5 h-3.5" />
@@ -71,11 +71,11 @@ export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onM
       {nextEvent ? (
         <div className="flex gap-2 justify-between text-center relative z-10">
           <div className="bg-itec-bg/50 border border-itec-gray/50 rounded-xl flex-1 py-2.5">
-            <span className="block text-xl font-bold text-white mb-0.5">{timeLeft.days}</span>
+            <span className="block text-xl font-bold text-itec-textmb-0.5">{timeLeft.days}</span>
             <span className="text-[9px] text-gray-500 uppercase tracking-wider">Días</span>
           </div>
           <div className="bg-itec-bg/50 border border-itec-gray/50 rounded-xl flex-1 py-2.5">
-            <span className="block text-xl font-bold text-white mb-0.5">{timeLeft.hours}</span>
+            <span className="block text-xl font-bold text-itec-textmb-0.5">{timeLeft.hours}</span>
             <span className="text-[9px] text-gray-500 uppercase tracking-wider">Hrs</span>
           </div>
           <div className="bg-itec-bg/50 border border-itec-gray/50 rounded-xl flex-1 py-2.5">

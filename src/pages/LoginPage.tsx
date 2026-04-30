@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@context/AuthContext";
 import FormLogin from "@features/login/components/organisms/FormLogin";;
-import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { MainLayout } from "@/components/templates/MainLayout";
 import { usePageTitle } from "@hooks/usePageTitle";
 
 export const LoginPage: React.FC = () => {
@@ -21,12 +21,12 @@ export const LoginPage: React.FC = () => {
   if (loading) return null;
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="w-full h-dvh flex flex-col items-center justify-center md:flex-row relative">
         <div className="animate-[fade-in_0.6s_ease-out]">
           <FormLogin />
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-itec-sidebar/80 border border-itec-surface/10 py-4 px-6 rounded-2xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-itec-box/80 border border-itec-box/10 py-4 px-6 rounded-2xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]">
             <div className="flex -space-x-3 shrink-0">
               <img
                 className="w-10 h-10 rounded-full border-2 border-[#111111] object-cover"
@@ -51,6 +51,6 @@ export const LoginPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { DashboardLayout } from "@components/templates/DashboardLayout";
+import { MainLayout } from "@/components/templates/MainLayout";
 import { usePageTitle } from "@hooks/usePageTitle";
 import { useAuth } from "@context/AuthContext";
 
@@ -12,7 +12,7 @@ export const FaqsPage: React.FC = () => {
   const { isAdmin } = useAuth();
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <PageHeader
         title="Ayuda y Consultas"
         description="Resuelve tus dudas rápidas con nuestro Asistente ITEC o revisa el calendario académico."
@@ -34,6 +34,6 @@ export const FaqsPage: React.FC = () => {
         </div>
         
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

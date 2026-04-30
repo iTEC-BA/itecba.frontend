@@ -29,7 +29,7 @@ export const InboxWidget: React.FC = () => {
 
   return (
     <div className="bg-[#1e1e1e] border border-[#333] rounded-xl p-6">
-      <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
+      <h2 className="text-xl font-bold text-itec-textflex items-center gap-2 mb-6">
         <Icons type="message" className="w-5 h-5 " /> Mi Buzón de Avisos
       </h2>
       <div className="space-y-3">
@@ -46,7 +46,7 @@ export const InboxWidget: React.FC = () => {
                 <h3 className={`font-semibold ${msg.isRead ? 'text-gray-300' : 'text-white'}`}>{msg.subject}</h3>
                 <span className="text-xs text-gray-500">{new Date(msg.createdAt).toLocaleDateString()}</span>
               </div>
-              <p className="text-sm text-gray-400 whitespace-pre-wrap">{msg.content}</p>
+              <p className="text-sm text-itec-text whitespace-pre-wrap">{msg.content}</p>
             </div>
           ))
         )}

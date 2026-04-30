@@ -19,7 +19,7 @@ export const GroupResults: React.FC<Props> = ({ results, onClear, onAddClick }) 
         <div>
           <div className="flex items-center gap-3 mb-2">
             <span className="w-1.5 h-6 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.5)]"></span>
-            <h3 className="text-xl font-bold text-white tracking-tight">Resultados de la Búsqueda</h3>
+            <h3 className="text-xl font-bold text-itec-texttracking-tight">Resultados de la Búsqueda</h3>
           </div>
           <p className="text-xs font-medium text-slate-400 ml-5 uppercase tracking-widest">
             Encontramos <span className="text-emerald-400 font-bold">{safeResults.length}</span> comunidade{safeResults.length === 1 ? '' : 's'}

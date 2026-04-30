@@ -9,7 +9,7 @@ export const EmptyState: React.FC = () => (
       <Icons type="search" className="w-10 h-10 opacity-60 drop-shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
     </div>
     
-    <h3 className="text-3xl font-extrabold text-white mb-3 relative z-10 tracking-tight">Cinta vacía</h3>
+    <h3 className="text-3xl font-extrabold text-itec-textmb-3 relative z-10 tracking-tight">Cinta vacía</h3>
     <p className="text-sm text-slate-400 max-w-sm mx-auto relative z-10 leading-relaxed">
       No encontramos cursos que coincidan con tus filtros. Probá ajustando la búsqueda o cambiando de materia en el panel superior.
     </p>

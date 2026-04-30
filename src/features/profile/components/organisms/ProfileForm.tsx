@@ -47,7 +47,7 @@ export const ProfileForm: React.FC = () => {
           <div className="w-16 h-16 bg-slate-950 border border-white/10 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-inner">
             <span className="text-2xl">🎓</span>
           </div>
-          <h2 className="text-2xl font-black text-white mb-2 text-center tracking-tight">Solicitar TarjeTEC</h2>
+          <h2 className="text-2xl font-black text-itec-textmb-2 text-center tracking-tight">Solicitar TarjeTEC</h2>
           <p className="text-sm text-slate-400 mb-8 text-center">Completá tus datos para generar tu credencial y acceder a beneficios UTN.</p>
           
           <form onSubmit={handleRequestCard} className="flex flex-col gap-5">
@@ -91,7 +91,7 @@ export const ProfileForm: React.FC = () => {
             {error && <p className="text-red-400 text-xs font-bold text-center mt-2 bg-red-400/10 py-2 rounded-lg border border-red-400/20">{error}</p>}
             
             <div className="pt-4 flex flex-col gap-3">
-              <Button type="submit" disabled={isSaving} className="w-full py-3.5 font-bold text-sm bg-sky-600 hover:bg-sky-500 text-white rounded-xl transition-all shadow-lg shadow-sky-500/25 disabled:opacity-50 cursor-pointer">
+              <Button type="submit" disabled={isSaving} className="w-full py-3.5 font-bold text-sm bg-sky-600 hover:bg-sky-500 text-itec-textrounded-xl transition-all shadow-lg shadow-sky-500/25 disabled:opacity-50 cursor-pointer">
                 {isSaving ? 'Generando...' : 'Generar Credencial'}
               </Button>
               <button type="button" onClick={logout} className="text-xs text-slate-500 hover:text-slate-300 transition-colors font-medium cursor-pointer">

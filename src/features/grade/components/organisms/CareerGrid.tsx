@@ -10,7 +10,7 @@ const CAREER_CARDS: CareerOption[] = [
   { id: 'industrial', name: 'Ingeniería Industrial', icon: '⚙️', color: 'text-yellow-400', border: 'hover:border-yellow-500', shadow: 'hover:shadow-yellow-500/20', bgGlow: 'bg-yellow-500/20' },
   { id: 'electronica', name: 'Ingeniería Electrónica', icon: '🔌', color: 'text-red-400', border: 'hover:border-red-500', shadow: 'hover:shadow-red-500/20', bgGlow: 'bg-red-500/20' },
   { id: 'civil', name: 'Ingeniería Civil', icon: '🏗️', color: 'text-orange-400', border: 'hover:border-orange-500', shadow: 'hover:shadow-orange-500/20', bgGlow: 'bg-orange-500/20' },
-  { id: 'mecanica', name: 'Ingeniería Mecánica', icon: '🔧', color: 'text-gray-400', border: 'hover:border-gray-500', shadow: 'hover:shadow-gray-500/20', bgGlow: 'bg-gray-500/20' },
+  { id: 'mecanica', name: 'Ingeniería Mecánica', icon: '🔧', color: 'text-itec-text', border: 'hover:border-gray-500', shadow: 'hover:shadow-gray-500/20', bgGlow: 'bg-gray-500/20' },
   { id: 'quimica', name: 'Ingeniería Química', icon: '🧪', color: 'text-purple-400', border: 'hover:border-purple-500', shadow: 'hover:shadow-purple-500/20', bgGlow: 'bg-purple-500/20' },
   { id: 'naval', name: 'Ingeniería Naval', icon: '🚢', color: 'text-cyan-400', border: 'hover:border-cyan-500', shadow: 'hover:shadow-cyan-500/20', bgGlow: 'bg-cyan-500/20' },
   { id: 'textil', name: 'Ingeniería Textil', icon: '🧵', color: 'text-pink-400', border: 'hover:border-pink-500', shadow: 'hover:shadow-pink-500/20', bgGlow: 'bg-pink-500/20' },
@@ -37,7 +37,7 @@ export const CareerGrid: React.FC<Props> = ({ onSelect }) => {
             placeholder="Buscar tu carrera..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-itec-surface border border-itec-gray text-white pl-12 pr-4 py-3.5 rounded-2xl focus:outline-none focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-lg"
+            className="w-full bg-itec-box border border-itec-gray text-itec-textpl-12 pr-4 py-3.5 rounded-2xl focus:outline-none focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-lg"
           />
         </div>
       </div>
@@ -58,10 +58,10 @@ export const CareerGrid: React.FC<Props> = ({ onSelect }) => {
           })}
         </div>
       ) : (
-        <div className="text-center py-20 bg-itec-surface border border-itec-gray rounded-3xl">
+        <div className="text-center py-20 bg-itec-box border border-itec-gray rounded-3xl">
           <span className="text-4xl mb-4 block">🔍</span>
-          <h3 className="text-white font-bold text-lg">No encontramos esa carrera</h3>
-          <p className="text-gray-400 text-sm">Verificá que el nombre esté bien escrito.</p>
+          <h3 className="text-itec-textfont-bold text-lg">No encontramos esa carrera</h3>
+          <p className="text-itec-text text-sm">Verificá que el nombre esté bien escrito.</p>
         </div>
       )}
     </div>

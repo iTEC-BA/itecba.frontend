@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardLayout } from '@components/templates/DashboardLayout';
+import { MainLayout } from '@/components/templates/MainLayout';
 import { PageHeader } from '@components/ui/PageHeader';
 import { RewardsWidget } from '@features/rewards/components/organisms/RewardsWidget';
 import { InboxWidget } from '@features/rewards/components/organisms/InboxWidget';
@@ -9,7 +9,7 @@ export const RewardsPage: React.FC = () => {
   usePageTitle('Beneficios y Canjes');
 
   return (
-    <DashboardLayout>
+    <MainLayout>
       <div className="max-w-[1100px] mx-auto pb-20 pt-8 px-6 lg:px-0 animate-fade-in">
         <PageHeader 
           title="Club de Beneficios" 
@@ -26,6 +26,6 @@ export const RewardsPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };

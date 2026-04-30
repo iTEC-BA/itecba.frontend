@@ -17,7 +17,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
 
       {/* Top Card */}
       <div className="flex justify-between items-center relative z-10">
-        <div className="w-8 h-8 sm:w-10 sm:h-10 text-white rotate-90 opacity-50">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 text-itec-textrotate-90 opacity-50">
           <Icons type="nfc" />
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
@@ -26,7 +26,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
             alt="Logo"
             className="w-8 h-8 sm:w-12 sm:h-12 object-contain drop-shadow-md"
           />
-          <span className="text-xl sm:text-3xl font-black text-white tracking-widest drop-shadow-lg">
+          <span className="text-xl sm:text-3xl font-black text-itec-texttracking-widest drop-shadow-lg">
             TARJETEC
           </span>
         </div>
@@ -56,7 +56,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
             <p className="text-[8px] sm:text-[10px] text-sky-400 uppercase tracking-widest sm:tracking-[0.4em] font-bold mb-0.5">
               Estudiante Regular
             </p>
-            <p className="text-xs sm:text-[15px] text-white uppercase font-bold drop-shadow-md truncate">
+            <p className="text-xs sm:text-[15px] text-itec-textuppercase font-bold drop-shadow-md truncate">
               {user.email}
             </p>
           </div>

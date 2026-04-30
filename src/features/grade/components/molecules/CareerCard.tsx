@@ -12,7 +12,7 @@ export const CareerCard: React.FC<Props> = ({ career, isAvailable, onClick }) =>
   return (
     <div 
       onClick={() => isAvailable && onClick(career.id)}
-      className={`relative bg-itec-surface border rounded-3xl p-6 flex flex-col justify-between transition-all duration-500 group overflow-hidden h-full min-h-[220px]
+      className={`relative bg-itec-box border rounded-3xl p-6 flex flex-col justify-between transition-all duration-500 group overflow-hidden h-full min-h-[220px]
         ${isAvailable 
           ? `border-itec-gray cursor-pointer ${career.border} hover:shadow-2xl ${career.shadow} hover:-translate-y-2` 
           : 'border-itec-gray/30 cursor-not-allowed opacity-75 hover:opacity-90 grayscale'}`}
@@ -42,7 +42,7 @@ export const CareerCard: React.FC<Props> = ({ career, isAvailable, onClick }) =>
       </div>
 
       <div className="relative z-10 mt-auto">
-        <h3 className="text-lg font-bold text-white mb-3 leading-tight group-hover:text-gray-100 transition-colors">
+        <h3 className="text-lg font-bold text-itec-textmb-3 leading-tight group-hover:text-gray-100 transition-colors">
           {career.name}
         </h3>
         

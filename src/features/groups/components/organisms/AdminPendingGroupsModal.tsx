@@ -36,13 +36,13 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
         {/* Header del Modal */}
         <div className="bg-gray-800/50 border-b border-gray-700 p-6 flex justify-between items-center shrink-0">
           <div>
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <h2 className="text-xl font-bold text-itec-textflex items-center gap-2">
               <Icons type="users" className="w-5 h-5 text-blue-400" />
               Panel de Moderación
             </h2>
-            <p className="text-xs text-gray-400 mt-1">Revisá la validez de los grupos aportados antes de hacerlos públicos.</p>
+            <p className="text-xs text-itec-text mt-1">Revisá la validez de los grupos aportados antes de hacerlos públicos.</p>
           </div>
-          <button onClick={onClose} className="cursor-pointer text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition-colors">
+          <button onClick={onClose} className="cursor-pointer text-itec-text hover:text-itec-textp-2 rounded-lg hover:bg-gray-800 transition-colors">
             <Icons type="close" className="w-5 h-5" />
           </button>
         </div>
@@ -52,17 +52,17 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="w-8 h-8 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin mb-4"></div>
-              <p className="text-gray-400 text-sm">Cargando solicitudes...</p>
+              <p className="text-itec-text text-sm">Cargando solicitudes...</p>
             </div>
           ) : pendingGroups.length > 0 ? (
             <div className="border border-gray-700 rounded-xl overflow-hidden bg-gray-800/30">
               <table className="w-full text-left border-collapse text-sm">
                 <thead className="bg-gray-800 border-b border-gray-700">
                   <tr>
-                    <th className="p-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Materia & Comisión</th>
-                    <th className="p-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Especialidad</th>
-                    <th className="p-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Aportado Por</th>
-                    <th className="p-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">Acciones</th>
+                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider">Materia & Comisión</th>
+                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider">Especialidad</th>
+                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider">Aportado Por</th>
+                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700/50">
@@ -105,7 +105,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
                           <button 
                             onClick={() => handleApprove(group)} 
                             disabled={approveMutation.isPending} 
-                            className="cursor-pointer px-4 py-2 text-xs font-bold bg-green-600 text-white hover:bg-green-500 rounded-xl transition-all disabled:opacity-50 shadow-sm"
+                            className="cursor-pointer px-4 py-2 text-xs font-bold bg-green-600 text-itec-texthover:bg-green-500 rounded-xl transition-all disabled:opacity-50 shadow-sm"
                           >
                             Aprobar
                           </button>
@@ -120,7 +120,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
           ) : (
             <div className="text-center py-20 flex flex-col items-center">
               <Icons type="check" className="w-12 h-12 text-gray-600 mb-4" />
-              <p className="text-gray-400 text-sm">No hay grupos pendientes de revisión.</p>
+              <p className="text-itec-text text-sm">No hay grupos pendientes de revisión.</p>
               <p className="text-gray-500 text-xs mt-1">Todo está al día.</p>
             </div>
           )}
