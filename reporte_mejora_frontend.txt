@@ -1,0 +1,130 @@
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  🚀 mejorar_frontend.sh — Auditoría iTEC BA\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+Fecha: 2026-05-06 20:10:54
+Directorio raíz: /c/Users/tumiri/Desktop/Proyectos/itec/itecba-frontend
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  1. Estructura de carpetas (Feature-Driven + Atomic Design)\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[0;32m  ✔ src/features → existe\033[0m
+\033[0;32m  ✔ src/components/atoms → existe\033[0m
+\033[0;32m  ✔ src/components/molecules → existe\033[0m
+\033[0;32m  ✔ src/components/organisms → existe\033[0m
+\033[0;32m  ✔ src/components/templates → existe\033[0m
+\033[0;32m  ✔ src/pages → existe\033[0m
+\033[0;32m  ✔ src/hooks → existe\033[0m
+\033[0;32m  ✔ src/services → existe\033[0m
+\033[1;33m  ⚠ src/types → NO existía — creado automáticamente\033[0m
+\033[0;32m  ✔ src/context → existe\033[0m
+\033[0;32m  ✔ src/lib → existe\033[0m
+\033[0;32m  ✔ src/data → existe\033[0m
+\033[0;32m  ✔ src/assets → existe\033[0m
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  2. Auditoría de imports relativos largos (../../../)\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\n\033[1m── Archivos con imports ../../.. o más profundos ──\033[0m
+\033[0;32m  ✔ No se encontraron imports con 3+ niveles relativos. ¡Aliases bien usados!\033[0m
+\n\033[1m── Verificando aliases en vite.config.ts y tsconfig.app.json ──\033[0m
+\033[0;32m  ✔ @components configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @features configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @pages configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @hooks configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @services configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @context configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @lib configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @data configurado en vite.config.ts\033[0m
+\033[0;32m  ✔ @assets configurado en vite.config.ts\033[0m
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  3. Detección de páginas sin React.lazy()\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\n\033[1m── Páginas registradas en App.tsx vs lazy() ──\033[0m
+\033[0;32m  ✔ Todas las páginas están usando React.lazy() en App.tsx\033[0m
+\n\033[1m── Verificando uso de <Suspense> en App.tsx ──\033[0m
+\033[0;32m  ✔ <Suspense> encontrado en App.tsx\033[0m
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  4. Auditoría de responsividad del Sidebar\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\n\033[1m── Archivos relacionados con Sidebar ──\033[0m
+  📄 src/components/atoms/SidebarState.tsx
+  📄 src/components/molecules/BottomNavbar.tsx
+  📄 src/components/molecules/SidebarItem.tsx
+  📄 src/components/molecules/TopNavbar.tsx
+  📄 src/components/organisms/ChatbotWidget.tsx
+  📄 src/components/organisms/Sidebar.tsx
+  📄 src/components/templates/MainLayout.tsx
+  📄 src/components/templates/SidebarLayout.tsx
+  📄 src/features/about/components/organisms/AboutProjectWidget.tsx
+  📄 src/features/about/components/organisms/ContributorsWidget.tsx
+  📄 src/features/admission/components/organisms/IngresoHighlightActions.tsx
+  📄 src/features/faqs/components/molecules/ChatInput.tsx
+  📄 src/features/faqs/components/organisms/ChatInterface.tsx
+  📄 src/features/groups/components/molecules/EmptyGroupState.tsx
+  📄 src/features/resources/components/organisms/AddResourceModal.tsx
+  📄 src/features/resources/components/organisms/ResourceFilters.tsx
+  📄 src/features/resources/components/organisms/ResourcesTable.tsx
+  📄 src/hooks/useSidebarLinks.ts
+  📄 src/pages/CourseDetail.tsx
+\n\033[1m── Verificando toggle/isOpen para mobile ──\033[0m
+\033[0;32m  ✔ Estado isOpen/toggle detectado\033[0m
+\033[1;33m  ⚠ No se detectó botón hamburguesa (puede estar en TopNavbar)\033[0m
+\033[0;32m  ✔ Animación drawer (translate-x) detectada\033[0m
+\033[0;32m  ✔ Overlay/backdrop detectado\033[0m
+\n\033[1m── Verificando clases responsive en Sidebar ──\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/atoms/SidebarState.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/molecules/BottomNavbar.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/molecules/SidebarItem.tsx\033[0m
+\033[0;32m  ✔ Clases responsive (md:/lg:) encontradas en: src/components/molecules/TopNavbar.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/organisms/ChatbotWidget.tsx\033[0m
+\033[0;32m  ✔ Clases responsive (md:/lg:) encontradas en: src/components/organisms/Sidebar.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/templates/MainLayout.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/templates/SidebarLayout.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/about/components/organisms/AboutProjectWidget.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/about/components/organisms/ContributorsWidget.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/admission/components/organisms/IngresoHighlightActions.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/faqs/components/molecules/ChatInput.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/faqs/components/organisms/ChatInterface.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/groups/components/molecules/EmptyGroupState.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/resources/components/organisms/AddResourceModal.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/resources/components/organisms/ResourceFilters.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/resources/components/organisms/ResourcesTable.tsx\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/hooks/useSidebarLinks.ts\033[0m
+\033[1;33m  ⚠ Sin clases responsive detectadas en: src/pages/CourseDetail.tsx\033[0m
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  5. Auditoría de Atomic Design por feature\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\n\033[1m── Verificando estructura atoms/molecules/organisms en cada feature ──\033[0m
+  \033[0;36mabout\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36madmin\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36madmission\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36mcourses\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36merror\033[0m  atoms:✖  molecules:~  organisms:✖  hooks:~  services:~  types:✔
+  \033[0;36mfaqs\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36mgrade\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36mgroups\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36mhome\033[0m  atoms:✔  molecules:~  organisms:✔  hooks:~  services:✔  types:✔
+  \033[0;36mlogin\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36mprofile\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:~  services:✔  types:✔
+  \033[0;36mprogress\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:~  types:✔
+  \033[0;36mresources\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+  \033[0;36mrewards\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
+\n\033[1m── Posibles componentes genéricos duplicados en features ──\033[0m
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  6. Verificando hook useSidebarMobile\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[0;31m  ✖ useSidebarMobile.ts NO encontrado en src/hooks/useSidebarMobile.ts\033[0m
+\033[1;33m  ⚠ Acción requerida: copiar el archivo desde las mejoras propuestas.\033[0m
+\033[1;33m  ⚠ Este hook es necesario para que el drawer mobile funcione.\033[0m
+\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+\033[1m\033[0;36m  📋 RESUMEN\033[0m
+\033[1m\033[0;34m══════════════════════════════════════════\033[0m
+Reporte completo guardado en: \033[1m\033[0;32mreporte_mejora_frontend.txt\033[0m
+
+\033[1mArchivos a reemplazar/agregar según las mejoras propuestas:\033[0m
+  • src/App.tsx                              → Suspense por ruta (granular)
+  • src/hooks/useSidebarMobile.ts            → Hook de estado mobile (NUEVO)
+  • src/components/organisms/Sidebar.tsx     → Drawer mobile + overlay
+  • src/components/molecules/TopNavbar.tsx   → Botón hamburguesa
+  • src/components/molecules/SidebarItem.tsx → Prop onNavigate para cerrar drawer
+  • src/components/templates/SidebarLayout.tsx → Ajuste z-index y relative
+
+\033[0;32m\033[1m✔ Auditoría completada.\033[0m
