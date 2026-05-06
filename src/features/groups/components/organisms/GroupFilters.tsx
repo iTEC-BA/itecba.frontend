@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from '@components/atoms/Input';
+import { Input } from '@/components/ui/Input';
 import { Icons } from '@/components/ui/icons/Icons';
 import { CustomSelect } from '@components/molecules/CustomSelect';
 import { AutocompleteInput } from '@components/molecules/AutocompleteInput';

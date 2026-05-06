@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Input } from '@components/atoms/Input';
-import { Select } from '@components/atoms/Select';
-import { Button } from '@components/atoms/Button';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Button } from '@components/ui/Button';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '@features/groups/types/groups'; 
 
 interface Props {

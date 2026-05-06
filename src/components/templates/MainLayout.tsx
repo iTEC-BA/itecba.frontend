@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { LoadingState } from "../atoms/LoadingState";
+import { LoadingState } from "../ui/LoadingState";
 import { RewardsWidget } from "@/features/rewards/components/organisms/RewardsWidget";
 import { SidebarLayout } from "./SidebarLayout";
 

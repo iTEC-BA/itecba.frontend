@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 import type { CalculatedSubject } from '../../hooks/useProgress';
 
 interface Props {

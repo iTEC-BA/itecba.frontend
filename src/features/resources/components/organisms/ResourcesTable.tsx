@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icons } from '@/components/ui/icons/Icons';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 import type { ResourceData } from '../../services/resourcesService';
 
 interface Props {

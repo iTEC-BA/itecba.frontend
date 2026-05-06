@@ -1,7 +1,7 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import { PageHeader } from '@components/ui/PageHeader';
 import { MainLayout } from '@/components/templates/MainLayout';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 import { useAuth } from '@context/AuthContext';
 
 import { ResourceFilters } from '@features/resources/components/organisms/ResourceFilters';

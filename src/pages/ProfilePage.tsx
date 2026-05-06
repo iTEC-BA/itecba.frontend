@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { useAuth } from "@context/AuthContext";
-import { LoadingState } from "@components/atoms/LoadingState"; // O el spinner que prefieras usar
+import { LoadingState } from "@/components/ui/LoadingState"; // O el spinner que prefieras usar
 
 import { TarjeTec } from "@features/profile/components/organisms/TarjeTec";
 import { ProfileForm } from "@features/profile/components/organisms/ProfileForm";

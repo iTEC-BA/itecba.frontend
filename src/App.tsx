@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@context/AuthContext";
 import { ProtectedRoute } from "@components/templates/ProtectedRoute";
-import LoadingState from "@components/atoms/LoadingState";
+import LoadingState from "@/components/ui/LoadingState";
 
 // Carga Diferida (Code Splitting)
 const RewardsPage = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));

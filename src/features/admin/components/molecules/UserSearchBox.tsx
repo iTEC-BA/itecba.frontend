@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { User } from '@context/AuthContext';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 
 interface Props {
   searchMutation: UseMutationResult<User | null, Error, string, unknown>;

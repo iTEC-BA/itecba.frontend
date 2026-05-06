@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { UseMutationResult } from '@tanstack/react-query';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 
 interface Props {
   createMutation: UseMutationResult<string, Error, { title: string; message: string; hours: number; isCritical: boolean }, unknown>;

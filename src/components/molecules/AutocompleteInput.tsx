@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input } from '@/components/atoms/Input';
+import { Input } from '@/components/ui/Input';
 
 interface Props {
   label: string;

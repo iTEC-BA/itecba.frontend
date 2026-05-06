@@ -1,43 +1,73 @@
-import { useState, useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export const useSidebarLinks = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
-  const toggleExpand = () => setIsExpanded((prev) => !prev);
+  const getFormattedName = useCallback(() => {
+    if (!user?.name) return "Estudiante";
+    const email = user.email || "";
+    const username = email.split("@")[0];
+    return username || "Estudiante";
+  }, [user]);
 
-  const linksRigth = useMemo(
+  const sections = useMemo(
     () => [
-      { path: "/", label: "Inicio", iconName: "home", iconColor: "text-itec-text" },
-      { path: "/cursos", label: "Cursos", iconName: "play", iconColor: "text-itec-courses" },
-      { path: "/grupos", label: "Grupos", iconName: "users", iconColor: "text-itec-groups" },
-      { path: "/progreso", label: "Mi Progreso", iconName: "bookmark", iconColor: "text-itec-progress" },
-      { path: "/recursos", label: "Recursos", iconName: "folder", iconColor: "text-itec-text" },
-      { path: "/ingreso", label: "Ingreso", iconName: "entry", iconColor: "text-itec-text" },
-      { path: "/grado", label: "Calificaciones", iconName: "degree", iconColor: "text-itec-text" },
-      { path: "/beneficios", label: "Beneficios", iconName: "star", iconColor: "text-itec-rewards" },
-      { path: "/faqs", label: "Ayuda y FAQs", iconName: "info", iconColor: "text-itec-text" },
+      {
+        title: "Principal",
+        links: [
+          { path: "/", label: "Inicio", iconName: "home" },
+          { path: "/buscatec", label: "BuscaTEC", iconName: "search" },
+          { path: "/aulas", label: "Buscar aula", iconName: "map-pin" },
+        ],
+      },
+      {
+        title: "Aprender",
+        links: [
+          { path: "/cursos", label: "Cursos", iconName: "book", badge: "Nuevo" },
+          { path: "/guiatec", label: "GuíaTEC", iconName: "video", tag: { text: "Free", color: "green" as const } },
+          { path: "/recursos", label: "BiblioTEC", iconName: "library" },
+        ],
+      },
+      {
+        title: "Comunidad",
+        links: [
+          { path: "/grupos", label: "Grupos", iconName: "users" },
+          { path: "/faqs", label: "Novedades", iconName: "news" },
+        ],
+      },
+      {
+        title: "Herramientas",
+        links: [
+          { path: "/grado", label: "Calc. promedio", iconName: "calculator" },
+          { path: "/calendario", label: "Calendario académico", iconName: "calendar" },
+          { path: "/plugins", label: "Plugins y apps", iconName: "tool" },
+        ],
+      },
     ],
-    [],
+    []
   );
 
-  const linksCenter = useMemo(
+  const footerLinks = useMemo(
     () => [
-      { path: "/", label: "Inicio", iconName: "home", iconColor: "text-itec-text" },
-      { path: "/cursos", label: "Cursos", iconName: "play", iconColor: "text-itec-text" },
-      { path: "/grupos", label: "Grupos", iconName: "users", iconColor: "text-itec-text" },
-      { path: "/progreso", label: "Progreso", iconName: "bookmark", iconColor: "text-itec-text" },
+      // Protegido: Solo Admins
+      { path: "/admin", label: "Panel Admin", iconName: "settings", requireAdmin: true },
+      // Protegido: Solo Usuarios Logueados
+      { path: "/beneficios", label: "Recompensas", iconName: "gift", tag: { text: "340 pts", color: "gold" as const }, requireAuth: true },
+      { path: "/progreso", label: "Seguidor de carrera", iconName: "chart-line", requireAuth: true },
+      // Dinámico: Cambia si está logueado o no
+      { 
+        path: isAuthenticated ? "/perfil" : "/login", 
+        label: isAuthenticated ? getFormattedName() : "Iniciar Sesión", 
+        iconName: "user" 
+      },
+      { path: "/terminos", label: "Términos y cond.", iconName: "file-text" },
     ],
-    [],
+    [isAuthenticated, getFormattedName]
   );
 
-  const visibleLinksRigth = isExpanded ? linksRigth : linksRigth.slice(0, 5);
-  const visibleLinksCenter = isExpanded ? linksCenter : linksCenter.slice(0, 5);
-  const links = linksRigth.concat(linksCenter);
   return {
-    visibleLinks: visibleLinksRigth,
-    visibleLinksCenter,
-    isExpanded,
-    toggleExpand,
-    totalLinks: links.length,
+    sections,
+    footerLinks,
   };
 };

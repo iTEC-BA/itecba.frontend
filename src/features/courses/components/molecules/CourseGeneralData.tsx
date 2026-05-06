@@ -1,5 +1,5 @@
 import { useState, useEffect, type ChangeEvent, type FC } from 'react';
-import { Input } from '@components/atoms/Input';
+import { Input } from '@/components/ui/Input';
 
 
 const MATERIAS_UTN: string[] = [

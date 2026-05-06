@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 import { getAuth } from 'firebase/auth';
 import { adminRedemptionsService } from '../../services/adminRedemptionsService';

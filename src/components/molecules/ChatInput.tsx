@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from 'react';
-import { Button } from '../atoms/Button';
+import { Button } from '../ui/Button';
 import { Icons } from '../ui/icons/Icons';
 
 interface Props {

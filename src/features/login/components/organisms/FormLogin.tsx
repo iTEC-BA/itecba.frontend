@@ -3,7 +3,7 @@ import logoItec from "@assets/logo.png";
 import { useAuth } from "@context/AuthContext";
 import { Icons } from "@/components/ui/icons/Icons";
 import { MainLayout } from "@/components/templates/MainLayout";
-import LoadingState from "@components/atoms/LoadingState";
+import LoadingState from "@/components/ui/LoadingState";
 
 const FormLogin: React.FC = () => {
   const { loginWithGoogle, isAuthenticated, loading } = useAuth();

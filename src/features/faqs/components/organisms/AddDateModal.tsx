@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Icons } from '@/components/ui/icons/Icons';
-import { Input } from '@components/atoms/Input';
-import { Button } from '@components/atoms/Button';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@components/ui/Button';
 import type { ImportantDate } from '../organisms/ImportantDatesWidget';
 
 interface Props {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Input } from '@components/atoms/Input';
-import { Button } from '@components/atoms/Button';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 
 export interface VideoItem {

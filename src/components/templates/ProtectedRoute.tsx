@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import LoadingState from '../atoms/LoadingState';
+import LoadingState from '../ui/LoadingState';
 
 export const ProtectedRoute: React.FC = () => {
   const { user, loading } = useAuth(); // Asumiendo que tu AuthContext retorna esto

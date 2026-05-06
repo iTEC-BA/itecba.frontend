@@ -1,7 +1,7 @@
 // src/features/admin/components/organisms/RewardsManagement.tsx
 import React, { useState, useEffect } from "react";
-import { Button } from "@components/atoms/Button";
-import { Input } from "@components/atoms/Input";
+import { Button } from "@components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { Icons } from "@/components/ui/icons/Icons";
 import { Reward, RewardType } from "@features/rewards/types/rewards";
 import { rewardsService } from "@features/rewards/services/rewardsService";

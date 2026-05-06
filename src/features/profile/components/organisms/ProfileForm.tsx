@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@context/AuthContext";
-import { Input } from "@components/atoms/Input";
-import { Button } from "@components/atoms/Button";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@components/ui/Button";
 
 export const ProfileForm: React.FC = () => {
   const { user, updateProfile, logout } = useAuth();

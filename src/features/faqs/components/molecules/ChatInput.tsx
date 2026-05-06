@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 
 interface Props {

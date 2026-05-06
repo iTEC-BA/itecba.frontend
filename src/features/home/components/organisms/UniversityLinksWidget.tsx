@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { linksService, type CampusLink } from "../../services/linksService";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "@components/ui/Button";
 import { useAuth } from "@context/AuthContext";
 
 const EditLinksModal = React.lazy(() =>

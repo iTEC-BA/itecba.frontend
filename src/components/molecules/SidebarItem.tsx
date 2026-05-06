@@ -1,37 +1,40 @@
-import { NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Icons } from "../ui/icons/Icons";
+import { SidebarBadge,SidebarTag } from "../atoms/SidebarState";
 
-interface SidebarItemProps {
+export interface SidebarItemProps {
   path: string;
   label: string;
   iconName: string;
-  iconColor: string;
+  badge?: string;
+  tag?: { text: string; color: "gold" | "green" };
+  onClick?: () => void;
 }
 
-export const SidebarItem = ({
-  path,
-  label,
-  iconName,
-  iconColor,
-}: SidebarItemProps) => {
+export const SidebarItem = ({ path, label, iconName, badge, tag, onClick }: SidebarItemProps) => {
+  const location = useLocation();
+  const isActive = location.pathname === path;
+
   return (
-    <NavLink
+    <Link
       to={path}
-      className={({ isActive }) =>
-        `flex items-center gap-3 rounded-lg transition-colors duration-200 cursor-pointer group ${
-          isActive
-            ? "bg-itec-primary/10 text-itec-primary font-semibold"
-            : "text-itec-text-reverse hover:bg-itec-surface"
-        }`
-      }
+      onClick={onClick}
+      className={`flex items-center gap-[9px] py-2 px-[14px] mx-1.5 rounded-[9px] cursor-pointer transition-colors text-[13px] ${
+        isActive
+          ? "bg-itec-red/15 text-[#e01540]"
+          : "text-[#9aa3b0] hover:bg-[#1c2535]"
+      }`}
     >
-      <div className="flex items-center justify-center rounded-full size-7 overflow-hidden bg-itec-surface text-itec-text-reverse group-hover:bg-itec-surface/80 transition-colors">
+      <div className="w-[17px] h-[17px] flex items-center justify-center shrink-0">
         <Icons
-          className={`size-5 text-itec-primary ${iconColor}`}
           type={iconName}
+          className={`w-full h-full ${isActive ? "text-[#e01540]" : "text-[#5a6475]"}`}
         />
       </div>
-      <p>{label}</p>
-    </NavLink>
+      <span className="truncate">{label}</span>
+
+      {badge && <SidebarBadge>{badge}</SidebarBadge>}
+      {tag && <SidebarTag color={tag.color}>{tag.text}</SidebarTag>}
+    </Link>
   );
 };

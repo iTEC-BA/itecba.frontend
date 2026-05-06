@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MainLayout } from '@/components/templates/MainLayout';
 import { Icons } from '@/components/ui/icons/Icons';
-import { Button } from '@components/atoms/Button';
+import { Button } from '@components/ui/Button';
 
 // Hooks de React Query
 import { useCourseById, useUpdateCourse } from '@features/courses/hooks/useCourses';
