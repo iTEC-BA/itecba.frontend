@@ -9,6 +9,7 @@ echo "Generando archivo de código consolidado en $OUTPUT..."
 
 # Buscar archivos excluyendo carpetas, dependencias, imágenes y variables de entorno
 find . -type f \
+    -not -path "*/.itec_backup_20260506_105108/*" \
     -not -path "*/node_modules/*" \
     -not -path "*/.git/*" \
     -not -path "*/dist/*" \
