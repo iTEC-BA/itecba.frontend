@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { Input } from '@components/atoms/Input';
 import { Button } from '@components/atoms/Button';
 import type { ImportantDate } from '../organisms/ImportantDatesWidget';

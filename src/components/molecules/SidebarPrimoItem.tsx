@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Icons } from '../ui/Icons';
+import { Icons } from '../ui/icons/Icons';
 
 interface SidebarPrimoItemProps {
   path: string;

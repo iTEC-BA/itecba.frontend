@@ -2,7 +2,7 @@ import React, { useState, Suspense } from "react";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { PageHeader } from "@components/ui/PageHeader";
 import { useAuth } from "@context/AuthContext";
-import { Icons } from "@components/ui/Icons";
+import { Icons } from "@/components/ui/icons/Icons";
 
 import { useCourses, useDeleteCourse } from "@features/courses/hooks/useCourses"; 
 import { useCourseSearch } from "@features/courses/hooks/useCourseSearch";

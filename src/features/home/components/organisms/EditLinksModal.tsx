@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { Input } from '@components/atoms/Input';
 import { Button } from '@components/atoms/Button';
 import { linksService, type CampusLink } from '../../services/linksService';

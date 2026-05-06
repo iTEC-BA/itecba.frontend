@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@components/atoms/Input';
 import { Select } from '@components/atoms/Select';
 import { Button } from '@components/atoms/Button';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '@features/groups/types/groups';
 import { useAuth } from '@context/AuthContext';
 

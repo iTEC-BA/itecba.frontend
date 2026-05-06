@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@components/atoms/Button';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { coursesService, type CourseData } from '../../services/coursesService';
 import { CourseGeneralData } from '../molecules/CourseGeneralData';
 import { CourseVideoListEditor, type VideoItem } from './CourseVideoListEditor';

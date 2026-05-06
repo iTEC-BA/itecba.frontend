@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@components/atoms/Button';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { getAuth } from 'firebase/auth';
 import { adminRedemptionsService } from '../../services/adminRedemptionsService';
 import { RedemptionRecord } from '@features/rewards/types/rewards';

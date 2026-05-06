@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../atoms/Button';
-import { Icons } from '../ui/Icons';
+import { Icons } from '../ui/icons/Icons';
 
 interface Props {
   onSendMessage: (text: string) => void;

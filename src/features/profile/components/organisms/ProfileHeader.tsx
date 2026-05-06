@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '@context/AuthContext';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 
 export const ProfileHeader: React.FC = () => {
   const { user, logout } = useAuth();

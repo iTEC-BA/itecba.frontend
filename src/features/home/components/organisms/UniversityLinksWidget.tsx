@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from "react";
-import { Icons } from "@components/ui/Icons";
+import { Icons } from "@/components/ui/icons/Icons";
 import { linksService, type CampusLink } from "../../services/linksService";
 import { Button } from "@/components/atoms/Button";
 

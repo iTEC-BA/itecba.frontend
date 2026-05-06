@@ -1,6 +1,6 @@
 import React, { Suspense, useState } from 'react';
 import { MainLayout } from '@/components/templates/MainLayout';
-import { Icons } from '@/components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 
 import { useAuth } from '@/context/AuthContext';
 import { GroupFilters } from '@features/groups/components/organisms/GroupFilters';

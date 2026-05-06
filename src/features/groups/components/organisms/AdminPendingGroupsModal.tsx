@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { type GroupData } from '../../services/groupsService';
 import { usePendingGroups, useApprovePendingGroup, useRejectPendingGroup } from '../../hooks/useGroups';
 

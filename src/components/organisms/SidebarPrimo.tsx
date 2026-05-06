@@ -1,7 +1,7 @@
 import { useAuth } from '../../context/AuthContext';
 import { useSidebarLinks } from '../../hooks/useSidebarLinks';
 import { SidebarPrimoItem } from '../molecules/SidebarPrimoItem';
-import { Icons } from '../ui/Icons';
+import { Icons } from '../ui/icons/Icons';
 
 export const SidebarPrimo = () => {
   const { user } = useAuth();

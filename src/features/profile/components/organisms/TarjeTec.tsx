@@ -1,5 +1,5 @@
 import React from "react";
-import { Icons } from "@components/ui/Icons";
+import { Icons } from "@/components/ui/icons/Icons";
 import logoItec from "@assets/logo.png";
 import type { User } from "@context/AuthContext";
 

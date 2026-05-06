@@ -1,7 +1,7 @@
 // src/features/rewards/components/organisms/RewardsWidget.tsx
 import React, { useState } from "react";
 import { useRewards } from "../../hooks/useRewards";
-import { RewardCard } from "../molecules/RewardCard";
+import { RewardCardSmall } from "../atoms/RewardsCardSmall";
 import { RedeemModal } from "./RedeemModal";
 import { Reward, RedemptionPayload } from "../../types/rewards";
 
@@ -30,14 +30,8 @@ export const RewardsWidget: React.FC = () => {
 
   return (
     <section className="mb-4 relative">
-      <div className="flex flex-col justify-between gap-4 mb-4">
-        <h3 className="font-semibold text-itec-text/60 flex items-center gap-2">
-          Beneficios Estudiantiles
-        </h3>
-        <p className="text-itec-text text-sm">
-          Intercambia tus puntos académicos por mentorías, descuentos y accesos
-          exclusivos.
-        </p>
+      <div className="flex flex-col justify-between gap-4 mb-4 text-itec-gray">
+        <h3 className="text-xs">RECOMPENSAS — {pointsBalance} PTS</h3>
       </div>
 
       {rewards.length === 0 ? (
@@ -51,7 +45,7 @@ export const RewardsWidget: React.FC = () => {
           {rewards.map((reward: any) => {
             const uniqueId = reward._id || reward.id;
             return (
-              <RewardCard
+              <RewardCardSmall
                 key={uniqueId}
                 reward={{ ...reward, id: uniqueId }}
                 userPoints={pointsBalance}

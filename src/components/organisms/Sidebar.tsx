@@ -1,6 +1,6 @@
 import React from 'react';
 import logoItec from '../../assets/logo.png';
-import { Icons } from '../ui/Icons';
+import { Icons } from '../ui/icons/Icons';
 import { SidebarItem } from '../molecules/SidebarItem';
 import { useAuth } from '../../context/AuthContext'; 
 

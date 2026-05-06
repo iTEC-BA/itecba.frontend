@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 
 // Componentes Globales
 import { MainLayout } from '@/components/templates/MainLayout';
-import { Icons } from '@components/ui/Icons'; 
+import { Icons } from '@/components/ui/icons/Icons'; 
 import { useAuth } from '@context/AuthContext';
 
 // Componentes de courses

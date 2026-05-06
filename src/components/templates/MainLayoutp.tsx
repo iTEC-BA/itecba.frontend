@@ -3,7 +3,7 @@ import { Sidebar } from "../organisms/Sidebar";
 // import { ChatbotWidget } from "../organisms/ChatbotWidget"; 
 // import { BackgroundBlur } from "../ui/BackgroundBlur"; 
 import logoItec from "../../assets/logo.png"; 
-import { Icons } from "../ui/Icons";
+import { Icons } from "../ui/icons/Icons";
 // Agrega esta importación arriba:
 import { GlobalAnnouncement } from '../../features/admin/components/atoms/GlobalAnnouncement';
 export const MainLayouta: React.FC<{ children: React.ReactNode }> = ({

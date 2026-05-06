@@ -9,7 +9,7 @@ interface RewardCardProps {
   onSelect: (reward: Reward) => void;
 }
 
-export const RewardCard: React.FC<RewardCardProps> = ({
+export const RewardCardMedium: React.FC<RewardCardProps> = ({
   reward,
   userPoints,
   onSelect,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icons } from '../ui/Icons';
+import { Icons } from '../ui/icons/Icons';
 
 interface Props {
   type: 'curso' | 'aporte' | 'grupo';

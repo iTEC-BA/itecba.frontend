@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@components/atoms/Button";
 import { Input } from "@components/atoms/Input";
-import { Icons } from "@components/ui/Icons";
+import { Icons } from "@/components/ui/icons/Icons";
 import { Reward, RewardType } from "@features/rewards/types/rewards";
 import { rewardsService } from "@features/rewards/services/rewardsService";
 import { adminRewardsService } from "../../services/adminRewardsService";

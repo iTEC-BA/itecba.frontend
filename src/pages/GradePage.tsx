@@ -1,5 +1,5 @@
 import React, { useState, Suspense } from "react";
-import { Icons } from "../components/ui/Icons";
+import { Icons } from "../components/ui/icons/Icons";
 import { PageHeader } from "../components/ui/PageHeader";
 import { MainLayout } from "../components/templates/MainLayout";
 import { CareerGrid } from "@/features/grade/components/organisms/CareerGrid";

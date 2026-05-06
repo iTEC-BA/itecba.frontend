@@ -1,4 +1,4 @@
-import { Icons } from "@/components/ui/Icons";
+import { Icons } from "@/components/ui/icons/Icons";
 import { useRewards } from "../../hooks/useRewards";
 
 export default function RewardsPointsItem({children}) {
@@ -10,7 +10,6 @@ export default function RewardsPointsItem({children}) {
         {pointsBalance}
       </span>
       {children ?<span className="text-sm">{children}</span> :<></> }
-      
     </div>
   );
 }

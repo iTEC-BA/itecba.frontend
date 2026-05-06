@@ -1,7 +1,7 @@
 import React from "react";
 import logoItec from "@assets/logo.png";
 import { useAuth } from "@context/AuthContext";
-import { Icons } from "@components/ui/Icons";
+import { Icons } from "@/components/ui/icons/Icons";
 import { MainLayout } from "@/components/templates/MainLayout";
 import LoadingState from "@components/atoms/LoadingState";
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '@components/atoms/Input';
 import { Button } from '@components/atoms/Button';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 
 export interface VideoItem {
   title: string;

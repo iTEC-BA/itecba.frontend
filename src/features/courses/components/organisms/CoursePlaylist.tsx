@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import type { Video } from '../../services/coursesService';
 
 interface Props {

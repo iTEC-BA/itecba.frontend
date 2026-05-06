@@ -1,6 +1,6 @@
 import React from 'react';
 import type { UseMutationResult } from '@tanstack/react-query';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import type { AnnouncementData } from '../../services/adminService';
 
 interface Props {

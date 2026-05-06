@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getAuth } from 'firebase/auth';
 import { inboxService } from '../../services/inboxService';
 import { InboxMessage } from '../../types/rewards';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 
 export const InboxWidget: React.FC = () => {
   const [messages, setMessages] = useState<InboxMessage[]>([]);

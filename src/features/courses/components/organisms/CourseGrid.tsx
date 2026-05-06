@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { CourseCard } from '../molecules/CourseCard';
 import type { CourseData } from '../../services/coursesService';
 

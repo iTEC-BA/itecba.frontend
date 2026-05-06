@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { Icons } from '../ui/Icons';
+import { Icons } from './icons/Icons';
 
 interface Props {
   title: string;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@components/atoms/Button';
 import { Input } from '@components/atoms/Input';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { Reward, RedemptionPayload } from '../../types/rewards';
 
 interface RedeemModalProps {

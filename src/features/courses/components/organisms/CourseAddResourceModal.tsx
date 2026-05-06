@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Icons } from '@components/ui/Icons';
+import { Icons } from '@/components/ui/icons/Icons';
 import { useAuth } from '@context/AuthContext';
 
 const API_URL_RESOURCES = 'http://127.0.0.1:5001/api/resources'; 
