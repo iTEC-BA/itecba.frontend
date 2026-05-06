@@ -31,6 +31,29 @@ dist-ssr
 
 
 ==================================================
+ARCHIVO: ./.vercel/project.json
+==================================================
+{"projectId":"prj_lrwh0GtopuJ0wUu96SblVEO69VB2","orgId":"team_i397YKF5zUkM7pqqmEH2XJc6","projectName":"itecba-pwa"}
+
+
+==================================================
+ARCHIVO: ./.vercel/README.txt
+==================================================
+> Why do I have a folder named ".vercel" in my project?
+The ".vercel" folder is created when you link a directory to a Vercel project.
+
+> What does the "project.json" file contain?
+The "project.json" file contains:
+- The ID of the Vercel project that you linked ("projectId")
+- The ID of the user or team your Vercel project is owned by ("orgId")
+
+> Should I commit the ".vercel" folder?
+No, you should not share the ".vercel" folder with anyone.
+Upon creation, it will be automatically added to your ".gitignore" file.
+
+
+
+==================================================
 ARCHIVO: ./dev-dist/registerSW.js
 ==================================================
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/dev-sw.js?dev-sw', { scope: '/', type: 'classic' })
@@ -122,7 +145,7 @@ define(['./workbox-b9d3b234'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.p8ia387d9fo"
+    "revision": "0.nbtjkcq5fd"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -20695,6 +20718,19 @@ ARCHIVO: ./tsconfig.node.json
   "include": ["vite.config.ts"]
 }
 
+
+
+==================================================
+ARCHIVO: ./vercel.json
+==================================================
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
 
 
 ==================================================

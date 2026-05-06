@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OUTPUT="codigo_completo_para_ia.txt"
+OUTPUT="codigo_frontend_ia.txt"
 
 echo "Generando archivo de código consolidado en $OUTPUT..."
 
