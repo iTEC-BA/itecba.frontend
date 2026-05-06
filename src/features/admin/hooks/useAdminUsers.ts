@@ -16,7 +16,7 @@ export const useAdminUsers = (isAdmin: boolean) => {
   const loadAdmins = async () => {
     setIsLoadingAdmins(true);
     try {
-      const data = await adminService.getAdminUsers();
+      const data = await adminService.getAdmins();
       setAdmins(data);
     } catch (e) {
       console.error("Error cargando admins");

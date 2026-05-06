@@ -5,7 +5,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'admin' | 'inicio' | 'servicios' | 'nosotros' | 'proyectos' | 'contacto';
   fullWidth?: boolean;
   icon?: string;
-  text: string;
+  text?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({ 

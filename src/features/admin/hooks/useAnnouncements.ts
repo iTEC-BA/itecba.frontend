@@ -18,7 +18,7 @@ export const useAnnouncements = (isAdmin: boolean) => {
     if (!form.title || !form.message) return;
     setIsSubmitting(true);
     try {
-      await adminService.createAnnouncement(form.title, form.message, parseInt(form.hours));
+      await adminService.createAnnouncement(form.title, form.message, parseInt(form.hours), false);
       await loadAnnouncements();
       onSuccess();
     } catch (error: any) {

@@ -6,7 +6,7 @@ import logoItec from '../../assets/logo.png';
 
 interface Message {
   role: 'user' | 'model';
-  text: string;
+  text?: string;
 }
 
 const ITEC_FOOTER = "\n\n---\n*💡 Recuerda que siempre puedes consultar en nuestros grupos de WhatsApp o en nuestro [Instagram oficial @itecba](https://instagram.com/itecba).*";

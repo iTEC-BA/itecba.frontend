@@ -3,7 +3,7 @@ import { Button } from '../ui/Button';
 import { Icons } from '../ui/icons/Icons';
 
 interface Props {
-  onSendMessage: (text: string) => void;
+  onSendMessage: (text?: string) => void;
   disabled?: boolean;
 }
 

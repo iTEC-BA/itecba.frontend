@@ -19,7 +19,7 @@ export const CAREER_NAMES: Record<string, string> = {
 export const useProgress = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const storageKey = `itec_progress_${user?.uid}`;
+  const storageKey = `itec_progress_${user?.id}`;
 
   const loadUserData = () => {
     const stored = localStorage.getItem(storageKey);
@@ -44,7 +44,7 @@ export const useProgress = () => {
   };
 
   const query = useQuery<CareerProgress>({
-    queryKey: ['progress', user?.uid],
+    queryKey: ['progress', user?.id],
     queryFn: () => {
       const userData = loadUserData();
       const activeCareerId = userData.activeCareer;
@@ -127,7 +127,7 @@ export const useProgress = () => {
       localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.id] })
   });
 
   const switchCareer = useMutation({
@@ -139,7 +139,7 @@ export const useProgress = () => {
       localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.id] })
   });
 
   // NUEVA MUTACIÓN: Eliminar Carrera
@@ -161,7 +161,7 @@ export const useProgress = () => {
       localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.id] })
   });
 
   return { ...query, updateSubjectStatus: updateSubjectStatus.mutate, switchCareer: switchCareer.mutate, removeCareer: removeCareer.mutate };

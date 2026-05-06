@@ -1,4 +1,4 @@
-import React from 'react';
+
 import type { ProgressMetrics } from '../../types/progress';
 
 export const MetricCard = ({ title, value, subtitle, icon, highlight }: any) => (

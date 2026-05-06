@@ -7,7 +7,7 @@ import { useChatbot } from '../../hooks/useChatbot';
 
 export interface Message {
   role: 'user' | 'model';
-  text: string;
+  text?: string;
   timestamp: Date;
   isAiGenerated?: boolean;
   suggestions?: string[]; // 🟢 AÑADIMOS EL TIPO AQUÍ

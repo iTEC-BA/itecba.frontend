@@ -56,7 +56,7 @@ export const groupsService = {
     }
   },
 
-  submitNewGroup: async (groupData: Omit<GroupData, 'id'>, isAdmin: boolean): Promise<string> => {
+  submitNewGroup: async (groupData: Omit<GroupData, 'id'>, _isAdmin: boolean): Promise<string> => {
     const token = await getToken(false);
     const headers: Record<string, string> = {
       'Content-Type': 'application/json'

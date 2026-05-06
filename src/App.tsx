@@ -1,10 +1,17 @@
+// src/App.tsx
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@context/AuthContext";
 import { ProtectedRoute } from "@components/templates/ProtectedRoute";
 import LoadingState from "@/components/ui/LoadingState";
 
-// Carga Diferida (Code Splitting)
+// ── Componentes PWA ──────────────────────────────────────────────────────────
+// Estos dos componentes son los que hacen aparecer el banner de instalación
+// y el toast de actualización. SIN estos imports el botón de instalar NUNCA aparece.
+import { InstallPWABanner } from "@components/molecules/InstallPWABanner";
+import { UpdatePWAToast }   from "@components/molecules/UpdatePWAToast";
+
+// ── Carga Diferida (Code Splitting) ──────────────────────────────────────────
 const RewardsPage       = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
 const CourseEditDetail  = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
 const HomePage          = lazy(() => import("@pages/HomePage").then(m => ({ default: m.HomePage })));
@@ -21,12 +28,12 @@ const AdminPanel        = lazy(() => import("@pages/AdminPanel").then(m => ({ de
 const ProgressPage      = lazy(() => import("@pages/ProgressPage").then(m => ({ default: m.ProgressPage })));
 const ErrorPage         = lazy(() => import("@pages/ErrorPage").then(m => ({ default: m.ErrorPage })));
 const LoginPage         = lazy(() => import("@pages/LoginPage").then(m => ({ default: m.LoginPage })));
-const BuscaTECPage  = lazy(() => import("@pages/BuscaTECPage").then(m => ({ default: m.BuscaTECPage })));
-const AulasPage     = lazy(() => import("@pages/AulasPage").then(m => ({ default: m.AulasPage })));
-const GuiaTECPage   = lazy(() => import("@pages/GuiaTECPage").then(m => ({ default: m.GuiaTECPage })));
-const CalendarioPage = lazy(() => import("@pages/CalendarioPage").then(m => ({ default: m.CalendarioPage })));
-const PluginsPage   = lazy(() => import("@pages/PluginsPage").then(m => ({ default: m.PluginsPage })));
-const TerminosPage  = lazy(() => import("@pages/TerminosPage").then(m => ({ default: m.TerminosPage })));
+const BuscaTECPage      = lazy(() => import("@pages/BuscaTECPage").then(m => ({ default: m.BuscaTECPage })));
+const AulasPage         = lazy(() => import("@pages/AulasPage").then(m => ({ default: m.AulasPage })));
+const GuiaTECPage       = lazy(() => import("@pages/GuiaTECPage").then(m => ({ default: m.GuiaTECPage })));
+const CalendarioPage    = lazy(() => import("@pages/CalendarioPage").then(m => ({ default: m.CalendarioPage })));
+const PluginsPage       = lazy(() => import("@pages/PluginsPage").then(m => ({ default: m.PluginsPage })));
+const TerminosPage      = lazy(() => import("@pages/TerminosPage").then(m => ({ default: m.TerminosPage })));
 
 export const App: React.FC = () => {
   return (
@@ -67,6 +74,16 @@ export const App: React.FC = () => {
           </Routes>
         </Suspense>
       </BrowserRouter>
+
+      {/*
+        ── PWA: Banner de instalación y Toast de actualización ────────────────
+        Deben estar FUERA del BrowserRouter porque son overlays globales
+        (position: fixed) que no pertenecen a ninguna ruta específica.
+        InstallPWABanner → aparece cuando Chrome detecta que la PWA es instalable
+        UpdatePWAToast   → aparece cuando hay una nueva versión del Service Worker
+      */}
+      <InstallPWABanner />
+      <UpdatePWAToast />
     </AuthProvider>
   );
 };

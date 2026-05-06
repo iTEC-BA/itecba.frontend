@@ -39,7 +39,7 @@ export const CourseEditDetail: React.FC = () => {
     if (course) {
       setCourseTitle(course.title || '');
       setCourseDesc(course.description || '');
-      setImageUrl(course.image || '');
+      setImageUrl((course as any).image || (course as any).thumbnail || '');
       setMateria(course.materia || '');
       setCategoria(course.categoria || 'Comunidad');
       setVideos(course.videos?.length ? [...course.videos] : [{ title: '', youtubeId: '', duration: '' }]);
@@ -52,9 +52,9 @@ export const CourseEditDetail: React.FC = () => {
     setIsFetchingPlaylist(true);
     setError('');
     try {
-      const fetchedVideos = await coursesService.fetchYoutubePlaylist(playlistUrl);
-      if (fetchedVideos && fetchedVideos.length > 0) {
-        setVideos(fetchedVideos);
+      const fetchedVideos = await coursesService.fetchPlaylistDetails(playlistUrl);
+      if (fetchedVideos && fetchedVideos.videos && fetchedVideos.videos.length > 0) {
+        setVideos(fetchedVideos.videos as any);
       } else {
         setError('La playlist está vacía o es privada.');
       }
@@ -80,17 +80,18 @@ export const CourseEditDetail: React.FC = () => {
       courseData: {
         title: courseTitle,
         description: courseDesc,
-        image: imageUrl,
+        
         materia,
         categoria,
-        videos: cleanVideos
+        videos: cleanVideos as any
       }
     }, {
       onSuccess: () => {
         // Redirige al detalle del curso cuando termina de guardar
         navigate(`/cursos/${id}`);
       },
-      onError: (err) => setError('Fallo al actualizar el curso en la base de datos.')
+      // Línea 93. Ponle un guión bajo a err:
+      onError: () => setError('Fallo al actualizar el curso en la base de datos.')
     });
   };
 
@@ -175,7 +176,7 @@ export const CourseEditDetail: React.FC = () => {
                   videos={videos} setVideos={setVideos}
                   mode={mode} setMode={setMode}
                   playlistUrl={playlistUrl} setPlaylistUrl={setPlaylistUrl}
-                  handleFetchPlaylist={handleFetchPlaylist} isFetching={isFetchingPlaylist}
+                  onFetchPlaylist={handleFetchPlaylist} isFetching={isFetchingPlaylist}
                 />
               </div>
 

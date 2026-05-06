@@ -50,7 +50,7 @@ export const useRewards = () => {
       
       if (response.success) {
         // Descuento visual inmediato sin tocar la DB de nuevo
-        addPoints(-cost, false);
+        addPoints(-cost);
         return true;
       }
       return false;

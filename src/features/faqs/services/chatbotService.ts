@@ -1,14 +1,14 @@
 import { FAQ_DATABASE } from '../types/faqs';
 import type { Message } from '../components/organisms/ChatInterface';
 
-const normalizeText = (text: string) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, "").trim();
+const normalizeText = (text?: string) => (text || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, "").trim();
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'; 
 
 export const chatbotService = {
   
   // 🟢 AHORA DEVUELVE UN OBJETO CON TEXTO Y SUGERENCIAS
-  searchFaqAnswer: (query: string): { text: string, suggestions?: string[] } => {
+  searchFaqAnswer: (query: string): { text?: string, suggestions?: string[] } => {
     const cleanQuery = normalizeText(query);
     const queryWords = cleanQuery.split(' ');
 

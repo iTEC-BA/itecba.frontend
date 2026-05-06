@@ -44,7 +44,7 @@ export const resourcesService = {
     return data.map((d: any) => ({ ...d, id: d._id }));
   },
 
-  submitNewResource: async (resourceData: Omit<ResourceData, 'id'>, isDirectPublish: boolean): Promise<string> => {
+  submitNewResource: async (resourceData: Omit<ResourceData, 'id'>, _isDirectPublish: boolean): Promise<string> => {
     const token = await getToken();
     const res = await fetch(API_URL, {
       method: 'POST',

@@ -7,7 +7,7 @@ export interface SidebarItemProps {
   label: string;
   iconName: string;
   badge?: string;
-  tag?: { text: string; color: "gold" | "green" };
+  tag?: { text?: string; color: "gold" | "green" };
   onClick?: () => void;
 }
 

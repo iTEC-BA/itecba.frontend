@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Icons } from '@/components/ui/icons/Icons';
-import { useAuth } from '@context/AuthContext';
+import { auth } from '@/lib/firebase';
 
 const API_URL_RESOURCES = 'http://127.0.0.1:5001/api/resources'; 
 
@@ -17,12 +17,11 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
   const [driveUrl, setDriveUrl] = useState('');
   const [error, setError] = useState('');
   
-  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const addResourceMutation = useMutation({
     mutationFn: async () => {
-      const token = await user?.getIdToken();
+      const token = await auth.currentUser?.getIdToken();
       const payload = {
         title: title.trim(),
         materia, // Se auto-hereda del curso actual

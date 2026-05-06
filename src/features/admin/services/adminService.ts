@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, updateDoc, Timestamp, query, where, limit } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, query, where, limit } from 'firebase/firestore';
 import { db, auth } from '@lib/firebase';
 import type { User } from '@context/AuthContext';
 

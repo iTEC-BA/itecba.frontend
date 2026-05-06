@@ -30,7 +30,7 @@ const FORMATOS_ARCHIVO = [
   { value: 'Notion', label: 'Notion / Web' },
   { value: 'ZIP', label: 'Archivo Comprimido' },
 ];
-export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) => {
+export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { user, isAuthenticated, loginWithGoogle, addPoints } = useAuth();
   
   const submitMutation = useSubmitResource();

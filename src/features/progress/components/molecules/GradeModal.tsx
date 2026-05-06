@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Button } from '@components/ui/Button';
-import type { CalculatedSubject } from '../../hooks/useProgress';
 
 interface Props {
-  subject: CalculatedSubject;
+  subject: { id: string; name: string };
   targetStatus: 'aprobada' | 'regular';
   onClose: () => void;
   onConfirm: (id: string, status: string, grade?: number, year?: number) => void;

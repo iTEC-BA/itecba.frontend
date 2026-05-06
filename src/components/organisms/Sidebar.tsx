@@ -17,7 +17,7 @@ export const Sidebar = () => {
     requireAuth: typeof link.requireAuth === "boolean" ? link.requireAuth : undefined,
     requireAdmin: typeof link.requireAdmin === "boolean" ? link.requireAdmin : undefined,
     badge: typeof link.badge === "string" ? link.badge : undefined,
-    tag: link.tag && typeof link.tag === "object" && "text" in link.tag ? link.tag as { text: string; color: "green" | "gold" } : undefined,
+    tag: link.tag && typeof link.tag === "object" && "text" in link.tag ? link.tag as { text?: string; color: "green" | "gold" } : undefined,
   });
 
   return (

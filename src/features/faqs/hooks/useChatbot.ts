@@ -26,10 +26,10 @@ export const useChatbot = (userEmail: string) => {
     return () => clearInterval(interval);
   }, [userEmail]);
 
-  const handleSendMessage = async (text: string, forceAI: boolean = false) => {
-    if (!text.trim()) return;
+  const handleSendMessage = async (text?: string, forceAI: boolean = false) => {
+    if (!text || !text.trim()) return;
 
-    if (text.toLowerCase().trim() === "reset ai") {
+    if (text && text.toLowerCase().trim() === "reset ai") {
       localStorage.removeItem(`itec_ai_last_${userEmail}`);
       checkAILimits();
       setMessages(prev => [...prev, { role: 'model', text: "✅ Truco dev activado: Has reseteado tu límite de IA.", timestamp: new Date() }]);
@@ -40,7 +40,7 @@ export const useChatbot = (userEmail: string) => {
     setIsTyping(true);
 
     if (forceAI && canUseAI) {
-      const aiResponse = await chatbotService.askAdvancedAI(text, messages);
+      const aiResponse = await chatbotService.askAdvancedAI(text || '', messages);
       setMessages(prev => [...prev, { role: 'model', text: aiResponse, timestamp: new Date(), isAiGenerated: true }]);
       
       if (!aiResponse.includes("⚠️")) {
@@ -49,10 +49,10 @@ export const useChatbot = (userEmail: string) => {
       }
     } else {
       setTimeout(() => {
-        const isGreeting = ['hola', 'buenas', 'holis'].includes(text.toLowerCase().trim());
+        const isGreeting = ['hola', 'buenas', 'holis'].includes(text ? text.toLowerCase().trim() : '');
         
         // 🟢 RECIBIMOS TEXTO Y SUGERENCIAS DEL SERVICIO
-        const responseData = chatbotService.searchFaqAnswer(text);
+        const responseData = chatbotService.searchFaqAnswer(text || '');
         const finalAnswer = responseData.text + (isGreeting ? '' : '\n\n' + ITEC_FOOTER);
         
         setMessages(prev => [...prev, { 

@@ -1,7 +1,7 @@
 import { Icons } from "@/components/ui/icons/Icons";
 import { useRewards } from "../../hooks/useRewards";
 
-export default function RewardsPointsItem({children}) {
+export default function RewardsPointsItem({ children }: { children: React.ReactNode }) {
   const { pointsBalance } = useRewards();
   return (
     <div className="flex justify-center items-center gap-2 w-fit">

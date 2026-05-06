@@ -12,7 +12,7 @@ export const useAdminData = () => {
   });
 
   // 2. Obtener Lista de Avisos
-const { data: announcements = [], isLoading: isLoadingAnnouncements, isError: isErrorAnnouncements } = useQuery({
+const { data: announcements = [], isLoading: isLoadingAnnouncements } = useQuery({
     queryKey: ['adminAnnouncements'],
     queryFn: adminService.getActiveAnnouncements,
   });

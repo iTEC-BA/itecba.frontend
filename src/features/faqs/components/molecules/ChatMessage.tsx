@@ -4,7 +4,7 @@ import { Icons } from '@/components/ui/icons/Icons';
 
 interface Props {
   role: 'user' | 'model';
-  text: string;
+  text?: string;
   timestamp: Date;
 }
 
@@ -16,7 +16,7 @@ export const ChatMessage: React.FC<Props> = ({ role, text, timestamp }) => {
 
   // 🟢 NUEVA FUNCIONALIDAD: Copiar mensaje
   const handleCopy = () => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text || '');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

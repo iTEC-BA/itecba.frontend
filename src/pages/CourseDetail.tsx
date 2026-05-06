@@ -19,7 +19,7 @@ const CourseResourcesModal = React.lazy(() => import('@features/courses/componen
 const CourseAddResourceModal = React.lazy(() => import('@features/courses/components/organisms/CourseAddResourceModal').then(m => ({ default: m.CourseAddResourceModal })));
 
 export const CourseDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); 
+  const { id } = useParams<{ id: string }>();   
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
 
@@ -38,7 +38,7 @@ export const CourseDetail: React.FC = () => {
   useEffect(() => {
     if (course && user) {
       try {
-        const key = `itec_course_progress_${user.uid}_${course.id || (course as any)._id}`;
+        const key = `itec_course_progress_${user?.id}_${course.id || (course as any)._id}`;
         const stored = localStorage.getItem(key);
         if (stored) setWatchedVideos(new Set(JSON.parse(stored)));
       } catch (e) { console.error("Error cargando progreso:", e); }
@@ -55,7 +55,7 @@ export const CourseDetail: React.FC = () => {
       else newSet.add(videoId);
       
       try {
-        const key = `itec_course_progress_${user.uid}_${course.id || (course as any)._id}`;
+        const key = `itec_course_progress_${user?.id}_${course.id || (course as any)._id}`;
         localStorage.setItem(key, JSON.stringify(Array.from(newSet)));
       } catch (err) { console.error("Error guardando progreso:", err); }
       
@@ -240,7 +240,7 @@ export const CourseDetail: React.FC = () => {
           <CourseResourcesModal 
             isOpen={isViewModalOpen} 
             onClose={() => setIsViewModalOpen(false)} 
-            resources={relatedResources}
+            resources={relatedResources as any}
           />
         </Suspense>
       )}
@@ -251,7 +251,7 @@ export const CourseDetail: React.FC = () => {
             isOpen={isAddModalOpen} 
             onClose={() => setIsAddModalOpen(false)} 
             courseTitle={course.title}
-            materia={course.materia}
+            materia={course.materia || ''}
           />
         </Suspense>
       )}

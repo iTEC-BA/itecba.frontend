@@ -3,7 +3,7 @@ import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 
 interface Props {
-  onSendMessage: (text: string, forceAI?: boolean) => void;
+  onSendMessage: (text?: string, forceAI?: boolean) => void;
   disabled?: boolean;
   canUseAI: boolean;
   timeLeftAI: string | null;
