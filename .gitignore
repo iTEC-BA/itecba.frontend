@@ -27,3 +27,6 @@ dist-ssr
 *.env
 .env
 .vercel
+
+codigo_frontend_ia.txt
+mejorar_frontend.sh

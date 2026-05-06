@@ -1,6 +1,4 @@
 // src/features/rewards/hooks/useRewards.ts
-// FIX: Agregado guard de autenticación para evitar loop infinito de fetches.
-// El hook ahora NO llama a la API si el usuario no está autenticado.
 import { useState, useEffect, useCallback } from 'react';
 import { rewardsService } from '../services/rewardsService';
 import { Reward, RedemptionPayload } from '../types/rewards';
@@ -8,10 +6,10 @@ import { useAuth } from '@context/AuthContext';
 import { getAuth } from 'firebase/auth';
 
 export const useRewards = () => {
-  const { user, isAuthenticated, addPoints } = useAuth();
+  const { user, addPoints } = useAuth();
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [pointsBalance, setPointsBalance] = useState<number>(user?.points || 0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isRedeeming, setIsRedeeming] = useState(false);
 
   useEffect(() => {
@@ -19,13 +17,6 @@ export const useRewards = () => {
   }, [user?.points]);
 
   const fetchRewards = useCallback(async () => {
-    // GUARD: no fetchear si el usuario no está autenticado
-    if (!isAuthenticated) {
-      setRewards([]);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
     try {
       const authUser = getAuth().currentUser;
@@ -38,7 +29,7 @@ export const useRewards = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated]); // DEPENDENCIA CORRECTA: solo re-ejecutar si cambia el estado de auth
+  }, []);
 
   useEffect(() => {
     fetchRewards();
@@ -53,15 +44,13 @@ export const useRewards = () => {
       if (!authUser) throw new Error("Usuario no autenticado en Firebase");
 
       const token = await authUser.getIdToken();
+      
+      console.log("Enviando canje al backend...", { rewardId, payload });
       const response = await rewardsService.redeemReward(payload, rewardId, token);
-
+      
       if (response.success) {
-<<<<<<< HEAD
         // Descuento visual inmediato sin tocar la DB de nuevo
-        addPoints(-cost);
-=======
         addPoints(-cost, false);
->>>>>>> feature/dev-jaiiirot
         return true;
       }
       return false;
