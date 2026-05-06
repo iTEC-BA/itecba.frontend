@@ -21,8 +21,6 @@ const AdminPanel        = lazy(() => import("@pages/AdminPanel").then(m => ({ de
 const ProgressPage      = lazy(() => import("@pages/ProgressPage").then(m => ({ default: m.ProgressPage })));
 const ErrorPage         = lazy(() => import("@pages/ErrorPage").then(m => ({ default: m.ErrorPage })));
 const LoginPage         = lazy(() => import("@pages/LoginPage").then(m => ({ default: m.LoginPage })));
-
-// ── Páginas nuevas ──────────────────────────────────────────────────────────
 const BuscaTECPage  = lazy(() => import("@pages/BuscaTECPage").then(m => ({ default: m.BuscaTECPage })));
 const AulasPage     = lazy(() => import("@pages/AulasPage").then(m => ({ default: m.AulasPage })));
 const GuiaTECPage   = lazy(() => import("@pages/GuiaTECPage").then(m => ({ default: m.GuiaTECPage })));
@@ -46,8 +44,6 @@ export const App: React.FC = () => {
             <Route path="/grado"      element={<GradePage />} />
             <Route path="/nosotros"   element={<AboutPage />} />
             <Route path="/grupos"     element={<GroupsPage />} />
-
-            {/* Nuevas páginas públicas */}
             <Route path="/buscatec"   element={<BuscaTECPage />} />
             <Route path="/aulas"      element={<AulasPage />} />
             <Route path="/guiatec"    element={<GuiaTECPage />} />
