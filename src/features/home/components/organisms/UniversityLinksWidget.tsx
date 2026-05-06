@@ -1,23 +1,20 @@
 import React, { useState, useEffect, Suspense } from "react";
-import { Icons } from "@/components/ui/icons/Icons";
 import { linksService, type CampusLink } from "../../services/linksService";
 import { Button } from "@/components/atoms/Button";
+import { useAuth } from "@context/AuthContext";
 
-// 🔴 LAZY LOADING: El modal no se descarga hasta que sea estrictamente necesario
 const EditLinksModal = React.lazy(() =>
   import("./EditLinksModal").then((module) => ({
     default: module.EditLinksModal,
   })),
 );
 
-interface Props {
-  isAdmin: boolean;
-}
 
-export const UniversityLinksWidget: React.FC<Props> = ({ isAdmin }) => {
+export const UniversityLinksWidget = () => {
   const [links, setLinks] = useState<CampusLink[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { isAdmin } = useAuth();
 
   const loadLinks = async () => {
     setIsLoading(true);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { Button } from '../atoms/Button';
 import { Icons } from '../ui/icons/Icons';
 
@@ -10,7 +10,7 @@ interface Props {
 export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled }) => {
   const [input, setInput] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim() || disabled) return;
     onSendMessage(input);
