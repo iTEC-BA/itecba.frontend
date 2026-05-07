@@ -45,7 +45,11 @@ export const ProfileStatsWidget: React.FC = () => {
       value: careers.length || 0,
       accent: "text-itec-sky",
       icon: "🎓",
-      sublabel: isDoubleMajor ? "Doble trayectoria" : yearsIn ? `${yearsIn}° año` : "Sin datos",
+      sublabel: isDoubleMajor
+        ? "Doble trayectoria"
+        : yearsIn
+          ? `${yearsIn}° año`
+          : "Sin datos",
     },
   ];
 
