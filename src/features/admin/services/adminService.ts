@@ -67,7 +67,8 @@ export const adminService = {
         createdAt: a.createdAt ? { toDate: () => new Date(a.createdAt as string | number) } : { toDate: () => new Date() }
       }));
     } catch (error) {
-      console.error("❌ Error al obtener avisos:", error instanceof Error ? error.message : error);
+      // console.error("❌ Error al obtener avisos:", error instanceof Error ? error.message : error);
+      console.log(error)
       return []; 
     }
   },
