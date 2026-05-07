@@ -17,13 +17,13 @@ export interface CourseData {
   imageUrl: string;
   playlistId: string;
   videos: Video[];
-  createdAt?: any;
-  // 🔴 NUEVO: Agregamos tipado para los filtros, asumiendo que tu backend de Mongo los soporta o los soportará
+  createdAt?: Date | string;
   materia?: string;
-  categoria?: string; // ej: "Oficial", "Comunidad"
+  categoria?: string;
 }
 
-const API_URL = 'http://127.0.0.1:5001/api/courses'; 
+
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/courses`;
 
 const getToken = async () => {
   const token = await auth.currentUser?.getIdToken();
@@ -38,7 +38,12 @@ export const coursesService = {
       if (!res.ok) throw new Error('Error obteniendo cursos');
       const data = await res.json();
       // Mapeamos para asegurar que id sea igual a _id para compatibilidad del frontend
-      return Array.isArray(data) ? data.map((c: any) => ({ ...c, id: c._id })) : [];
+      return Array.isArray(data)
+        ? data.map((c: unknown) => {
+            const course = c as CourseData & { _id?: string };
+            return { ...course, id: course._id };
+          })
+        : [];
     } catch (error) {
       console.error(error);
       return []; 

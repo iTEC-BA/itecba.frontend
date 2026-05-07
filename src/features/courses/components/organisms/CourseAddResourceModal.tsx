@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Icons } from '@/components/ui/icons/Icons';
 import { auth } from '@/lib/firebase';
 
-const API_URL_RESOURCES = 'http://127.0.0.1:5001/api/resources'; 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 interface Props {
   isOpen: boolean;
@@ -30,7 +30,7 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
         nivel: 1
       };
       
-      const res = await fetch(API_URL_RESOURCES, {
+      const res = await fetch(`${API_URL}/resources`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -8,7 +8,8 @@ export interface CampusLink {
   order: number;
 }
 
-const API_URL = 'http://127.0.0.1:5001/api/links';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_URL = `${API_BASE}/links`;
 
 const getToken = async () => {
   const token = await auth.currentUser?.getIdToken();

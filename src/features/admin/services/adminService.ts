@@ -7,11 +7,11 @@ export interface AnnouncementData {
   title: string;
   message: string;
   isCritical: boolean;
-  expiresAt: any;
-  createdAt: any;
+  expiresAt: { toDate: () => Date };
+  createdAt: { toDate: () => Date };
 }
 
-const API_URL_ANNOUNCEMENTS = 'http://127.0.0.1:5001/api/announcements';
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/announcements`;
 
 const getToken = async () => {
   const token = await auth.currentUser?.getIdToken();
@@ -42,8 +42,15 @@ export const adminService = {
   // --- AVISOS GLOBALES ---
   getActiveAnnouncements: async (): Promise<AnnouncementData[]> => {
     try {
-      const res = await fetch(`${API_URL_ANNOUNCEMENTS}/active`);
-      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const url = `${API_URL}/active`;
+      console.log("📍 Fetching announcements from:", url);
+      
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       
       if (!data || !Array.isArray(data)) {
@@ -51,15 +58,16 @@ export const adminService = {
         return [];
       }
 
-      return data.map((a: any) => ({
-        ...a, 
-        id: a._id || a.id, // Seguridad extra por si viene como id o _id
+      return data.map((a: Record<string, unknown>) => ({
+        id: String(a._id || a.id || ''),
+        title: String(a.title || ''),
+        message: String(a.message || ''),
         isCritical: Boolean(a.isCritical),
-        expiresAt: a.expiresAt ? { toDate: () => new Date(a.expiresAt) } : { toDate: () => new Date() },
-        createdAt: a.createdAt ? { toDate: () => new Date(a.createdAt) } : { toDate: () => new Date() }
+        expiresAt: a.expiresAt ? { toDate: () => new Date(a.expiresAt as string | number) } : { toDate: () => new Date() },
+        createdAt: a.createdAt ? { toDate: () => new Date(a.createdAt as string | number) } : { toDate: () => new Date() }
       }));
     } catch (error) {
-      console.error("❌ Error al obtener avisos:", error);
+      console.error("❌ Error al obtener avisos:", error instanceof Error ? error.message : error);
       return []; 
     }
   },
@@ -67,7 +75,7 @@ export const adminService = {
   createAnnouncement: async (title: string, message: string, hoursActive: number, isCritical: boolean): Promise<string> => {
     try {
       const token = await getToken();
-      const res = await fetch(API_URL_ANNOUNCEMENTS, {
+      const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ title: title.trim(), message: message.trim(), hoursActive, isCritical })
@@ -89,7 +97,7 @@ export const adminService = {
   deleteAnnouncement: async (id: string): Promise<void> => {
     try {
       const token = await getToken();
-      await fetch(`${API_URL_ANNOUNCEMENTS}/${id}`, {
+      await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

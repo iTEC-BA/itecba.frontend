@@ -16,7 +16,7 @@ export interface ResourceData {
 }
 
 // Asegúrate de que este sea tu puerto real
-const API_URL = 'http://127.0.0.1:5001/api/resources';
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/resources`;
 
 const getToken = async () => {
   const token = await auth.currentUser?.getIdToken();

@@ -8,14 +8,12 @@ export interface GroupData {
   comision: string;
   link: string;
   tipo: 'Oficial' | 'Alumnos';
-  createdAt?: any;
+  createdAt?: Record<string, unknown>;
   submittedBy?: string;
 }
 
 // En groupsService.ts
-const API_URL = import.meta.env.VITE_API_URL 
-  ? `${import.meta.env.VITE_API_URL}/api/groups` 
-  : 'http://127.0.0.1:5001/api/groups';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
   
 // Obtenemos el token de seguridad de Firebase Auth
 const getToken = async (requireAuth = true) => {
