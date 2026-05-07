@@ -11,6 +11,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+./src/assets/sh
 dist
 dist-ssr
 *.local
@@ -28,12 +29,18 @@ dist-ssr
 
 *.env
 .env
+.vercel
+
+codigo_frontend_ia.txt
+mejorar_frontend.sh
+.env*.local
+
 
 
 ==================================================
 ARCHIVO: ./.vercel/project.json
 ==================================================
-{"projectId":"prj_lrwh0GtopuJ0wUu96SblVEO69VB2","orgId":"team_i397YKF5zUkM7pqqmEH2XJc6","projectName":"itecba-pwa"}
+{"projectId":"prj_tjvGkibeJ5fW690RJsUtkDkkTJnN","orgId":"team_i397YKF5zUkM7pqqmEH2XJc6","projectName":"itecba-frontend"}
 
 
 ==================================================
@@ -145,7 +152,11 @@ define(['./workbox-b9d3b234'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
+<<<<<<< HEAD
+    "revision": "0.qqf6dgsd18"
+=======
     "revision": "0.8q54flls5c"
+>>>>>>> feature/dev-jaiiirot
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -4962,12 +4973,16 @@ ARCHIVO: ./index.html
     <meta charset="UTF-8" />
 
     <!-- ── Viewport & Mobile ──────────────────────────────────────────── -->
+    <!-- viewport-fit=cover es CRÍTICO para que la app se extienda detrás
+         del notch y la Dynamic Island en iPhone -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- ── PWA Meta Tags ──────────────────────────────────────────────── -->
     <meta name="theme-color" content="#1A1A1A" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- black-translucent: el status bar de iPhone se superpone al contenido
+         con fondo transparente — le da el look nativo con tema oscuro -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="iTEC BA" />
     <meta name="application-name" content="iTEC BA" />
@@ -4979,7 +4994,7 @@ ARCHIVO: ./index.html
     <meta name="keywords" content="UTN, FRBA, iTEC, estudiantes, cursos, recursos, campus" />
     <meta name="author" content="iTEC BA" />
 
-    <!-- ── Open Graph ─────────────────────────────────────────────────── -->
+    <!-- ── Open Graph (preview en WhatsApp, Telegram, etc.) ──────────── -->
     <meta property="og:title" content="iTEC BA — UTN FRBA" />
     <meta property="og:description" content="La plataforma estudiantil de la UTN Buenos Aires." />
     <meta property="og:image" content="/icons/pwa-512.png" />
@@ -4988,9 +5003,22 @@ ARCHIVO: ./index.html
     <!-- ── Icons ──────────────────────────────────────────────────────── -->
     <link rel="icon" type="image/png" sizes="64x64"   href="/icons/pwa-64.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/pwa-192.png" />
-    <link rel="apple-touch-icon"      sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <!-- apple-touch-icon: ícono que se usa en la pantalla de inicio de iOS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
 
-    <!-- ── Safe area (iPhone con notch / Dynamic Island) ─────────────── -->
+    <!-- ── Safe area variables ────────────────────────────────────────── -->
+    <!--
+      IMPORTANTE: El padding de safe-area NO va en el body.
+      Si lo ponés en body, empuja todo el contenido y genera espacios
+      en blanco extraños. En cambio, exponemos las variables CSS y
+      cada componente (TopNavbar, BottomNavbar, etc.) las usa donde corresponde.
+
+      Uso en componentes:
+        padding-top: env(safe-area-inset-top)      → TopNavbar
+        padding-bottom: env(safe-area-inset-bottom) → BottomNavbar / contenido final
+        padding-left: env(safe-area-inset-left)    → layout raíz en landscape
+        padding-right: env(safe-area-inset-right)  → layout raíz en landscape
+    -->
     <style>
       :root {
         --sat: env(safe-area-inset-top);
@@ -4998,11 +5026,26 @@ ARCHIVO: ./index.html
         --sal: env(safe-area-inset-left);
         --sar: env(safe-area-inset-right);
       }
-      body {
-        padding-top:    env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left:   env(safe-area-inset-left);
-        padding-right:  env(safe-area-inset-right);
+
+      /* Reset base para PWA */
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      html, body, #root {
+        height: 100%;
+        /* NO poner overflow: hidden acá — rompe el scroll en iOS */
+        overscroll-behavior: none; /* Evita el bounce blanco en iOS al hacer pull */
+      }
+
+      /* Elimina el highlight azul/gris al tocar en móvil */
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Evita zoom automático en inputs en iOS (requiere font-size >= 16px) */
+      input, select, textarea {
+        font-size: max(16px, 1em);
       }
     </style>
 
@@ -5013,7 +5056,6 @@ ARCHIVO: ./index.html
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
 
 
 ==================================================
@@ -5424,142 +5466,6 @@ Estos archivos aseguran que el historyAPI de React Router funcione correctamente
 
 
 ==================================================
-ARCHIVO: ./reporte_mejora_frontend.txt
-==================================================
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  🚀 mejorar_frontend.sh — Auditoría iTEC BA\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-Fecha: 2026-05-06 20:10:54
-Directorio raíz: /c/Users/tumiri/Desktop/Proyectos/itec/itecba-frontend
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  1. Estructura de carpetas (Feature-Driven + Atomic Design)\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[0;32m  ✔ src/features → existe\033[0m
-\033[0;32m  ✔ src/components/atoms → existe\033[0m
-\033[0;32m  ✔ src/components/molecules → existe\033[0m
-\033[0;32m  ✔ src/components/organisms → existe\033[0m
-\033[0;32m  ✔ src/components/templates → existe\033[0m
-\033[0;32m  ✔ src/pages → existe\033[0m
-\033[0;32m  ✔ src/hooks → existe\033[0m
-\033[0;32m  ✔ src/services → existe\033[0m
-\033[1;33m  ⚠ src/types → NO existía — creado automáticamente\033[0m
-\033[0;32m  ✔ src/context → existe\033[0m
-\033[0;32m  ✔ src/lib → existe\033[0m
-\033[0;32m  ✔ src/data → existe\033[0m
-\033[0;32m  ✔ src/assets → existe\033[0m
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  2. Auditoría de imports relativos largos (../../../)\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\n\033[1m── Archivos con imports ../../.. o más profundos ──\033[0m
-\033[0;32m  ✔ No se encontraron imports con 3+ niveles relativos. ¡Aliases bien usados!\033[0m
-\n\033[1m── Verificando aliases en vite.config.ts y tsconfig.app.json ──\033[0m
-\033[0;32m  ✔ @components configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @features configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @pages configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @hooks configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @services configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @context configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @lib configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @data configurado en vite.config.ts\033[0m
-\033[0;32m  ✔ @assets configurado en vite.config.ts\033[0m
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  3. Detección de páginas sin React.lazy()\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\n\033[1m── Páginas registradas en App.tsx vs lazy() ──\033[0m
-\033[0;32m  ✔ Todas las páginas están usando React.lazy() en App.tsx\033[0m
-\n\033[1m── Verificando uso de <Suspense> en App.tsx ──\033[0m
-\033[0;32m  ✔ <Suspense> encontrado en App.tsx\033[0m
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  4. Auditoría de responsividad del Sidebar\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\n\033[1m── Archivos relacionados con Sidebar ──\033[0m
-  📄 src/components/atoms/SidebarState.tsx
-  📄 src/components/molecules/BottomNavbar.tsx
-  📄 src/components/molecules/SidebarItem.tsx
-  📄 src/components/molecules/TopNavbar.tsx
-  📄 src/components/organisms/ChatbotWidget.tsx
-  📄 src/components/organisms/Sidebar.tsx
-  📄 src/components/templates/MainLayout.tsx
-  📄 src/components/templates/SidebarLayout.tsx
-  📄 src/features/about/components/organisms/AboutProjectWidget.tsx
-  📄 src/features/about/components/organisms/ContributorsWidget.tsx
-  📄 src/features/admission/components/organisms/IngresoHighlightActions.tsx
-  📄 src/features/faqs/components/molecules/ChatInput.tsx
-  📄 src/features/faqs/components/organisms/ChatInterface.tsx
-  📄 src/features/groups/components/molecules/EmptyGroupState.tsx
-  📄 src/features/resources/components/organisms/AddResourceModal.tsx
-  📄 src/features/resources/components/organisms/ResourceFilters.tsx
-  📄 src/features/resources/components/organisms/ResourcesTable.tsx
-  📄 src/hooks/useSidebarLinks.ts
-  📄 src/pages/CourseDetail.tsx
-\n\033[1m── Verificando toggle/isOpen para mobile ──\033[0m
-\033[0;32m  ✔ Estado isOpen/toggle detectado\033[0m
-\033[1;33m  ⚠ No se detectó botón hamburguesa (puede estar en TopNavbar)\033[0m
-\033[0;32m  ✔ Animación drawer (translate-x) detectada\033[0m
-\033[0;32m  ✔ Overlay/backdrop detectado\033[0m
-\n\033[1m── Verificando clases responsive en Sidebar ──\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/atoms/SidebarState.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/molecules/BottomNavbar.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/molecules/SidebarItem.tsx\033[0m
-\033[0;32m  ✔ Clases responsive (md:/lg:) encontradas en: src/components/molecules/TopNavbar.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/organisms/ChatbotWidget.tsx\033[0m
-\033[0;32m  ✔ Clases responsive (md:/lg:) encontradas en: src/components/organisms/Sidebar.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/templates/MainLayout.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/components/templates/SidebarLayout.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/about/components/organisms/AboutProjectWidget.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/about/components/organisms/ContributorsWidget.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/admission/components/organisms/IngresoHighlightActions.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/faqs/components/molecules/ChatInput.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/faqs/components/organisms/ChatInterface.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/groups/components/molecules/EmptyGroupState.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/resources/components/organisms/AddResourceModal.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/resources/components/organisms/ResourceFilters.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/features/resources/components/organisms/ResourcesTable.tsx\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/hooks/useSidebarLinks.ts\033[0m
-\033[1;33m  ⚠ Sin clases responsive detectadas en: src/pages/CourseDetail.tsx\033[0m
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  5. Auditoría de Atomic Design por feature\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\n\033[1m── Verificando estructura atoms/molecules/organisms en cada feature ──\033[0m
-  \033[0;36mabout\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36madmin\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36madmission\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36mcourses\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36merror\033[0m  atoms:✖  molecules:~  organisms:✖  hooks:~  services:~  types:✔
-  \033[0;36mfaqs\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36mgrade\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36mgroups\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36mhome\033[0m  atoms:✔  molecules:~  organisms:✔  hooks:~  services:✔  types:✔
-  \033[0;36mlogin\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36mprofile\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:~  services:✔  types:✔
-  \033[0;36mprogress\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:~  types:✔
-  \033[0;36mresources\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-  \033[0;36mrewards\033[0m  atoms:✔  molecules:✔  organisms:✔  hooks:✔  services:✔  types:✔
-\n\033[1m── Posibles componentes genéricos duplicados en features ──\033[0m
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  6. Verificando hook useSidebarMobile\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[0;31m  ✖ useSidebarMobile.ts NO encontrado en src/hooks/useSidebarMobile.ts\033[0m
-\033[1;33m  ⚠ Acción requerida: copiar el archivo desde las mejoras propuestas.\033[0m
-\033[1;33m  ⚠ Este hook es necesario para que el drawer mobile funcione.\033[0m
-\n\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-\033[1m\033[0;36m  📋 RESUMEN\033[0m
-\033[1m\033[0;34m══════════════════════════════════════════\033[0m
-Reporte completo guardado en: \033[1m\033[0;32mreporte_mejora_frontend.txt\033[0m
-
-\033[1mArchivos a reemplazar/agregar según las mejoras propuestas:\033[0m
-  • src/App.tsx                              → Suspense por ruta (granular)
-  • src/hooks/useSidebarMobile.ts            → Hook de estado mobile (NUEVO)
-  • src/components/organisms/Sidebar.tsx     → Drawer mobile + overlay
-  • src/components/molecules/TopNavbar.tsx   → Botón hamburguesa
-  • src/components/molecules/SidebarItem.tsx → Prop onNavigate para cerrar drawer
-  • src/components/templates/SidebarLayout.tsx → Ajuste z-index y relative
-
-\033[0;32m\033[1m✔ Auditoría completada.\033[0m
-
-
-
-==================================================
 ARCHIVO: ./src/App.css
 ==================================================
 #root {
@@ -5610,17 +5516,14 @@ ARCHIVO: ./src/App.css
 ==================================================
 ARCHIVO: ./src/App.tsx
 ==================================================
-// src/App.tsx
-// Mejora: Suspense por ruta (granular) en lugar de uno global único.
-// Esto permite que cada página tenga su propio estado de carga sin bloquear el layout.
-
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@context/AuthContext";
 import { ProtectedRoute } from "@components/templates/ProtectedRoute";
 import LoadingState from "@components/ui/LoadingState";
+import { InstallPWABanner } from "./components/molecules/InstallPWABanner";
+import { UpdatePWAToast } from "./components/molecules/UpdatePWAToast";
 
-// ── Carga diferida (Code Splitting) ───────────────────────────────────────────
 const RewardsPage      = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
 const CourseEditDetail = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
 const HomePage         = lazy(() => import("@pages/HomePage").then(m => ({ default: m.HomePage })));
@@ -5687,6 +5590,16 @@ export const App: React.FC = () => {
           <Route path="*" element={<PageSuspense><ErrorPage /></PageSuspense>} />
         </Routes>
       </BrowserRouter>
+
+      {/*
+        ── PWA: Banner de instalación y Toast de actualización ────────────────
+        Deben estar FUERA del BrowserRouter porque son overlays globales
+        (position: fixed) que no pertenecen a ninguna ruta específica.
+        InstallPWABanner → aparece cuando Chrome detecta que la PWA es instalable
+        UpdatePWAToast   → aparece cuando hay una nueva versión del Service Worker
+      */}
+      <InstallPWABanner />
+      <UpdatePWAToast />
     </AuthProvider>
   );
 };
@@ -5935,7 +5848,7 @@ import { Button } from '../ui/Button';
 import { Icons } from '../ui/icons/Icons';
 
 interface Props {
-  onSendMessage: (text: string) => void;
+  onSendMessage: (text?: string) => void;
   disabled?: boolean;
 }
 
@@ -6373,170 +6286,6 @@ export const TopNavbar = () => {
 
 
 ==================================================
-ARCHIVO: ./src/components/molecules/TopNavbar.tsx.bak
-==================================================
-// src/components/molecules/TopNavbar.tsx
-// Mejora: agrega botón hamburguesa (☰) en mobile para abrir el sidebar drawer.
-
-import { Link } from "react-router-dom";
-import { useAuth } from "@context/AuthContext";
-import { Icons } from "@components/ui/icons/Icons";
-import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
-import { NotificationBell } from "@features/home/components/organisms/NotificationBell";
-import logo from "@assets/logo.png";
-import { RewardsWidgetPoints } from "@features/rewards/components/atoms/RewardsWidgetPoints";
-import { useSidebarMobile } from "@hooks/useSidebarMobile";
-
-export const TopNavbar = () => {
-  const { user } = useAuth();
-  const { toggle } = useSidebarMobile();
-
-  return (
-    <header className="shrink-0 z-[100] h-16 flex items-center px-4 bg-itec-sidebar border-b border-white/5">
-      <div className="w-full mx-auto flex items-center gap-3">
-
-        {/* ── Izquierda: hamburguesa (solo mobile) + logo ── */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Botón hamburguesa — visible solo en mobile (<md) */}
-          <button
-            onClick={toggle}
-            aria-label="Abrir menú"
-            className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
-          >
-            {/* Icono de tres líneas */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
-          <Link
-            to="/"
-            className="w-max h-8 rounded-lg flex items-center justify-center flex-row gap-3"
-          >
-            <img src={logo} alt="ITEC Logo" className="size-7 object-contain" />
-            <span className="hidden sm:block text-xl font-bold tracking-tight text-white">
-              iTEC <span className="text-itec-red">BA</span>
-            </span>
-          </Link>
-        </div>
-
-        {/* ── Centro: buscador (oculto en mobile muy pequeño) ── */}
-        <div className="hidden sm:flex flex-1 max-w-xl mx-auto items-center gap-0">
-          <UniversalSearch />
-        </div>
-
-        {/* ── Derecha: redes, puntos, notificaciones, perfil ── */}
-        <div className="flex items-center gap-1 shrink-0 ml-auto">
-          <div className="hidden lg:flex flex-row items-center gap-0.5">
-            <a
-              href="https://www.youtube.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <Icons type="youtube" className="w-5 h-5" />
-              <span className="text-sm font-medium">43K</span>
-            </a>
-            <a
-              href="https://www.facebook.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M12 2.04c-5.5 0-10 4.49-10 10.02c0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89c1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02" />
-              </svg>
-              <span className="text-sm font-medium">65K</span>
-            </a>
-            <a
-              href="https://www.udemy.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="currentColor" d="m19 2l-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5c.1 0 .15-.07.25-.07c1.35-.65 3.3-1.09 4.75-1.09c1.95 0 4.05.4 5.5 1.5c1.35-.85 3.8-1.5 5.5-1.5c1.65 0 3.35.31 4.75 1.06c.1.05.15.03.25.03c.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5c-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5" />
-              </svg>
-              <span className="text-sm font-medium">309K</span>
-            </a>
-            <a
-              href="https://discord.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 16 16">
-                <path fill="currentColor" d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011a.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0a8 8 0 0 0-.412-.833a.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02a.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595a.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085a8 8 0 0 1-1.249.594a.05.05 0 0 0-.03.03a.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019a13.2 13.2 0 0 0 4.001-2.02a.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613c0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613c0 .888-.631 1.612-1.438 1.612" />
-              </svg>
-            </a>
-            <a
-              href="https://www.instagram.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <Icons type="instagram" className="w-5 h-5" />
-            </a>
-          </div>
-          <div className="hidden lg:block h-5 w-px mx-1 bg-white/10"></div>
-
-          {/* Puntos de recompensa */}
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full border text-sm bg-white/5 border-white/10 mr-1">
-            <RewardsWidgetPoints />
-          </div>
-
-          {/* Categoría */}
-          <div className="relative">
-            <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
-              <Icons type="category" className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Notificaciones */}
-          <div className="relative">
-            <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
-              <NotificationBell />
-            </button>
-          </div>
-
-          {/* Foto de perfil / login */}
-          <div className="relative ml-1">
-            {user?.photoURL ? (
-              <Link
-                to="/perfil"
-                className="w-8 h-8 rounded-lg overflow-hidden flex cursor-pointer hover:opacity-80 transition-opacity border border-white/10"
-              >
-                <img
-                  src={user.photoURL}
-                  alt={user.name || "Perfil"}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            ) : (
-              <Link
-                to="/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 text-xs font-medium transition-colors bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
-              >
-                <Icons type="google" className="w-4 h-4" />
-                <span className="hidden sm:inline">Iniciar sesión</span>
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-};
-
-
-==================================================
 ARCHIVO: ./src/components/molecules/UpdatePWAToast.tsx
 ==================================================
 // src/components/molecules/UpdatePWAToast.tsx
@@ -6631,7 +6380,7 @@ import logoItec from '../../assets/logo.png';
 
 interface Message {
   role: 'user' | 'model';
-  text: string;
+  text?: string;
 }
 
 const ITEC_FOOTER = "\n\n---\n*💡 Recuerda que siempre puedes consultar en nuestros grupos de WhatsApp o en nuestro [Instagram oficial @itecba](https://instagram.com/itecba).*";
@@ -6852,7 +6601,6 @@ export const Sidebar = () => {
                     iconName={link.iconName}
                     badge={badge}
                     tag={tag}
-                    onNavigate={close}
                   />
                 </SidebarProtect>
               );
@@ -6877,7 +6625,6 @@ export const Sidebar = () => {
                   iconName={link.iconName}
                   badge={badge}
                   tag={tag}
-                  onNavigate={close}
                 />
               </SidebarProtect>
             );
@@ -7042,7 +6789,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'admin' | 'inicio' | 'servicios' | 'nosotros' | 'proyectos' | 'contacto';
   fullWidth?: boolean;
   icon?: string;
-  text: string;
+  text?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({ 
@@ -9409,7 +9156,7 @@ export const useAdminData = () => {
   });
 
   // 2. Obtener Lista de Avisos
-const { data: announcements = [], isLoading: isLoadingAnnouncements, isError: isErrorAnnouncements } = useQuery({
+const { data: announcements = [], isLoading: isLoadingAnnouncements } = useQuery({
     queryKey: ['adminAnnouncements'],
     queryFn: adminService.getActiveAnnouncements,
   });
@@ -9484,7 +9231,7 @@ export const useAdminUsers = (isAdmin: boolean) => {
   const loadAdmins = async () => {
     setIsLoadingAdmins(true);
     try {
-      const data = await adminService.getAdminUsers();
+      const data = await adminService.getAdmins();
       setAdmins(data);
     } catch (e) {
       console.error("Error cargando admins");
@@ -9589,7 +9336,7 @@ export const useAnnouncements = (isAdmin: boolean) => {
     if (!form.title || !form.message) return;
     setIsSubmitting(true);
     try {
-      await adminService.createAnnouncement(form.title, form.message, parseInt(form.hours));
+      await adminService.createAnnouncement(form.title, form.message, parseInt(form.hours), false);
       await loadAnnouncements();
       onSuccess();
     } catch (error: any) {
@@ -9662,7 +9409,7 @@ export const adminRewardsService = {
 ==================================================
 ARCHIVO: ./src/features/admin/services/adminService.ts
 ==================================================
-import { collection, getDocs, doc, updateDoc, Timestamp, query, where, limit } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, query, where, limit } from 'firebase/firestore';
 import { db, auth } from '@lib/firebase';
 import type { User } from '@context/AuthContext';
 
@@ -11020,7 +10767,7 @@ ARCHIVO: ./src/features/courses/components/organisms/CourseAddResourceModal.tsx
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Icons } from '@/components/ui/icons/Icons';
-import { useAuth } from '@context/AuthContext';
+import { auth } from '@/lib/firebase';
 
 const API_URL_RESOURCES = 'http://127.0.0.1:5001/api/resources'; 
 
@@ -11036,12 +10783,11 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
   const [driveUrl, setDriveUrl] = useState('');
   const [error, setError] = useState('');
   
-  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const addResourceMutation = useMutation({
     mutationFn: async () => {
-      const token = await user?.getIdToken();
+      const token = await auth.currentUser?.getIdToken();
       const payload = {
         title: title.trim(),
         materia, // Se auto-hereda del curso actual
@@ -12206,7 +11952,7 @@ import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 
 interface Props {
-  onSendMessage: (text: string, forceAI?: boolean) => void;
+  onSendMessage: (text?: string, forceAI?: boolean) => void;
   disabled?: boolean;
   canUseAI: boolean;
   timeLeftAI: string | null;
@@ -12284,7 +12030,7 @@ import { Icons } from '@/components/ui/icons/Icons';
 
 interface Props {
   role: 'user' | 'model';
-  text: string;
+  text?: string;
   timestamp: Date;
 }
 
@@ -12296,7 +12042,7 @@ export const ChatMessage: React.FC<Props> = ({ role, text, timestamp }) => {
 
   // 🟢 NUEVA FUNCIONALIDAD: Copiar mensaje
   const handleCopy = () => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text || '');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -12451,7 +12197,7 @@ import { useChatbot } from '../../hooks/useChatbot';
 
 export interface Message {
   role: 'user' | 'model';
-  text: string;
+  text?: string;
   timestamp: Date;
   isAiGenerated?: boolean;
   suggestions?: string[]; // 🟢 AÑADIMOS EL TIPO AQUÍ
@@ -12664,10 +12410,10 @@ export const useChatbot = (userEmail: string) => {
     return () => clearInterval(interval);
   }, [userEmail]);
 
-  const handleSendMessage = async (text: string, forceAI: boolean = false) => {
-    if (!text.trim()) return;
+  const handleSendMessage = async (text?: string, forceAI: boolean = false) => {
+    if (!text || !text.trim()) return;
 
-    if (text.toLowerCase().trim() === "reset ai") {
+    if (text && text.toLowerCase().trim() === "reset ai") {
       localStorage.removeItem(`itec_ai_last_${userEmail}`);
       checkAILimits();
       setMessages(prev => [...prev, { role: 'model', text: "✅ Truco dev activado: Has reseteado tu límite de IA.", timestamp: new Date() }]);
@@ -12678,7 +12424,7 @@ export const useChatbot = (userEmail: string) => {
     setIsTyping(true);
 
     if (forceAI && canUseAI) {
-      const aiResponse = await chatbotService.askAdvancedAI(text, messages);
+      const aiResponse = await chatbotService.askAdvancedAI(text || '', messages);
       setMessages(prev => [...prev, { role: 'model', text: aiResponse, timestamp: new Date(), isAiGenerated: true }]);
       
       if (!aiResponse.includes("⚠️")) {
@@ -12687,10 +12433,10 @@ export const useChatbot = (userEmail: string) => {
       }
     } else {
       setTimeout(() => {
-        const isGreeting = ['hola', 'buenas', 'holis'].includes(text.toLowerCase().trim());
+        const isGreeting = ['hola', 'buenas', 'holis'].includes(text ? text.toLowerCase().trim() : '');
         
         // 🟢 RECIBIMOS TEXTO Y SUGERENCIAS DEL SERVICIO
-        const responseData = chatbotService.searchFaqAnswer(text);
+        const responseData = chatbotService.searchFaqAnswer(text || '');
         const finalAnswer = responseData.text + (isGreeting ? '' : '\n\n' + ITEC_FOOTER);
         
         setMessages(prev => [...prev, { 
@@ -12721,14 +12467,14 @@ ARCHIVO: ./src/features/faqs/services/chatbotService.ts
 import { FAQ_DATABASE } from '../types/faqs';
 import type { Message } from '../components/organisms/ChatInterface';
 
-const normalizeText = (text: string) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, "").trim();
+const normalizeText = (text?: string) => (text || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, "").trim();
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'; 
 
 export const chatbotService = {
   
   // 🟢 AHORA DEVUELVE UN OBJETO CON TEXTO Y SUGERENCIAS
-  searchFaqAnswer: (query: string): { text: string, suggestions?: string[] } => {
+  searchFaqAnswer: (query: string): { text?: string, suggestions?: string[] } => {
     const cleanQuery = normalizeText(query);
     const queryWords = cleanQuery.split(' ');
 
@@ -14569,7 +14315,7 @@ export const groupsService = {
     }
   },
 
-  submitNewGroup: async (groupData: Omit<GroupData, 'id'>, isAdmin: boolean): Promise<string> => {
+  submitNewGroup: async (groupData: Omit<GroupData, 'id'>, _isAdmin: boolean): Promise<string> => {
     const token = await getToken(false);
     const headers: Record<string, string> = {
       'Content-Type': 'application/json'
@@ -16059,7 +15805,7 @@ export const StatusBadge: React.FC<Props> = ({ status }) => {
 ==================================================
 ARCHIVO: ./src/features/progress/components/atoms/Widgets.tsx
 ==================================================
-import React from 'react';
+
 import type { ProgressMetrics } from '../../types/progress';
 
 export const MetricCard = ({ title, value, subtitle, icon, highlight }: any) => (
@@ -16107,10 +15853,9 @@ ARCHIVO: ./src/features/progress/components/molecules/GradeModal.tsx
 ==================================================
 import React, { useState } from 'react';
 import { Button } from '@components/ui/Button';
-import type { CalculatedSubject } from '../../hooks/useProgress';
 
 interface Props {
-  subject: CalculatedSubject;
+  subject: { id: string; name: string };
   targetStatus: 'aprobada' | 'regular';
   onClose: () => void;
   onConfirm: (id: string, status: string, grade?: number, year?: number) => void;
@@ -16214,8 +15959,8 @@ export const ProgressTable: React.FC<Props> = ({ subjects, allSubjects, onAction
 ==================================================
 ARCHIVO: ./src/features/progress/components/molecules/SubjectCard.tsx
 ==================================================
-import React from 'react';
-import type { Subject } from '../../types/progress';
+import React from "react";
+import type { Subject } from "../../types/progress";
 
 interface Props {
   subject: Subject;
@@ -16224,53 +15969,123 @@ interface Props {
 export const SubjectCard: React.FC<Props> = ({ subject }) => {
   // Mapa de estilos según el estado adaptado al theme oscuro de ITEC
   const statusConfig = {
-    aprobada: { bg: 'bg-green-500/10', border: 'border-green-500/50', badge: 'bg-green-600 text-white', text: 'text-green-500', icon: 'M20 6 9 17l-5-5' },
-    regular: { bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/50', badge: 'bg-fuchsia-500 text-white', text: 'text-fuchsia-500', icon: 'M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20' },
-    cursando: { bg: 'bg-yellow-400/10', border: 'border-yellow-400/50', badge: 'bg-yellow-500 text-itec-textanimate-pulse', text: 'text-yellow-500', icon: 'M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z' },
-    disponible: { bg: 'bg-itec-box', border: 'border-itec-gray hover:border-itec-blue/50', badge: 'bg-itec-blue text-white', text: 'text-itec-blue-skye', icon: 'M5 12h14M12 5v14' },
-    bloqueada: { bg: 'bg-itec-bg/50', border: 'border-itec-gray/50 opacity-60', badge: 'bg-gray-600 text-white', text: 'text-gray-500', icon: 'M7 11V7a5 5 0 0 1 10 0v4M3 11h18v11H3z' }, // Simplified lock path
+    aprobada: {
+      bg: "bg-green-500/10",
+      border: "border-green-500/50",
+      badge: "bg-green-600 text-white",
+      text: "text-green-500",
+      icon: "M20 6 9 17l-5-5",
+    },
+    regular: {
+      bg: "bg-fuchsia-500/10",
+      border: "border-fuchsia-500/50",
+      badge: "bg-fuchsia-500 text-white",
+      text: "text-fuchsia-500",
+      icon: "M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20",
+    },
+    cursando: {
+      bg: "bg-yellow-400/10",
+      border: "border-yellow-400/50",
+      badge: "bg-yellow-500 text-itec-textanimate-pulse",
+      text: "text-yellow-500",
+      icon: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+    },
+    disponible: {
+      bg: "bg-itec-box",
+      border: "border-itec-gray hover:border-itec-blue/50",
+      badge: "bg-itec-blue text-white",
+      text: "text-itec-blue-skye",
+      icon: "M5 12h14M12 5v14",
+    },
+    bloqueada: {
+      bg: "bg-itec-bg/50",
+      border: "border-itec-gray/50 opacity-60",
+      badge: "bg-gray-600 text-white",
+      text: "text-gray-500",
+      icon: "M7 11V7a5 5 0 0 1 10 0v4M3 11h18v11H3z",
+    }, // Simplified lock path
   };
 
-  const config = statusConfig[subject.status];
+  const config =
+    statusConfig[subject.status as keyof typeof statusConfig] ||
+    statusConfig.disponible;
 
   return (
-    <div className={`rounded-2xl border shadow-md relative transition-all duration-300 transform ${config.bg} ${config.border} ${subject.status !== 'bloqueada' ? 'hover:-translate-y-1 hover:shadow-lg' : ''}`}>
+    <div
+      className={`rounded-2xl border shadow-md relative transition-all duration-300 transform ${config.bg} ${config.border} ${subject.status !== "bloqueada" ? "hover:-translate-y-1 hover:shadow-lg" : ""}`}
+    >
       <div className="flex flex-col space-y-1.5 p-6">
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1 absolute -top-3 left-6">
-              <div className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-lg ${config.badge}`}>
-                {subject.status.charAt(0).toUpperCase() + subject.status.slice(1)}
+              <div
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-lg ${config.badge}`}
+              >
+                {subject.status.charAt(0).toUpperCase() +
+                  subject.status.slice(1)}
               </div>
             </div>
-            <h3 className="font-bold tracking-tight mt-4 min-h-[3.5rem] flex items-center text-lg leading-tight text-white">{subject.name}</h3>
-            <div className="text-itec-text text-xs font-mono font-bold opacity-80">{subject.code}</div>
+            <h3 className="font-bold tracking-tight mt-4 min-h-[3.5rem] flex items-center text-lg leading-tight text-white">
+              {subject.name}
+            </h3>
+            <div className="text-itec-text text-xs font-mono font-bold opacity-80">
+              {subject.code}
+            </div>
           </div>
-          
-          <button 
-            disabled={subject.status === 'bloqueada'}
-            className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${subject.status === 'bloqueada' ? 'bg-itec-bg border border-itec-gray text-gray-500' : `${config.badge} hover:scale-105 shadow-lg`}`}
+
+          <button
+            disabled={subject.status === "bloqueada"}
+            className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${subject.status === "bloqueada" ? "bg-itec-bg border border-itec-gray text-gray-500" : `${config.badge} hover:scale-105 shadow-lg`}`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d={config.icon}></path>
             </svg>
           </button>
         </div>
       </div>
 
-      {(subject.status === 'aprobada' || subject.status === 'regular') && (
+      {((subject.status as string) === "aprobada" ||
+        (subject.status as string) === "regular") && (
         <div className="p-6 pt-0 space-y-4">
-          <div className={`animate-in fade-in slide-in-from-top-3 duration-500 p-3 rounded-xl border ${config.bg} ${config.border} grid grid-cols-2 items-start gap-4`}>
-            {subject.status === 'aprobada' ? (
+          <div
+            className={`animate-in fade-in slide-in-from-top-3 duration-500 p-3 rounded-xl border ${config.bg} ${config.border} grid grid-cols-2 items-start gap-4`}
+          >
+            {subject.status === "aprobada" ? (
               <div className="flex flex-col gap-1.5">
-                <span className={`text-[10px] font-bold ${config.text}`}>NOTA</span>
-                <input className={`w-full h-9 bg-itec-bg border ${config.border} rounded-lg text-center text-sm font-bold text-itec-textoutline-none focus:border-itec-blue`} type="number" defaultValue={subject.grade} readOnly />
+                <span className={`text-[10px] font-bold ${config.text}`}>
+                  NOTA
+                </span>
+                <input
+                  className={`w-full h-9 bg-itec-bg border ${config.border} rounded-lg text-center text-sm font-bold text-itec-textoutline-none focus:border-itec-blue`}
+                  type="number"
+                  defaultValue={subject.grade}
+                  readOnly
+                />
               </div>
-            ) : <div></div>}
-            
+            ) : (
+              <div></div>
+            )}
+
             <div className="flex flex-col gap-1.5 items-end">
-              <span className={`text-[10px] font-bold ${config.text}`}>AÑO</span>
-              <input className={`w-full h-9 bg-itec-bg border ${config.border} rounded-lg text-center text-sm font-bold text-itec-textoutline-none focus:border-itec-blue`} type="number" defaultValue={subject.year} readOnly />
+              <span className={`text-[10px] font-bold ${config.text}`}>
+                AÑO
+              </span>
+              <input
+                className={`w-full h-9 bg-itec-bg border ${config.border} rounded-lg text-center text-sm font-bold text-itec-textoutline-none focus:border-itec-blue`}
+                type="number"
+                defaultValue={(subject as any).year || subject.level}
+                readOnly
+              />
             </div>
           </div>
         </div>
@@ -16278,6 +16093,7 @@ export const SubjectCard: React.FC<Props> = ({ subject }) => {
     </div>
   );
 };
+
 
 
 ==================================================
@@ -16546,7 +16362,7 @@ export const CAREER_NAMES: Record<string, string> = {
 export const useProgress = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const storageKey = `itec_progress_${user?.uid}`;
+  const storageKey = `itec_progress_${user?.id}`;
 
   const loadUserData = () => {
     const stored = localStorage.getItem(storageKey);
@@ -16571,7 +16387,7 @@ export const useProgress = () => {
   };
 
   const query = useQuery<CareerProgress>({
-    queryKey: ['progress', user?.uid],
+    queryKey: ['progress', user?.id],
     queryFn: () => {
       const userData = loadUserData();
       const activeCareerId = userData.activeCareer;
@@ -16654,7 +16470,7 @@ export const useProgress = () => {
       localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.id] })
   });
 
   const switchCareer = useMutation({
@@ -16666,7 +16482,7 @@ export const useProgress = () => {
       localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.id] })
   });
 
   // NUEVA MUTACIÓN: Eliminar Carrera
@@ -16688,7 +16504,7 @@ export const useProgress = () => {
       localStorage.setItem(storageKey, JSON.stringify(uData));
       return true;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.uid] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress', user?.id] })
   });
 
   return { ...query, updateSubjectStatus: updateSubjectStatus.mutate, switchCareer: switchCareer.mutate, removeCareer: removeCareer.mutate };
@@ -16817,7 +16633,7 @@ const FORMATOS_ARCHIVO = [
   { value: 'Notion', label: 'Notion / Web' },
   { value: 'ZIP', label: 'Archivo Comprimido' },
 ];
-export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose, isAdmin }) => {
+export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { user, isAuthenticated, loginWithGoogle, addPoints } = useAuth();
   
   const submitMutation = useSubmitResource();
@@ -17391,7 +17207,7 @@ export const resourcesService = {
     return data.map((d: any) => ({ ...d, id: d._id }));
   },
 
-  submitNewResource: async (resourceData: Omit<ResourceData, 'id'>, isDirectPublish: boolean): Promise<string> => {
+  submitNewResource: async (resourceData: Omit<ResourceData, 'id'>, _isDirectPublish: boolean): Promise<string> => {
     const token = await getToken();
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -17635,7 +17451,7 @@ ARCHIVO: ./src/features/rewards/components/molecules/RewardsPointsItem.tsx
 import { Icons } from "@/components/ui/icons/Icons";
 import { useRewards } from "../../hooks/useRewards";
 
-export default function RewardsPointsItem({children}) {
+export default function RewardsPointsItem({ children }: { children: React.ReactNode }) {
   const { pointsBalance } = useRewards();
   return (
     <div className="flex justify-center items-center gap-2 w-fit">
@@ -17720,67 +17536,6 @@ export const InboxWidget: React.FC = () => {
   );
 };
 
-
-
-==================================================
-ARCHIVO: ./src/features/rewards/components/organisms/InboxWidget.tsx.bak
-==================================================
-import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
-import { inboxService } from '../../services/inboxService';
-import { InboxMessage } from '../../types/rewards';
-import { Icons } from '@/components/ui/icons/Icons';
-
-export const InboxWidget: React.FC = () => {
-  const [messages, setMessages] = useState<InboxMessage[]>([]);
-
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const token = await getAuth().currentUser?.getIdToken();
-      if (token) {
-        const data = await inboxService.getMyMessages(token);
-        setMessages(data);
-      }
-    };
-    fetchMessages();
-  }, []);
-
-  const handleRead = async (id: string, isRead: boolean) => {
-    if (isRead) return;
-    const token = await getAuth().currentUser?.getIdToken();
-    if (token) {
-      await inboxService.markAsRead(id, token);
-      setMessages(messages.map(m => m._id === id ? { ...m, isRead: true } : m));
-    }
-  };
-
-  return (
-    <div className="bg-[#1e1e1e] border border-[#333] rounded-xl p-6">
-      <h2 className="text-xl font-bold text-itec-textflex items-center gap-2 mb-6">
-        <Icons type="message" className="w-5 h-5 " /> Mi Buzón de Avisos
-      </h2>
-      <div className="space-y-3">
-        {messages.length === 0 ? (
-          <p className="text-gray-500 text-sm">No tienes mensajes nuevos.</p>
-        ) : (
-          messages.map(msg => (
-            <div 
-              key={msg._id} 
-              onClick={() => handleRead(msg._id, msg.isRead)}
-              className={`p-4 rounded-lg border transition-colors cursor-pointer ${msg.isRead ? 'bg-[#252525] border-[#333]' : 'bg-[#1e293b] border-itec-blue/50'}`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className={`font-semibold ${msg.isRead ? 'text-gray-300' : 'text-white'}`}>{msg.subject}</h3>
-                <span className="text-xs text-gray-500">{new Date(msg.createdAt).toLocaleDateString()}</span>
-              </div>
-              <p className="text-sm text-itec-text whitespace-pre-wrap">{msg.content}</p>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-};
 
 
 ==================================================
@@ -17969,81 +17724,6 @@ export const RewardsWidget: React.FC = () => {
 
 
 ==================================================
-ARCHIVO: ./src/features/rewards/components/organisms/RewardsWidget.tsx.bak
-==================================================
-// src/features/rewards/components/organisms/RewardsWidget.tsx
-import React, { useState } from "react";
-import { useRewards } from "../../hooks/useRewards";
-import { RewardCardSmall } from "../atoms/RewardsCardSmall";
-import { RedeemModal } from "./RedeemModal";
-import { Reward, RedemptionPayload } from "../../types/rewards";
-
-export const RewardsWidget: React.FC = () => {
-  const { rewards, pointsBalance, isLoading, isRedeeming, handleRedeem } =
-    useRewards();
-  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
-
-  const onConfirmRedeem = async (payload: RedemptionPayload) => {
-    if (!selectedReward) return;
-    const rewardId = (selectedReward as any)._id || selectedReward.id;
-
-    const success = await handleRedeem(
-      payload,
-      rewardId,
-      selectedReward.pointsCost,
-    );
-    if (success) {
-      setSelectedReward(null);
-      alert("¡Canje realizado con éxito!");
-    }
-  };
-
-  if (isLoading)
-    return <div className="animate-pulse h-64 bg-itect-bg rounded-xl"></div>;
-
-  return (
-    <section className="mb-4 relative">
-      <div className="flex flex-col justify-between gap-4 mb-4 text-itec-gray">
-        <h3 className="text-xs">RECOMPENSAS — {pointsBalance} PTS</h3>
-      </div>
-
-      {rewards.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-itec-text">
-            Próximamente habrán nuevos beneficios disponibles.
-          </p>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-1">
-          {rewards.map((reward: any) => {
-            const uniqueId = reward._id || reward.id;
-            return (
-              <RewardCardSmall
-                key={uniqueId}
-                reward={{ ...reward, id: uniqueId }}
-                userPoints={pointsBalance}
-                onSelect={setSelectedReward}
-              />
-            );
-          })}
-        </div>
-      )}
-
-      {selectedReward && (
-        <RedeemModal
-          reward={selectedReward}
-          isLoading={isRedeeming}
-          onClose={() => setSelectedReward(null)}
-          onConfirm={onConfirmRedeem}
-        />
-      )}
-    </section>
-  );
-};
-
-
-
-==================================================
 ARCHIVO: ./src/features/rewards/hooks/useRewards.ts
 ==================================================
 // src/features/rewards/hooks/useRewards.ts
@@ -18104,7 +17784,7 @@ export const useRewards = () => {
       const response = await rewardsService.redeemReward(payload, rewardId, token);
 
       if (response.success) {
-        addPoints(-cost, false);
+        addPoints(-cost);
         return true;
       }
       return false;
@@ -18119,77 +17799,6 @@ export const useRewards = () => {
   return { rewards, pointsBalance, isLoading, isRedeeming, handleRedeem, refreshRewards: fetchRewards };
 };
 
-
-
-==================================================
-ARCHIVO: ./src/features/rewards/hooks/useRewards.ts.bak
-==================================================
-// src/features/rewards/hooks/useRewards.ts
-import { useState, useEffect, useCallback } from 'react';
-import { rewardsService } from '../services/rewardsService';
-import { Reward, RedemptionPayload } from '../types/rewards';
-import { useAuth } from '@context/AuthContext';
-import { getAuth } from 'firebase/auth';
-
-export const useRewards = () => {
-  const { user, addPoints } = useAuth();
-  const [rewards, setRewards] = useState<Reward[]>([]);
-  const [pointsBalance, setPointsBalance] = useState<number>(user?.points || 0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRedeeming, setIsRedeeming] = useState(false);
-
-  useEffect(() => {
-    setPointsBalance(user?.points || 0);
-  }, [user?.points]);
-
-  const fetchRewards = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const authUser = getAuth().currentUser;
-      if (!authUser) return;
-      const token = await authUser.getIdToken();
-      const data = await rewardsService.getAvailableRewards(token);
-      setRewards(data);
-    } catch (error) {
-      console.error("Error al cargar beneficios:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchRewards();
-  }, [fetchRewards]);
-
-  const handleRedeem = async (payload: RedemptionPayload, rewardId: string, cost: number) => {
-    if (pointsBalance < cost) return false;
-
-    setIsRedeeming(true);
-    try {
-      const authUser = getAuth().currentUser;
-      if (!authUser) throw new Error("Usuario no autenticado en Firebase");
-
-      const token = await authUser.getIdToken();
-      
-      console.log("Enviando canje al backend...", { rewardId, payload });
-      const response = await rewardsService.redeemReward(payload, rewardId, token);
-      
-      if (response.success) {
-        // Descuento visual inmediato sin tocar la DB de nuevo
-        addPoints(-cost, false);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Fallo en el proceso de canje:", error);
-      return false;
-    } finally {
-      setIsRedeeming(false);
-    }
-  };
-
-  return { rewards, pointsBalance, isLoading, isRedeeming, handleRedeem, refreshRewards: fetchRewards };
-};
 
 
 ==================================================
@@ -19351,7 +18960,7 @@ const CourseResourcesModal = React.lazy(() => import('@features/courses/componen
 const CourseAddResourceModal = React.lazy(() => import('@features/courses/components/organisms/CourseAddResourceModal').then(m => ({ default: m.CourseAddResourceModal })));
 
 export const CourseDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); 
+  const { id } = useParams<{ id: string }>();   
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
 
@@ -19370,7 +18979,7 @@ export const CourseDetail: React.FC = () => {
   useEffect(() => {
     if (course && user) {
       try {
-        const key = `itec_course_progress_${user.uid}_${course.id || (course as any)._id}`;
+        const key = `itec_course_progress_${user?.id}_${course.id || (course as any)._id}`;
         const stored = localStorage.getItem(key);
         if (stored) setWatchedVideos(new Set(JSON.parse(stored)));
       } catch (e) { console.error("Error cargando progreso:", e); }
@@ -19387,7 +18996,7 @@ export const CourseDetail: React.FC = () => {
       else newSet.add(videoId);
       
       try {
-        const key = `itec_course_progress_${user.uid}_${course.id || (course as any)._id}`;
+        const key = `itec_course_progress_${user?.id}_${course.id || (course as any)._id}`;
         localStorage.setItem(key, JSON.stringify(Array.from(newSet)));
       } catch (err) { console.error("Error guardando progreso:", err); }
       
@@ -19572,7 +19181,7 @@ export const CourseDetail: React.FC = () => {
           <CourseResourcesModal 
             isOpen={isViewModalOpen} 
             onClose={() => setIsViewModalOpen(false)} 
-            resources={relatedResources}
+            resources={relatedResources as any}
           />
         </Suspense>
       )}
@@ -19583,7 +19192,7 @@ export const CourseDetail: React.FC = () => {
             isOpen={isAddModalOpen} 
             onClose={() => setIsAddModalOpen(false)} 
             courseTitle={course.title}
-            materia={course.materia}
+            materia={course.materia || ''}
           />
         </Suspense>
       )}
@@ -19637,7 +19246,7 @@ export const CourseEditDetail: React.FC = () => {
     if (course) {
       setCourseTitle(course.title || '');
       setCourseDesc(course.description || '');
-      setImageUrl(course.image || '');
+      setImageUrl((course as any).image || (course as any).thumbnail || '');
       setMateria(course.materia || '');
       setCategoria(course.categoria || 'Comunidad');
       setVideos(course.videos?.length ? [...course.videos] : [{ title: '', youtubeId: '', duration: '' }]);
@@ -19650,9 +19259,9 @@ export const CourseEditDetail: React.FC = () => {
     setIsFetchingPlaylist(true);
     setError('');
     try {
-      const fetchedVideos = await coursesService.fetchYoutubePlaylist(playlistUrl);
-      if (fetchedVideos && fetchedVideos.length > 0) {
-        setVideos(fetchedVideos);
+      const fetchedVideos = await coursesService.fetchPlaylistDetails(playlistUrl);
+      if (fetchedVideos && fetchedVideos.videos && fetchedVideos.videos.length > 0) {
+        setVideos(fetchedVideos.videos as any);
       } else {
         setError('La playlist está vacía o es privada.');
       }
@@ -19678,17 +19287,18 @@ export const CourseEditDetail: React.FC = () => {
       courseData: {
         title: courseTitle,
         description: courseDesc,
-        image: imageUrl,
+        
         materia,
         categoria,
-        videos: cleanVideos
+        videos: cleanVideos as any
       }
     }, {
       onSuccess: () => {
         // Redirige al detalle del curso cuando termina de guardar
         navigate(`/cursos/${id}`);
       },
-      onError: (err) => setError('Fallo al actualizar el curso en la base de datos.')
+      // Línea 93. Ponle un guión bajo a err:
+      onError: () => setError('Fallo al actualizar el curso en la base de datos.')
     });
   };
 
@@ -19773,7 +19383,7 @@ export const CourseEditDetail: React.FC = () => {
                   videos={videos} setVideos={setVideos}
                   mode={mode} setMode={setMode}
                   playlistUrl={playlistUrl} setPlaylistUrl={setPlaylistUrl}
-                  handleFetchPlaylist={handleFetchPlaylist} isFetching={isFetchingPlaylist}
+                  onFetchPlaylist={handleFetchPlaylist} isFetching={isFetchingPlaylist}
                 />
               </div>
 
@@ -20436,7 +20046,7 @@ export const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      const origin = location.state?.from?.pathname || "/app";
+      const origin = location.state?.from?.pathname || "/";
       navigate(origin, { replace: true });
     }
   }, [user, loading, navigate, location]);
@@ -21280,7 +20890,7 @@ ARCHIVO: ./tsconfig.app.json
 
     /* Alias Paths */
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
@@ -21311,6 +20921,200 @@ ARCHIVO: ./tsconfig.app.json
   },
   "include": ["src"]
 }
+
+
+==================================================
+ARCHIVO: ./tsconfig.app.tsbuildinfo
+==================================================
+{
+  "root": [
+    "./src/app.tsx",
+    "./src/main.tsx",
+    "./src/vite-env.d.ts",
+    "./src/vite-pwa.d.ts",
+    "./src/components/atoms/card.tsx",
+    "./src/components/atoms/iconbutton.tsx",
+    "./src/components/atoms/sidebarstate.tsx",
+    "./src/components/molecules/autocompleteinput.tsx",
+    "./src/components/molecules/bottomnavbar.tsx",
+    "./src/components/molecules/chatinput.tsx",
+    "./src/components/molecules/customselect.tsx",
+    "./src/components/molecules/installpwabanner.tsx",
+    "./src/components/molecules/searchresultitem.tsx",
+    "./src/components/molecules/sidebaritem.tsx",
+    "./src/components/molecules/topnavbar.tsx",
+    "./src/components/molecules/updatepwatoast.tsx",
+    "./src/components/molecules/widgetheader.tsx",
+    "./src/components/organisms/chatbotwidget.tsx",
+    "./src/components/organisms/sidebar.tsx",
+    "./src/components/templates/mainlayout.tsx",
+    "./src/components/templates/protectedroute.tsx",
+    "./src/components/templates/sidebarlayout.tsx",
+    "./src/components/ui/backgroundblur.tsx",
+    "./src/components/ui/button.tsx",
+    "./src/components/ui/input.tsx",
+    "./src/components/ui/loadingstate.tsx",
+    "./src/components/ui/pageheader.tsx",
+    "./src/components/ui/select.tsx",
+    "./src/components/ui/icons/fileicon.tsx",
+    "./src/components/ui/icons/icons.tsx",
+    "./src/components/ui/icons/raccoon.tsx",
+    "./src/components/ui/icons/svgtarjetec.tsx",
+    "./src/context/authcontext.tsx",
+    "./src/data/carreras.ts",
+    "./src/data/specialties.ts",
+    "./src/features/about/components/organisms/aboutprojectwidget.tsx",
+    "./src/features/about/components/organisms/contributorswidget.tsx",
+    "./src/features/about/hooks/usecontributors.ts",
+    "./src/features/about/types/nosotroslinks.ts",
+    "./src/features/admin/components/atoms/globalannouncement.tsx",
+    "./src/features/admin/components/molecules/newsfeed.tsx",
+    "./src/features/admin/components/molecules/newsform.tsx",
+    "./src/features/admin/components/molecules/userresultcard.tsx",
+    "./src/features/admin/components/molecules/usersearchbox.tsx",
+    "./src/features/admin/components/organisms/adminredemptions.tsx",
+    "./src/features/admin/components/organisms/admintable.tsx",
+    "./src/features/admin/components/organisms/newsmanagement.tsx",
+    "./src/features/admin/components/organisms/rewardsmanagement.tsx",
+    "./src/features/admin/components/organisms/usermanagement.tsx",
+    "./src/features/admin/hooks/useadmindata.ts",
+    "./src/features/admin/hooks/useadminusers.ts",
+    "./src/features/admin/hooks/useannouncements.ts",
+    "./src/features/admin/services/adminredemptionsservice.ts",
+    "./src/features/admin/services/adminrewardsservice.ts",
+    "./src/features/admin/services/adminservice.ts",
+    "./src/features/admission/components/organisms/adminadmissiondatesmodal.tsx",
+    "./src/features/admission/components/organisms/admissioncountdownwidget.tsx",
+    "./src/features/admission/components/organisms/ingresoacademicgrid.tsx",
+    "./src/features/admission/components/organisms/ingresohighlightactions.tsx",
+    "./src/features/admission/components/organisms/ingresosocialgrid.tsx",
+    "./src/features/admission/components/organisms/ingresostepswidget.tsx",
+    "./src/features/admission/hooks/useadmissiondates.ts",
+    "./src/features/admission/hooks/useadmissionprogress.ts",
+    "./src/features/admission/types/ingresolinks.ts",
+    "./src/features/courses/components/atoms/categorypill.tsx",
+    "./src/features/courses/components/atoms/emptystate.tsx",
+    "./src/features/courses/components/atoms/filterselect.tsx",
+    "./src/features/courses/components/atoms/loadingstate.tsx",
+    "./src/features/courses/components/atoms/progressbar.tsx",
+    "./src/features/courses/components/atoms/searchinput.tsx",
+    "./src/features/courses/components/molecules/coursecard.tsx",
+    "./src/features/courses/components/molecules/coursefilters.tsx",
+    "./src/features/courses/components/molecules/coursegeneraldata.tsx",
+    "./src/features/courses/components/organisms/addcoursemodal.tsx",
+    "./src/features/courses/components/organisms/courseaddresourcemodal.tsx",
+    "./src/features/courses/components/organisms/coursegrid.tsx",
+    "./src/features/courses/components/organisms/coursematerialmodal.tsx",
+    "./src/features/courses/components/organisms/courseplaylist.tsx",
+    "./src/features/courses/components/organisms/courseresourcesmodal.tsx",
+    "./src/features/courses/components/organisms/coursevideolisteditor.tsx",
+    "./src/features/courses/components/organisms/coursevideoplayer.tsx",
+    "./src/features/courses/hooks/usecoursesearch.ts",
+    "./src/features/courses/hooks/usecourses.ts",
+    "./src/features/courses/services/coursesservice.ts",
+    "./src/features/error/types/linksutils.ts",
+    "./src/features/faqs/components/molecules/chatinput.tsx",
+    "./src/features/faqs/components/molecules/chatmessage.tsx",
+    "./src/features/faqs/components/organisms/adddatemodal.tsx",
+    "./src/features/faqs/components/organisms/chatinterface.tsx",
+    "./src/features/faqs/components/organisms/importantdateswidget.tsx",
+    "./src/features/faqs/hooks/usechatbot.ts",
+    "./src/features/faqs/services/chatbotservice.ts",
+    "./src/features/faqs/types/faqs.ts",
+    "./src/features/grade/components/molecules/careercard.tsx",
+    "./src/features/grade/components/organisms/careergraph.tsx",
+    "./src/features/grade/components/organisms/careergrid.tsx",
+    "./src/features/grade/hooks/usecareers.ts",
+    "./src/features/grade/types/correlativas.ts",
+    "./src/features/groups/components/molecules/emptygroupstate.tsx",
+    "./src/features/groups/components/molecules/groupcard.tsx",
+    "./src/features/groups/components/organisms/addgroupmodal.tsx",
+    "./src/features/groups/components/organisms/adminpendinggroupsmodal.tsx",
+    "./src/features/groups/components/organisms/groupfilters.tsx",
+    "./src/features/groups/components/organisms/groupresults.tsx",
+    "./src/features/groups/components/organisms/specialtygrid.tsx",
+    "./src/features/groups/hooks/useaddgroupform.ts",
+    "./src/features/groups/hooks/usegroupfilters.ts",
+    "./src/features/groups/hooks/usegroups.ts",
+    "./src/features/groups/services/groupsservice.ts",
+    "./src/features/groups/types/groups.ts",
+    "./src/features/home/components/organisms/editlinksmodal.tsx",
+    "./src/features/home/components/organisms/hubnavigation.tsx",
+    "./src/features/home/components/organisms/notificationbell.tsx",
+    "./src/features/home/components/organisms/universalsearch.tsx",
+    "./src/features/home/components/organisms/universitylinkswidget.tsx",
+    "./src/features/home/components/organisms/welcomewidget.tsx",
+    "./src/features/home/services/linksservice.ts",
+    "./src/features/home/types/dashboarddata.ts",
+    "./src/features/login/components/organisms/formlogin.tsx",
+    "./src/features/profile/components/atoms/profiletarjetecsmall.tsx",
+    "./src/features/profile/components/molecules/cardcoursestate.tsx",
+    "./src/features/profile/components/organisms/benefitsgrid.tsx",
+    "./src/features/profile/components/organisms/profileform.tsx",
+    "./src/features/profile/components/organisms/profileheader.tsx",
+    "./src/features/profile/components/organisms/profilestatswidget.tsx",
+    "./src/features/profile/components/organisms/tarjetec.tsx",
+    "./src/features/profile/types/profiledata.ts",
+    "./src/features/progress/components/atoms/statusbadge.tsx",
+    "./src/features/progress/components/atoms/widgets.tsx",
+    "./src/features/progress/components/molecules/grademodal.tsx",
+    "./src/features/progress/components/molecules/progresstable.tsx",
+    "./src/features/progress/components/molecules/subjectcard.tsx",
+    "./src/features/progress/components/molecules/subjecttablerow.tsx",
+    "./src/features/progress/components/organisms/progressdashboard.tsx",
+    "./src/features/progress/hooks/useprogress.ts",
+    "./src/features/progress/types/progress.ts",
+    "./src/features/progress/utils/academiclogic.ts",
+    "./src/features/resources/components/organisms/addresourcemodal.tsx",
+    "./src/features/resources/components/organisms/adminpendingresourcesmodal.tsx",
+    "./src/features/resources/components/organisms/resourcefilters.tsx",
+    "./src/features/resources/components/organisms/resourcestable.tsx",
+    "./src/features/resources/hooks/useresources.ts",
+    "./src/features/resources/services/resourcesservice.ts",
+    "./src/features/rewards/components/atoms/rewardscardlarge.tsx",
+    "./src/features/rewards/components/atoms/rewardscardmedium.tsx",
+    "./src/features/rewards/components/atoms/rewardscardsmall.tsx",
+    "./src/features/rewards/components/atoms/rewardswidgetpoints.tsx",
+    "./src/features/rewards/components/molecules/rewardcard.tsx",
+    "./src/features/rewards/components/molecules/rewardspointsitem.tsx",
+    "./src/features/rewards/components/organisms/inboxwidget.tsx",
+    "./src/features/rewards/components/organisms/redeemmodal.tsx",
+    "./src/features/rewards/components/organisms/rewardswidget.tsx",
+    "./src/features/rewards/hooks/userewards.ts",
+    "./src/features/rewards/services/inboxservice.ts",
+    "./src/features/rewards/services/rewardsservice.ts",
+    "./src/features/rewards/types/rewards.ts",
+    "./src/hooks/useinstallpwa.ts",
+    "./src/hooks/usepagetitle.ts",
+    "./src/hooks/usesidebarlinks.ts",
+    "./src/lib/firebase.ts",
+    "./src/lib/supabase.ts",
+    "./src/pages/aboutpage.tsx",
+    "./src/pages/adminpanel.tsx",
+    "./src/pages/admissionpage.tsx",
+    "./src/pages/aulaspage.tsx",
+    "./src/pages/buscatecpage.tsx",
+    "./src/pages/calendariopage.tsx",
+    "./src/pages/coursedetail.tsx",
+    "./src/pages/courseeditdetail.tsx",
+    "./src/pages/coursespage.tsx",
+    "./src/pages/errorpage.tsx",
+    "./src/pages/faqspage.tsx",
+    "./src/pages/gradepage.tsx",
+    "./src/pages/groupspage.tsx",
+    "./src/pages/guiatecpage.tsx",
+    "./src/pages/homepage.tsx",
+    "./src/pages/loginpage.tsx",
+    "./src/pages/pluginspage.tsx",
+    "./src/pages/profilepage.tsx",
+    "./src/pages/progresspage.tsx",
+    "./src/pages/resourcespage.tsx",
+    "./src/pages/rewardspage.tsx",
+    "./src/pages/terminospage.tsx"
+  ],
+  "version": "5.8.3"
+}
+
 
 
 ==================================================

@@ -30,3 +30,4 @@ dist-ssr
 
 codigo_frontend_ia.txt
 mejorar_frontend.sh
+.env*.local

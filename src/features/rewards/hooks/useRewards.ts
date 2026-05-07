@@ -56,12 +56,7 @@ export const useRewards = () => {
       const response = await rewardsService.redeemReward(payload, rewardId, token);
 
       if (response.success) {
-<<<<<<< HEAD
-        // Descuento visual inmediato sin tocar la DB de nuevo
         addPoints(-cost);
-=======
-        addPoints(-cost, false);
->>>>>>> feature/dev-jaiiirot
         return true;
       }
       return false;

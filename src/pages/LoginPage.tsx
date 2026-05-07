@@ -13,7 +13,7 @@ export const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      const origin = location.state?.from?.pathname || "/app";
+      const origin = location.state?.from?.pathname || "/";
       navigate(origin, { replace: true });
     }
   }, [user, loading, navigate, location]);
