@@ -1,187 +1,113 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { MainLayout } from '@/components/templates/MainLayout';
-import { Icons } from '@/components/ui/icons/Icons';
-import { Button } from '@components/ui/Button';
-
-// Hooks de React Query
-import { useCourseById, useUpdateCourse } from '@features/courses/hooks/useCourses';
-import { coursesService } from '@features/courses/services/coursesService';
-
-// Componentes Reutilizables de la feature Courses
-import { CourseGeneralData } from '@features/courses/components/molecules/CourseGeneralData';
-import { CourseVideoListEditor, type VideoItem } from '@features/courses/components/organisms/CourseVideoListEditor';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { MainLayout } from "@/components/templates/MainLayout";
+import { Icons } from "@/components/ui/icons/Icons";
+import { Button } from "@components/ui/Button";
+import { useCourseById, useUpdateCourse } from "@features/courses/hooks/useCourses";
+import { coursesService } from "@features/courses/services/coursesService";
+import { CourseGeneralData } from "@features/courses/components/molecules/CourseGeneralData";
+import { CourseVideoListEditor, type VideoItem } from "@features/courses/components/organisms/CourseVideoListEditor";
 
 export const CourseEditDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
-  // Extraemos la data cacheada
-  const { data: course, isLoading, isError } = useCourseById(id || '');
-  const updateCourseMutation = useUpdateCourse();
 
-  // Estados locales para los inputs
-  const [courseTitle, setCourseTitle] = useState('');
-  const [courseDesc, setCourseDesc] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [materia, setMateria] = useState('');
-  const [categoria, setCategoria] = useState('Comunidad');
-  
-  // Estado para la lista de videos
-  const [videos, setVideos] = useState<VideoItem[]>([{ title: '', youtubeId: '', duration: '' }]);
-  const [mode, setMode] = useState<'manual' | 'youtube'>('manual');
-  const [playlistUrl, setPlaylistUrl] = useState('');
-  const [isFetchingPlaylist, setIsFetchingPlaylist] = useState(false);
-  const [error, setError] = useState('');
+  const { data: course, isLoading, isError } = useCourseById(id ?? "");
+  const updateMutation = useUpdateCourse();
 
-  // Llenar el formulario cuando React Query trae el curso
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [image, setImage] = useState("");
+  const [materia, setMateria] = useState("");
+  const [categoria, setCategoria] = useState("Comunidad");
+  const [videos, setVideos] = useState<VideoItem[]>([{ title: "", youtubeId: "", duration: "" }]);
+  const [mode, setMode] = useState<"manual" | "youtube">("manual");
+  const [playlistUrl, setPlaylistUrl] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState("");
+
   useEffect(() => {
     if (course) {
-      setCourseTitle(course.title || '');
-      setCourseDesc(course.description || '');
-      setImageUrl((course as any).image || (course as any).thumbnail || '');
-      setMateria(course.materia || '');
-      setCategoria(course.categoria || 'Comunidad');
-      setVideos(course.videos?.length ? [...course.videos] : [{ title: '', youtubeId: '', duration: '' }]);
+      setTitle(course.title ?? "");
+      setDesc(course.description ?? "");
+      setImage((course as any).image || (course as any).thumbnail || course.imageUrl || "");
+      setMateria(course.materia ?? "");
+      setCategoria(course.categoria ?? "Comunidad");
+      setVideos(course.videos?.length ? [...course.videos] : [{ title: "", youtubeId: "", duration: "" }]);
     }
   }, [course]);
 
-  // Manejo de la Playlist de YouTube
   const handleFetchPlaylist = async () => {
     if (!playlistUrl.trim()) return;
-    setIsFetchingPlaylist(true);
-    setError('');
+    setIsFetching(true); setError("");
     try {
-      const fetchedVideos = await coursesService.fetchPlaylistDetails(playlistUrl);
-      if (fetchedVideos && fetchedVideos.videos && fetchedVideos.videos.length > 0) {
-        setVideos(fetchedVideos.videos as any);
-      } else {
-        setError('La playlist está vacía o es privada.');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Error al importar los videos de YouTube.');
-    } finally {
-      setIsFetchingPlaylist(false);
-    }
+      const data = await coursesService.fetchPlaylistDetails(playlistUrl);
+      if (data?.videos?.length) setVideos(data.videos as any);
+      else setError("Playlist vacía o privada.");
+    } catch (e: any) { setError(e.message ?? "Error al importar."); }
+    finally { setIsFetching(false); }
   };
 
-  // Validación y Envío Seguro
   const handleSave = () => {
-    setError('');
-    const cleanVideos = videos.filter(v => v.title.trim() && v.youtubeId.trim());
-    
-    if (!courseTitle.trim() || !courseDesc.trim() || cleanVideos.length === 0) {
-      setError('Por favor, completa el título, la descripción y añade al menos un video válido.');
-      return;
+    setError("");
+    const clean = videos.filter((v) => v.title.trim() && v.youtubeId.trim());
+    if (!title.trim() || !desc.trim() || !clean.length) {
+      setError("Completá título, descripción y al menos un video."); return;
     }
-
-    updateCourseMutation.mutate({
-      id: id!,
-      courseData: {
-        title: courseTitle,
-        description: courseDesc,
-        
-        materia,
-        categoria,
-        videos: cleanVideos as any
-      }
-    }, {
-      onSuccess: () => {
-        // Redirige al detalle del curso cuando termina de guardar
-        navigate(`/cursos/${id}`);
-      },
-      // Línea 93. Ponle un guión bajo a err:
-      onError: () => setError('Fallo al actualizar el curso en la base de datos.')
-    });
+    updateMutation.mutate(
+      { id: id!, courseData: { title, description: desc, materia, categoria, videos: clean as any } },
+      { onSuccess: () => navigate(`/cursos/${id}`), onError: () => setError("Error al guardar.") }
+    );
   };
 
-  if (isLoading) {
-    return (
-      <MainLayout>
-        <div className="flex items-center justify-center h-[70vh]">
-          <div className="w-10 h-10 border-4 border-itec-gray border-t-itecBlue rounded-full animate-spin"></div>
-        </div>
-      </MainLayout>
-    );
-  }
+  if (isLoading) return (
+    <MainLayout>
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="w-10 h-10 border-2 border-itec-gray/30 border-t-itec-blue-skye rounded-full animate-spin" />
+      </div>
+    </MainLayout>
+  );
 
-  if (isError || !course) {
-    return (
-      <MainLayout>
-        <div className="flex flex-col items-center justify-center h-[70vh]">
-          <h2 className="text-xl font-bold text-red-400 mb-2">Error al cargar el curso</h2>
-          <button onClick={() => navigate('/cursos')} className="text-sm text-itec-text underline hover:text-white">Volver al catálogo</button>
-        </div>
-      </MainLayout>
-    );
-  }
+  if (isError || !course) return (
+    <MainLayout>
+      <div className="flex flex-col items-center justify-center h-[60vh] gap-3 text-itec-gray">
+        <p className="font-bold text-sm">No se encontró el curso.</p>
+        <Link to="/cursos" className="text-xs text-itec-blue-skye hover:underline">Volver</Link>
+      </div>
+    </MainLayout>
+  );
 
   return (
     <MainLayout>
-      <div className="max-w-[1000px] mx-auto pb-24 pt-6 px-4 xl:px-0 animate-fade-in">
-         
-         {/* HEADER Y NAVEGACIÓN */}
-         <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-           <div>
-             <button 
-                onClick={() => navigate(-1)} 
-                className="flex items-center gap-2 text-itec-text hover:text-itec-texttransition-colors mb-4 text-[10px] font-bold tracking-widest uppercase outline-none"
-             >
-               <div className="w-3 h-3"><Icons type="chevron-left" /></div>
-               Cancelar y Volver
-             </button>
-             <h1 className="text-3xl md:text-4xl font-black text-itec-textflex items-center gap-3 tracking-tight">
-               <span className="text-itecBlue">✏️</span> Configurar Curso
-             </h1>
-             <p className="text-itec-text text-sm mt-1 font-medium">Modifica los detalles académicos y el plan de estudios.</p>
-           </div>
-           
-           <Button 
-              onClick={handleSave} 
-              disabled={updateCourseMutation.isPending} 
-              className="bg-itec-red hover:bg-itec-red-skye px-8 py-3.5 rounded-xl font-black shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all outline-none"
-           >
-             {updateCourseMutation.isPending ? 'GUARDANDO...' : 'Guardar Cambios'}
-           </Button>
-         </div>
+      <div className="max-w-3xl mx-auto px-2 pb-10">
 
-         {/* Alertas */}
-         {error && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl mb-8 text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
-              <Icons type="close" /> {error}
-            </div>
-         )}
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <Link to={`/cursos/${id}`} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-itec-gray hover:text-itec-text transition-all">
+            <Icons type="arrowLeft" className="w-4 h-4" />
+          </Link>
+          <div>
+            <h1 className="text-lg font-black text-itec-text">Editar curso</h1>
+            <p className="text-xs text-itec-gray line-clamp-1">{course.title}</p>
+          </div>
+        </div>
 
-         {/* CONTENEDOR GLASSMORPHISM PREMIUM */}
-         <div className="bg-itec-box/40 border border-white/5 rounded-[2rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group">
-            {/* Efecto de Luz de fondo */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-itecBlue/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-itecBlue/20 transition-colors duration-700"></div>
-            
-            <div className="relative z-10 space-y-10">
-              
-              {/* SECCIÓN 1: Datos Generales */}
-              <CourseGeneralData 
-                title={courseTitle} setTitle={setCourseTitle}
-                image={imageUrl} setImage={setImageUrl}
-                desc={courseDesc} setDesc={setCourseDesc}
-                materia={materia} setMateria={setMateria}
-                categoria={categoria} setCategoria={setCategoria}
-              />
+        {/* Error */}
+        {error && <p className="mb-4 text-itec-red text-xs font-bold bg-itec-red/10 border border-itec-red/30 p-3 rounded-xl">{error}</p>}
 
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        {/* Formulario */}
+        <div className="bg-itec-card rounded-2xl p-5 space-y-6">
+          <CourseGeneralData title={title} setTitle={setTitle} image={image} setImage={setImage} desc={desc} setDesc={setDesc} materia={materia} setMateria={setMateria} categoria={categoria} setCategoria={setCategoria} />
+          <CourseVideoListEditor videos={videos} setVideos={setVideos} mode={mode} setMode={setMode} playlistUrl={playlistUrl} setPlaylistUrl={setPlaylistUrl} onFetchPlaylist={handleFetchPlaylist} isFetching={isFetching} />
+        </div>
 
-              {/* SECCIÓN 2: Videos del Curso */}
-              <div className="pt-2">
-                <CourseVideoListEditor 
-                  videos={videos} setVideos={setVideos}
-                  mode={mode} setMode={setMode}
-                  playlistUrl={playlistUrl} setPlaylistUrl={setPlaylistUrl}
-                  onFetchPlaylist={handleFetchPlaylist} isFetching={isFetchingPlaylist}
-                />
-              </div>
-
-            </div>
-         </div>
+        {/* Acciones */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-5">
+          <Button variant="secondary" onClick={() => navigate(`/cursos/${id}`)} className="flex-1">Cancelar</Button>
+          <Button variant="primary" onClick={handleSave} disabled={updateMutation.isPending} className="flex-1 bg-itec-blue-skye border-none hover:opacity-90">
+            {updateMutation.isPending ? "Guardando..." : "Guardar cambios"}
+          </Button>
+        </div>
       </div>
     </MainLayout>
   );

@@ -1,144 +1,95 @@
-import React, { useState } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@components/ui/Button';
-import { Icons } from '@/components/ui/icons/Icons';
+import React, { useState } from "react";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@components/ui/Button";
+import { Icons } from "@/components/ui/icons/Icons";
 
-export interface VideoItem {
-  title: string;
-  youtubeId: string;
-  duration: string;
-}
+export interface VideoItem { title: string; youtubeId: string; duration: string; }
 
 interface Props {
   videos: VideoItem[];
-  setVideos: (videos: VideoItem[]) => void;
-  mode: 'manual' | 'youtube';
-  setMode: (mode: 'manual' | 'youtube') => void;
+  setVideos: (v: VideoItem[]) => void;
+  mode: "manual" | "youtube";
+  setMode: (m: "manual" | "youtube") => void;
   playlistUrl: string;
-  setPlaylistUrl: (url: string) => void;
+  setPlaylistUrl: (u: string) => void;
   onFetchPlaylist: () => void;
   isFetching: boolean;
 }
 
 export const CourseVideoListEditor: React.FC<Props> = ({
-  videos, setVideos,
-  mode, setMode,
-  playlistUrl, setPlaylistUrl,
-  onFetchPlaylist, isFetching
+  videos, setVideos, mode, setMode, playlistUrl, setPlaylistUrl, onFetchPlaylist, isFetching,
 }) => {
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragged, setDragged] = useState<number | null>(null);
 
-  const addVideoRow = () => setVideos([...videos, { title: '', youtubeId: '', duration: '' }]);
-  const removeVideoRow = (index: number) => setVideos(videos.filter((_, i) => i !== index));
-
-  const updateVideo = (index: number, field: keyof VideoItem, value: string) => {
-    const newVideos = [...videos];
-    newVideos[index] = { ...newVideos[index], [field]: value };
-    setVideos(newVideos);
+  const add = () => setVideos([...videos, { title: "", youtubeId: "", duration: "" }]);
+  const remove = (i: number) => setVideos(videos.filter((_, idx) => idx !== i));
+  const update = (i: number, field: keyof VideoItem, val: string) => {
+    const next = [...videos]; next[i] = { ...next[i], [field]: val }; setVideos(next);
   };
-
-  const handleDragStart = (index: number) => setDraggedIndex(index);
-  const handleDragOver = (e: React.DragEvent) => e.preventDefault();
-  const handleDrop = (index: number) => {
-    if (draggedIndex === null || draggedIndex === index) return;
-    const newVideos = [...videos];
-    const draggedVideo = newVideos[draggedIndex];
-    newVideos.splice(draggedIndex, 1);
-    newVideos.splice(index, 0, draggedVideo);
-    setVideos(newVideos);
-    setDraggedIndex(null);
+  const drop = (i: number) => {
+    if (dragged === null || dragged === i) return;
+    const next = [...videos];
+    const item = next.splice(dragged, 1)[0];
+    next.splice(i, 0, item);
+    setVideos(next); setDragged(null);
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-itec-gray pb-2">
+      {/* Header + tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/8 pb-3">
         <div>
-          <h3 className="text-lg font-bold text-white">Contenido del curso</h3>
-          <p className="text-[11px] text-itec-text">Pista: Mantén presionado el ícono ⋮⋮ para reordenar los videos.</p>
+          <h3 className="text-xs font-black text-itec-text uppercase tracking-widest">Contenido</h3>
+          <p className="text-[10px] text-itec-gray mt-0.5">Arrastrá el ⋮⋮ para reordenar.</p>
         </div>
-
-        <div className="flex bg-itec-box border border-itec-gray rounded-full p-1">
-          <button type="button" onClick={() => setMode('manual')} className={`px-4 py-1 rounded-full text-[11px] font-bold uppercase transition-colors ${mode === 'manual' ? 'bg-itec-gray text-white' : 'text-gray-500 hover:text-gray-300'}`}>
-            Manual
-          </button>
-          <button type="button" onClick={() => setMode('youtube')} className={`px-4 py-1 rounded-full text-[11px] font-bold uppercase transition-colors ${mode === 'youtube' ? 'bg-[#FF0000]/20 text-red-500' : 'text-gray-500 hover:text-gray-300'}`}>
-            YouTube
-          </button>
+        <div className="flex bg-itec-box border border-white/10 rounded-xl p-1 self-start sm:self-auto">
+          {(["manual", "youtube"] as const).map((m) => (
+            <button key={m} type="button" onClick={() => setMode(m)}
+              className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wide transition-all ${mode === m ? (m === "youtube" ? "bg-red-600 text-white" : "bg-itec-blue-skye text-white") : "text-itec-gray hover:text-itec-text"}`}>
+              {m}
+            </button>
+          ))}
         </div>
       </div>
 
-      {mode === 'youtube' && (
-        <div className="flex flex-col sm:flex-row gap-2 pb-4">
-          <div className="flex-1">
-             <Input fullWidth placeholder="Pega el link de la Playlist aquí..." value={playlistUrl} onChange={(e: any) => setPlaylistUrl(e.target.value)} className="bg-itec-box border-red-500/30 text-sm py-2 focus:border-red-500" />
-          </div>
-          <Button type="button" onClick={onFetchPlaylist} disabled={isFetching || !playlistUrl} className="bg-red-600 hover:bg-red-700 border-none text-itec-textpx-6 w-full sm:w-auto shrink-0 py-2">
-            {isFetching ? 'Extrayendo...' : 'Extraer Videos'}
+      {/* Import playlist */}
+      {mode === "youtube" && (
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Input fullWidth placeholder="Link de la playlist de YouTube..." value={playlistUrl} onChange={(e: any) => setPlaylistUrl(e.target.value)} className="bg-white/[0.04] border-red-500/30 text-sm py-2.5 rounded-xl" />
+          <Button type="button" onClick={onFetchPlaylist} disabled={isFetching || !playlistUrl} className="bg-red-600 hover:bg-red-700 border-none text-white px-5 shrink-0 sm:w-auto w-full">
+            {isFetching ? "Extrayendo..." : "Importar"}
           </Button>
         </div>
       )}
 
-      <div className="space-y-2 max-h-[40vh] overflow-y-auto custom-scrollbar pr-2 pb-10">
-        {videos.map((video, index) => (
-          <div 
-            key={index} 
-            draggable 
-            onDragStart={() => handleDragStart(index)}
-            onDragOver={handleDragOver}
-            onDrop={() => handleDrop(index)}
-            className={`flex items-center gap-2 p-2 rounded-xl bg-itec-box/30 hover:bg-itec-box border border-transparent hover:border-itec-gray/50 transition-all group ${draggedIndex === index ? 'opacity-40 scale-[0.98] border-dashed border-itec-gray' : ''}`}
-          >
-            <div className="cursor-grab active:cursor-grabbing text-gray-500 hover:text-itec-textpx-2 py-2 flex items-center justify-center">
-              <span className="text-xl leading-none font-bold">⋮⋮</span>
+      {/* Lista de videos */}
+      <div className="space-y-1.5 max-h-[35vh] overflow-y-auto pr-1">
+        {videos.map((v, i) => (
+          <div key={i} draggable onDragStart={() => setDragged(i)} onDragOver={(e) => e.preventDefault()} onDrop={() => drop(i)}
+            className={`flex items-center gap-2 p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-transparent hover:border-white/8 transition-all group ${dragged === i ? "opacity-40 border-dashed border-white/20" : ""}`}>
+            <span className="text-itec-gray cursor-grab active:cursor-grabbing px-1 text-lg font-black leading-none">⋮⋮</span>
+            <span className="w-5 h-5 rounded-full bg-itec-bg border border-white/10 flex items-center justify-center text-[9px] font-black text-itec-gray shrink-0">{i + 1}</span>
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
+              <input type="text" placeholder="Título del video..." value={v.title} onChange={(e) => update(i, "title", e.target.value)}
+                className="sm:col-span-7 bg-transparent border border-transparent focus:border-itec-blue-skye/40 focus:bg-white/[0.04] rounded-lg px-2 py-1.5 text-xs text-itec-text placeholder-itec-gray/40 outline-none transition-all" />
+              <input type="text" placeholder="ID YouTube" value={v.youtubeId} onChange={(e) => update(i, "youtubeId", e.target.value)}
+                className="sm:col-span-3 bg-transparent border border-transparent focus:border-itec-blue-skye/40 focus:bg-white/[0.04] rounded-lg px-2 py-1.5 text-[10px] font-mono text-itec-text placeholder-itec-gray/40 outline-none transition-all" />
+              <input type="text" placeholder="0:00" value={v.duration} onChange={(e) => update(i, "duration", e.target.value)}
+                className="sm:col-span-2 bg-transparent border border-transparent focus:border-itec-blue-skye/40 focus:bg-white/[0.04] rounded-lg px-2 py-1.5 text-[10px] text-itec-text text-right placeholder-itec-gray/40 outline-none transition-all" />
             </div>
-            
-            <div className="w-6 h-6 rounded-full bg-itec-bg border border-itec-gray flex items-center justify-center shrink-0 text-itec-text group-hover:text-itec-textgroup-hover:border-itec-blue transition-colors">
-              <span className="text-[10px] font-bold">{index + 1}</span>
-            </div>
-
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
-              <div className="sm:col-span-7 relative">
-                <input 
-                  type="text" 
-                  placeholder="Ej: Unidad 1: Introducción..." 
-                  value={video.title} 
-                  onChange={(e) => updateVideo(index, 'title', e.target.value)} 
-                  title="Clic para editar el título"
-                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-sm text-itec-textfocus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-600 font-medium transition-all"
-                />
-              </div>
-              <div className="sm:col-span-3">
-                <input 
-                  type="text" 
-                  placeholder="ID: dQw4w9WgXcQ" 
-                  value={video.youtubeId} 
-                  onChange={(e) => updateVideo(index, 'youtubeId', e.target.value)} 
-                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-[11px] text-itec-text font-mono focus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-700 transition-all"
-                />
-              </div>
-              <div className="sm:col-span-2 flex justify-end">
-                <input 
-                  type="text" 
-                  placeholder="00:00" 
-                  value={video.duration} 
-                  onChange={(e) => updateVideo(index, 'duration', e.target.value)} 
-                  className="w-full bg-transparent border border-transparent hover:border-itec-gray/80 focus:border-itec-blue focus:bg-itec-bg rounded-md px-2 py-1.5 text-xs text-itec-text text-right focus:ring-1 focus:ring-itec-blue outline-none placeholder-gray-600 transition-all"
-                />
-              </div>
-            </div>
-
-            <button type="button" onClick={() => removeVideoRow(index)} disabled={videos.length === 1} className="opacity-0 group-hover:opacity-100 p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg disabled:opacity-0 transition-all shrink-0">
-              <Icons type="trash" className="w-4 h-4" />
+            <button type="button" onClick={() => remove(i)} disabled={videos.length === 1}
+              className="opacity-0 group-hover:opacity-100 p-1.5 text-itec-gray hover:text-itec-red hover:bg-itec-red/10 rounded-lg transition-all disabled:opacity-0">
+              <Icons type="trash" className="w-3.5 h-3.5" />
             </button>
           </div>
         ))}
       </div>
 
-      <button type="button" onClick={addVideoRow} className="mt-4 text-itec-text hover:text-itec-texttext-sm font-medium flex items-center gap-2 transition-colors py-2">
-        <div className="w-6 h-6 rounded-full bg-itec-box border border-itec-gray flex items-center justify-center">
+      <button type="button" onClick={add} className="flex items-center gap-2 text-xs text-itec-gray hover:text-itec-text transition-colors font-semibold mt-1">
+        <div className="w-5 h-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
           <Icons type="plus" className="w-3 h-3" />
         </div>
-        Añadir nuevo video
+        Añadir video
       </button>
     </div>
   );

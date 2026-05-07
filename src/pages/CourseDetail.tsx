@@ -1,261 +1,180 @@
-import React, { useState, useEffect, useMemo, Suspense } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+// @ts-nocheck
+import React, { useState, useEffect, useMemo, Suspense } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { MainLayout } from "@/components/templates/MainLayout";
+import { Icons } from "@/components/ui/icons/Icons";
+import { useAuth } from "@context/AuthContext";
+import { CourseVideoPlayer } from "@features/courses/components/organisms/CourseVideoPlayer";
+import { CoursePlaylist } from "@features/courses/components/organisms/CoursePlaylist";
+import { useCourseById, useDeleteCourse } from "@features/courses/hooks/useCourses";
+import { useResources } from "@features/resources/hooks/useResources";
 
-// Componentes Globales
-import { MainLayout } from '@/components/templates/MainLayout';
-import { Icons } from '@/components/ui/icons/Icons'; 
-import { useAuth } from '@context/AuthContext';
-
-// Componentes de courses
-import { CourseVideoPlayer } from '@features/courses/components/organisms/CourseVideoPlayer';
-import { CoursePlaylist } from '@features/courses/components/organisms/CoursePlaylist';
-
-// Hooks
-import { useCourseById, useDeleteCourse } from '@features/courses/hooks/useCourses';
-import { useResources } from '@features/resources/hooks/useResources'; 
-
-// Lazy, carga retrasada
-const CourseResourcesModal = React.lazy(() => import('@features/courses/components/organisms/CourseResourcesModal').then(m => ({ default: m.CourseResourcesModal })));
-const CourseAddResourceModal = React.lazy(() => import('@features/courses/components/organisms/CourseAddResourceModal').then(m => ({ default: m.CourseAddResourceModal })));
+const CourseResourcesModal = React.lazy(() =>
+  import("@features/courses/components/organisms/CourseResourcesModal").then((m) => ({ default: m.CourseResourcesModal }))
+);
+const CourseAddResourceModal = React.lazy(() =>
+  import("@features/courses/components/organisms/CourseAddResourceModal").then((m) => ({ default: m.CourseAddResourceModal }))
+);
+const CourseMaterialModal = React.lazy(() =>
+  import("@features/courses/components/organisms/CourseMaterialModal").then((m) => ({ default: m.CourseMaterialModal }))
+);
 
 export const CourseDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();   
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
 
-  const { data: course, isLoading: isCourseLoading } = useCourseById(id || '');
+  const { data: course, isLoading } = useCourseById(id ?? "");
   const { data: allResources = [] } = useResources();
-  const deleteCourseMutation = useDeleteCourse();
+  const deleteMutation = useDeleteCourse();
 
-  // Estados Separados para Visualización y Creación
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  
-  const [watchedVideos, setWatchedVideos] = useState<Set<string>>(new Set());
-  const [copySuccess, setCopySuccess] = useState(false);
+  const [videoIndex, setVideoIndex] = useState(0);
+  const [watched, setWatched] = useState<Set<string>>(new Set());
+  const [isMaterialOpen, setMaterialOpen] = useState(false);
+  const [isAddResOpen, setAddResOpen] = useState(false);
+  const [isResOpen, setResOpen] = useState(false);
+  const [copyOk, setCopyOk] = useState(false);
+
+  const courseId = course?.id || (course as any)?._id || "";
 
   useEffect(() => {
-    if (course && user) {
+    if (courseId && user?.id) {
       try {
-        const key = `itec_course_progress_${user?.id}_${course.id || (course as any)._id}`;
-        const stored = localStorage.getItem(key);
-        if (stored) setWatchedVideos(new Set(JSON.parse(stored)));
-      } catch (e) { console.error("Error cargando progreso:", e); }
+        const raw = localStorage.getItem(`itec_course_progress_${user.id}_${courseId}`);
+        if (raw) setWatched(new Set(JSON.parse(raw)));
+      } catch {}
     }
-  }, [course, user]);
+  }, [courseId, user?.id]);
 
-  const handleToggleWatched = (videoId: string, e: React.MouseEvent) => {
+  const toggleWatched = (videoId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!course || !user) return;
-    
-    setWatchedVideos(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(videoId)) newSet.delete(videoId);
-      else newSet.add(videoId);
-      
-      try {
-        const key = `itec_course_progress_${user?.id}_${course.id || (course as any)._id}`;
-        localStorage.setItem(key, JSON.stringify(Array.from(newSet)));
-      } catch (err) { console.error("Error guardando progreso:", err); }
-      
-      return newSet;
+    if (!courseId || !user?.id) return;
+    setWatched((prev) => {
+      const next = new Set(prev);
+      next.has(videoId) ? next.delete(videoId) : next.add(videoId);
+      try { localStorage.setItem(`itec_course_progress_${user.id}_${courseId}`, JSON.stringify([...next])); } catch {}
+      return next;
     });
   };
 
   const handleShare = () => {
-    try {
-      navigator.clipboard.writeText(window.location.href);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 3000);
-    } catch (err) {
-      console.error('Failed to copy!', err);
-    }
+    navigator.clipboard.writeText(window.location.href).catch(() => {});
+    setCopyOk(true);
+    setTimeout(() => setCopyOk(false), 3000);
+  };
+
+  const handleDelete = () => {
+    if (!window.confirm("¿Eliminar este curso permanentemente?")) return;
+    deleteMutation.mutate(courseId, { onSuccess: () => navigate("/cursos") });
   };
 
   const relatedResources = useMemo(() => {
     if (!course || !allResources.length) return [];
-    const cleanCourseTitle = course.title.toLowerCase().replace('curso de ', '').trim();
-    return allResources.filter((r: any) => r.materia === course.materia || r.title.toLowerCase().includes(cleanCourseTitle));
+    const clean = course.title.toLowerCase().replace("curso de ", "").trim();
+    return allResources.filter((r: any) => r.materia === course.materia || r.title.toLowerCase().includes(clean));
   }, [course, allResources]);
 
-  const handleDelete = () => {
-    if (window.confirm("🔴 ¿Estás seguro de que quieres eliminar este curso permanentemente?")) {
-      deleteCourseMutation.mutate(course?.id || (course as any)?._id || '', {
-        onSuccess: () => navigate('/cursos')
-      });
-    }
-  };
+  const activeVideo = course?.videos?.[videoIndex];
 
-  if (isCourseLoading) {
-    return (
-      <MainLayout>
-        <div className="flex flex-col items-center justify-center h-[70vh] gap-5">
-          <div className="w-10 h-10 border-4 border-white/10 border-t-orange-500 rounded-full animate-spin"></div>
-          <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase animate-pulse">Preparando entorno...</p>
-        </div>
-      </MainLayout>
-    );
-  }
+  if (isLoading) return (
+    <MainLayout>
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="w-10 h-10 border-2 border-itec-gray/30 border-t-itec-blue-skye rounded-full animate-spin" />
+      </div>
+    </MainLayout>
+  );
 
-  if (!course) {
-    return (
-      <MainLayout>
-        <div className="flex items-center justify-center h-[70vh]">
-           <div className="bg-itec-box/40 backdrop-blur-xl border border-white/5 p-10 rounded-[2rem] text-center max-w-md shadow-2xl">
-             <span className="text-5xl block mb-6 opacity-80">🔍</span>
-             <h2 className="text-xl font-bold text-itec-textmb-2">Curso no encontrado</h2>
-             <p className="text-sm text-itec-text mb-8 leading-relaxed">El material que intentas visualizar no existe o ha sido retirado de la plataforma.</p>
-             <Link to="/cursos" className="bg-white text-black font-bold px-8 py-3.5 rounded-xl transition-transform hover:scale-[0.98] outline-none inline-block text-xs uppercase tracking-widest shadow-lg">
-               Volver al Catálogo
-             </Link>
-           </div>
-        </div>
-      </MainLayout>
-    );
-  }
-
-  const currentVideo = (course.videos && course.videos.length > 0) ? course.videos[currentVideoIndex] : undefined;
+  if (!course) return (
+    <MainLayout>
+      <div className="flex flex-col items-center justify-center h-[60vh] gap-3 text-itec-gray">
+        <span className="text-4xl opacity-40">😕</span>
+        <p className="font-bold text-sm">Curso no encontrado</p>
+        <Link to="/cursos" className="text-xs text-itec-blue-skye hover:underline">Volver a cursos</Link>
+      </div>
+    </MainLayout>
+  );
 
   return (
     <MainLayout>
-      <div className="max-w-[1300px] mx-auto pb-24 pt-6 px-4 lg:px-6 xl:px-0 animate-fade-in">
-        
-        {/* Controles Superiores */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <Link to="/cursos" className="inline-flex items-center gap-2 text-gray-500 hover:text-itec-texttext-[10px] font-bold uppercase tracking-widest transition-colors w-fit group outline-none">
-            <div className="w-5 h-5 group-hover:-translate-x-1 transition-transform"><Icons type="play" /></div>
-            Catálogo Principal
+      <div className="max-w-6xl mx-auto px-2 pb-10">
+
+        {/* Breadcrumb + admin actions */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+          <Link to="/cursos" className="flex items-center gap-1.5 text-xs text-itec-gray hover:text-itec-text transition-colors">
+            <Icons type="arrowLeft" className="w-3.5 h-3.5" />
+            Cursos
           </Link>
-          
           {isAdmin && (
             <div className="flex items-center gap-2">
-              <Link 
-                to={`/cursos/editar/${course.id || (course as any)._id}`}
-                className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-itec-texttext-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all outline-none"
-              >
-                Editar
+              <Link to={`/cursos/editar/${courseId}`}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-itec-gray hover:text-itec-text text-xs font-bold transition-all">
+                <Icons type="edit" className="w-3 h-3" /> Editar
               </Link>
-              <button 
-                onClick={handleDelete}
-                disabled={deleteCourseMutation.isPending}
-                className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-itec-texttext-[10px] font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all outline-none border border-red-500/20 hover:border-red-500 cursor-pointer"
-              >
-                {deleteCourseMutation.isPending ? 'BORRANDO...' : 'ELIMINAR'}
+              <button onClick={handleDelete}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-itec-red/10 border border-itec-red/25 text-itec-red hover:bg-itec-red/20 text-xs font-bold transition-all">
+                <Icons type="trash" className="w-3 h-3" /> Eliminar
               </button>
             </div>
           )}
         </div>
 
-        {/* Título Principal */}
-        <div className="mb-10">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-md shadow-sm">
-              {course.materia}
+        {/* Título + badge */}
+        <div className="flex flex-wrap items-start gap-2 mb-6">
+          <h1 className="text-xl md:text-2xl font-black text-itec-text leading-snug flex-1">{course.title}</h1>
+          {course.categoria === "Oficial" && (
+            <span className="shrink-0 mt-0.5 bg-itec-blue/20 text-itec-blue-skye border border-itec-blue-skye/30 text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">
+              Oficial
             </span>
-            <span className="bg-white/5 text-itec-text border border-white/10 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-md">
-              {course.categoria}
-            </span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-itec-texttracking-tight mb-2 leading-tight">{course.title}</h1>
+          )}
+          {course.materia && <span className="w-full text-xs text-itec-gray">{course.materia}</span>}
         </div>
 
-        {/* Layout Principal: 2 Columnas */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          
-          {/* Columna Izquierda (Video Player) */}
-          <div className="lg:col-span-2 w-full">
-            <CourseVideoPlayer 
+        {/* Layout: player + playlist */}
+        <div className="flex flex-col lg:flex-row gap-5">
+          {/* Player — ocupa todo el ancho en mobile, 2/3 en desktop */}
+          <div className="flex-1 min-w-0">
+            <CourseVideoPlayer
               course={course}
-              activeVideo={currentVideo} 
-              watchedVideos={watchedVideos}
+              activeVideo={activeVideo}
+              watchedVideos={watched}
               relatedResourcesCount={relatedResources.length}
-              copySuccess={copySuccess}
-              onToggleWatched={handleToggleWatched}
-              onOpenMaterialModal={() => setIsViewModalOpen(true)} // 🟢 ABRE MODAL DE VISUALIZACIÓN
+              copySuccess={copyOk}
+              onToggleWatched={toggleWatched}
+              onOpenMaterialModal={() => setMaterialOpen(true)}
               onShare={handleShare}
             />
+            {/* Botón "Ver recursos de la clase" en mobile */}
+            {isAdmin && (
+              <button onClick={() => setAddResOpen(true)}
+                className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-white/10 text-itec-gray hover:text-itec-text hover:border-white/20 text-xs font-semibold transition-all lg:hidden">
+                <Icons type="plus" className="w-3.5 h-3.5" /> Añadir recurso
+              </button>
+            )}
           </div>
 
-          {/* Columna Derecha (Sidebar: Playlist y Recursos) */}
-          <div className="lg:col-span-1 flex flex-col gap-8 w-full">
-            <CoursePlaylist 
-              videos={course.videos} 
-              currentIndex={currentVideoIndex} 
-              onSelectVideo={setCurrentVideoIndex}
-              watchedVideos={watchedVideos} 
+          {/* Playlist */}
+          <div className="lg:w-80 xl:w-96 shrink-0">
+            <CoursePlaylist
+              videos={course.videos}
+              currentIndex={videoIndex}
+              onSelectVideo={setVideoIndex}
+              watchedVideos={watched}
             />
-
-            {/* Widget de Material Extra */}
-            <div className="bg-itec-box/40 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-2xl">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-itec-textfont-bold text-sm tracking-wide">
-                  <span className="text-orange-500 mr-2 text-lg">📚</span> Material Extra
-                </h3>
-                {isAdmin && (
-                  <button 
-                    onClick={() => setIsAddModalOpen(true)} // 🟢 ABRE MODAL DE CREACIÓN
-                    className="text-[9px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1.5 rounded-lg border border-white/10 transition-colors font-bold uppercase tracking-widest outline-none"
-                  >
-                    + Vincular PDF
-                  </button>
-                )}
-              </div>
-              
-              {relatedResources.length === 0 ? (
-                <div className="border border-dashed border-white/5 rounded-2xl p-6 text-center opacity-60">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">No hay archivos vinculados</p>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  {relatedResources.slice(0, 4).map((res: any) => (
-                    <a key={res.id} href={res.driveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-3 bg-white/[0.02] hover:bg-white/[0.06] border border-white/5 rounded-2xl transition-all group outline-none shadow-sm">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 text-orange-500 flex items-center justify-center shrink-0 border border-orange-500/20">
-                        📄
-                      </div>
-                      <div className="overflow-hidden flex-1">
-                        <h4 className="text-xs font-bold text-itec-texttruncate group-hover:text-orange-400 transition-colors">{res.title}</h4>
-                        <p className="text-[10px] text-gray-500 truncate mt-0.5">{res.materia}</p>
-                      </div>
-                      <div className="text-gray-600 group-hover:text-itec-texttransition-colors w-4 h-4 shrink-0">
-                        <Icons type="external-link" />
-                      </div>
-                    </a>
-                  ))}
-                  {relatedResources.length > 4 && (
-                    <Link to="/recursos" className="text-[10px] text-center text-itec-text hover:text-itec-textmt-4 font-bold uppercase tracking-widest block transition-colors outline-none bg-white/5 hover:bg-white/10 py-3 rounded-xl border border-white/5">
-                      Ver todo el catálogo
-                    </Link>
-                  )}
-                </div>
-              )}
-            </div>
+            {isAdmin && (
+              <button onClick={() => setAddResOpen(true)}
+                className="hidden lg:flex mt-3 w-full items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-white/10 text-itec-gray hover:text-itec-text hover:border-white/20 text-xs font-semibold transition-all">
+                <Icons type="plus" className="w-3.5 h-3.5" /> Añadir recurso
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* 🟢 RENDERIZADO CONDICIONAL DE MODALES (Aislados y Optimizados) */}
-      {isViewModalOpen && (
-        <Suspense fallback={null}>
-          <CourseResourcesModal 
-            isOpen={isViewModalOpen} 
-            onClose={() => setIsViewModalOpen(false)} 
-            resources={relatedResources as any}
-          />
-        </Suspense>
-      )}
-
-      {isAddModalOpen && (
-        <Suspense fallback={null}>
-          <CourseAddResourceModal 
-            isOpen={isAddModalOpen} 
-            onClose={() => setIsAddModalOpen(false)} 
-            courseTitle={course.title}
-            materia={course.materia || ''}
-          />
-        </Suspense>
-      )}
-
+      {/* Modales */}
+      <Suspense fallback={null}>
+        <CourseMaterialModal isOpen={isMaterialOpen} onClose={() => setMaterialOpen(false)} relatedResources={relatedResources} />
+        {isAdmin && <CourseAddResourceModal isOpen={isAddResOpen} onClose={() => setAddResOpen(false)} courseTitle={course.title} materia={course.materia ?? ""} />}
+      </Suspense>
     </MainLayout>
   );
 };

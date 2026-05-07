@@ -90,7 +90,7 @@ export const CalendarioPage: React.FC = () => {
                 const day = d.getDate();
                 const cfg = TYPE_CONFIG[ev.type];
                 return (
-                  <div key={i} className="flex items-center gap-3 bg-[#111820] border border-white/7 rounded-xl p-3 hover:border-white/12 transition-colors">
+                  <div key={i} className="flex items-center gap-3 bg-itec-card border border-white/7 rounded-xl p-3 hover:border-white/12 transition-colors">
                     <div className={`shrink-0 w-11 h-11 rounded-xl flex flex-col items-center justify-center border ${cfg.color}`}>
                       <span className="text-lg font-bold leading-none">{day}</span>
                       <span className="text-[8px] uppercase mt-0.5">{MONTHS[parseInt(month) - 1].slice(0, 3)}</span>

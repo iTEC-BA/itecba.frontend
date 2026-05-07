@@ -1,70 +1,97 @@
-// src/features/rewards/components/organisms/RewardsWidget.tsx
-// FIX: El widget solo se monta si el usuario está autenticado,
-// evitando que useRewards intente fetchear sin token.
 import React, { useState } from "react";
 import { useAuth } from "@context/AuthContext";
 import { useRewards } from "../../hooks/useRewards";
-import { RewardCardSmall } from "../atoms/RewardsCardSmall";
+import { Icons } from "@components/ui/icons/Icons";
+import { RewardCardCompact } from "../molecules/RewardCardCompact";
 import { RedeemModal } from "./RedeemModal";
-import { Reward, RedemptionPayload } from "../../types/rewards";
+import { RewardSuccessModal } from "./RewardSuccessModal";
+import type { Reward, RedemptionPayload } from "../../types/rewards";
 
 const RewardsWidgetInner: React.FC = () => {
   const { rewards, pointsBalance, isLoading, isRedeeming, handleRedeem } = useRewards();
-  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+  const [selected, setSelected] = useState<Reward | null>(null);
+  const [successInfo, setSuccessInfo] = useState<{
+    title: string;
+    cost: number;
+    newBalance: number;
+  } | null>(null);
 
-  const onConfirmRedeem = async (payload: RedemptionPayload) => {
-    if (!selectedReward) return;
-    const rewardId = (selectedReward as any)._id || selectedReward.id;
-    const success = await handleRedeem(payload, rewardId, selectedReward.pointsCost);
-    if (success) {
-      setSelectedReward(null);
-      alert("¡Canje realizado con éxito!");
+  const onConfirm = async (payload: RedemptionPayload) => {
+    if (!selected) return;
+    const id = (selected as any)._id || selected.id;
+    const ok = await handleRedeem(payload, id, selected.pointsCost);
+    if (ok) {
+      setSuccessInfo({
+        title: selected.title,
+        cost: selected.pointsCost,
+        newBalance: pointsBalance - selected.pointsCost,
+      });
+      setSelected(null);
     }
   };
 
-  if (isLoading)
-    return <div className="animate-pulse h-64 bg-itec-bg rounded-xl"></div>;
+  if (isLoading) {
+    return (
+      <div className="space-y-2 animate-pulse">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="h-10 bg-white/4 rounded-xl" />
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <section className="mb-4 relative">
-      <div className="flex flex-col justify-between gap-4 mb-4 text-itec-gray">
-        <h3 className="text-xs">RECOMPENSAS — {pointsBalance} PTS</h3>
+    <section className="space-y-1.5">
+      <div className="flex items-center justify-between px-1 mb-2">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-itec-text/40">
+          Recompensas
+        </p>
+        <div className="flex items-center gap-1 text-xs font-bold text-itec-rewards">
+          <Icons type="star" className="size-3" />
+          <span className="tabular-nums">{pointsBalance.toLocaleString()} pts</span>
+        </div>
       </div>
 
       {rewards.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-itec-text">Próximamente habrán nuevos beneficios disponibles.</p>
-        </div>
+        <p className="text-xs text-itec-text/40 text-center py-4">
+          Sin beneficios disponibles aún
+        </p>
       ) : (
-        <div className="flex flex-col gap-1">
-          {rewards.map((reward: any) => {
-            const uniqueId = reward._id || reward.id;
-            return (
-              <RewardCardSmall
-                key={uniqueId}
-                reward={{ ...reward, id: uniqueId }}
-                userPoints={pointsBalance}
-                onSelect={setSelectedReward}
-              />
-            );
-          })}
-        </div>
+        rewards.slice(0, 5).map((r: any) => {
+          const id = r._id || r.id;
+          return (
+            <RewardCardCompact
+              key={id}
+              reward={{ ...r, id }}
+              userPoints={pointsBalance}
+              onSelect={setSelected}
+            />
+          );
+        })
       )}
 
-      {selectedReward && (
+      {selected && (
         <RedeemModal
-          reward={selectedReward}
+          reward={selected}
+          userPoints={pointsBalance}
           isLoading={isRedeeming}
-          onClose={() => setSelectedReward(null)}
-          onConfirm={onConfirmRedeem}
+          onClose={() => setSelected(null)}
+          onConfirm={onConfirm}
+        />
+      )}
+
+      {successInfo && (
+        <RewardSuccessModal
+          rewardTitle={successInfo.title}
+          pointsCost={successInfo.cost}
+          newBalance={successInfo.newBalance}
+          onClose={() => setSuccessInfo(null)}
         />
       )}
     </section>
   );
 };
 
-// Guard: solo renderiza el widget si el usuario está autenticado.
-// Esto evita que useRewards se ejecute para visitantes anónimos.
 export const RewardsWidget: React.FC = () => {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) return null;

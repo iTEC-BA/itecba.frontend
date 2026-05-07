@@ -47,7 +47,7 @@ export const AulasPage: React.FC = () => {
 
       {/* Buscador + filtro sede */}
       <div className="flex flex-col sm:flex-row gap-2 mb-4">
-        <div className="flex-1 flex items-center gap-2 bg-[#111820] border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
+        <div className="flex-1 flex items-center gap-2 bg-itec-card border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
           <div className="w-4 h-4 text-[#5a6475] shrink-0">
             <Icons type="map-pin" className="w-full h-full" />
           </div>
@@ -62,7 +62,7 @@ export const AulasPage: React.FC = () => {
         <select
           value={sede}
           onChange={(e) => setSede(e.target.value)}
-          className="bg-[#111820] border border-white/7 text-[#9aa3b0] text-sm px-4 py-3 rounded-xl outline-none focus:border-itec-blue-skye transition-colors"
+          className="bg-itec-card border border-white/7 text-[#9aa3b0] text-sm px-4 py-3 rounded-xl outline-none focus:border-itec-blue-skye transition-colors"
         >
           <option value="Todas">Todas las sedes</option>
           <option value="Medrano">Medrano</option>
@@ -72,7 +72,7 @@ export const AulasPage: React.FC = () => {
 
       {/* Aula seleccionada — detalle */}
       {selected && (
-        <div className="mb-5 bg-[#111820] border border-itec-red/30 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="mb-5 bg-itec-card border border-itec-red/30 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -120,7 +120,7 @@ export const AulasPage: React.FC = () => {
             <button
               key={a.numero}
               onClick={() => setSelected(a)}
-              className={`text-left w-full bg-[#111820] border rounded-xl p-3.5 flex items-center gap-3 transition-colors ${
+              className={`text-left w-full bg-itec-card border rounded-xl p-3.5 flex items-center gap-3 transition-colors ${
                 selected?.numero === a.numero ? "border-itec-red/40" : "border-white/7 hover:border-white/12"
               }`}
             >

@@ -1,80 +1,87 @@
 import React from 'react';
-import type { ResourceData } from '../../services/resourcesService';
+import { Icons } from '@/components/ui/icons/Icons';
+import { PendingResourceRow } from '../molecules/PendingResourceRow';
 import { usePendingResources, useApprovePendingResource, useRejectPendingResource } from '../../hooks/useResources';
+import type { ResourceData } from '../../types/resource.types';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-}
+interface Props { isOpen: boolean; onClose: () => void }
 
 export const AdminPendingResourcesModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  // Traemos la data del caché (cargará al instante)
   const { data: pending = [], isLoading } = usePendingResources(true);
-  
-  const approveMutation = useApprovePendingResource();
-  const rejectMutation = useRejectPendingResource();
+  const approve = useApprovePendingResource();
+  const reject  = useRejectPendingResource();
 
-  const handleApprove = (res: ResourceData) => {
-    approveMutation.mutate(res, {
-      onError: () => alert("Error al aprobar.")
-    });
-  };
+  const handleApprove = (r: ResourceData) =>
+    approve.mutate(r, { onError: () => alert('Error al aprobar.') });
 
   const handleReject = (id: string) => {
-    if (!window.confirm("¿Rechazar este aporte?")) return;
-    rejectMutation.mutate(id, {
-      onError: () => alert("Error al rechazar.")
-    });
+    if (!window.confirm('¿Rechazar este aporte?')) return;
+    reject.mutate(id, { onError: () => alert('Error al rechazar.') });
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
-      <div className="bg-itec-box border border-itec-gray rounded-2xl w-full max-w-5xl shadow-2xl p-6 relative flex flex-col max-h-[85vh]">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-itec-textz-10">✖</button>
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-itec-textflex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-500 flex items-center justify-center text-sm">🛡️</span>
-            Moderación de Aportes
-          </h2>
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4">
+      <div className="w-full sm:max-w-4xl bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-3xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[85vh]">
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-itec-gray/20 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/20 flex items-center justify-center text-orange-400 text-lg">
+              🛡️
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-itec-text">Moderación de Aportes</h2>
+              <p className="text-xs text-itec-gray mt-0.5">
+                {pending.length} pendiente{pending.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-itec-gray/40 text-itec-gray hover:text-itec-text transition-colors"
+          >
+            <div className="w-4 h-4"><Icons type="close" /></div>
+          </button>
         </div>
 
-        <div className="flex-1 overflow-auto custom-scrollbar border border-itec-gray rounded-xl bg-itec-bg">
+        {/* Body */}
+        <div className="flex-1 overflow-auto">
           {isLoading ? (
-            <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-t-orange-500 rounded-full animate-spin"></div></div>
+            <div className="flex items-center justify-center py-24">
+              <div className="w-8 h-8 rounded-full border-2 border-itec-gray/30 border-t-orange-500 animate-spin" />
+            </div>
           ) : pending.length > 0 ? (
-            <table className="w-full text-left whitespace-nowrap text-sm">
-              <thead className="bg-itec-box sticky top-0 border-b border-itec-gray">
-                <tr>
-                  <th className="p-3 text-[10px] text-gray-500 uppercase">Título / Materia</th>
-                  <th className="p-3 text-[10px] text-gray-500 uppercase">Carrera</th>
-                  <th className="p-3 text-[10px] text-gray-500 uppercase">Tipo</th>
-                  <th className="p-3 text-[10px] text-gray-500 uppercase text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pending.map((res) => (
-                  <tr key={res.id} className="border-b border-itec-gray/50 hover:bg-itec-box/50">
-                    <td className="p-3">
-                      <p className="text-itec-textfont-medium">{res.title}</p>
-                      <p className="text-xs text-itec-text">{res.materia}</p>
-                    </td>
-                    <td className="p-3 text-itec-text text-xs capitalize">{res.carrera}</td>
-                    <td className="p-3"><span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">{res.tipo} • {res.formato}</span></td>
-                    <td className="p-3 text-right">
-                      <div className="flex justify-end gap-2">
-                        <a href={res.link} target="_blank" rel="noreferrer" className="px-3 py-1.5 text-xs bg-itec-gray text-itec-textrounded-lg">Ver Archivo</a>
-                        <button onClick={() => handleReject(res.id as string)} disabled={rejectMutation.isPending} className="px-3 py-1.5 text-xs bg-itec-red/10 text-itec-red-skye rounded-lg disabled:opacity-50">Rechazar</button>
-                        <button onClick={() => handleApprove(res)} disabled={approveMutation.isPending} className="px-3 py-1.5 text-xs bg-orange-600 text-itec-textrounded-lg disabled:opacity-50">Aprobar</button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-itec-bg border-b border-itec-gray/20 sticky top-0 z-10">
+                  <tr>
+                    {['Título / Materia', 'Carrera', 'Tipo', 'Acciones'].map((h, i) => (
+                      <th key={h}
+                        className={`px-4 py-3 text-[10px] font-bold text-itec-gray uppercase tracking-widest ${i === 0 ? '' : i === 1 ? 'hidden sm:table-cell' : i === 2 ? 'hidden md:table-cell' : 'text-right'}`}>
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-itec-gray/10">
+                  {pending.map(r => (
+                    <PendingResourceRow
+                      key={r.id} resource={r}
+                      onApprove={handleApprove} onReject={handleReject}
+                      isApproving={approve.isPending} isRejecting={reject.isPending}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
-            <div className="text-center py-20 text-itec-text">No hay aportes pendientes.</div>
+            <div className="flex flex-col items-center justify-center py-24 text-center px-6">
+              <span className="text-5xl mb-4">✅</span>
+              <p className="text-base font-semibold text-itec-text mb-1">Todo revisado</p>
+              <p className="text-sm text-itec-gray">No hay aportes pendientes de moderación.</p>
+            </div>
           )}
         </div>
       </div>

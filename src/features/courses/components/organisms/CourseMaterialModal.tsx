@@ -1,55 +1,37 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Icons } from '@/components/ui/icons/Icons';
-import { SearchResultItem } from '@components/molecules/SearchResultItem'; 
-import type { ResourceData } from '@features/resources/services/resourcesService';
+import React from "react";
+import { Icons } from "@/components/ui/icons/Icons";
+import { SearchResultItem } from "@components/molecules/SearchResultItem";
+import type { ResourceData } from "@features/resources/services/resourcesService";
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  relatedResources: ResourceData[];
-}
+interface Props { isOpen: boolean; onClose: () => void; relatedResources: ResourceData[]; }
 
 export const CourseMaterialModal: React.FC<Props> = ({ isOpen, onClose, relatedResources }) => {
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-100 bg-black/80 flex items-center justify-center p-4">
-      <div className="bg-itec-box border border-itec-gray rounded-3xl w-full max-w-lg shadow-2xl p-6 relative animate-in zoom-in-95 duration-200">
-        <button onClick={onClose} className="absolute top-5 right-5 w-8 h-8 rounded-full bg-itec-bg border border-itec-gray flex items-center justify-center text-gray-500 hover:text-itec-texttransition-colors z-10">
-          <div className="w-4 h-4"><Icons type="close" /></div>
-        </button>
-        
-        <h2 className="text-xl font-bold text-itec-textmb-1 flex items-center gap-2">
-          <span className="text-orange-500">📚</span> Material de Apoyo
-        </h2>
-        <p className="text-xs text-itec-text mb-6">Archivos, resúmenes y parciales de esta materia.</p>
-
-        {relatedResources.length > 0 ? (
-          <div className="space-y-2 max-h-[50vh] overflow-y-auto custom-scrollbar pr-2">
-            {relatedResources.map(res => (
-              // 🔴 RECICLAMOS EL COMPONENTE DEL BUSCADOR
-              <SearchResultItem 
-                key={res.id || (res as any)._id}
-                type="aporte"
-                title={res.title}
-                subtitle={`${res.tipo} • Subido por ${res.autor}`}
-                link={res.link}
-                isExternal
-              />
-            ))}
+    <div className="fixed inset-0 z-[200] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="bg-itec-box border border-white/10 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg max-h-[80vh] flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between p-5 border-b border-white/8 shrink-0">
+          <div>
+            <h2 className="text-base font-black text-itec-text">Material de apoyo</h2>
+            <p className="text-xs text-itec-gray">Archivos y recursos de esta materia.</p>
           </div>
-        ) : (
-          <div className="text-center py-10 bg-itec-bg rounded-2xl border border-itec-gray border-dashed">
-            <span className="text-4xl block mb-3 opacity-50">📂</span>
-            <p className="text-itec-text text-sm font-medium">Aún no hay apuntes para esta materia.</p>
-          </div>
-        )}
-
-        <div className="mt-6 pt-5 border-t border-itec-gray text-center">
-          <Link to="/explore" className="text-sm font-bold text-orange-500 hover:text-orange-400 transition-colors flex items-center justify-center gap-2">
-            Buscar más en Aportes <div className="w-4 h-4"><Icons type="arrowRight" /></div>
-          </Link>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 text-itec-gray hover:text-itec-text transition-all">
+            <Icons type="close" className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          {relatedResources.length ? (
+            <div className="space-y-2">
+              {relatedResources.map((r) => (
+                <SearchResultItem key={r.id || (r as any)._id} type="aporte" title={r.title} subtitle={`${r.tipo} · ${r.autor}`} link={r.link} isExternal />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-14 text-itec-gray">
+              <span className="text-3xl mb-3 opacity-40">📂</span>
+              <p className="text-xs font-bold uppercase tracking-widest">Sin archivos aún</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

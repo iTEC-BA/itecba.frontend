@@ -1,14 +1,13 @@
 import React, { useState, Suspense } from "react";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { PageHeader } from "@components/ui/PageHeader";
-import { useAuth } from "@context/AuthContext";
 import { Icons } from "@/components/ui/icons/Icons";
-
-import { useCourses, useDeleteCourse } from "@features/courses/hooks/useCourses"; 
+import { useAuth } from "@context/AuthContext";
+import { usePageTitle } from "@hooks/usePageTitle";
+import { useCourses, useDeleteCourse } from "@features/courses/hooks/useCourses";
 import { useCourseSearch } from "@features/courses/hooks/useCourseSearch";
 import { CourseGrid } from "@features/courses/components/organisms/CourseGrid";
 import { CourseFilters } from "@features/courses/components/molecules/CourseFilters";
-import { usePageTitle } from "@hooks/usePageTitle";
 
 const AddCourseModal = React.lazy(() =>
   import("@features/courses/components/organisms/AddCourseModal").then((m) => ({ default: m.AddCourseModal }))
@@ -16,62 +15,47 @@ const AddCourseModal = React.lazy(() =>
 
 export const CoursesPage: React.FC = () => {
   usePageTitle("Cursos");
-
   const { isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: dbCourses = [], isLoading } = useCourses();
-  const deleteCourseMutation = useDeleteCourse();
+  const deleteMutation = useDeleteCourse();
   const { filters, filteredCourses } = useCourseSearch(dbCourses);
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!window.confirm("¿Seguro que deseas eliminar este curso definitivamente?")) return;
-
+  const handleDelete = (e: React.MouseEvent, id: string) => {
+    e.preventDefault(); e.stopPropagation();
+    if (!window.confirm("¿Seguro que deseas eliminar este curso?")) return;
     localStorage.removeItem(`itec_course_${id}`);
-    deleteCourseMutation.mutate(id, {
-      onError: () => alert("Error al eliminar el curso.")
-    });
+    deleteMutation.mutate(id, { onError: () => alert("Error al eliminar.") });
   };
 
   return (
     <MainLayout>
-      <div className="max-w-7xl mx-auto pb-10 relative z-10">
-        
+      <div className="max-w-6xl mx-auto px-2 pb-10">
         <PageHeader
           title="Campus de Cursos"
-          description="Material audiovisual oficial y comunitario. Potenciá tus estudios, retomá tus clases donde las dejaste y aprendé a tu propio ritmo."
+          description="Material audiovisual oficial y comunitario. Aprendé a tu ritmo."
           iconType="playFill"
           colorTheme="blue"
         >
           {isAdmin && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer bg-slate-900/90 border border-white/10 hover:border-sky-500/50 hover:bg-sky-500/10 text-slate-300 hover:text-sky-400 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95 shrink-0"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-itec-blue-skye text-white text-sm font-bold hover:opacity-90 transition-all active:scale-95 shrink-0"
             >
-              <div className="w-4 h-4"><Icons type="plus" /></div>
-              Aportar Curso
+              <Icons type="plus" className="w-4 h-4" />
+              Nuevo curso
             </button>
           )}
         </PageHeader>
 
         <CourseFilters filters={filters} isLoading={isLoading} />
-
-        <CourseGrid
-          courses={filteredCourses}
-          isLoading={isLoading} 
-          isAdmin={isAdmin}
-          onDelete={handleDelete}
-        />
+        <CourseGrid courses={filteredCourses} isLoading={isLoading} isAdmin={isAdmin} onDelete={handleDelete} />
       </div>
 
       {isAdmin && isModalOpen && (
-        <Suspense fallback={<div className="fixed inset-0 z-50 bg-slate-950/90" />}>
-          <AddCourseModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          />
+        <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60" />}>
+          <AddCourseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </Suspense>
       )}
     </MainLayout>

@@ -1,66 +1,125 @@
-// src/features/rewards/components/organisms/InboxWidget.tsx
-// FIX: Guard de autenticación — no llama /api/messages si el usuario no está logueado.
-import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
-import { useAuth } from '@context/AuthContext';
-import { inboxService } from '../../services/inboxService';
-import { InboxMessage } from '../../types/rewards';
-import { Icons } from '@/components/ui/icons/Icons';
+import React, { useState, useEffect, useCallback } from "react";
+import { Icons } from "@components/ui/icons/Icons";
+import { InboxMessageCard } from "../molecules/InboxMessageCard";
+import { EmptyState } from "../atoms/EmptyState";
+import { inboxService } from "../../services/inboxService";
+import type { InboxMessage } from "../../types/rewards";
+import { getAuth } from "firebase/auth";
 
 export const InboxWidget: React.FC = () => {
-  const { isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<InboxMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [isExpanded, setIsExpanded] = useState(true);
 
-  useEffect(() => {
-    // GUARD: no fetchear si el usuario no está autenticado
-    if (!isAuthenticated) return;
+  const fetchMessages = useCallback(async () => {
+    try {
+      const authUser = getAuth().currentUser;
+      if (!authUser) return;
+      const token = await authUser.getIdToken();
+      const data = await inboxService.getMyMessages(token);
+      setMessages(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error cargando mensajes:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-    const fetchMessages = async () => {
-      const token = await getAuth().currentUser?.getIdToken();
-      if (!token) return;
-      try {
-        const data = await inboxService.getMyMessages(token);
-        setMessages(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error("Error cargando mensajes:", err);
-      }
-    };
-    fetchMessages();
-  }, [isAuthenticated]); // re-fetch cuando cambia el estado de auth
+  useEffect(() => { fetchMessages(); }, [fetchMessages]);
 
-  if (!isAuthenticated) return null;
+  const handleRead = async (id: string) => {
+    try {
+      const authUser = getAuth().currentUser;
+      if (!authUser) return;
+      const token = await authUser.getIdToken();
+      await inboxService.markAsRead(id, token);
+      setMessages((prev) =>
+        prev.map((m) => (m._id === id ? { ...m, isRead: true } : m))
+      );
+    } catch (err) {
+      console.error("Error marcando como leído:", err);
+    }
+  };
+
+  const unreadCount = messages.filter((m) => !m.isRead).length;
+  const filtered = messages.filter(
+    (m) =>
+      m.subject.toLowerCase().includes(search.toLowerCase()) ||
+      m.content.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="bg-[#1e1e1e] border border-[#333] rounded-xl p-6">
-      <h2 className="text-xl font-bold text-itec-text flex items-center gap-2 mb-6">
-        <Icons type="message" className="w-5 h-5" /> Mi Buzón de Avisos
-      </h2>
-      <div className="space-y-3">
-        {messages.length === 0 ? (
-          <p className="text-gray-500 text-sm">No tienes mensajes nuevos.</p>
-        ) : (
-          messages.map(msg => (
-            <div
-              key={msg._id}
-              onClick={async () => {
-                if (msg.isRead) return;
-                const token = await getAuth().currentUser?.getIdToken();
-                if (token) {
-                  await inboxService.markAsRead(msg._id, token);
-                  setMessages(prev => prev.map(m => m._id === msg._id ? { ...m, isRead: true } : m));
-                }
-              }}
-              className={`p-4 rounded-lg border transition-colors cursor-pointer ${msg.isRead ? 'bg-[#252525] border-[#333]' : 'bg-[#1e293b] border-itec-blue/50'}`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className={`font-semibold ${msg.isRead ? 'text-gray-300' : 'text-white'}`}>{msg.subject}</h3>
-                <span className="text-xs text-gray-500">{new Date(msg.createdAt).toLocaleDateString()}</span>
-              </div>
-              <p className="text-sm text-itec-text whitespace-pre-wrap">{msg.content}</p>
-            </div>
-          ))
-        )}
+    <div className="bg-itec-card border border-white/5 rounded-3xl overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-itec-blue-skye/12 border border-itec-blue-skye/20 flex items-center justify-center">
+            <Icons type="mail" className="size-4 text-itec-blue-skye" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-itec-text leading-none">Buzón</p>
+            {unreadCount > 0 && (
+              <p className="text-[10px] text-itec-blue-skye font-bold mt-0.5">
+                {unreadCount} sin leer
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {unreadCount > 0 && (
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-itec-blue-skye text-white text-[10px] font-black">
+              {unreadCount}
+            </span>
+          )}
+          <button
+            onClick={() => setIsExpanded((p) => !p)}
+            className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/4 hover:bg-white/8 text-itec-text/50 transition-colors"
+          >
+            <Icons
+              type={isExpanded ? "chevron-up" : "chevron-down"}
+              className="size-4"
+            />
+          </button>
+        </div>
       </div>
+
+      {isExpanded && (
+        <>
+          <div className="px-4 py-3 border-b border-white/5">
+            <div className="relative">
+              <Icons
+                type="search"
+                className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-itec-text/30"
+              />
+              <input
+                type="text"
+                placeholder="Buscar mensajes..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-itec-bg border border-white/8 rounded-xl pl-8 pr-3 py-2.5 text-xs text-itec-text placeholder:text-itec-text/30 focus:outline-none focus:border-white/20 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div className="p-3 space-y-2 max-h-[60vh] lg:max-h-[480px] overflow-y-auto">
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-16 bg-white/3 rounded-xl animate-pulse" />
+              ))
+            ) : filtered.length === 0 ? (
+              <EmptyState
+                emoji="📭"
+                title="Sin mensajes"
+                subtitle="Aquí aparecerán los avisos del equipo de ITEC."
+              />
+            ) : (
+              filtered.map((msg) => (
+                <InboxMessageCard key={msg._id} msg={msg} onRead={handleRead} />
+              ))
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

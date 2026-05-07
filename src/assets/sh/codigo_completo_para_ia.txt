@@ -18359,7 +18359,7 @@ export const AulasPage: React.FC = () => {
 
       {/* Buscador + filtro sede */}
       <div className="flex flex-col sm:flex-row gap-2 mb-4">
-        <div className="flex-1 flex items-center gap-2 bg-[#111820] border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
+        <div className="flex-1 flex items-center gap-2 bg-itec-card border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
           <div className="w-4 h-4 text-[#5a6475] shrink-0">
             <Icons type="map-pin" className="w-full h-full" />
           </div>
@@ -18374,7 +18374,7 @@ export const AulasPage: React.FC = () => {
         <select
           value={sede}
           onChange={(e) => setSede(e.target.value)}
-          className="bg-[#111820] border border-white/7 text-[#9aa3b0] text-sm px-4 py-3 rounded-xl outline-none focus:border-itec-blue-skye transition-colors"
+          className="bg-itec-card border border-white/7 text-[#9aa3b0] text-sm px-4 py-3 rounded-xl outline-none focus:border-itec-blue-skye transition-colors"
         >
           <option value="Todas">Todas las sedes</option>
           <option value="Medrano">Medrano</option>
@@ -18384,7 +18384,7 @@ export const AulasPage: React.FC = () => {
 
       {/* Aula seleccionada — detalle */}
       {selected && (
-        <div className="mb-5 bg-[#111820] border border-itec-red/30 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="mb-5 bg-itec-card border border-itec-red/30 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -18432,7 +18432,7 @@ export const AulasPage: React.FC = () => {
             <button
               key={a.numero}
               onClick={() => setSelected(a)}
-              className={`text-left w-full bg-[#111820] border rounded-xl p-3.5 flex items-center gap-3 transition-colors ${
+              className={`text-left w-full bg-itec-card border rounded-xl p-3.5 flex items-center gap-3 transition-colors ${
                 selected?.numero === a.numero ? "border-itec-red/40" : "border-white/7 hover:border-white/12"
               }`}
             >
@@ -18530,7 +18530,7 @@ export const BuscaTECPage: React.FC = () => {
 
       {/* Buscador principal */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-4">
-        <div className="flex-1 flex items-center gap-2 bg-[#111820] border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
+        <div className="flex-1 flex items-center gap-2 bg-itec-card border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
           <div className="w-4 h-4 text-[#5a6475] shrink-0">
             <Icons type="search" className="w-full h-full" />
           </div>
@@ -18587,7 +18587,7 @@ export const BuscaTECPage: React.FC = () => {
           {filtered.map((r, i) => (
             <div
               key={i}
-              className="bg-[#111820] border border-white/7 rounded-xl p-3.5 flex items-center gap-3 hover:border-white/12 transition-colors cursor-pointer"
+              className="bg-itec-card border border-white/7 rounded-xl p-3.5 flex items-center gap-3 hover:border-white/12 transition-colors cursor-pointer"
             >
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${TYPE_ICON_BG[r.type]}`}>
                 <div className="w-5 h-5"><Icons type={r.iconName} className="w-full h-full" /></div>
@@ -18706,7 +18706,7 @@ export const CalendarioPage: React.FC = () => {
                 const day = d.getDate();
                 const cfg = TYPE_CONFIG[ev.type];
                 return (
-                  <div key={i} className="flex items-center gap-3 bg-[#111820] border border-white/7 rounded-xl p-3 hover:border-white/12 transition-colors">
+                  <div key={i} className="flex items-center gap-3 bg-itec-card border border-white/7 rounded-xl p-3 hover:border-white/12 transition-colors">
                     <div className={`shrink-0 w-11 h-11 rounded-xl flex flex-col items-center justify-center border ${cfg.color}`}>
                       <span className="text-lg font-bold leading-none">{day}</span>
                       <span className="text-[8px] uppercase mt-0.5">{MONTHS[parseInt(month) - 1].slice(0, 3)}</span>
@@ -19703,7 +19703,7 @@ export const GuiaTECPage: React.FC = () => {
 
       {/* Player activo */}
       {playing && (
-        <div className="mb-6 bg-[#111820] border border-white/7 rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="mb-6 bg-itec-card border border-white/7 rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="aspect-video bg-black flex items-center justify-center relative">
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-itec-red/20 flex items-center justify-center mx-auto mb-3">
@@ -19786,7 +19786,7 @@ const VideoCard = ({
 }) => (
   <button
     onClick={onPlay}
-    className="text-left w-full bg-[#111820] border border-white/7 hover:border-white/12 rounded-xl p-3.5 flex items-center gap-3 transition-colors group"
+    className="text-left w-full bg-itec-card border border-white/7 hover:border-white/12 rounded-xl p-3.5 flex items-center gap-3 transition-colors group"
   >
     <div className="w-11 h-11 rounded-xl bg-itec-red/12 text-[#e01540] flex items-center justify-center shrink-0 group-hover:bg-itec-red/20 transition-colors">
       <div className="w-5 h-5"><Icons type="playFill" className="w-full h-full" /></div>
@@ -20027,7 +20027,7 @@ export const PluginsPage: React.FC = () => {
             </>
           );
 
-          const cls = "flex items-start gap-3 bg-[#111820] border border-white/7 rounded-xl p-4 hover:border-white/12 transition-colors";
+          const cls = "flex items-start gap-3 bg-itec-card border border-white/7 rounded-xl p-4 hover:border-white/12 transition-colors";
 
           return p.isExternal ? (
             <a key={p.title} href={p.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
@@ -20415,7 +20415,7 @@ export const TerminosPage: React.FC = () => {
       />
 
       <div className="max-w-3xl mx-auto">
-        <div className="bg-[#111820] border border-white/7 rounded-xl p-4 mb-6 flex items-start gap-3">
+        <div className="bg-itec-card border border-white/7 rounded-xl p-4 mb-6 flex items-start gap-3">
           <div className="text-lg shrink-0">📌</div>
           <p className="text-sm text-[#9aa3b0] leading-relaxed">
             ITEC.BA es un proyecto estudiantil independiente, sin fines de lucro, creado por y para estudiantes de la UTN FRBA. Última actualización: <strong className="text-itec-text">Mayo 2025</strong>.
@@ -20424,7 +20424,7 @@ export const TerminosPage: React.FC = () => {
 
         <div className="flex flex-col gap-2">
           {SECTIONS.map((s, i) => (
-            <div key={i} className="bg-[#111820] border border-white/7 rounded-xl overflow-hidden">
+            <div key={i} className="bg-itec-card border border-white/7 rounded-xl overflow-hidden">
               <button
                 onClick={() => setExpanded(expanded === i ? null : i)}
                 className="w-full flex items-center justify-between gap-3 p-4 text-left"

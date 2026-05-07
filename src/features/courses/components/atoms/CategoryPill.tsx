@@ -1,18 +1,14 @@
-import React from 'react';
+import React from "react";
 
-interface Props {
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
-}
+interface Props { label: string; isActive: boolean; onClick: () => void; }
 
 export const CategoryPill: React.FC<Props> = ({ label, isActive, onClick }) => (
   <button
     onClick={onClick}
-    className={`cursor-pointer px-6 py-2.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-300 active:scale-95 ${
-      isActive 
-        ? 'bg-gradient-to-r from-sky-500 to-blue-500 text-itec-textshadow-[0_0_20px_rgba(14,165,233,0.4)] border-none transform -translate-y-0.5' 
-        : 'bg-slate-900/50 text-slate-400 border border-white/5 hover:text-itec-texthover:border-sky-500/30 hover:bg-slate-800'
+    className={`shrink-0 px-5 py-2 rounded-full text-xs font-bold tracking-wide whitespace-nowrap transition-all duration-200 active:scale-95 ${
+      isActive
+        ? "bg-itec-blue-skye text-white border border-itec-blue-skye"
+        : "bg-transparent text-itec-gray border border-white/10 hover:border-white/25 hover:text-itec-text"
     }`}
   >
     {label}

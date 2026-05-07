@@ -1,249 +1,179 @@
-// src/features/admin/components/organisms/RewardsManagement.tsx
 import React, { useState, useEffect } from "react";
-import { Button } from "@components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { Icons } from "@/components/ui/icons/Icons";
-import { Reward, RewardType } from "@features/rewards/types/rewards";
+import { RewardTypeBadge } from "@features/rewards/components/atoms/RewardTypeBadge";
+import { PointsBadge } from "@features/rewards/components/atoms/PointsBadge";
+import { RewardStatusDot } from "@features/rewards/components/atoms/RewardStatusDot";
+import { RewardTierBadge } from "@features/rewards/components/atoms/RewardTierBadge";
+import { RewardFormModal } from "@features/rewards/components/organisms/RewardFormModal";
+import { DeleteRewardModal } from "@features/rewards/components/organisms/DeleteRewardModal";
 import { rewardsService } from "@features/rewards/services/rewardsService";
-import { adminRewardsService } from "../../services/adminRewardsService";
+import { useRewardAdmin } from "@features/rewards/hooks/useRewardAdmin";
+import type { Reward, RewardFormData } from "@features/rewards/types/rewards";
 import { getAuth } from "firebase/auth";
+
+const getToken = async () => {
+  const u = getAuth().currentUser;
+  if (!u) throw new Error("No autenticado");
+  return u.getIdToken();
+};
 
 export const RewardsManagement: React.FC = () => {
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const initialFormState = {
-    title: "",
-    description: "",
-    pointsCost: 100,
-    type: "mentorship" as RewardType,
-    icon: "star",
-  };
-  const [formData, setFormData] = useState(initialFormState);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [editingReward, setEditingReward] = useState<Reward | null>(null);
+  const [deletingReward, setDeletingReward] = useState<Reward | null>(null);
+  const [search, setSearch] = useState("");
 
   const fetchRewards = async () => {
     setIsLoading(true);
     try {
-      const auth = getAuth();
-      const token = await auth.currentUser?.getIdToken();
-      if (token) {
-        const data = await rewardsService.getAvailableRewards(token);
-        setRewards(data);
-      }
-    } catch (error) {
-      console.error("Error cargando beneficios:", error);
+      const token = await getToken();
+      const data = await rewardsService.getAllRewards(token);
+      setRewards(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error cargando rewards:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchRewards();
-  }, []);
+  useEffect(() => { fetchRewards(); }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const auth = getAuth();
-      const token = await auth.currentUser?.getIdToken();
-      if (token) {
-        await adminRewardsService.createReward(formData, token);
-        setIsModalOpen(false);
-        setFormData(initialFormState);
-        await fetchRewards(); // Refrescar vista
-      }
-    } catch (error) {
-      console.error("Error al guardar:", error);
-    } finally {
-      setIsSubmitting(false);
+  const adminHook = useRewardAdmin(fetchRewards);
+
+  const handleSubmit = async (data: RewardFormData): Promise<boolean> => {
+    if (editingReward) {
+      const id = (editingReward as any)._id || editingReward.id;
+      const ok = await adminHook.updateReward(id, data);
+      if (ok) setEditingReward(null);
+      return ok;
+    } else {
+      const ok = await adminHook.createReward(data);
+      if (ok) setIsAddOpen(false);
+      return ok;
     }
   };
 
+  const handleDelete = async () => {
+    if (!deletingReward) return;
+    const ok = await adminHook.deleteReward(deletingReward);
+    if (ok) setDeletingReward(null);
+  };
+
+  const filtered = rewards.filter(
+    (r) =>
+      r.title.toLowerCase().includes(search.toLowerCase()) ||
+      r.type.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center bg-itec-box border border-itec-gray/10 p-5 rounded-xl">
-        <div>
-          <h2 className="text-xl font-bold text-itec-text flex items-center gap-2">
-            <Icons type="star" className="w-5 h-5 text-itec-rewards" />
-            Gestión de Beneficios
-          </h2>
-          <p className="text-sm text-itec-text mt-1">
-            Administra los beneficios canjeables por puntos.
-          </p>
+    <div className="bg-itec-card border border-white/5 rounded-3xl overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-itec-rewards/12 border border-itec-rewards/20 flex items-center justify-center">
+            <Icons type="star" className="size-4 text-itec-rewards" />
+          </div>
+          <div>
+            <p className="text-sm font-black text-itec-text leading-none">Beneficios</p>
+            <p className="text-[10px] text-itec-text/40 mt-0.5">
+              {rewards.length} beneficios
+            </p>
+          </div>
         </div>
-        <Button
-          variant="admin"
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2"
-          icon="settings"
-          text="Agregar Beneficio"
-        />
+        <button
+          onClick={() => setIsAddOpen(true)}
+          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-itec-rewards/12 border border-itec-rewards/25 text-itec-rewards text-xs font-bold hover:bg-itec-rewards/20 transition-all active:scale-95"
+        >
+          <Icons type="plus" className="size-3.5" />
+          Agregar
+        </button>
       </div>
 
-      {isLoading ? (
-        <div className="animate-pulse h-40 bg-itec-box border border-itec-gray/10"></div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {rewards.map((reward: any) => {
-            const uniqueKey = reward._id || reward.id; // Clave única segura
+      <div className="px-4 py-3 border-b border-white/5">
+        <div className="relative">
+          <Icons
+            type="search"
+            className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-itec-text/30"
+          />
+          <input
+            type="text"
+            placeholder="Buscar beneficio..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-itec-bg border border-white/8 rounded-xl pl-8 pr-3 py-2.5 text-xs text-itec-text placeholder:text-itec-text/30 focus:outline-none focus:border-white/20 transition-colors"
+          />
+        </div>
+      </div>
+
+      <div className="divide-y divide-white/4">
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-16 px-5 py-3 animate-pulse">
+              <div className="h-full bg-white/4 rounded-xl" />
+            </div>
+          ))
+        ) : filtered.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="text-itec-text/30 text-sm">Sin resultados</p>
+          </div>
+        ) : (
+          filtered.map((r: any) => {
+            const id = r._id || r.id;
             return (
               <div
-                key={uniqueKey}
-                className=" bg-itec-box border border-itec-gray/10 rounded-xl p-5 flex flex-col hover:border-itec-blue/50 transition-colors"
+                key={id}
+                className="group flex items-center gap-3 px-5 py-3 hover:bg-white/2 transition-colors"
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-md bg-[#1a1a1a] flex items-center justify-center text-itec-rewards">
-                    <Icons type={reward.icon as any} className="w-4 h-4" />
+                <RewardStatusDot active={r.isActive !== false} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p className="text-sm font-bold text-itec-text truncate">{r.title}</p>
+                    {r.tier && <RewardTierBadge tier={r.tier} />}
                   </div>
-                  <h3 className="text-itec-textfont-semibold flex-1 truncate">
-                    {reward.title}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <RewardTypeBadge type={r.type} />
+                    <PointsBadge points={r.pointsCost} size="xs" showLabel />
+                  </div>
                 </div>
-                <p className="text-sm text-itec-text mb-4 line-clamp-2 flex-1">
-                  {reward.description}
-                </p>
-                <div className="flex justify-between items-center pt-3 border-t border-[#333]">
-                  <span className="text-xs px-2 py-1 bg-[#1a1a1a] rounded text-gray-300 capitalize">
-                    {reward.type.replace("_", " ")}
-                  </span>
-                  <span className="text-itec-blue font-bold">
-                    {reward.pointsCost} pts
-                  </span>
+                <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                  <button
+                    onClick={() => setEditingReward({ ...r, id })}
+                    className="h-8 px-3 flex items-center gap-1 rounded-lg bg-itec-blue-skye/10 border border-itec-blue-skye/20 text-itec-blue-skye text-xs font-bold hover:bg-itec-blue-skye/20 transition-colors"
+                  >
+                    <Icons type="edit" className="size-3" />
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => setDeletingReward({ ...r, id })}
+                    className="h-8 px-3 flex items-center gap-1 rounded-lg bg-red-500/8 border border-red-500/15 text-red-400 text-xs font-bold hover:bg-red-500/15 transition-colors"
+                  >
+                    <Icons type="trash" className="size-3" />
+                    Borrar
+                  </button>
                 </div>
               </div>
             );
-          })}
-        </div>
+          })
+        )}
+      </div>
+
+      {(isAddOpen || !!editingReward) && (
+        <RewardFormModal
+          editingReward={editingReward}
+          isLoading={adminHook.isSubmitting}
+          onClose={() => { setIsAddOpen(false); setEditingReward(null); }}
+          onSubmit={handleSubmit}
+        />
       )}
 
-      {/* MODAL MANTIENE SU ESTRUCTURA ORIGINAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-[#1e1e1e] border border-[#333] rounded-xl w-full max-w-lg p-6 shadow-2xl">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-white">
-                Agregar Beneficio
-              </h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-itec-text hover:text-white"
-              >
-                <Icons type="close" className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm text-itec-text mb-1">
-                  Título del beneficio
-                </label>
-                <Input
-                  type="text"
-                  required
-                  fullWidth
-                  value={formData.title}
-                  placeholder="Ej: Mentoría Web"
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-itec-text mb-1">
-                  Descripción
-                </label>
-                <textarea
-                  className="w-full bg-[#0a0a0a] border border-[#262626] text-itec-text px-4 py-2 rounded-lg focus:outline-none focus:border-itec-blue resize-none"
-                  rows={3}
-                  required
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm text-itec-text mb-1">
-                    Costo en Puntos
-                  </label>
-                  <Input
-                    type="number"
-                    required
-                    fullWidth
-                    min="1"
-                    value={formData.pointsCost.toString()}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pointsCost: Number(e.target.value),
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-itec-text mb-1">
-                    Tipo de Canje
-                  </label>
-                  <select
-                    className="w-full bg-[#0a0a0a] border border-[#262626] text-itec-text px-4 py-[10px] rounded-lg focus:outline-none focus:border-itec-blue appearance-none"
-                    value={formData.type}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        type: e.target.value as RewardType,
-                      })
-                    }
-                  >
-                    <option value="mentorship">Mentoría / Llamada</option>
-                    <option value="group_access">Acceso a Grupo</option>
-                    <option value="discount">Descuento</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm text-itec-text mb-1">
-                  Ícono (Nombre exacto en UI/Icons)
-                </label>
-                <Input
-                  type="text"
-                  required
-                  fullWidth
-                  value={formData.icon}
-                  placeholder="Ej: star, users, bookmark"
-                  onChange={(e) =>
-                    setFormData({ ...formData, icon: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setIsModalOpen(false)}
-                  fullWidth
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  fullWidth
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Guardando..." : "Crear Beneficio"}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {deletingReward && (
+        <DeleteRewardModal
+          reward={deletingReward}
+          isLoading={adminHook.isSubmitting}
+          onClose={() => setDeletingReward(null)}
+          onConfirm={handleDelete}
+        />
       )}
     </div>
   );

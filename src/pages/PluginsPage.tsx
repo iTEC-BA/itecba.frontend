@@ -129,7 +129,7 @@ export const PluginsPage: React.FC = () => {
             </>
           );
 
-          const cls = "flex items-start gap-3 bg-[#111820] border border-white/7 rounded-xl p-4 hover:border-white/12 transition-colors";
+          const cls = "flex items-start gap-3 bg-itec-card border border-white/7 rounded-xl p-4 hover:border-white/12 transition-colors";
 
           return p.isExternal ? (
             <a key={p.title} href={p.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>

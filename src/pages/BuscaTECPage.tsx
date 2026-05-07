@@ -68,7 +68,7 @@ export const BuscaTECPage: React.FC = () => {
 
       {/* Buscador principal */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-4">
-        <div className="flex-1 flex items-center gap-2 bg-[#111820] border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
+        <div className="flex-1 flex items-center gap-2 bg-itec-card border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
           <div className="w-4 h-4 text-[#5a6475] shrink-0">
             <Icons type="search" className="w-full h-full" />
           </div>
@@ -125,7 +125,7 @@ export const BuscaTECPage: React.FC = () => {
           {filtered.map((r, i) => (
             <div
               key={i}
-              className="bg-[#111820] border border-white/7 rounded-xl p-3.5 flex items-center gap-3 hover:border-white/12 transition-colors cursor-pointer"
+              className="bg-itec-card border border-white/7 rounded-xl p-3.5 flex items-center gap-3 hover:border-white/12 transition-colors cursor-pointer"
             >
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${TYPE_ICON_BG[r.type]}`}>
                 <div className="w-5 h-5"><Icons type={r.iconName} className="w-full h-full" /></div>

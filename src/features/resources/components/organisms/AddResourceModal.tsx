@@ -3,185 +3,196 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
+import { FilterField } from '../molecules/FilterField';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '@features/groups/types/groups';
 import { useAuth } from '@context/AuthContext';
-
-// Importamos la mutación
 import { useSubmitResource } from '../../hooks/useResources';
+import { TIPOS_ARCHIVO, FORMATOS_ARCHIVO } from '../../types/resource.types';
+import type { ResourceFormState } from '../../types/resource.types';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  isAdmin: boolean;
-}
+interface Props { isOpen: boolean; onClose: () => void; isAdmin: boolean }
 
-const TIPOS_ARCHIVO = [
-  { value: 'Apunte', label: 'Apunte de Clase' },
-  { value: 'Resumen', label: 'Resumen Teórico' },
-  { value: 'Parcial', label: 'Modelo de Parcial' },
-  { value: 'Final', label: 'Modelo de Final' },
-  { value: 'Guía', label: 'Guía de Ejercicios' },
-  { value: 'Carpeta', label: 'Carpeta Drive Completa' },
-];
+const EMPTY: ResourceFormState = { title: '', carrera: '', nivel: '', materia: '', tipo: 'Apunte', formato: 'PDF', link: '' };
+const INPUT_CLS = 'text-sm py-2.5 bg-itec-bg border-itec-gray/60 focus:border-orange-500/70 transition-colors placeholder:text-itec-gray/40';
 
-const FORMATOS_ARCHIVO = [
-  { value: 'PDF', label: 'Documento PDF' },
-  { value: 'Drive', label: 'Google Drive' },
-  { value: 'Notion', label: 'Notion / Web' },
-  { value: 'ZIP', label: 'Archivo Comprimido' },
-];
 export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { user, isAuthenticated, loginWithGoogle, addPoints } = useAuth();
-  
-  const submitMutation = useSubmitResource();
+  const mutation = useSubmitResource();
 
-  const [form, setForm] = useState({ title: '', carrera: '', nivel: '', materia: '', tipo: 'Apunte', formato: 'PDF', link: '' });
+  const [form, setForm] = useState<ResourceFormState>(EMPTY);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [successInfo, setSuccessInfo] = useState({ title: '', desc: '' });
-  
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [successInfo, setSuccessInfo] = useState<{ title: string; desc: string } | null>(null);
+  const [openDrop, setOpenDrop] = useState(false);
+  const dropRef = useRef<HTMLDivElement>(null);
 
-  const isPending = submitMutation.isPending;
-
-  const materiasDisponibles = (form.carrera && form.nivel && MATERIAS_POR_CARRERA[form.carrera] && MATERIAS_POR_CARRERA[form.carrera][form.nivel])
+  const materias = form.carrera && form.nivel && MATERIAS_POR_CARRERA[form.carrera]?.[form.nivel]
     ? MATERIAS_POR_CARRERA[form.carrera][form.nivel] : [];
+  const filteredMaterias = materias.filter(m => m.toLowerCase().includes(form.materia.toLowerCase()));
 
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => { if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowDropdown(false); };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    const h = (e: MouseEvent) => { if (!dropRef.current?.contains(e.target as Node)) setOpenDrop(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
+
+  const set = (k: keyof ResourceFormState, v: string) => setForm(f => ({ ...f, [k]: v }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isPending) return;
-
+    if (mutation.isPending) return;
     setError('');
     if (!form.title || !form.carrera || !form.nivel || !form.materia || !form.link) {
       setError('Completá todos los campos obligatorios.'); return;
     }
-
-    const isDirectPublish = isAuthenticated;
-    const newResourceData = {
-      title: form.title,
-      carrera: form.carrera,
-      nivel: form.nivel,
-      materia: form.materia,
-      tipo: form.tipo,
-      formato: form.formato,
-      link: form.link,
-      autor: 'Comunidad ITEC',
-      submittedBy: user?.email || 'invitado'
-    };
-
-    // 🟢 Ejecutamos la mutación en lugar de la función suelta
-    submitMutation.mutate(
-      { data: newResourceData, isDirectPublish },
+    mutation.mutate(
+      { data: { ...form, autor: 'Comunidad ITEC', submittedBy: user?.email ?? 'invitado' }, isDirectPublish: isAuthenticated },
       {
         onSuccess: async () => {
-          if (isDirectPublish) {
-            await addPoints(1); // Sumamos el punto si se publica directo
-            setSuccessInfo({ title: '¡Aporte Publicado!', desc: '¡Ganaste +1 Punto ITEC! Gracias por colaborar con la comunidad.' });
+          if (isAuthenticated) {
+            await addPoints(1);
+            setSuccessInfo({ title: '¡Aporte publicado!', desc: '¡Ganaste +1 Punto ITEC! Gracias por colaborar.' });
           } else {
-            setSuccessInfo({ title: '¡Solicitud Enviada!', desc: 'Tu aporte fue enviado a revisión. Un admin lo validará pronto.' });
+            setSuccessInfo({ title: '¡Solicitud enviada!', desc: 'Tu aporte fue enviado a revisión. Un admin lo validará pronto.' });
           }
-
-          setSuccess(true);
-          setTimeout(() => { 
-            setSuccess(false); 
-            setForm({ title: '', carrera: '', nivel: '', materia: '', tipo: 'Apunte', formato: 'PDF', link: '' }); 
-            onClose(); 
-          }, 3000);
+          setTimeout(() => { setSuccessInfo(null); setForm(EMPTY); onClose(); }, 3000);
         },
-        onError: () => {
-          setError('Error al enviar el archivo. Revisa tu conexión a la base de datos.');
-        }
-      }
+        onError: () => setError('Error al enviar. Revisá tu conexión.'),
+      },
     );
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-itec-box border border-itec-gray rounded-3xl w-full max-w-xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-200 my-8">
-        <button onClick={onClose} disabled={isPending} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-itec-bg border border-itec-gray text-gray-500 hover:text-itec-texttransition-colors">✖</button>
-        <h2 className="text-2xl font-bold text-itec-textmb-2">Aportar Archivo</h2>
-        <p className="text-sm text-itec-text mb-6">Sube material y gana <strong className="text-yellow-500">+1 Punto ITEC</strong>.</p>
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4">
+      <div className="w-full sm:max-w-lg bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-3xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[90vh]">
 
-        {success ? (
-          <div className="text-center py-10 animate-in fade-in zoom-in">
-            <span className="text-6xl block mb-4">⭐</span>
-            <h3 className="text-xl font-bold text-green-500 mb-2">{successInfo.title}</h3>
-            <p className="text-gray-300 text-sm">{successInfo.desc}</p>
+        {/* Header fijo */}
+        <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-itec-gray/20 shrink-0">
+          <div>
+            <h2 className="text-xl font-bold text-itec-text">Aportar Material</h2>
+            <p className="text-xs text-itec-gray mt-0.5">
+              Sube material y gana{' '}
+              <span className="text-yellow-400 font-semibold">+1 Punto ITEC</span>
+            </p>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {!isAuthenticated && (
-              <div className="bg-gradient-to-r from-orange-500/20 to-transparent border border-orange-500/30 rounded-xl p-4 mb-2 flex items-center justify-between gap-4 shadow-lg">
-                <div>
-                  <h4 className="text-[13px] font-bold text-itec-textmb-1">¿Querés ganar puntos?</h4>
-                  <p className="text-[11px] text-itec-text leading-tight">Iniciá sesión para acumular Puntos ITEC y publicar al instante.</p>
+          <button
+            onClick={onClose}
+            disabled={mutation.isPending}
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-itec-gray/40 text-itec-gray hover:text-itec-text hover:border-itec-gray transition-colors"
+          >
+            <div className="w-4 h-4"><Icons type="close" /></div>
+          </button>
+        </div>
+
+        {/* Cuerpo scrollable */}
+        <div className="overflow-y-auto flex-1 px-6 py-5">
+          {successInfo ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center animate-in fade-in zoom-in-95">
+              <span className="text-6xl mb-5">⭐</span>
+              <h3 className="text-xl font-bold text-orange-400 mb-2">{successInfo.title}</h3>
+              <p className="text-sm text-itec-gray max-w-xs leading-relaxed">{successInfo.desc}</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+
+              {/* Banner login */}
+              {!isAuthenticated && (
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-orange-500/10 border border-orange-500/20 p-4">
+                  <div>
+                    <p className="text-sm font-semibold text-itec-text">¿Querés ganar puntos?</p>
+                    <p className="text-xs text-itec-gray mt-0.5 leading-tight">
+                      Iniciá sesión para publicar al instante y acumular puntos.
+                    </p>
+                  </div>
+                  <button
+                    type="button" onClick={loginWithGoogle}
+                    className="shrink-0 flex items-center gap-2 bg-itec-text text-itec-bg text-xs font-bold py-2 px-3 rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    <div className="w-4 h-4"><Icons type="google" /></div>
+                    Ingresar
+                  </button>
                 </div>
-                <button type="button" onClick={loginWithGoogle} className="shrink-0 bg-white text-black text-[11px] font-bold py-2 px-3 rounded-lg flex items-center gap-2">
-                  <div className="w-4 h-4 text-blue-600"><Icons type="google" /></div> Ingresar
-                </button>
-              </div>
-            )}
-
-            <div>
-              <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1.5">Título del Aporte</label>
-              <Input fullWidth placeholder="Ej: Resumen Completo Unidad 1 a 5..." value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="bg-itec-bg border-itec-gray text-sm py-2.5" />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1.5">Carrera</label>
-                <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera} onChange={e => setForm({...form, carrera: e.target.value, nivel: e.target.value === 'ingreso' ? '0' : '', materia: ''})} className="text-sm bg-itec-bg py-2.5" />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1.5">Año</label>
-                <Select fullWidth disabled={!form.carrera} options={NIVEL_OPTIONS} value={form.nivel} onChange={e => setForm({...form, nivel: e.target.value, materia: ''})} className="text-sm bg-itec-bg py-2.5 disabled:opacity-50" />
-              </div>
-            </div>
-
-            <div ref={dropdownRef} className="relative">
-              <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1.5">Materia</label>
-              <Input fullWidth disabled={!form.carrera || !form.nivel} placeholder={!form.carrera ? "Seleccioná Carrera..." : "Buscar..."} value={form.materia} onChange={e => { setForm({...form, materia: e.target.value}); setShowDropdown(true); }} onFocus={() => setShowDropdown(true)} className="text-sm bg-itec-bg py-2.5 disabled:opacity-50" />
-              {showDropdown && materiasDisponibles.length > 0 && (
-                <ul className="absolute z-50 w-full mt-2 bg-itec-sidebar border border-itec-gray rounded-xl shadow-2xl max-h-40 overflow-y-auto custom-scrollbar">
-                  {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
-                    <li key={m} onClick={() => { setForm({...form, materia: m}); setShowDropdown(false); }} className="px-4 py-2 text-sm text-gray-300 hover:bg-itec-blue hover:text-itec-textcursor-pointer border-b border-itec-gray/50">{m}</li>
-                  ))}
-                </ul>
               )}
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1.5">Tipo</label>
-                <Select fullWidth options={TIPOS_ARCHIVO} value={form.tipo} onChange={e => setForm({...form, tipo: e.target.value})} className="text-sm bg-itec-bg py-2.5" />
+              {/* Título */}
+              <FilterField label="Título del aporte *">
+                <Input fullWidth placeholder="Ej: Resumen Unidades 1–5 Análisis I" value={form.title} onChange={e => set('title', e.target.value)} className={INPUT_CLS} />
+              </FilterField>
+
+              {/* Carrera + Año */}
+              <div className="grid grid-cols-2 gap-3">
+                <FilterField label="Carrera *">
+                  <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera}
+                    onChange={e => { set('carrera', e.target.value); setForm(f => ({ ...f, carrera: e.target.value, nivel: e.target.value === 'ingreso' ? '0' : '', materia: '' })); }}
+                    className={`${INPUT_CLS} cursor-pointer`} />
+                </FilterField>
+                <FilterField label="Año *">
+                  <Select fullWidth disabled={!form.carrera} options={NIVEL_OPTIONS} value={form.nivel}
+                    onChange={e => { setForm(f => ({ ...f, nivel: e.target.value, materia: '' })); }}
+                    className={`${INPUT_CLS} disabled:opacity-40 cursor-pointer`} />
+                </FilterField>
               </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1.5">Formato</label>
-                <Select fullWidth options={FORMATOS_ARCHIVO} value={form.formato} onChange={e => setForm({...form, formato: e.target.value})} className="text-sm bg-itec-bg py-2.5" />
+
+              {/* Materia con autocomplete */}
+              <FilterField label="Materia *">
+                <div ref={dropRef} className="relative">
+                  <Input fullWidth disabled={!form.carrera || !form.nivel}
+                    placeholder={!form.carrera ? 'Primero elegí carrera...' : 'Buscar materia...'}
+                    value={form.materia}
+                    onChange={e => { set('materia', e.target.value); setOpenDrop(true); }}
+                    onFocus={() => setOpenDrop(true)}
+                    className={`${INPUT_CLS} disabled:opacity-40`} />
+                  {openDrop && filteredMaterias.length > 0 && (
+                    <ul className="absolute z-50 top-full mt-1 w-full max-h-40 overflow-y-auto bg-itec-sidebar border border-itec-gray/40 rounded-xl shadow-2xl shadow-black/40">
+                      {filteredMaterias.map(m => (
+                        <li key={m} onMouseDown={() => { set('materia', m); setOpenDrop(false); }}
+                          className="px-3 py-2.5 text-sm text-itec-text hover:bg-orange-600/80 cursor-pointer border-b border-itec-gray/20 last:border-0 transition-colors truncate">
+                          {m}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </FilterField>
+
+              {/* Tipo + Formato */}
+              <div className="grid grid-cols-2 gap-3">
+                <FilterField label="Tipo">
+                  <Select fullWidth options={[...TIPOS_ARCHIVO]} value={form.tipo} onChange={e => set('tipo', e.target.value)} className={`${INPUT_CLS} cursor-pointer`} />
+                </FilterField>
+                <FilterField label="Formato">
+                  <Select fullWidth options={[...FORMATOS_ARCHIVO]} value={form.formato} onChange={e => set('formato', e.target.value)} className={`${INPUT_CLS} cursor-pointer`} />
+                </FilterField>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1.5">Link del Archivo (Drive, Mega, Notion)</label>
-              <Input fullWidth placeholder="https://..." value={form.link} onChange={e => setForm({...form, link: e.target.value})} className="bg-itec-bg border-itec-gray text-sm py-2.5" />
-            </div>
+              {/* Link */}
+              <FilterField label="Link del archivo *">
+                <Input fullWidth placeholder="https://drive.google.com/..." value={form.link} onChange={e => set('link', e.target.value)} className={INPUT_CLS} />
+              </FilterField>
 
-            {error && <p className="text-itec-red-skye text-xs font-bold bg-itec-red/10 p-2 rounded">{error}</p>}
+              {error && (
+                <p className="text-xs font-semibold text-itec-red-skye bg-itec-red/10 border border-itec-red/20 rounded-lg px-3 py-2">
+                  {error}
+                </p>
+              )}
+            </form>
+          )}
+        </div>
 
-            <div className="pt-4 flex justify-end gap-3">
-              <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="bg-itec-bg border-none text-itec-text">Cancelar</Button>
-              <Button type="submit" variant="primary" disabled={isPending} className="bg-orange-600 hover:bg-orange-500 border-none text-itec-textfont-bold">{isPending ? 'Subiendo...' : 'Publicar y Ganar Puntos'}</Button>
-            </div>
-          </form>
+        {/* Footer fijo */}
+        {!successInfo && (
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-itec-gray/20 shrink-0">
+            <Button onClick={onClose} disabled={mutation.isPending}
+              className="px-4 py-2 text-sm bg-transparent border border-itec-gray/40 text-itec-gray hover:text-itec-text hover:border-itec-gray transition-colors rounded-xl">
+              Cancelar
+            </Button>
+            <Button onClick={(e: React.MouseEvent) => handleSubmit(e as unknown as React.FormEvent)}
+              disabled={mutation.isPending}
+              className="px-5 py-2 text-sm bg-orange-600 hover:bg-orange-500 text-itec-text font-semibold rounded-xl transition-all disabled:opacity-50 shadow-lg shadow-orange-900/30">
+              {mutation.isPending ? 'Publicando...' : 'Publicar · +1 Punto'}
+            </Button>
+          </div>
         )}
       </div>
     </div>

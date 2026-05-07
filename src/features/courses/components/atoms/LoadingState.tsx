@@ -1,12 +1,11 @@
-import React from 'react';
+import React from "react";
 
-export const LoadingState: React.FC = () => (
-  <div className="flex flex-col items-center justify-center py-32 animate-in fade-in duration-700">
-    <div className="relative w-20 h-20 flex items-center justify-center mb-8">
-       <div className="absolute inset-0 border-4 border-slate-800/50 rounded-full"></div>
-       <div className="absolute inset-0 border-4 border-sky-500 rounded-full border-t-transparent animate-spin drop-shadow-[0_0_15px_rgba(14,165,233,0.5)]"></div>
+export const CourseLoadingState: React.FC = () => (
+  <div className="flex flex-col items-center justify-center py-24 gap-4 animate-in fade-in duration-500">
+    <div className="relative w-12 h-12">
+      <div className="absolute inset-0 border-2 border-itec-gray/30 rounded-full" />
+      <div className="absolute inset-0 border-2 border-t-itec-blue-skye rounded-full animate-spin" />
     </div>
-    <h3 className="text-itec-textfont-bold text-xl mb-2 tracking-wide">Desplegando Clases...</h3>
-    <p className="text-sky-500/70 text-sm font-medium">Sincronizando con el servidor</p>
+    <p className="text-itec-gray text-xs font-bold uppercase tracking-widest">Cargando cursos...</p>
   </div>
 );

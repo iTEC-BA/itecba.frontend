@@ -1,138 +1,92 @@
-import React, { useMemo } from 'react';
-import { Icons } from '@/components/ui/icons/Icons';
-import type { Video } from '../../services/coursesService';
+import React, { useMemo } from "react";
+import { Icons } from "@/components/ui/icons/Icons";
+import { ProgressBar } from "../atoms/ProgressBar";
+import type { Video } from "../../services/coursesService";
 
 interface Props {
   videos?: Video[];
   currentIndex: number;
-  onSelectVideo: (index: number) => void;
+  onSelectVideo: (i: number) => void;
   watchedVideos?: Set<string>;
 }
 
-export const CoursePlaylist: React.FC<Props> = ({ 
-  videos = [], 
-  currentIndex, 
-  onSelectVideo, 
-  watchedVideos = new Set() 
+export const CoursePlaylist: React.FC<Props> = ({
+  videos = [], currentIndex, onSelectVideo, watchedVideos = new Set(),
 }) => {
-  
-  // 🟢 Lógica Pura: Cálculo seguro del progreso usando youtubeId como llave maestra
-  const { total, watchedCount, progressPercent } = useMemo(() => {
-    const totalVideos = videos.length;
-    if (totalVideos === 0) return { total: 0, watchedCount: 0, progressPercent: 0 };
-
-    const watched = videos.filter(v => {
-      // Usamos youtubeId como ID principal de seguimiento, fallback a id
-      const vidId = v.youtubeId || v.id || (v as any)._id;
-      return vidId && watchedVideos.has(vidId);
-    }).length;
-
-    const percent = Math.round((watched / totalVideos) * 100);
-    return { total: totalVideos, watchedCount: watched, progressPercent: percent };
+  const { total, watchedCount, pct } = useMemo(() => {
+    const total = videos.length;
+    if (!total) return { total: 0, watchedCount: 0, pct: 0 };
+    const watchedCount = videos.filter((v) => watchedVideos.has(v.youtubeId || v.id || "")).length;
+    return { total, watchedCount, pct: Math.round((watchedCount / total) * 100) };
   }, [videos, watchedVideos]);
 
-  // UI: Estado Vacío
-  if (total === 0) {
-    return (
-      <div className="bg-itec-box/40 border border-white/5 rounded-3xl p-10 shadow-2xl flex flex-col items-center justify-center text-gray-500 min-h-[300px]">
-         <span className="text-4xl mb-4 opacity-50">📭</span>
-         <p className="text-xs uppercase tracking-widest font-bold">Sin lecciones publicadas</p>
-      </div>
-    );
-  }
+  if (!total) return (
+    <div className="flex flex-col items-center justify-center py-16 border border-dashed border-white/8 rounded-2xl text-itec-gray">
+      <span className="text-3xl mb-3 opacity-40">📭</span>
+      <p className="text-xs font-bold uppercase tracking-widest">Sin lecciones publicadas</p>
+    </div>
+  );
 
   return (
-    <div className="bg-itec-box/40 border border-white/5 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col h-[450px] md:h-auto md:max-h-[650px] animate-fade-in relative group">
-      
-      {/* Resplandor decorativo de fondo */}
-      <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-blue-500/10 rounded-full blur-[60px] pointer-events-none transition-opacity group-hover:bg-blue-500/20"></div>
-
-      {/* HEADER DE LA PLAYLIST */}
-      <div className="p-6 md:p-8 border-b border-white/5 bg-white/[0.01] shrink-0 relative z-10">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-itec-textfont-bold text-sm tracking-wide">Contenido del Curso</h3>
-          <span className="bg-white/5 border border-white/10 text-itec-text text-[10px] font-bold px-3 py-1 rounded-full tracking-widest uppercase">
-            {watchedCount} / {total} Completados
+    <div className="flex flex-col bg-itec-card rounded-2xl overflow-hidden h-full max-h-[70vh] md:max-h-[600px]">
+      {/* Header progreso */}
+      <div className="p-4 border-b border-white/8 shrink-0">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-black text-itec-text uppercase tracking-widest">Lecciones</span>
+          <span className={`text-xs font-bold ${pct === 100 ? "text-emerald-400" : "text-itec-blue-skye"}`}>
+            {watchedCount}/{total} · {pct}%
           </span>
         </div>
-        
-        {/* Barra de Progreso Premium */}
-        <div className="space-y-2.5">
-          <div className="flex justify-between items-end">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Tu Progreso</span>
-            <span className={`text-xl font-black tracking-tighter ${progressPercent === 100 ? 'text-green-400' : 'text-white'}`}>
-              {progressPercent}%
-            </span>
-          </div>
-          <div className="w-full h-2 bg-black/40 rounded-full overflow-hidden border border-white/5 shadow-inner">
-            <div 
-              className={`h-full rounded-full transition-all duration-700 ease-out ${
-                progressPercent === 100 
-                  ? 'bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.6)]' 
-                  : 'bg-gradient-to-r from-blue-500 to-sky-400 shadow-[0_0_15px_rgba(249,115,22,0.5)]'
-              }`}
-              style={{ width: `${progressPercent}%` }}
-            ></div>
-          </div>
-        </div>
+        <ProgressBar progress={pct} variant={pct === 100 ? "green" : "blue"} />
       </div>
 
-      {/* LISTA DE VIDEOS (Scrollable) */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-4 relative z-10">
-        <div className="flex flex-col gap-1.5">
-          {videos.map((video, index) => {
-            const isActive = index === currentIndex;
-            const videoId = video.youtubeId || video.id || (video as any)._id || '';
-            const isWatched = videoId ? watchedVideos.has(videoId) : false;
-
-            return (
-              <button
-                key={index}
-                onClick={() => onSelectVideo(index)}
-                className={`w-full text-left p-3.5 rounded-2xl flex items-center gap-4 transition-all duration-300 outline-none group/item ${
-                  isActive 
-                    ? 'bg-white/[0.08] border border-white/10 shadow-lg' 
-                    : 'bg-transparent border border-transparent hover:bg-white/[0.04]'
-                }`}
-              >
-                {/* Ícono de Estado */}
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
-                  isWatched 
-                    ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
-                    : isActive
-                      ? 'bg-sky-500 text-itec-textshadow-[0_0_15px_rgba(249,115,22,0.4)]'
-                      : 'bg-black/50 text-gray-500 border border-white/10 group-hover/item:text-gray-300 group-hover/item:border-white/20'
+      {/* Lista scrollable */}
+      <div className="flex-1 overflow-y-auto p-2">
+        {videos.map((video, i) => {
+          const vid = video.youtubeId || video.id || "";
+          const isActive = i === currentIndex;
+          const isWatched = vid ? watchedVideos.has(vid) : false;
+          return (
+            <button
+              key={i}
+              onClick={() => onSelectVideo(i)}
+              className={`w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5 transition-all duration-200 ${
+                isActive
+                  ? "bg-itec-blue/20 border border-itec-blue-skye/30"
+                  : "hover:bg-white/[0.04] border border-transparent"
+              }`}
+            >
+              {/* Icono estado */}
+              <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+                isWatched
+                  ? "bg-emerald-500/15 text-emerald-400"
+                  : isActive
+                  ? "bg-itec-blue-skye text-white"
+                  : "bg-white/5 text-itec-gray"
+              }`}>
+                <div className="w-3.5 h-3.5">
+                  {isWatched ? <Icons type="check" /> : <Icons type="play" />}
+                </div>
+              </div>
+              {/* Textos */}
+              <div className="flex-1 overflow-hidden">
+                <p className={`text-xs font-semibold line-clamp-2 leading-snug transition-colors ${
+                  isActive ? "text-itec-text" : isWatched ? "text-itec-gray" : "text-itec-text/80"
                 }`}>
-                  <div className="w-5 h-5">
-                    {isWatched ? <Icons type="check" /> : <Icons type="play" />}
-                  </div>
-                </div>
-
-                {/* Textos */}
-                <div className="flex-1 overflow-hidden pr-2">
-                  <h4 className={`text-xs font-bold line-clamp-2 leading-snug transition-colors ${
-                    isActive ? 'text-white' : isWatched ? 'text-itec-text' : 'text-gray-300 group-hover/item:text-white'
-                  }`}>
-                    <span className="text-gray-500 mr-1">{index + 1}.</span> 
-                    {video.title || 'Lección sin título'}
-                  </h4>
-                  {video.duration && (
-                    <p className={`text-[9px] uppercase tracking-widest mt-1.5 font-bold ${
-                      isActive ? 'text-sky-500' : 'text-gray-600'
-                    }`}>
-                      {video.duration}
-                    </p>
-                  )}
-                </div>
-
-                {/* Indicador visual lateral si está activo */}
-                {isActive && (
-                  <div className="w-1 h-8 bg-sky-700 rounded-full shadow-[0_0_10px_rgba(22,123,249,0.8)]"></div>
+                  <span className="text-itec-gray/50 mr-1">{i + 1}.</span>
+                  {video.title || "Lección sin título"}
+                </p>
+                {video.duration && (
+                  <p className={`text-[10px] mt-0.5 font-medium ${isActive ? "text-itec-blue-skye" : "text-itec-gray/50"}`}>
+                    {video.duration}
+                  </p>
                 )}
-              </button>
-            );
-          })}
-        </div>
+              </div>
+              {/* Indicador activo */}
+              {isActive && <div className="w-1 h-5 bg-itec-blue-skye rounded-full shrink-0" />}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

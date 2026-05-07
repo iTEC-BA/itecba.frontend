@@ -1,75 +1,54 @@
-import React from 'react';
-import { Icons } from '@/components/ui/icons/Icons';
+import React from "react";
+import { Icons } from "@/components/ui/icons/Icons";
 
-interface Resource {
-  id: string;
-  title: string;
-  materia: string;
-  driveUrl: string;
-}
-
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  resources: Resource[];
-}
+interface Resource { id: string; title: string; materia: string; driveUrl: string; }
+interface Props { isOpen: boolean; onClose: () => void; resources: Resource[]; }
 
 export const CourseResourcesModal: React.FC<Props> = ({ isOpen, onClose, resources }) => {
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-itec-box/90 backdrop-blur-2xl border border-white/10 rounded-[2rem] w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95">
-        
-        {/* Header Modal */}
-        <div className="p-6 md:p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02] shrink-0">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-500 flex items-center justify-center shadow-inner">
-              <span className="text-2xl drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]">📚</span>
-            </div>
+    <div className="fixed inset-0 z-[200] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="bg-itec-box border border-white/10 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md max-h-[80vh] flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between p-5 border-b border-white/8 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-itec-blue/20 border border-itec-blue-skye/25 text-itec-blue-skye flex items-center justify-center text-base">📚</div>
             <div>
-              <h2 className="text-xl font-bold text-itec-texttracking-tight">Archivos de la Clase</h2>
-              <p className="text-[10px] text-itec-text font-medium uppercase tracking-widest mt-0.5">Recursos Disponibles</p>
+              <h2 className="text-sm font-black text-itec-text">Archivos de la clase</h2>
+              <p className="text-[10px] text-itec-gray uppercase tracking-widest">{resources.length} recurso{resources.length !== 1 ? "s" : ""}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-itec-textbg-white/5 hover:bg-white/10 border border-transparent hover:border-white/10 rounded-full p-2 transition-all outline-none">
-            <div className="w-5 h-5"><Icons type="close" /></div>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 text-itec-gray hover:text-itec-text transition-all">
+            <Icons type="close" className="w-4 h-4" />
           </button>
         </div>
-        
-        {/* Lista de Recursos Scrollable */}
-        <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-1">
-          {resources.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-gray-500 opacity-60">
-               <span className="text-5xl mb-4">📭</span>
-               <p className="text-xs font-bold uppercase tracking-widest">Sin archivos vinculados</p>
-               <p className="text-sm font-medium mt-2 text-center max-w-[250px]">El profesor aún no ha subido material complementario para este curso.</p>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {resources.map((res) => (
-                <a key={res.id} href={res.driveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-4 bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 rounded-2xl transition-all group outline-none shadow-sm">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/10 to-orange-500/10 text-red-400 flex items-center justify-center shrink-0 border border-red-500/20 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">📄</span>
+        <div className="flex-1 overflow-y-auto p-4">
+          {resources.length ? (
+            <div className="space-y-2">
+              {resources.map((r) => (
+                <a key={r.id} href={r.driveUrl} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-3 p-3 bg-white/[0.03] hover:bg-white/[0.07] border border-white/8 hover:border-itec-blue-skye/30 rounded-xl transition-all group">
+                  <div className="w-9 h-9 rounded-lg bg-itec-red/10 border border-itec-red/20 text-itec-red flex items-center justify-center shrink-0 text-base">📄</div>
+                  <div className="flex-1 overflow-hidden">
+                    <p className="text-sm font-bold text-itec-text truncate group-hover:text-itec-blue-skye transition-colors">{r.title}</p>
+                    <p className="text-[10px] text-itec-gray truncate mt-0.5">{r.materia}</p>
                   </div>
-                  <div className="overflow-hidden flex-1">
-                    <h4 className="text-sm font-bold text-itec-texttruncate group-hover:text-red-400 transition-colors">{res.title}</h4>
-                    <p className="text-[10px] text-gray-500 truncate mt-1">{res.materia}</p>
-                  </div>
-                  <div className="text-gray-600 group-hover:text-itec-texttransition-colors w-5 h-5 shrink-0 bg-white/5 p-1 rounded-full group-hover:bg-white/10">
+                  <div className="w-4 h-4 text-itec-gray group-hover:text-itec-blue-skye transition-colors shrink-0">
                     <Icons type="external-link" />
                   </div>
                 </a>
               ))}
             </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-14 text-itec-gray">
+              <span className="text-3xl mb-3 opacity-40">📭</span>
+              <p className="text-xs font-bold uppercase tracking-widest">Sin archivos vinculados</p>
+            </div>
           )}
         </div>
-        
-        {/* Botón Acción Inferior */}
-        <div className="p-6 md:px-8 border-t border-white/5 bg-black/20 shrink-0">
-           <button onClick={onClose} className="w-full bg-white hover:bg-gray-200 text-black font-black py-4 rounded-xl transition-transform hover:scale-[0.98] text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.15)] outline-none">
-             Entendido, Volver al curso
-           </button>
+        <div className="p-4 border-t border-white/8 shrink-0">
+          <button onClick={onClose} className="w-full py-3 rounded-xl bg-itec-blue-skye text-white text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all active:scale-[0.98]">
+            Volver al curso
+          </button>
         </div>
       </div>
     </div>

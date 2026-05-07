@@ -1,33 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from '@lib/firebase';
+import type { ResourceData } from '../types/resource.types';
 
-export interface ResourceData {
-  id: string;
-  title: string;
-  carrera: string;
-  nivel: string;
-  materia: string;
-  tipo: string;
-  formato: string;
-  link: string;
-  autor: string;
-  createdAt?: any;
-  submittedBy?: string;
-}
+export type { ResourceData };
 
-// Asegúrate de que este sea tu puerto real
 const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/resources`;
 
-const getToken = async () => {
+const getToken = async (): Promise<string> => {
   const token = await auth.currentUser?.getIdToken();
-  if (!token) throw new Error("Debes iniciar sesión");
+  if (!token) throw new Error('Debes iniciar sesión');
   return token;
 };
 
 export const resourcesService = {
-  
   getApprovedResources: async (): Promise<ResourceData[]> => {
-    // 🔴 CORRECCIÓN 1: Quitamos /approved
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error('Error al traer recursos');
     const data = await res.json();
@@ -37,25 +23,24 @@ export const resourcesService = {
   getPendingResources: async (): Promise<ResourceData[]> => {
     const token = await getToken();
     const res = await fetch(`${API_URL}/pending`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error('Error al traer pendientes');
     const data = await res.json();
     return data.map((d: any) => ({ ...d, id: d._id }));
   },
 
-  submitNewResource: async (resourceData: Omit<ResourceData, 'id'>, _isDirectPublish: boolean): Promise<string> => {
+  submitNewResource: async (
+    resourceData: Omit<ResourceData, 'id'>,
+    _isDirectPublish: boolean,
+  ): Promise<string> => {
     const token = await getToken();
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(resourceData)
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(resourceData),
     });
     const data = await res.json();
-    // 🔴 BLINDAJE EXTRA: Verificamos si hubo error
     if (!res.ok) throw new Error(data.message || 'Error al enviar aporte');
     return data._id;
   },
@@ -63,8 +48,8 @@ export const resourcesService = {
   approvePendingResource: async (resource: ResourceData): Promise<string> => {
     const token = await getToken();
     const res = await fetch(`${API_URL}/${resource.id}/approve`, {
-      method: 'PUT', // 🔴 CORRECCIÓN 2: Cambiamos PATCH por PUT
-      headers: { 'Authorization': `Bearer ${token}` }
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'Error al aprobar');
@@ -75,8 +60,8 @@ export const resourcesService = {
     const token = await getToken();
     const res = await fetch(`${API_URL}/${resourceId}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error('Error al eliminar');
-  }
+  },
 };

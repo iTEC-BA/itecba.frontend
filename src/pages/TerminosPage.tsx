@@ -75,7 +75,7 @@ export const TerminosPage: React.FC = () => {
       />
 
       <div className="max-w-3xl mx-auto">
-        <div className="bg-[#111820] border border-white/7 rounded-xl p-4 mb-6 flex items-start gap-3">
+        <div className="bg-itec-card border border-white/7 rounded-xl p-4 mb-6 flex items-start gap-3">
           <div className="text-lg shrink-0">📌</div>
           <p className="text-sm text-[#9aa3b0] leading-relaxed">
             ITEC.BA es un proyecto estudiantil independiente, sin fines de lucro, creado por y para estudiantes de la UTN FRBA. Última actualización: <strong className="text-itec-text">Mayo 2025</strong>.
@@ -84,7 +84,7 @@ export const TerminosPage: React.FC = () => {
 
         <div className="flex flex-col gap-2">
           {SECTIONS.map((s, i) => (
-            <div key={i} className="bg-[#111820] border border-white/7 rounded-xl overflow-hidden">
+            <div key={i} className="bg-itec-card border border-white/7 rounded-xl overflow-hidden">
               <button
                 onClick={() => setExpanded(expanded === i ? null : i)}
                 className="w-full flex items-center justify-between gap-3 p-4 text-left"
