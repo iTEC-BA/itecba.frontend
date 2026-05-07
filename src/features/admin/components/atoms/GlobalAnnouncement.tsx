@@ -98,9 +98,11 @@ export const GlobalAnnouncement: React.FC = () => {
   // 🛡️ PROTECCIÓN DE FECHA
   let dateObj = new Date();
   try {
-    dateObj = currentAnnouncement.createdAt?.toDate 
-      ? currentAnnouncement.createdAt.toDate() 
-      : new Date(currentAnnouncement.createdAt || Date.now());
+    if (typeof currentAnnouncement.createdAt === 'object' && currentAnnouncement.createdAt?.toDate) {
+      dateObj = currentAnnouncement.createdAt.toDate();
+    } else if (typeof currentAnnouncement.createdAt === 'string' || typeof currentAnnouncement.createdAt === 'number') {
+      dateObj = new Date(currentAnnouncement.createdAt);
+    }
   } catch(e) { console.error("Error leyendo fecha", e); }
 
   return (

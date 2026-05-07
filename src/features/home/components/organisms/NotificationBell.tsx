@@ -98,7 +98,12 @@ export const NotificationBell: React.FC = () => {
                   if (!news) return null;
                   let dateObj = new Date();
                   try {
-                    dateObj = news.createdAt?.toDate ? news.createdAt.toDate() : new Date(news.createdAt || Date.now());
+                    const createdAt = news.createdAt as any;
+                    if (createdAt && typeof createdAt.toDate === 'function') {
+                      dateObj = createdAt.toDate();
+                    } else {
+                      dateObj = new Date(createdAt ?? Date.now());
+                    }
                   } catch (e) {
                     console.error('❌ Error obteniendo fecha de notificación', e);
                   }
