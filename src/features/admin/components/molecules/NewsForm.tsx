@@ -98,13 +98,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
           </div>
 
           {/* Botón Submit */}
-          <Button 
-            type="submit" 
-            disabled={createMutation.isPending} 
-            className="w-full py-4 rounded-xl font-black tracking-wide bg-orange-500 hover:bg-orange-600 text-itec-textborder-none mt-4 shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_25px_rgba(249,115,22,0.4)] transition-all outline-none"
-          >
-            {createMutation.isPending ? 'PUBLICANDO AVISO...' : 'PUBLICAR EN LA PLATAFORMA'}
-          </Button>
+          <Button type="submit" variant="orange" hierarchy="solid" fullWidth isLoading={createMutation.isPending}>PUBLICAR EN LA PLATAFORMA</Button>
         </form>
       </div>
     </div>

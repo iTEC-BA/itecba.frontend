@@ -1,6 +1,5 @@
 import React, { useState, FormEvent } from 'react';
 import { Button } from '../ui/Button';
-import { Icons } from '../ui/icons/Icons';
 
 interface Props {
   onSendMessage: (text?: string) => void;
@@ -30,13 +29,7 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled }) => {
             className="w-full bg-itec-bg border border-itec-gray text-itec-textpl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-itec-blue text-sm transition-all shadow-inner disabled:opacity-50"
           />
         </div>
-        <Button 
-          type="submit" 
-          disabled={!input.trim() || disabled} 
-          className="rounded-xl px-5 py-3.5 bg-itec-blue border-none text-itec-textdisabled:opacity-50 hover:bg-itec-blue-skye shadow-lg transition-transform active:scale-95 flex items-center justify-center"
-        >
-          <div className="w-5 h-5"><Icons type="send" /></div>
-        </Button>
+        <Button type="submit" variant="primary" hierarchy="solid" disabled={!input.trim() || disabled} icon="send" />
       </form>
     </div>
   );

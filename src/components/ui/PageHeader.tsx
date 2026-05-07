@@ -2,68 +2,85 @@
 import React from 'react';
 import { Icons } from './icons/Icons';
 
+// Expandimos la paleta para incluir todas las "páginas" o secciones futuras
+export type HeaderColorTheme = 
+  | 'purple' | 'orange' | 'blue' | 'green' | 'yellow' 
+  | 'teal' | 'red' | 'pink' | 'indigo' | 'cyan' | 'emerald' | 'slate';
+
 interface Props {
   title: string;
   description: string;
   iconType?: string;
   imageUrl?: string;
-  colorTheme: 'purple' | 'orange' | 'blue' | 'green' | 'yellow' | 'teal' | 'red';
+  colorTheme: HeaderColorTheme;
   children?: React.ReactNode;
 }
 
-export const PageHeader: React.FC<Props> = ({ title, description, iconType, imageUrl, colorTheme, children }) => {
+export const PageHeader: React.FC<Props> = ({ 
+  title, description, iconType, imageUrl, colorTheme, children 
+}) => {
   
-  const getThemeClasses = () => {
-    switch (colorTheme) {
-      case 'purple': return 'bg-purple-500/10 text-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.3)] border-purple-500/20';
-      case 'orange': return 'bg-orange-500/10 text-orange-400 shadow-[0_0_30px_rgba(249,115,22,0.3)] border-orange-500/20';
-      case 'blue': return 'bg-blue-500/10 text-blue-400 shadow-[0_0_30px_rgba(59,130,246,0.3)] border-blue-500/20';
-      case 'green': return 'bg-itec-groups text-itec-text-reverse shadow-[0_0_30px_rgba(34,197,94,0.3)] border-green-500/20';
-      case 'yellow': return 'bg-yellow-500/10 text-yellow-400 shadow-[0_0_30px_rgba(234,179,8,0.3)] border-yellow-500/20';
-      case 'teal': return 'bg-teal-500/10 text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.3)] border-teal-500/20';
-      case 'red': return 'bg-red-500/10 text-red-400 shadow-[0_0_30px_rgba(239,68,68,0.3)] border-red-500/20';
-      default: return 'bg-gray-500/10 text-itec-text shadow-[0_0_30px_rgba(156,163,175,0.3)] border-gray-500/20';
-    }
+  // Diccionario centralizado: Más limpio que un switch gigante y fácil de mantener.
+  // Colores sutiles: fondos translúcidos (/10), bordes suaves (/20) y sombras elegantes (15px)
+  const themeStyles: Record<HeaderColorTheme, { box: string; glow: string }> = {
+    purple:  { box: 'bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.15)]', glow: 'rgba(168,85,247,0.4)' },
+    orange:  { box: 'bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.15)]', glow: 'rgba(249,115,22,0.4)' },
+    blue:    { box: 'bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.15)]',   glow: 'rgba(59,130,246,0.4)' },
+    green:   { box: 'bg-green-500/10 text-green-400 border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.15)]',  glow: 'rgba(34,197,94,0.4)' },
+    yellow:  { box: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.15)]',  glow: 'rgba(234,179,8,0.4)' },
+    teal:    { box: 'bg-teal-500/10 text-teal-400 border-teal-500/20 shadow-[0_0_15px_rgba(20,184,166,0.15)]',   glow: 'rgba(20,184,166,0.4)' },
+    red:     { box: 'bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.15)]',     glow: 'rgba(239,68,68,0.4)' },
+    pink:    { box: 'bg-pink-500/10 text-pink-400 border-pink-500/20 shadow-[0_0_15px_rgba(236,72,153,0.15)]',    glow: 'rgba(236,72,153,0.4)' },
+    indigo:  { box: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)]',  glow: 'rgba(99,102,241,0.4)' },
+    cyan:    { box: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.15)]',     glow: 'rgba(6,182,212,0.4)' },
+    emerald: { box: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]', glow: 'rgba(16,185,129,0.4)' },
+    slate:   { box: 'bg-slate-500/10 text-slate-400 border-slate-500/20 shadow-[0_0_15px_rgba(100,116,139,0.15)]',   glow: 'rgba(100,116,139,0.4)' },
   };
 
-  const getGlowColor = () => {
-    switch (colorTheme) {
-      case 'red': return 'rgba(239,68,68,0.5)';
-      // (Puedes agregar los demás colores si en el futuro usas logos de otro color)
-      default: return 'rgba(255,255,255,0.2)';
-    }
-  };
+  const currentStyle = themeStyles[colorTheme] || themeStyles.slate;
 
   return (
-    <div className="mb-8 animate-in fade-in zoom-in-95 shrink-0 flex flex-col items-center xl:items-start xl:flex-row">
-      {/* 🔴 LÓGICA MEJORADA: Si es imagen, la mostramos gigante y sin caja. Si es icono, usamos la caja bonita. */}
-      {imageUrl ? (
-        <img 
-          src={imageUrl} 
-          alt="Logo" 
-          className="h-28 md:h-36 mb-6 mx-auto object-contain " 
-          style={{ filter: `drop-shadow(0px 0px 30px ${getGlowColor()})` }}
-        />
-      ) : (
-        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center my-auto mr-6 border transition-all ${getThemeClasses()}`}>
-          <div className="w-8 h-8">
-            {/* // eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <Icons type={iconType as any} />
+    <header className="mb-6 md:mb-8 animate-in fade-in slide-in-from-top-2 duration-500">
+      {/* sm:flex-row permite que en tablets/PC el header y los botones se pongan uno a cada lado */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 md:gap-6">
+        
+        {/* Lado izquierdo: Icono y Textos (Alineados en fila para ahorrar muchísimo espacio en mobile) */}
+        <div className="flex items-start gap-3 md:gap-4">
+          
+          {imageUrl ? (
+            <img 
+              src={imageUrl} 
+              alt={title} 
+              // Tamaños reducidos y lógicos para un encabezado
+              className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0 mt-1" 
+              style={{ filter: `drop-shadow(0px 4px 12px ${currentStyle.glow})` }}
+            />
+          ) : (
+            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center border shrink-0 mt-1 transition-all ${currentStyle.box}`}>
+              <div className="w-6 h-6 md:w-7 md:h-7">
+                <Icons type={iconType as any} />
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col pt-0.5">
+            <h1 className="text-2xl md:text-3xl font-bold text-itec-text tracking-tight mb-1">
+              {title}
+            </h1>
+            <p className="text-xs md:text-sm text-itec-gray max-w-xl leading-relaxed">
+              {description}
+            </p>
           </div>
         </div>
-      )}
-      <div className='flex flex-col items-center mx-auto xl:items-start xl:mx-2'>
-        <h1 className="text-3xl md:text-4xl font-bold text-itec-textmb-2 tracking-tight">{title}</h1>
-        <p className="text-itec-text text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-          {description}
-        </p>
-      </div>
-        
+
+        {/* Lado derecho: Acciones (Botones o selectores). Si existen, los acomoda de forma natural */}
         {children && (
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-6 ml-0 xl:ml-auto">
+          <div className="flex items-center justify-center md:flex-col md:items-end gap-3 sm:mt-1 shrink-0 ">
             {children}
           </div>
         )}
-    </div>
+
+      </div>
+    </header>
   );
 };

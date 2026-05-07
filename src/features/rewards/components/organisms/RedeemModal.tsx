@@ -89,7 +89,7 @@ export const RedeemModal: React.FC<Props> = ({
             <div className="flex gap-3 pt-1">
               <Button
                 type="button"
-                variant="secondary"
+                variant="slate" hierarchy="ghost"
                 onClick={onClose}
                 fullWidth
                 className="h-11 rounded-2xl text-sm font-bold"
@@ -127,29 +127,14 @@ export const RedeemModal: React.FC<Props> = ({
             <div className="flex gap-3 pt-1">
               <Button
                 type="button"
-                variant="secondary"
+                variant="slate" hierarchy="ghost"
                 onClick={onClose}
                 fullWidth
                 className="h-11 rounded-2xl text-sm font-bold"
               >
                 Cancelar
               </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                fullWidth
-                disabled={isLoading}
-                className="h-11 rounded-2xl text-sm font-bold shadow-[0_0_24px_rgba(0,74,173,0.3)]"
-              >
-                {isLoading ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Procesando...
-                  </span>
-                ) : (
-                  "Confirmar canje"
-                )}
-              </Button>
+              <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isLoading}>Confirmar canje</Button>
             </div>
           </form>
         )}

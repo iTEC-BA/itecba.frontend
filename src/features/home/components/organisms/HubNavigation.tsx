@@ -16,7 +16,7 @@ const NAV_ITEMS = [
     title: 'BiblioTEC',
     description: 'Resúmenes, parciales y finales',
     href: '/recursos',
-    icon: 'library',
+    icon: 'folder',
     accentClass: 'hover:border-orange-500/40',
     iconBgClass: 'bg-orange-500/10',
     iconTextClass: 'text-orange-400',

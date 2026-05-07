@@ -51,7 +51,7 @@ export const GradeModal: React.FC<Props> = ({ subject, targetStatus, onClose, on
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-6">
-            <Button variant="secondary" onClick={onClose} type="button">Cancelar</Button>
+            <Button variant="slate" hierarchy="ghost" onClick={onClose} type="button">Cancelar</Button>
             <Button variant="primary" type="submit">Guardar</Button>
           </div>
         </form>

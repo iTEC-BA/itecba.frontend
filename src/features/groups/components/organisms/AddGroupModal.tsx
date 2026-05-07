@@ -1,206 +1,163 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { Input } from '@components/ui/Input';
+import { Select } from '@components/ui/Select';
 import { Button } from '@components/ui/Button';
-import { Icons } from '@/components/ui/icons/Icons';
+import { Icons } from '@components/ui/icons/Icons';
 import { useAuth } from '@context/AuthContext';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '../../types/groups';
 import { groupsService, type GroupData } from '../../services/groupsService';
 import { useSubmitGroup } from '../../hooks/useGroups';
 import { useAddGroupForm } from '../../hooks/useAddGroupForm';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  isAdmin: boolean;
-  userEmail: string;
-  existingGroups: GroupData[];
-}
+interface Props { isOpen: boolean; onClose: () => void; isAdmin: boolean; userEmail: string; existingGroups: GroupData[]; }
 
 export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, existingGroups }) => {
   const { user, isAuthenticated, loginWithGoogle } = useAuth();
-  const submitGroupMutation = useSubmitGroup();
-  
-  // 🟢 Hook Atómico para la lógica
-  const { form, setForm, materiasDisponibles, handleCarreraChange, handleNivelChange } = useAddGroupForm();
-
+  const submitMutation = useSubmitGroup();
+  const { form, setForm, materiasDisponibles, loadingMaterias, handleCarreraChange, handleNivelChange } = useAddGroupForm();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [successInfo, setSuccessInfo] = useState({ title: '', desc: '' });
-  
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const isPending = submitGroupMutation.isPending;
-
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowDropdown(false);
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const h = (e: MouseEvent) => { if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowDropdown(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isPending) return;
+    if (submitMutation.isPending) return;
     setError('');
-    
     if (!form.carrera || !form.nivel || !form.materia || !form.comision || !form.link) {
       setError('Completá todos los campos para continuar.'); return;
     }
-    if (!materiasDisponibles.includes(form.materia)) {
-      setError('Seleccioná una materia válida de la lista desplegable.'); return;
-    }
-
+    if (!form.link.startsWith('http')) { setError('El link debe comenzar con https://'); return; }
     try {
-      const isDupApproved = existingGroups.some(g => 
-        (g.materia === form.materia && g.comision.toLowerCase() === form.comision.toLowerCase()) || g.link === form.link
-      );
-
-      if (isDupApproved) {
-        setError(`Este link o la comisión ${form.comision.toUpperCase()} ya están registrados.`); return;
-      }
-
+      const isDupApproved = existingGroups.some(g => (g.materia === form.materia && g.comision.toLowerCase() === form.comision.toLowerCase()) || g.link === form.link);
+      if (isDupApproved) { setError(`Este link o la comisión ${form.comision.toUpperCase()} ya están registrados.`); return; }
       const isDupPending = await groupsService.checkIsDuplicatePending(form.materia, form.comision, form.link);
-      if (isDupPending) {
-        setError('Este grupo ya fue sugerido y está en revisión.'); return;
-      }
-
-      const isDirectPublish = isAuthenticated;
-      const newGroupData = {
-        carrera: form.carrera, nivel: form.nivel, materia: form.materia, 
-        comision: form.comision.toUpperCase(), link: form.link, 
-        tipo: isAdmin ? form.tipo : 'Alumnos', submittedBy: user?.email || 'invitado'
-      };
-
-      submitGroupMutation.mutate(
-        { data: newGroupData, isDirectPublish },
+      if (isDupPending) { setError('Este grupo ya fue sugerido y está en revisión.'); return; }
+      submitMutation.mutate(
+        { data: { carrera: form.carrera, nivel: form.nivel, materia: form.materia, comision: form.comision.toUpperCase(), link: form.link, tipo: isAdmin ? form.tipo : 'Alumnos', submittedBy: user?.email || 'invitado' }, isDirectPublish: isAuthenticated },
         {
           onSuccess: () => {
-            setSuccessInfo({ 
-              title: isDirectPublish ? '¡Grupo Publicado!' : '¡Solicitud Enviada!', 
-              desc: isDirectPublish ? 'Tu grupo ya está visible para todos.' : 'Un administrador lo revisará pronto.' 
-            });
+            setSuccessInfo({ title: isAuthenticated ? '¡Grupo Publicado!' : '¡Solicitud Enviada!', desc: isAuthenticated ? 'Tu grupo ya está visible para todos.' : 'Un administrador lo revisará pronto.' });
             setSuccess(true);
-            setTimeout(() => { setSuccess(false); onClose(); }, 3000);
+            setTimeout(() => { setSuccess(false); onClose(); }, 2500);
           },
-          onError: () => setError('Error de conexión al enviar el grupo.')
+          onError: () => setError('Error de conexión al enviar el grupo.'),
         }
       );
-    } catch {
-      setError('Ocurrió un error al procesar la solicitud.');
-    }
+    } catch { setError('Ocurrió un error al procesar la solicitud.'); }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg shadow-2xl p-8 relative">
-        
-        <button onClick={onClose} disabled={isPending} className="cursor-pointer absolute top-4 right-4 text-itec-text hover:text-itec-texttransition-colors disabled:opacity-50">
-          <Icons type="close" className="w-5 h-5" />
-        </button>
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="bg-itec-box border border-white/[0.08] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
 
-        <h2 className="text-2xl font-bold text-itec-textmb-1">Aportar Grupo</h2>
-        <p className="text-sm text-itec-text mb-6">Completá los datos para sumar a la comunidad.</p>
-
-        {success ? (
-          <div className="text-center py-10 animate-in fade-in duration-300">
-            <span className="text-5xl block mb-4">✅</span>
-            <h3 className="text-xl font-bold text-itec-textmb-2">{successInfo.title}</h3>
-            <p className="text-itec-text text-sm">{successInfo.desc}</p>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
+          <div>
+            <h2 className="text-base font-bold text-itec-text">Aportar Grupo de WhatsApp</h2>
+            <p className="text-[11px] text-itec-gray mt-0.5">Completá los datos para sumarlo a la comunidad.</p>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-5">
-            
-            {!isAuthenticated && (
-              <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-sm font-bold text-itec-textmb-1">Iniciá sesión para publicar directo</h4>
-                  <p className="text-xs text-itec-text">Sumá puntos para tu TarjeTEC publicando sin revisión.</p>
+          <button onClick={onClose} disabled={submitMutation.isPending} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-itec-gray hover:text-itec-text transition-colors">
+            <Icons type="close" className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-5">
+          {success ? (
+            <div className="text-center py-12 animate-in fade-in duration-300 flex flex-col items-center gap-3">
+              <div className="w-14 h-14 bg-itec-groups/15 border border-itec-groups/30 rounded-full flex items-center justify-center text-2xl">✅</div>
+              <h3 className="text-lg font-bold text-itec-text">{successInfo.title}</h3>
+              <p className="text-itec-gray text-sm">{successInfo.desc}</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!isAuthenticated && (
+                <div className="bg-itec-blue-skye/10 border border-itec-blue-skye/25 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-bold text-itec-text">Iniciá sesión para publicar directo</p>
+                    <p className="text-xs text-itec-gray mt-0.5">Sin revisión y sumás puntos a tu TarjeTEC.</p>
+                  </div>
+                  <button type="button" onClick={loginWithGoogle} className="shrink-0 flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg transition-colors shadow-sm">
+                    <Icons type="google" className="w-4 h-4" /> Acceder
+                  </button>
                 </div>
-                <button type="button" onClick={loginWithGoogle} className="cursor-pointer shrink-0 bg-white hover:bg-gray-200 text-black text-xs font-bold py-2.5 px-4 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
-                  <div className="w-4 h-4 text-blue-600"><Icons type="google" /></div> Acceder
-                </button>
-              </div>
-            )}
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">1. Especialidad</label>
-                <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera} onChange={e => handleCarreraChange(e.target.value)} className="cursor-pointer text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500" />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">2. Nivel</label>
-                <Select 
-                  fullWidth disabled={!form.carrera} 
-                  options={form.carrera === 'homogeneas' ? NIVEL_OPTIONS.slice(0, 3) : NIVEL_OPTIONS} // 🟢 Restricción UI de Homogéneas
-                  value={form.nivel} onChange={e => handleNivelChange(e.target.value)} 
-                  className="cursor-pointer text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500 disabled:opacity-40" 
-                />
-              </div>
-            </div>
-
-            <div ref={dropdownRef} className="relative">
-              <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">3. Materia Oficial</label>
-              <Input 
-                fullWidth disabled={!form.carrera || !form.nivel} 
-                placeholder={!form.carrera || !form.nivel ? "Seleccioná especialidad y nivel..." : "Escribí para buscar..."} 
-                value={form.materia} onChange={e => { setForm({...form, materia: e.target.value}); setShowDropdown(true); }} 
-                onFocus={() => setShowDropdown(true)} 
-                className="cursor-text text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500 disabled:opacity-40" 
-              />
-              
-              {/* 🟢 DROPDOWN MEJORADO: Texto envolvente y buen contraste */}
-              {showDropdown && materiasDisponibles.length > 0 && (
-                <ul className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar">
-                  {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
-                    <li 
-                      key={m} onClick={() => { setForm({...form, materia: m}); setShowDropdown(false); }} 
-                      className="cursor-pointer px-4 py-3 text-sm text-gray-300 hover:bg-green-600 hover:text-itec-textborder-b border-gray-700 last:border-0 whitespace-normal break-words leading-tight transition-colors"
-                    >
-                      {m}
-                    </li>
-                  ))}
-                </ul>
               )}
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">4. Comisión</label>
-                <Input fullWidth placeholder="Ej: K1043" value={form.comision} onChange={e => setForm({...form, comision: e.target.value.toUpperCase()})} className="cursor-text text-sm py-2.5 uppercase bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500" />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">1. Especialidad</label>
+                  <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera} onChange={e => handleCarreraChange(e.target.value)} className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">2. Nivel</label>
+                  <Select fullWidth disabled={!form.carrera} options={NIVEL_OPTIONS} value={form.nivel} onChange={e => handleNivelChange(e.target.value)} className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all disabled:opacity-40" />
+                </div>
               </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">5. Link de WhatsApp</label>
-                <Input fullWidth placeholder="https://chat.whatsapp.com/..." value={form.link} onChange={e => setForm({...form, link: e.target.value})} className="cursor-text text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500" />
-              </div>
-            </div>
 
-            {isAdmin && (
-              <div className="p-4 bg-gray-800 border border-gray-700 rounded-xl mt-2">
-                <label className="block text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">Privilegio Admin: Tipo de Grupo</label>
-                <Select fullWidth options={[{value: 'Alumnos', label: 'Grupo de Alumnos'}, {value: 'Oficial', label: 'Grupo Oficial (ITEC)'}]} value={form.tipo} onChange={e => setForm({...form, tipo: e.target.value as 'Alumnos' | 'Oficial'})} className="cursor-pointer text-sm py-2 bg-gray-900 border-gray-600 text-gray-100 focus:border-blue-500" />
+              <div ref={dropdownRef} className="relative">
+                <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">3. Materia</label>
+                <Input
+                  fullWidth disabled={!form.carrera || !form.nivel}
+                  placeholder={!form.carrera || !form.nivel ? 'Seleccioná especialidad y nivel...' : loadingMaterias ? 'Cargando...' : 'Escribí para buscar...'}
+                  value={form.materia}
+                  onChange={e => { setForm({ ...form, materia: e.target.value }); setShowDropdown(true); }}
+                  onFocus={() => setShowDropdown(true)}
+                  className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all disabled:opacity-40"
+                />
+                {showDropdown && materiasDisponibles.length > 0 && (
+                  <ul className="absolute z-50 w-full mt-1 bg-itec-box border border-white/10 rounded-xl shadow-2xl max-h-52 overflow-y-auto">
+                    {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
+                      <li key={m} onClick={() => { setForm({ ...form, materia: m }); setShowDropdown(false); }}
+                        className="cursor-pointer px-4 py-2.5 text-sm text-itec-gray hover:bg-itec-groups/10 hover:text-itec-text border-b border-white/5 last:border-0 whitespace-normal leading-tight transition-colors">
+                        {m}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-            )}
 
-            {error && (
-              <div className="bg-red-900/20 border border-red-500/30 p-3 rounded-lg flex items-center gap-3">
-                <Icons type="info" className="w-4 h-4 text-red-400 shrink-0" />
-                <p className="text-red-300 text-xs font-medium leading-tight">{error}</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">4. Comisión</label>
+                  <Input fullWidth placeholder="Ej: K1043" value={form.comision} onChange={e => setForm({ ...form, comision: e.target.value.toUpperCase() })} className="text-sm py-2.5 uppercase bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">5. Link de WhatsApp</label>
+                  <Input fullWidth placeholder="https://chat.whatsapp.com/..." value={form.link} onChange={e => setForm({ ...form, link: e.target.value })} className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all" />
+                </div>
               </div>
-            )}
 
-            <div className="pt-4 flex justify-end gap-3">
-              <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="cursor-pointer bg-gray-800 border-gray-700 hover:bg-gray-700 text-gray-300">Cancelar</Button>
-              <Button type="submit" variant="primary" disabled={isPending} className="cursor-pointer bg-green-600 hover:bg-green-500 border-none text-itec-textshadow-md min-w-32 active:scale-95">
-                {isPending ? 'Procesando...' : 'Aportar Grupo'}
-              </Button>
-            </div>
-          </form>
-        )}
+              {isAdmin && (
+                <div className="bg-itec-blue-skye/5 border border-itec-blue-skye/15 rounded-xl p-3.5">
+                  <label className="block text-[10px] font-bold text-itec-blue-skye uppercase tracking-wider mb-1.5">Admin — Tipo de grupo</label>
+                  <Select fullWidth options={[{ value: 'Alumnos', label: 'Grupo de Alumnos' }, { value: 'Oficial', label: 'Grupo Oficial (ITEC)' }]} value={form.tipo} onChange={e => setForm({ ...form, tipo: e.target.value as 'Alumnos' | 'Oficial' })} className="text-sm py-2 bg-itec-bg border-white/8 focus:border-itec-blue-skye" />
+                </div>
+              )}
+
+              {error && (
+                <div className="bg-itec-red/10 border border-itec-red/25 p-3 rounded-xl flex items-start gap-2.5">
+                  <Icons type="info" className="w-4 h-4 text-itec-red shrink-0 mt-0.5" />
+                  <p className="text-itec-red text-xs leading-relaxed">{error}</p>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} disabled={submitMutation.isPending} className="text-xs">Cancelar</Button>
+                <Button type="submit" variant="primary" disabled={submitMutation.isPending} className="text-xs bg-itec-groups hover:bg-emerald-500 border-none shadow-md min-w-28 active:scale-95">
+                  {submitMutation.isPending ? 'Procesando...' : 'Aportar Grupo'}
+                </Button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );

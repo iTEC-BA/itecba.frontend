@@ -43,7 +43,7 @@ export const adminService = {
   getActiveAnnouncements: async (): Promise<AnnouncementData[]> => {
     try {
       const url = `${API_URL}/active`;
-      console.log("📍 Fetching announcements from:", url);
+      // console.log("📍 Fetching announcements from:", url);
       
       const res = await fetch(url, {
         method: 'GET',

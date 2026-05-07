@@ -7,11 +7,12 @@ const UserManagement = lazy(() => import("@features/admin/components/organisms/U
 const NewsManagement = lazy(() => import("@features/admin/components/organisms/NewsManagement").then(m => ({ default: m.NewsManagement })));
 const RewardsManagement = lazy(() => import("@features/admin/components/organisms/RewardsManagement").then(m => ({ default: m.RewardsManagement })));
 const AdminRedemptions = lazy(() => import("@features/admin/components/organisms/AdminRedemptions").then(m => ({ default: m.AdminRedemptions }))); // <-- NUEVO
+const AdminMaterias = lazy(() => import("@features/admin/components/organisms/AdminMaterias").then(m => ({ default: m.AdminMaterias })));
 
 export const AdminPanel: React.FC = () => {
   const { isAdmin } = useAuth();
   // Agregamos 'redemptions' a los tabs
-  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards' | 'redemptions'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards' | 'redemptions' | 'materias'>('users');
 
   if (!isAdmin) {
     return (
@@ -80,6 +81,12 @@ export const AdminPanel: React.FC = () => {
             >
               Historial de Canjes
             </button>
+            <button 
+              onClick={() => setActiveTab('materias')} 
+              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${activeTab === 'materias' ? 'bg-white/10 text-white shadow-md' : 'text-itec-text/60 hover:text-white hover:bg-white/5'}`}
+            >
+              Académico
+            </button>
           </div>
         </header>
 
@@ -88,6 +95,7 @@ export const AdminPanel: React.FC = () => {
           {activeTab === 'news' && <NewsManagement />}
           {activeTab === 'rewards' && <RewardsManagement />}
           {activeTab === 'redemptions' && <AdminRedemptions />}
+          {activeTab === 'materias' && <AdminMaterias />}
         </div>
 
       </div>

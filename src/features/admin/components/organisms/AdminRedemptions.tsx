@@ -63,7 +63,7 @@ const MessageModal: React.FC<{
             />
           </div>
           <div className="flex gap-3 pt-1">
-            <Button type="button" variant="secondary" onClick={onClose} fullWidth className="h-10 rounded-xl text-sm font-bold">Cancelar</Button>
+            <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} fullWidth className="h-10 rounded-xl text-sm font-bold">Cancelar</Button>
             <Button type="submit" variant="primary" fullWidth disabled={sending} className="h-10 rounded-xl text-sm font-bold">
               {sending ? "Enviando..." : "Enviar aviso"}
             </Button>
@@ -156,7 +156,7 @@ export const AdminRedemptions: React.FC = () => {
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <Button
-                          variant="secondary"
+                          variant="slate" hierarchy="ghost"
                           onClick={() => setContact({ uid: red.userId, email: red.userEmail })}
                           className="text-xs h-7 px-3 rounded-lg"
                           text="Contactar"

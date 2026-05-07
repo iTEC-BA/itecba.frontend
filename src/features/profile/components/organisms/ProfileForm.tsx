@@ -91,9 +91,7 @@ export const ProfileForm: React.FC = () => {
             {error && <p className="text-red-400 text-xs font-bold text-center mt-2 bg-red-400/10 py-2 rounded-lg border border-red-400/20">{error}</p>}
             
             <div className="pt-4 flex flex-col gap-3">
-              <Button type="submit" disabled={isSaving} className="w-full py-3.5 font-bold text-sm bg-sky-600 hover:bg-sky-500 text-itec-textrounded-xl transition-all shadow-lg shadow-sky-500/25 disabled:opacity-50 cursor-pointer">
-                {isSaving ? 'Generando...' : 'Generar Credencial'}
-              </Button>
+              <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isSaving}>Generar Credencial</Button>
               <button type="button" onClick={logout} className="text-xs text-slate-500 hover:text-slate-300 transition-colors font-medium cursor-pointer">
                 Cancelar y salir
               </button>

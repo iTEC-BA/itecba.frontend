@@ -103,7 +103,7 @@ export const CourseEditDetail: React.FC = () => {
 
         {/* Acciones */}
         <div className="flex flex-col sm:flex-row gap-3 mt-5">
-          <Button variant="secondary" onClick={() => navigate(`/cursos/${id}`)} className="flex-1">Cancelar</Button>
+          <Button variant="slate" hierarchy="ghost" onClick={() => navigate(`/cursos/${id}`)} className="flex-1">Cancelar</Button>
           <Button variant="primary" onClick={handleSave} disabled={updateMutation.isPending} className="flex-1 bg-itec-blue-skye border-none hover:opacity-90">
             {updateMutation.isPending ? "Guardando..." : "Guardar cambios"}
           </Button>

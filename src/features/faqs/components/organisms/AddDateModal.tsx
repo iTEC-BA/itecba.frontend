@@ -58,8 +58,8 @@ export const AddDateModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
           </div>
           
           <div className="pt-4 border-t border-itec-gray flex justify-end gap-3">
-            <Button type="button" variant="secondary" onClick={onClose}>Cancelar</Button>
-            <Button type="submit" variant="primary" className="bg-orange-600 hover:bg-orange-500 border-none">Guardar Fecha</Button>
+            <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose}>Cancelar</Button>
+            <Button type="submit" variant="orange" hierarchy="solid">Guardar Fecha</Button>
           </div>
         </form>
       </div>

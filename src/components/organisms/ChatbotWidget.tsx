@@ -134,11 +134,7 @@ export const ChatbotWidget: React.FC = () => {
                 placeholder="Escribe tu duda..."
                 className="flex-1 bg-itec-box border border-itec-gray text-itec-textpx-3 py-2.5 rounded-xl focus:outline-none focus:border-itec-blue disabled:opacity-50 text-sm transition-colors"
               />
-              <Button type="submit" disabled={isLoading || !input.trim()} className="px-4 rounded-xl flex items-center justify-center">
-                 <div className="w-[18px] h-[18px]">
-                    <Icons type="send" />
-                 </div>
-              </Button>
+              <Button type="submit" variant="primary" hierarchy="solid" isLoading={isLoading} disabled={!input.trim()} icon="send" />
             </form>
           </div>
         </div>

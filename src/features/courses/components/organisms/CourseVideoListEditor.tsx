@@ -56,9 +56,7 @@ export const CourseVideoListEditor: React.FC<Props> = ({
       {mode === "youtube" && (
         <div className="flex flex-col sm:flex-row gap-2">
           <Input fullWidth placeholder="Link de la playlist de YouTube..." value={playlistUrl} onChange={(e: any) => setPlaylistUrl(e.target.value)} className="bg-white/[0.04] border-red-500/30 text-sm py-2.5 rounded-xl" />
-          <Button type="button" onClick={onFetchPlaylist} disabled={isFetching || !playlistUrl} className="bg-red-600 hover:bg-red-700 border-none text-white px-5 shrink-0 sm:w-auto w-full">
-            {isFetching ? "Extrayendo..." : "Importar"}
-          </Button>
+          <Button type="button" variant="danger" hierarchy="solid" onClick={onFetchPlaylist} isLoading={isFetching} disabled={!playlistUrl}>Importar</Button>
         </div>
       )}
 

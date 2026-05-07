@@ -79,13 +79,7 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
               onChange={e => setTargetDate(e.target.value)}
               className="w-full bg-itec-box border border-itec-gray text-itec-textpx-4 py-2 rounded-xl focus:outline-none focus:border-purple-500 text-sm"
             />
-            <Button 
-              type="submit" 
-              disabled={isSubmitting || !eventName || !targetDate} 
-              className="w-full bg-purple-600 hover:bg-purple-500 border-none text-itec-texttext-sm py-2"
-            >
-              {isSubmitting ? 'Guardando...' : 'Agregar Evento'}
-            </Button>
+            <Button type="submit" variant="purple" hierarchy="solid" fullWidth isLoading={isSubmitting} disabled={!eventName || !targetDate}>Agregar Evento</Button>
           </div>
         </form>
 

@@ -26,7 +26,7 @@ export const useSidebarLinks = () => {
         links: [
           { path: "/cursos", label: "Cursos", iconName: "book", badge: "Nuevo" },
           { path: "/guiatec", label: "GuíaTEC", iconName: "video", tag: { text: "Free", color: "green" as const } },
-          { path: "/recursos", label: "BiblioTEC", iconName: "library" },
+          { path: "/recursos", label: "BiblioTEC", iconName: "folder" },
         ],
       },
       {

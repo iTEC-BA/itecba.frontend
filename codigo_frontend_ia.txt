@@ -152,7 +152,7 @@ define(['./workbox-b9d3b234'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.4ojocr2fgho"
+    "revision": "0.eo8k9tejen"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -5461,76 +5461,6 @@ Estos archivos aseguran que el historyAPI de React Router funcione correctamente
 ```
 
 
-==================================================
-ARCHIVO: ./reporte_mejora_resources.txt
-==================================================
-================================================================
-  REPORTE: mejorar_resources.sh
-  2026-05-07 02:02:12
-================================================================
-
-BACKUP ──────────────────────────────────────────────────────────
-  __backup_resources_20260507_020211/
-
-ARCHIVOS CREADOS / SOBREESCRITOS ────────────────────────────────
-  types/
-    src/features/resources/types/resource.types.ts
-  services/
-    src/features/resources/services/resourcesService.ts
-  hooks/
-    src/features/resources/hooks/useResources.ts
-  atoms/
-    src/features/resources/components/atoms/ResourceFormatBadge.tsx
-    src/features/resources/components/atoms/ResourceTypePill.tsx
-    src/features/resources/components/atoms/ResourceCardSkeleton.tsx
-    src/features/resources/components/atoms/EmptyResources.tsx
-  molecules/
-    src/features/resources/components/molecules/ResourceCard.tsx
-    src/features/resources/components/molecules/ResourceRow.tsx
-    src/features/resources/components/molecules/PendingResourceRow.tsx
-    src/features/resources/components/molecules/FilterField.tsx
-  organisms/
-    src/features/resources/components/organisms/ResourceFilters.tsx
-    src/features/resources/components/organisms/ResourcesTable.tsx
-    src/features/resources/components/organisms/AddResourceModal.tsx
-    src/features/resources/components/organisms/AdminPendingResourcesModal.tsx
-  pages/
-    src/pages/ResourcesPage.tsx
-
-MEJORAS DE DISEÑO ───────────────────────────────────────────────
-  • Paleta 100% itec-* (bg-itec-box, bg-itec-bg, bg-itec-sidebar,
-    text-itec-text, text-itec-gray, border-itec-gray, itec-red-skye,
-    itec-red, itec-blue, itec-blue-skye)
-  • Acento naranja (orange-500/600) consistente en toda la feature
-  • Skeleton loader animado en lugar de spinner plano
-  • Cards en móvil + tabla en desktop (lg:) — responsive extremo
-  • Modales: bottom-sheet en móvil, centrado en sm+ (items-end → sm:items-center)
-  • Backdrop blur en overlays
-  • Hover states con shadow de color (shadow-orange-900/30)
-  • Transiciones suaves (transition-all, transition-colors)
-  • animate-in fade-in en las listas
-  • Conteo de resultados visible en el panel de filtros
-  • Estado vacío mejorado con CTA clara
-  • Panel de moderación con estados de carga y vacío mejorados
-
-RESPONSIVE ──────────────────────────────────────────────────────
-  • ResourcesTable: cards (< lg), tabla (lg+)
-  • AdminPendingResourcesModal: columnas ocultas en < sm y < md
-  • ResourceFilters: 1 col (móvil) → 2 col (sm) → 5 col (lg)
-  • AddResourceModal: bottom-sheet en móvil, max-h: 92dvh
-  • ResourcesPage: usa usePageTitle + layout existente sin cambios
-
-COMPONENTIZACIÓN ────────────────────────────────────────────────
-  atoms    — sin lógica propia, solo presentación pura
-  molecules — combinan atoms, props simples
-  organisms — tienen lógica (hooks, callbacks) y componen la pantalla
-  hooks    — toda la lógica de negocio (React Query)
-  services — capa de datos pura, sin estado React
-  types    — tipos + constantes compartidas
-
-  Ningún componente supera las ~90 líneas.
-
-================================================================
 
 
 
@@ -5908,7 +5838,6 @@ export const BottomNavbar = () => {
 };
 
 
-
 ==================================================
 ARCHIVO: ./src/components/molecules/ChatInput.tsx
 ==================================================
@@ -5955,6 +5884,7 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled }) => {
     </div>
   );
 };
+
 
 
 ==================================================
@@ -6089,7 +6019,6 @@ export const InstallPWABanner: React.FC = () => {
     </div>
   );
 };
-
 
 
 ==================================================
@@ -6357,7 +6286,6 @@ export const TopNavbar = () => {
 ==================================================
 ARCHIVO: ./src/components/molecules/UpdatePWAToast.tsx
 ==================================================
-// src/components/molecules/UpdatePWAToast.tsx
 // Notificación de nueva versión disponible
 import React from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
@@ -6851,44 +6779,130 @@ export const BackgroundBlur: React.FC = () => {
 ==================================================
 ARCHIVO: ./src/components/ui/Button.tsx
 ==================================================
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { Icons } from '../ui/icons/Icons';
+import { Icons } from './icons/Icons';
+
+export type ButtonVariant = 
+  | 'primary' | 'secondary' | 'danger' | 'success' | 'warning' 
+  | 'purple' | 'orange' | 'teal' | 'slate';
+
+export type ButtonHierarchy = 'solid' | 'outline' | 'ghost';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'admin' | 'inicio' | 'servicios' | 'nosotros' | 'proyectos' | 'contacto';
+  /** El color temático del botón */
+  variant?: ButtonVariant;
+  /** El peso visual del botón */
+  hierarchy?: ButtonHierarchy;
+  /** Si debe ocupar el 100% del contenedor */
   fullWidth?: boolean;
+  /** Icono a la izquierda del texto */
   icon?: string;
+  /** Icono a la derecha del texto */
+  iconRight?: string;
+  /** Estado de carga (muestra un spinner y deshabilita el botón) */
+  isLoading?: boolean;
+  /** Texto del botón (opcional, también se puede usar children) */
   text?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({ 
   children, 
   variant = 'primary', 
+  hierarchy = 'solid',
   fullWidth = false,
   icon,
+  iconRight,
+  isLoading = false,
   text,
   className = '',
+  disabled,
   ...props 
 }) => {
-  const baseStyles = "px-4 py-2 rounded-lg transition-colors duration-200 cursor-pointer";
-  const widthStyles = fullWidth ? "w-full" : "";
-  
-  const variants = {
-    primary: "bg-itec-blue text-itec-text hover:bg-blue-800",
-    secondary: "bg-itec-gray text-itec-text hover:bg-gray-600",
-    admin: "text-itec-gray hover:bg-itec-red hover:text-itec-text",
-    inicio: "bg-blue-600 text-white hover:bg-blue-700",
-    servicios: "bg-emerald-600 text-white hover:bg-emerald-700",
-    nosotros: "bg-violet-600 text-white hover:bg-violet-700",
-    proyectos: "bg-amber-500 text-itec-text hover:bg-amber-600",
-    contacto: "bg-rose-600 text-white hover:bg-rose-700"
+  // 1. Clases Base (Estructura, tipografía, accesibilidad y animaciones)
+  const baseStyles = "inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-itec-bg active:scale-[0.98]";
+  const widthStyles = fullWidth ? "w-full" : "w-fit";
+  const disabledStyles = disabled || isLoading ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer";
+
+  // 2. Diccionario de Temas (Combinación de Color + Jerarquía Visual)
+  const getThemeStyles = () => {
+    const themes: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
+      primary: {
+        solid:   "bg-itec-blue-skye text-white hover:bg-itec-blue shadow-lg shadow-itec-blue/20",
+        outline: "border-2 border-itec-blue-skye text-itec-blue-skye hover:bg-itec-blue-skye/10",
+        ghost:   "text-itec-blue-skye hover:bg-itec-blue-skye/10"
+      },
+      secondary: {
+        solid:   "bg-white/10 text-white hover:bg-white/20 border border-white/5",
+        outline: "border-2 border-itec-gray text-itec-gray hover:text-white hover:bg-white/5 hover:border-white/20",
+        ghost:   "text-itec-gray hover:text-white hover:bg-white/10"
+      },
+      success: {
+        solid:   "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20",
+        outline: "border-2 border-emerald-600 text-emerald-500 hover:bg-emerald-600/10",
+        ghost:   "text-emerald-500 hover:bg-emerald-600/10"
+      },
+      danger: {
+        solid:   "bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-900/20",
+        outline: "border-2 border-rose-600 text-rose-500 hover:bg-rose-600/10",
+        ghost:   "text-rose-500 hover:bg-rose-600/10"
+      },
+      warning: {
+        solid:   "bg-amber-500 text-black hover:bg-amber-400 shadow-lg shadow-amber-900/20",
+        outline: "border-2 border-amber-500 text-amber-500 hover:bg-amber-500/10",
+        ghost:   "text-amber-500 hover:bg-amber-500/10"
+      },
+      purple: {
+        solid:   "bg-purple-600 text-white hover:bg-purple-500 shadow-lg shadow-purple-900/20",
+        outline: "border-2 border-purple-600 text-purple-500 hover:bg-purple-600/10",
+        ghost:   "text-purple-500 hover:bg-purple-600/10"
+      },
+      orange: {
+        solid:   "bg-orange-600 text-white hover:bg-orange-500 shadow-lg shadow-orange-900/20",
+        outline: "border-2 border-orange-600 text-orange-500 hover:bg-orange-600/10",
+        ghost:   "text-orange-500 hover:bg-orange-600/10"
+      },
+      teal: {
+        solid:   "bg-teal-600 text-white hover:bg-teal-500 shadow-lg shadow-teal-900/20",
+        outline: "border-2 border-teal-600 text-teal-500 hover:bg-teal-600/10",
+        ghost:   "text-teal-500 hover:bg-teal-600/10"
+      },
+      slate: {
+        solid:   "bg-slate-700 text-white hover:bg-slate-600 shadow-lg shadow-slate-900/20",
+        outline: "border-2 border-slate-600 text-slate-400 hover:text-white hover:bg-slate-600/10",
+        ghost:   "text-slate-400 hover:text-white hover:bg-slate-600/10"
+      }
+    };
+
+    // Fallback de seguridad por si envían una variante que no existe
+    return themes[variant]?.[hierarchy] || themes.primary.solid;
   };
 
   return (
-    <button className={`flex justify-center items-center ${baseStyles} ${variants[variant]} ${widthStyles} ${className}`} {...props}>
-      {icon ? <Icons type={icon} className="size-3"/> : null}
-      {text ? text : ''}
-      {children ? children : ''}
+    <button 
+      disabled={disabled || isLoading}
+      className={`${baseStyles} ${getThemeStyles()} ${widthStyles} ${disabledStyles} ${className}`} 
+      {...props}
+    >
+      {/* Si está cargando, reemplazamos el icono izquierdo por un spinner */}
+      {isLoading ? (
+        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+      ) : icon ? (
+        <div className="w-4 h-4 shrink-0"><Icons type={icon as any} /></div>
+      ) : null}
+      
+      {/* Contenido (Permite combinar prop text con children) */}
+      {(text || children) && (
+        <span className="truncate">
+          {text}
+          {children}
+        </span>
+      )}
+
+      {/* Icono a la derecha (ej: flecha de "siguiente") */}
+      {iconRight && !isLoading && (
+        <div className="w-4 h-4 shrink-0"><Icons type={iconRight as any} /></div>
+      )}
     </button>
   );
 };
@@ -7268,69 +7282,86 @@ ARCHIVO: ./src/components/ui/PageHeader.tsx
 import React from 'react';
 import { Icons } from './icons/Icons';
 
+// Expandimos la paleta para incluir todas las "páginas" o secciones futuras
+export type HeaderColorTheme = 
+  | 'purple' | 'orange' | 'blue' | 'green' | 'yellow' 
+  | 'teal' | 'red' | 'pink' | 'indigo' | 'cyan' | 'emerald' | 'slate';
+
 interface Props {
   title: string;
   description: string;
   iconType?: string;
   imageUrl?: string;
-  colorTheme: 'purple' | 'orange' | 'blue' | 'green' | 'yellow' | 'teal' | 'red';
+  colorTheme: HeaderColorTheme;
   children?: React.ReactNode;
 }
 
-export const PageHeader: React.FC<Props> = ({ title, description, iconType, imageUrl, colorTheme, children }) => {
+export const PageHeader: React.FC<Props> = ({ 
+  title, description, iconType, imageUrl, colorTheme, children 
+}) => {
   
-  const getThemeClasses = () => {
-    switch (colorTheme) {
-      case 'purple': return 'bg-purple-500/10 text-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.3)] border-purple-500/20';
-      case 'orange': return 'bg-orange-500/10 text-orange-400 shadow-[0_0_30px_rgba(249,115,22,0.3)] border-orange-500/20';
-      case 'blue': return 'bg-blue-500/10 text-blue-400 shadow-[0_0_30px_rgba(59,130,246,0.3)] border-blue-500/20';
-      case 'green': return 'bg-itec-groups text-itec-text-reverse shadow-[0_0_30px_rgba(34,197,94,0.3)] border-green-500/20';
-      case 'yellow': return 'bg-yellow-500/10 text-yellow-400 shadow-[0_0_30px_rgba(234,179,8,0.3)] border-yellow-500/20';
-      case 'teal': return 'bg-teal-500/10 text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.3)] border-teal-500/20';
-      case 'red': return 'bg-red-500/10 text-red-400 shadow-[0_0_30px_rgba(239,68,68,0.3)] border-red-500/20';
-      default: return 'bg-gray-500/10 text-itec-text shadow-[0_0_30px_rgba(156,163,175,0.3)] border-gray-500/20';
-    }
+  // Diccionario centralizado: Más limpio que un switch gigante y fácil de mantener.
+  // Colores sutiles: fondos translúcidos (/10), bordes suaves (/20) y sombras elegantes (15px)
+  const themeStyles: Record<HeaderColorTheme, { box: string; glow: string }> = {
+    purple:  { box: 'bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.15)]', glow: 'rgba(168,85,247,0.4)' },
+    orange:  { box: 'bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.15)]', glow: 'rgba(249,115,22,0.4)' },
+    blue:    { box: 'bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.15)]',   glow: 'rgba(59,130,246,0.4)' },
+    green:   { box: 'bg-green-500/10 text-green-400 border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.15)]',  glow: 'rgba(34,197,94,0.4)' },
+    yellow:  { box: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.15)]',  glow: 'rgba(234,179,8,0.4)' },
+    teal:    { box: 'bg-teal-500/10 text-teal-400 border-teal-500/20 shadow-[0_0_15px_rgba(20,184,166,0.15)]',   glow: 'rgba(20,184,166,0.4)' },
+    red:     { box: 'bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.15)]',     glow: 'rgba(239,68,68,0.4)' },
+    pink:    { box: 'bg-pink-500/10 text-pink-400 border-pink-500/20 shadow-[0_0_15px_rgba(236,72,153,0.15)]',    glow: 'rgba(236,72,153,0.4)' },
+    indigo:  { box: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)]',  glow: 'rgba(99,102,241,0.4)' },
+    cyan:    { box: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.15)]',     glow: 'rgba(6,182,212,0.4)' },
+    emerald: { box: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]', glow: 'rgba(16,185,129,0.4)' },
+    slate:   { box: 'bg-slate-500/10 text-slate-400 border-slate-500/20 shadow-[0_0_15px_rgba(100,116,139,0.15)]',   glow: 'rgba(100,116,139,0.4)' },
   };
 
-  const getGlowColor = () => {
-    switch (colorTheme) {
-      case 'red': return 'rgba(239,68,68,0.5)';
-      // (Puedes agregar los demás colores si en el futuro usas logos de otro color)
-      default: return 'rgba(255,255,255,0.2)';
-    }
-  };
+  const currentStyle = themeStyles[colorTheme] || themeStyles.slate;
 
   return (
-    <div className="mb-8 animate-in fade-in zoom-in-95 shrink-0 flex flex-col items-center xl:items-start xl:flex-row">
-      {/* 🔴 LÓGICA MEJORADA: Si es imagen, la mostramos gigante y sin caja. Si es icono, usamos la caja bonita. */}
-      {imageUrl ? (
-        <img 
-          src={imageUrl} 
-          alt="Logo" 
-          className="h-28 md:h-36 mb-6 mx-auto object-contain " 
-          style={{ filter: `drop-shadow(0px 0px 30px ${getGlowColor()})` }}
-        />
-      ) : (
-        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center my-auto mr-6 border transition-all ${getThemeClasses()}`}>
-          <div className="w-8 h-8">
-            {/* // eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <Icons type={iconType as any} />
+    <header className="mb-6 md:mb-8 animate-in fade-in slide-in-from-top-2 duration-500">
+      {/* sm:flex-row permite que en tablets/PC el header y los botones se pongan uno a cada lado */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 md:gap-6">
+        
+        {/* Lado izquierdo: Icono y Textos (Alineados en fila para ahorrar muchísimo espacio en mobile) */}
+        <div className="flex items-start gap-3 md:gap-4">
+          
+          {imageUrl ? (
+            <img 
+              src={imageUrl} 
+              alt={title} 
+              // Tamaños reducidos y lógicos para un encabezado
+              className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0 mt-1" 
+              style={{ filter: `drop-shadow(0px 4px 12px ${currentStyle.glow})` }}
+            />
+          ) : (
+            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center border shrink-0 mt-1 transition-all ${currentStyle.box}`}>
+              <div className="w-6 h-6 md:w-7 md:h-7">
+                <Icons type={iconType as any} />
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col pt-0.5">
+            <h1 className="text-2xl md:text-3xl font-bold text-itec-text tracking-tight mb-1">
+              {title}
+            </h1>
+            <p className="text-xs md:text-sm text-itec-gray max-w-xl leading-relaxed">
+              {description}
+            </p>
           </div>
         </div>
-      )}
-      <div className='flex flex-col items-center mx-auto xl:items-start xl:mx-2'>
-        <h1 className="text-3xl md:text-4xl font-bold text-itec-textmb-2 tracking-tight">{title}</h1>
-        <p className="text-itec-text text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-          {description}
-        </p>
-      </div>
-        
+
+        {/* Lado derecho: Acciones (Botones o selectores). Si existen, los acomoda de forma natural */}
         {children && (
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-6 ml-0 xl:ml-auto">
+          <div className="flex flex-col items-end gap-3 sm:mt-1 shrink-0">
             {children}
           </div>
         )}
-    </div>
+
+      </div>
+    </header>
   );
 };
 
@@ -8670,6 +8701,170 @@ export const UserSearchBox: React.FC<Props> = ({ searchMutation, toggleMutation 
 
 
 ==================================================
+ARCHIVO: ./src/features/admin/components/organisms/AdminMaterias.tsx
+==================================================
+import React, { useState, useEffect, useMemo } from 'react';
+import { materiasService, type MateriaRow } from '@features/groups/services/materiasService';
+import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '@features/groups/types/groups';
+import { Icons } from '@components/ui/icons/Icons';
+import { Select } from '@components/ui/Select';
+import { Input } from '@components/ui/Input';
+
+export const AdminMaterias: React.FC = () => {
+  const [materias, setMaterias] = useState<MateriaRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  
+  // Estado del Formulario
+  const [form, setForm] = useState({ id: '', carrera: 'sistemas', nivel: '1', materia: '' });
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetchMaterias = async () => {
+    try {
+      const data = await materiasService.getMaterias();
+      setMaterias(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchMaterias(); }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.materia.trim()) return;
+    setIsSubmitting(true);
+    try {
+      if (isEditing) {
+        await materiasService.updateMateria(form.id, { carrera: form.carrera, nivel: form.nivel, materia: form.materia });
+      } else {
+        await materiasService.createMateria({ carrera: form.carrera, nivel: form.nivel, materia: form.materia });
+      }
+      setForm({ id: '', carrera: 'sistemas', nivel: '1', materia: '' });
+      setIsEditing(false);
+      await fetchMaterias();
+    } catch (err) {
+      alert("Hubo un error al guardar. Revisa tus permisos.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleEdit = (m: MateriaRow) => {
+    setForm({ id: m.id, carrera: m.carrera, nivel: m.nivel, materia: m.materia });
+    setIsEditing(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("¿Seguro que quieres eliminar esta materia? Esto podría afectar la búsqueda de grupos asociados.")) return;
+    try {
+      await materiasService.deleteMateria(id);
+      await fetchMaterias();
+    } catch (err) {
+      alert("Error al eliminar la materia.");
+    }
+  };
+
+  const filteredMaterias = useMemo(() => {
+    return materias.filter(m => 
+      m.materia.toLowerCase().includes(search.toLowerCase()) || 
+      m.carrera.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [materias, search]);
+
+  const getCarreraLabel = (val: string) => CARRERAS_OPTIONS.find(c => c.value === val)?.label || val;
+  const getNivelLabel = (val: string) => NIVEL_OPTIONS.find(n => n.value === val)?.label || val;
+
+  return (
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-fade-in">
+      {/* Formulario Lateral */}
+      <div className="xl:col-span-1 bg-itec-box border border-white/10 rounded-2xl p-6 h-fit sticky top-6">
+        <h3 className="text-sm font-bold text-itec-text mb-4 uppercase tracking-widest text-itec-gray">
+          {isEditing ? '✏️ Editar Materia' : '➕ Nueva Materia'}
+        </h3>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">Carrera / Especialidad</label>
+            <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera} onChange={e => setForm({ ...form, carrera: e.target.value })} className="text-sm py-2.5 bg-itec-bg" />
+          </div>
+          <div>
+            <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">Nivel / Año</label>
+            <Select fullWidth options={NIVEL_OPTIONS} value={form.nivel} onChange={e => setForm({ ...form, nivel: e.target.value })} className="text-sm py-2.5 bg-itec-bg" />
+          </div>
+          <div>
+            <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">Nombre de la Materia</label>
+            <Input fullWidth placeholder="Ej: Redes de Datos..." value={form.materia} onChange={e => setForm({ ...form, materia: e.target.value })} className="text-sm py-2.5 bg-itec-bg" />
+          </div>
+          <div className="pt-2 flex gap-2">
+            {isEditing && (
+              <button type="button" onClick={() => { setIsEditing(false); setForm({ id: '', carrera: 'sistemas', nivel: '1', materia: '' }); }} className="w-1/3 py-2.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-white transition-colors">
+                Cancelar
+              </button>
+            )}
+            <button type="submit" disabled={isSubmitting || !form.materia.trim()} className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-white transition-colors ${isEditing ? 'bg-itec-blue-skye hover:bg-itec-blue' : 'bg-itec-groups hover:bg-emerald-500'} disabled:opacity-50`}>
+              {isSubmitting ? 'Guardando...' : isEditing ? 'Actualizar' : 'Agregar Materia'}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Tabla Central */}
+      <div className="xl:col-span-2 bg-itec-box border border-white/10 rounded-2xl flex flex-col h-[75vh]">
+        <div className="p-5 border-b border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base font-bold text-itec-text">Base de Datos de Materias</h2>
+            <p className="text-xs text-itec-gray">Total registradas: {materias.length}</p>
+          </div>
+          <div className="w-full sm:w-64">
+            <Input fullWidth placeholder="Buscar por materia o carrera..." value={search} onChange={e => setSearch(e.target.value)} className="text-sm py-2 bg-itec-bg" />
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-auto p-5">
+          {loading ? (
+            <div className="flex justify-center py-10"><span className="w-6 h-6 border-2 border-white/20 border-t-itec-blue-skye rounded-full animate-spin"></span></div>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="text-[10px] text-itec-gray uppercase tracking-widest border-b border-white/5">
+                  <th className="pb-3 font-bold px-2">Materia</th>
+                  <th className="pb-3 font-bold px-2">Carrera</th>
+                  <th className="pb-3 font-bold px-2">Nivel</th>
+                  <th className="pb-3 font-bold px-2 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm divide-y divide-white/5">
+                {filteredMaterias.map(m => (
+                  <tr key={m.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="py-3 px-2 font-medium text-white">{m.materia}</td>
+                    <td className="py-3 px-2 text-itec-gray">{getCarreraLabel(m.carrera)}</td>
+                    <td className="py-3 px-2 text-itec-gray">{getNivelLabel(m.nivel)}</td>
+                    <td className="py-3 px-2 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => handleEdit(m)} className="p-1.5 text-itec-blue-skye hover:bg-itec-blue-skye/10 rounded-lg"><Icons type="edit" className="w-4 h-4" /></button>
+                        <button onClick={() => handleDelete(m.id)} className="p-1.5 text-itec-red hover:bg-itec-red/10 rounded-lg"><Icons type="trash" className="w-4 h-4" /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filteredMaterias.length === 0 && (
+                  <tr><td colSpan={4} className="py-10 text-center text-itec-gray text-sm">No se encontraron materias.</td></tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+
+==================================================
 ARCHIVO: ./src/features/admin/components/organisms/AdminRedemptions.tsx
 ==================================================
 import React, { useState, useEffect } from "react";
@@ -9532,7 +9727,7 @@ export const adminService = {
   getActiveAnnouncements: async (): Promise<AnnouncementData[]> => {
     try {
       const url = `${API_URL}/active`;
-      console.log("📍 Fetching announcements from:", url);
+      // console.log("📍 Fetching announcements from:", url);
       
       const res = await fetch(url, {
         method: 'GET',
@@ -13593,49 +13788,105 @@ export const PLANES_DB: Record<string, PlanDeEstudio> = {
 
 
 ==================================================
+ARCHIVO: ./src/features/groups/components/atoms/GroupBadge.tsx
+==================================================
+import React from 'react';
+
+type BadgeVariant = 'nivel' | 'tipo' | 'carrera' | 'count';
+
+const VARIANT_CLASSES: Record<BadgeVariant, string> = {
+  nivel:   'bg-itec-groups/12 text-emerald-400 border-itec-groups/20',
+  tipo:    'bg-itec-blue-skye/12 text-blue-400 border-itec-blue-skye/20',
+  carrera: 'bg-white/5 text-itec-gray border-white/10',
+  count:   'bg-itec-red/12 text-itec-red border-itec-red/20',
+};
+
+export const GroupBadge: React.FC<{
+  children: React.ReactNode;
+  variant?: BadgeVariant;
+  className?: string;
+}> = ({ children, variant = 'nivel', className = '' }) => (
+  <span className={`inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider ${VARIANT_CLASSES[variant]} ${className}`}>
+    {children}
+  </span>
+);
+
+
+
+==================================================
+ARCHIVO: ./src/features/groups/components/atoms/GroupGlowCard.tsx
+==================================================
+import React from 'react';
+
+interface Props {
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  glowColor?: 'green' | 'blue' | 'red' | 'gold' | 'none';
+}
+
+const GLOW: Record<string, string> = {
+  green: 'hover:border-itec-groups/40 hover:shadow-[0_0_30px_rgba(0,136,84,0.10)]',
+  blue:  'hover:border-itec-blue-skye/40 hover:shadow-[0_0_30px_rgba(0,74,173,0.10)]',
+  red:   'hover:border-itec-red/40 hover:shadow-[0_0_30px_rgba(183,18,52,0.10)]',
+  gold:  'hover:border-itec-rewards/40 hover:shadow-[0_0_30px_rgba(240,177,0,0.10)]',
+  none:  '',
+};
+
+export const GroupGlowCard: React.FC<Props> = ({ children, className = '', onClick, glowColor = 'green' }) => {
+  const Tag = onClick ? 'button' : 'div';
+  return (
+    <Tag
+      onClick={onClick}
+      className={`bg-itec-box border border-white/[0.07] rounded-2xl transition-all duration-200 ${GLOW[glowColor]} ${onClick ? 'cursor-pointer text-left w-full' : ''} ${className}`}
+    >
+      {children}
+    </Tag>
+  );
+};
+
+
+
+==================================================
 ARCHIVO: ./src/features/groups/components/molecules/EmptyGroupState.tsx
 ==================================================
 import React from 'react';
-import { Icons } from '@/components/ui/icons/Icons';
+import { Icons } from '@components/ui/icons/Icons';
 
-interface Props {
-  onAddClick: () => void;
-}
+interface Props { onAddClick: () => void; }
 
-export const EmptyGroupState: React.FC<Props> = ({ onAddClick }) => {
-  return (
-    <div className="bg-gradient-to-b from-itec-box to-itec-sidebar border border-itec-gray border-dashed rounded-3xl p-10 md:p-16 text-center shadow-2xl flex flex-col items-center justify-center relative overflow-hidden group">
-      {/* Brillo de fondo */}
-      <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent opacity-30"></div>
-      <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-green-500/10 blur-[100px] rounded-full pointer-events-none transition-all duration-700 group-hover:bg-green-500/20"></div>
-      
-      <div className="w-20 h-20 bg-itec-bg border border-itec-gray rounded-full flex items-center justify-center text-4xl mb-6 shadow-inner relative z-10 group-hover:scale-110 transition-transform duration-500">
-        🚀
-      </div>
-      
-      <h3 className="text-xl md:text-2xl font-bold text-itec-textmb-3 relative z-10 tracking-tight">¡Sé el primero en aportar!</h3>
-      <p className="text-sm text-itec-text max-w-md mx-auto mb-8 relative z-10 leading-relaxed">
-        No hay registros en nuestra base para esta materia y comisión específica. Ayudá a tus compañeros compartiendo el enlace de WhatsApp.
-      </p>
-      
-      <button 
-        onClick={onAddClick} 
-        className="cursor-pointer bg-green-600 hover:bg-green-500 text-itec-textpx-8 py-3.5 rounded-xl text-sm font-bold transition-all hover:scale-105 shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center gap-3 relative z-10 active:scale-95"
-      >
-        <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
-          <Icons type="plus" className="w-3 h-3 text-white" />
-        </div>
-        Aportar Link del Grupo
-      </button>
+export const EmptyGroupState: React.FC<Props> = ({ onAddClick }) => (
+  <div className="flex flex-col items-center justify-center py-16 gap-4 text-center border border-dashed border-white/10 rounded-2xl bg-itec-box/40">
+    <div className="w-14 h-14 rounded-2xl bg-itec-groups/10 border border-itec-groups/20 flex items-center justify-center text-2xl">
+      🚀
     </div>
-  );
-};
+    <div>
+      <h3 className="text-base font-bold text-itec-text">¡Sé el primero en aportar!</h3>
+      <p className="text-sm text-itec-gray mt-1 max-w-xs mx-auto leading-relaxed">
+        No hay grupos para esta búsqueda. Ayudá a tus compañeros compartiendo el link de WhatsApp.
+      </p>
+    </div>
+    <button
+      onClick={onAddClick}
+      className="flex items-center gap-2 bg-itec-groups hover:bg-emerald-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(0,136,84,0.3)] active:scale-95"
+    >
+      <Icons type="plus" className="w-3.5 h-3.5" />
+      Aportar Link del Grupo
+    </button>
+  </div>
+);
+
 
 
 ==================================================
 ARCHIVO: ./src/features/groups/components/molecules/GroupCard.tsx
 ==================================================
-import React from 'react';
+import React, { useState } from 'react';
+import { Icons } from '@components/ui/icons/Icons';
+import { GroupBadge } from '../atoms/GroupBadge';
+import { GroupGlowCard } from '../atoms/GroupGlowCard';
+import { useAuth } from '@context/AuthContext';
+import { useReportGroup, useUpdateGroupLink } from '../../hooks/useGroups';
 import type { GroupData } from '../../services/groupsService';
 
 interface Props {
@@ -13643,515 +13894,643 @@ interface Props {
 }
 
 export const GroupCard: React.FC<Props> = ({ group }) => {
-  if (!group) return null; 
+  const { isAdmin, user, isAuthenticated } = useAuth();
+  const reportMutation = useReportGroup();
+  const updateLinkMutation = useUpdateGroupLink();
+
+  const [isEditingLink, setIsEditingLink] = useState(false);
+  const [newLink, setNewLink] = useState(group.link);
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [reportReason, setReportReason] = useState('link-invalido');
+  const [reported, setReported] = useState(false);
+  const [linkSaved, setLinkSaved] = useState(false);
+
+  if (!group) return null;
+
+  const handleSaveLink = async () => {
+    if (!newLink.startsWith('http') || newLink === group.link) { setIsEditingLink(false); return; }
+    updateLinkMutation.mutate({ id: group.id!, link: newLink }, {
+      onSuccess: () => { setLinkSaved(true); setIsEditingLink(false); setTimeout(() => setLinkSaved(false), 2000); },
+    });
+  };
+
+  const handleReport = async () => {
+    if (!isAuthenticated) { alert('Debes iniciar sesión para reportar.'); return; }
+    reportMutation.mutate(
+      { id: group.id!, reason: reportReason, email: user?.email || undefined },
+      {
+        onSuccess: () => { setReported(true); setShowReportForm(false); },
+        onError: (e: any) => alert(e.message || 'Error al reportar.'),
+      }
+    );
+  };
 
   return (
-    <div className="bg-slate-900 border border-white/5 rounded-2xl p-5 flex flex-col justify-between shadow-lg relative overflow-hidden group hover:border-emerald-500/40 hover:shadow-[0_0_25px_rgba(16,185,129,0.1)] hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-      
-      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full group-hover:bg-emerald-500/15 transition-colors duration-500 pointer-events-none"></div>
+    <GroupGlowCard glowColor="green" className="flex flex-col overflow-hidden group relative">
+      {/* Tipo ribbon */}
+      {group.tipo === 'Oficial' && (
+        <div className="absolute -right-6 top-4 bg-itec-blue-skye text-[8px] font-black text-white px-8 py-1 rotate-45 shadow-sm uppercase tracking-widest z-10">
+          Oficial
+        </div>
+      )}
 
-      <div className="absolute -right-7 top-4 bg-slate-950 border border-emerald-500/20 text-[9px] font-bold text-emerald-500 px-8 py-1 rotate-45 shadow-sm">
-        {group.tipo || 'General'}
+      <div className="p-4 flex flex-col gap-3 flex-1">
+        {/* Header badges */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <GroupBadge variant="nivel">Nivel {group.nivel === '0' ? 'Ingreso' : group.nivel}</GroupBadge>
+          {group.carrera && <GroupBadge variant="carrera">{group.carrera === 'homogeneas' ? 'Básicas (Z)' : group.carrera}</GroupBadge>}
+          {(group.reportCount ?? 0) > 0 && <GroupBadge variant="count">{group.reportCount} rep.</GroupBadge>}
+        </div>
+
+        {/* Materia */}
+        <div>
+          <h4 className="font-bold text-itec-text text-sm leading-snug line-clamp-2 group-hover:text-white transition-colors">
+            {group.materia}
+          </h4>
+          <p className="text-xs text-itec-gray mt-1 flex items-center gap-1.5">
+            Comisión:
+            <span className="font-mono font-bold text-emerald-400 bg-itec-groups/10 px-1.5 py-0.5 rounded border border-itec-groups/20 text-[10px]">
+              {group.comision}
+            </span>
+          </p>
+        </div>
+
+        {/* Link editor (admin) */}
+        {isAdmin && isEditingLink ? (
+          <div className="flex gap-1.5 items-center">
+            <input
+              value={newLink}
+              onChange={e => setNewLink(e.target.value)}
+              className="flex-1 bg-itec-bg border border-white/10 text-itec-text text-[11px] px-2.5 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
+              placeholder="https://chat.whatsapp.com/..."
+            />
+            <button
+              onClick={handleSaveLink}
+              disabled={updateLinkMutation.isPending}
+              className="w-7 h-7 bg-itec-groups rounded-lg flex items-center justify-center shrink-0 hover:bg-emerald-500 transition-colors disabled:opacity-50"
+            >
+              <Icons type="check" className="w-3.5 h-3.5 text-white" />
+            </button>
+            <button onClick={() => setIsEditingLink(false)} className="w-7 h-7 bg-white/5 rounded-lg flex items-center justify-center shrink-0 hover:bg-white/10 transition-colors">
+              <Icons type="close" className="w-3 h-3 text-itec-gray" />
+            </button>
+          </div>
+        ) : null}
+
+        {/* Saved feedback */}
+        {linkSaved && <p className="text-[10px] text-emerald-400 font-bold">Link actualizado ✓</p>}
+
+        {/* Report form */}
+        {showReportForm && (
+          <div className="bg-itec-bg border border-itec-red/25 rounded-xl p-3 flex flex-col gap-2 animate-in fade-in duration-200">
+            <p className="text-[11px] font-bold text-itec-text">Motivo del reporte:</p>
+            <select
+              value={reportReason}
+              onChange={e => setReportReason(e.target.value)}
+              className="bg-itec-box border border-white/10 text-itec-text text-xs px-2.5 py-1.5 rounded-lg outline-none focus:border-itec-red"
+            >
+              <option value="link-invalido">Link inválido / caído</option>
+              <option value="link-incorrecto">Link incorrecto</option>
+              <option value="grupo-lleno">Grupo lleno</option>
+              <option value="otro">Otro</option>
+            </select>
+            <div className="flex gap-1.5">
+              <button
+                onClick={handleReport}
+                disabled={reportMutation.isPending}
+                className="flex-1 bg-itec-red hover:bg-red-600 text-white text-xs font-bold py-1.5 rounded-lg transition-colors disabled:opacity-50"
+              >
+                {reportMutation.isPending ? 'Enviando...' : 'Reportar'}
+              </button>
+              <button onClick={() => setShowReportForm(false)} className="px-3 bg-white/5 hover:bg-white/10 text-itec-gray text-xs rounded-lg transition-colors">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Reported feedback */}
+        {reported && (
+          <p className="text-[10px] text-itec-red font-bold flex items-center gap-1">
+            <Icons type="check" className="w-3 h-3" /> Reporte enviado — gracias
+          </p>
+        )}
       </div>
-      
-      <div className="relative z-10">
-        <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-2 drop-shadow-sm">
-          Nivel {group.nivel === '0' ? 'Ingreso' : group.nivel}
-        </span>
-        <h4 className="font-bold text-slate-200 text-sm mb-2 pr-6 leading-snug group-hover:text-itec-texttransition-colors">{group.materia}</h4>
-        <p className="text-xs text-slate-400 flex items-center gap-2">
-          Comisión: 
-          <strong className="text-emerald-100 bg-slate-800 border border-white/5 px-2 py-0.5 rounded-md font-mono text-[11px]">
-            {group.comision}
-          </strong>
-        </p>
+
+      {/* Footer actions */}
+      <div className="flex gap-1.5 p-3 pt-0">
+        {/* Unirse */}
+        <a
+          href={group.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 flex items-center justify-center gap-1.5 bg-itec-groups/12 hover:bg-itec-groups text-emerald-400 hover:text-white border border-itec-groups/25 hover:border-itec-groups py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95"
+        >
+          <Icons type="users" className="w-3.5 h-3.5" />
+          Unirme
+        </a>
+
+        {/* Admin: editar link */}
+        {isAdmin && !isEditingLink && (
+          <button
+            onClick={() => setIsEditingLink(true)}
+            className="w-9 flex items-center justify-center bg-itec-blue-skye/10 hover:bg-itec-blue-skye/20 border border-itec-blue-skye/20 rounded-xl text-itec-blue-skye transition-colors"
+            title="Cambiar link"
+          >
+            <Icons type="edit" className="w-3.5 h-3.5" />
+          </button>
+        )}
+
+        {/* Reportar link */}
+        {!reported && !showReportForm && (
+          <button
+            onClick={() => setShowReportForm(true)}
+            className="w-9 flex items-center justify-center bg-white/5 hover:bg-itec-red/10 border border-white/8 hover:border-itec-red/25 rounded-xl text-itec-gray hover:text-itec-red transition-colors"
+            title="Reportar link caído"
+          >
+            <Icons type="flag" className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
-      
-      <a 
-        href={group.link} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="mt-6 relative z-10 flex items-center justify-center gap-2 w-full bg-slate-800/80 hover:bg-emerald-600 border border-white/5 hover:border-emerald-500 text-slate-300 hover:text-itec-textpy-2.5 rounded-xl text-xs font-bold transition-all duration-300 active:scale-95 shadow-sm"
-      >
-        Unirme al Grupo
-      </a>
+    </GroupGlowCard>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/groups/components/molecules/GroupCardSkeleton.tsx
+==================================================
+import React from 'react';
+export const GroupCardSkeleton: React.FC = () => (
+  <div className="bg-itec-box border border-white/[0.07] rounded-2xl p-4 flex flex-col gap-3 animate-pulse">
+    <div className="flex gap-1.5">
+      <div className="h-4 w-16 bg-white/5 rounded-full" />
+      <div className="h-4 w-20 bg-white/5 rounded-full" />
+    </div>
+    <div className="space-y-2">
+      <div className="h-4 bg-white/5 rounded w-3/4" />
+      <div className="h-3 bg-white/5 rounded w-1/2" />
+    </div>
+    <div className="h-8 bg-white/5 rounded-xl mt-auto" />
+  </div>
+);
+
+
+
+==================================================
+ARCHIVO: ./src/features/groups/components/molecules/GroupsStatsBar.tsx
+==================================================
+import React from 'react';
+import { Icons } from '@components/ui/icons/Icons';
+import type { GroupData } from '../../services/groupsService';
+
+interface Props { groups: GroupData[]; }
+
+export const GroupsStatsBar: React.FC<Props> = ({ groups }) => {
+  const total    = groups.length;
+  const oficiales = groups.filter(g => g.tipo === 'Oficial').length;
+  const carreras  = new Set(groups.map(g => g.carrera)).size;
+  const reportados = groups.filter(g => (g.reportCount ?? 0) > 0).length;
+
+  const stats = [
+    { label: 'Grupos', value: total, icon: 'users', color: 'text-emerald-400' },
+    { label: 'Oficiales', value: oficiales, icon: 'check', color: 'text-itec-blue-skye' },
+    { label: 'Carreras', value: carreras, icon: 'degree', color: 'text-itec-rewards' },
+    { label: 'Reportados', value: reportados, icon: 'close', color: 'text-itec-red' },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
+      {stats.map(s => (
+        <div key={s.label} className="bg-itec-box border border-white/[0.07] rounded-2xl p-3.5 flex items-center gap-3">
+          <div className={`w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 ${s.color}`}>
+            <Icons type={s.icon} className="w-4 h-4" />
+          </div>
+          <div>
+            <div className={`text-lg font-bold leading-none ${s.color}`}>{s.value}</div>
+            <div className="text-[10px] text-itec-gray mt-0.5">{s.label}</div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
+
 
 
 ==================================================
 ARCHIVO: ./src/features/groups/components/organisms/AddGroupModal.tsx
 ==================================================
 import React, { useState, useRef, useEffect } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { Input } from '@components/ui/Input';
+import { Select } from '@components/ui/Select';
 import { Button } from '@components/ui/Button';
-import { Icons } from '@/components/ui/icons/Icons';
+import { Icons } from '@components/ui/icons/Icons';
 import { useAuth } from '@context/AuthContext';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '../../types/groups';
 import { groupsService, type GroupData } from '../../services/groupsService';
 import { useSubmitGroup } from '../../hooks/useGroups';
 import { useAddGroupForm } from '../../hooks/useAddGroupForm';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  isAdmin: boolean;
-  userEmail: string;
-  existingGroups: GroupData[];
-}
+interface Props { isOpen: boolean; onClose: () => void; isAdmin: boolean; userEmail: string; existingGroups: GroupData[]; }
 
 export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, existingGroups }) => {
   const { user, isAuthenticated, loginWithGoogle } = useAuth();
-  const submitGroupMutation = useSubmitGroup();
-  
-  // 🟢 Hook Atómico para la lógica
-  const { form, setForm, materiasDisponibles, handleCarreraChange, handleNivelChange } = useAddGroupForm();
-
+  const submitMutation = useSubmitGroup();
+  const { form, setForm, materiasDisponibles, loadingMaterias, handleCarreraChange, handleNivelChange } = useAddGroupForm();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [successInfo, setSuccessInfo] = useState({ title: '', desc: '' });
-  
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const isPending = submitGroupMutation.isPending;
-
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowDropdown(false);
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const h = (e: MouseEvent) => { if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowDropdown(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isPending) return;
+    if (submitMutation.isPending) return;
     setError('');
-    
     if (!form.carrera || !form.nivel || !form.materia || !form.comision || !form.link) {
       setError('Completá todos los campos para continuar.'); return;
     }
-    if (!materiasDisponibles.includes(form.materia)) {
-      setError('Seleccioná una materia válida de la lista desplegable.'); return;
-    }
-
+    if (!form.link.startsWith('http')) { setError('El link debe comenzar con https://'); return; }
     try {
-      const isDupApproved = existingGroups.some(g => 
-        (g.materia === form.materia && g.comision.toLowerCase() === form.comision.toLowerCase()) || g.link === form.link
-      );
-
-      if (isDupApproved) {
-        setError(`Este link o la comisión ${form.comision.toUpperCase()} ya están registrados.`); return;
-      }
-
+      const isDupApproved = existingGroups.some(g => (g.materia === form.materia && g.comision.toLowerCase() === form.comision.toLowerCase()) || g.link === form.link);
+      if (isDupApproved) { setError(`Este link o la comisión ${form.comision.toUpperCase()} ya están registrados.`); return; }
       const isDupPending = await groupsService.checkIsDuplicatePending(form.materia, form.comision, form.link);
-      if (isDupPending) {
-        setError('Este grupo ya fue sugerido y está en revisión.'); return;
-      }
-
-      const isDirectPublish = isAuthenticated;
-      const newGroupData = {
-        carrera: form.carrera, nivel: form.nivel, materia: form.materia, 
-        comision: form.comision.toUpperCase(), link: form.link, 
-        tipo: isAdmin ? form.tipo : 'Alumnos', submittedBy: user?.email || 'invitado'
-      };
-
-      submitGroupMutation.mutate(
-        { data: newGroupData, isDirectPublish },
+      if (isDupPending) { setError('Este grupo ya fue sugerido y está en revisión.'); return; }
+      submitMutation.mutate(
+        { data: { carrera: form.carrera, nivel: form.nivel, materia: form.materia, comision: form.comision.toUpperCase(), link: form.link, tipo: isAdmin ? form.tipo : 'Alumnos', submittedBy: user?.email || 'invitado' }, isDirectPublish: isAuthenticated },
         {
           onSuccess: () => {
-            setSuccessInfo({ 
-              title: isDirectPublish ? '¡Grupo Publicado!' : '¡Solicitud Enviada!', 
-              desc: isDirectPublish ? 'Tu grupo ya está visible para todos.' : 'Un administrador lo revisará pronto.' 
-            });
+            setSuccessInfo({ title: isAuthenticated ? '¡Grupo Publicado!' : '¡Solicitud Enviada!', desc: isAuthenticated ? 'Tu grupo ya está visible para todos.' : 'Un administrador lo revisará pronto.' });
             setSuccess(true);
-            setTimeout(() => { setSuccess(false); onClose(); }, 3000);
+            setTimeout(() => { setSuccess(false); onClose(); }, 2500);
           },
-          onError: () => setError('Error de conexión al enviar el grupo.')
+          onError: () => setError('Error de conexión al enviar el grupo.'),
         }
       );
-    } catch {
-      setError('Ocurrió un error al procesar la solicitud.');
-    }
+    } catch { setError('Ocurrió un error al procesar la solicitud.'); }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg shadow-2xl p-8 relative">
-        
-        <button onClick={onClose} disabled={isPending} className="cursor-pointer absolute top-4 right-4 text-itec-text hover:text-itec-texttransition-colors disabled:opacity-50">
-          <Icons type="close" className="w-5 h-5" />
-        </button>
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="bg-itec-box border border-white/[0.08] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
 
-        <h2 className="text-2xl font-bold text-itec-textmb-1">Aportar Grupo</h2>
-        <p className="text-sm text-itec-text mb-6">Completá los datos para sumar a la comunidad.</p>
-
-        {success ? (
-          <div className="text-center py-10 animate-in fade-in duration-300">
-            <span className="text-5xl block mb-4">✅</span>
-            <h3 className="text-xl font-bold text-itec-textmb-2">{successInfo.title}</h3>
-            <p className="text-itec-text text-sm">{successInfo.desc}</p>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
+          <div>
+            <h2 className="text-base font-bold text-itec-text">Aportar Grupo de WhatsApp</h2>
+            <p className="text-[11px] text-itec-gray mt-0.5">Completá los datos para sumarlo a la comunidad.</p>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-5">
-            
-            {!isAuthenticated && (
-              <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-sm font-bold text-itec-textmb-1">Iniciá sesión para publicar directo</h4>
-                  <p className="text-xs text-itec-text">Sumá puntos para tu TarjeTEC publicando sin revisión.</p>
+          <button onClick={onClose} disabled={submitMutation.isPending} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-itec-gray hover:text-itec-text transition-colors">
+            <Icons type="close" className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-5">
+          {success ? (
+            <div className="text-center py-12 animate-in fade-in duration-300 flex flex-col items-center gap-3">
+              <div className="w-14 h-14 bg-itec-groups/15 border border-itec-groups/30 rounded-full flex items-center justify-center text-2xl">✅</div>
+              <h3 className="text-lg font-bold text-itec-text">{successInfo.title}</h3>
+              <p className="text-itec-gray text-sm">{successInfo.desc}</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!isAuthenticated && (
+                <div className="bg-itec-blue-skye/10 border border-itec-blue-skye/25 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-bold text-itec-text">Iniciá sesión para publicar directo</p>
+                    <p className="text-xs text-itec-gray mt-0.5">Sin revisión y sumás puntos a tu TarjeTEC.</p>
+                  </div>
+                  <button type="button" onClick={loginWithGoogle} className="shrink-0 flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg transition-colors shadow-sm">
+                    <Icons type="google" className="w-4 h-4" /> Acceder
+                  </button>
                 </div>
-                <button type="button" onClick={loginWithGoogle} className="cursor-pointer shrink-0 bg-white hover:bg-gray-200 text-black text-xs font-bold py-2.5 px-4 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
-                  <div className="w-4 h-4 text-blue-600"><Icons type="google" /></div> Acceder
-                </button>
-              </div>
-            )}
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">1. Especialidad</label>
-                <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera} onChange={e => handleCarreraChange(e.target.value)} className="cursor-pointer text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500" />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">2. Nivel</label>
-                <Select 
-                  fullWidth disabled={!form.carrera} 
-                  options={form.carrera === 'homogeneas' ? NIVEL_OPTIONS.slice(0, 3) : NIVEL_OPTIONS} // 🟢 Restricción UI de Homogéneas
-                  value={form.nivel} onChange={e => handleNivelChange(e.target.value)} 
-                  className="cursor-pointer text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500 disabled:opacity-40" 
-                />
-              </div>
-            </div>
-
-            <div ref={dropdownRef} className="relative">
-              <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">3. Materia Oficial</label>
-              <Input 
-                fullWidth disabled={!form.carrera || !form.nivel} 
-                placeholder={!form.carrera || !form.nivel ? "Seleccioná especialidad y nivel..." : "Escribí para buscar..."} 
-                value={form.materia} onChange={e => { setForm({...form, materia: e.target.value}); setShowDropdown(true); }} 
-                onFocus={() => setShowDropdown(true)} 
-                className="cursor-text text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500 disabled:opacity-40" 
-              />
-              
-              {/* 🟢 DROPDOWN MEJORADO: Texto envolvente y buen contraste */}
-              {showDropdown && materiasDisponibles.length > 0 && (
-                <ul className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar">
-                  {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
-                    <li 
-                      key={m} onClick={() => { setForm({...form, materia: m}); setShowDropdown(false); }} 
-                      className="cursor-pointer px-4 py-3 text-sm text-gray-300 hover:bg-green-600 hover:text-itec-textborder-b border-gray-700 last:border-0 whitespace-normal break-words leading-tight transition-colors"
-                    >
-                      {m}
-                    </li>
-                  ))}
-                </ul>
               )}
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">4. Comisión</label>
-                <Input fullWidth placeholder="Ej: K1043" value={form.comision} onChange={e => setForm({...form, comision: e.target.value.toUpperCase()})} className="cursor-text text-sm py-2.5 uppercase bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500" />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">1. Especialidad</label>
+                  <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera} onChange={e => handleCarreraChange(e.target.value)} className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">2. Nivel</label>
+                  <Select fullWidth disabled={!form.carrera} options={NIVEL_OPTIONS} value={form.nivel} onChange={e => handleNivelChange(e.target.value)} className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all disabled:opacity-40" />
+                </div>
               </div>
-              <div>
-                <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">5. Link de WhatsApp</label>
-                <Input fullWidth placeholder="https://chat.whatsapp.com/..." value={form.link} onChange={e => setForm({...form, link: e.target.value})} className="cursor-text text-sm py-2.5 bg-gray-800 border-gray-600 text-gray-100 focus:border-green-500" />
-              </div>
-            </div>
 
-            {isAdmin && (
-              <div className="p-4 bg-gray-800 border border-gray-700 rounded-xl mt-2">
-                <label className="block text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">Privilegio Admin: Tipo de Grupo</label>
-                <Select fullWidth options={[{value: 'Alumnos', label: 'Grupo de Alumnos'}, {value: 'Oficial', label: 'Grupo Oficial (ITEC)'}]} value={form.tipo} onChange={e => setForm({...form, tipo: e.target.value as 'Alumnos' | 'Oficial'})} className="cursor-pointer text-sm py-2 bg-gray-900 border-gray-600 text-gray-100 focus:border-blue-500" />
+              <div ref={dropdownRef} className="relative">
+                <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">3. Materia</label>
+                <Input
+                  fullWidth disabled={!form.carrera || !form.nivel}
+                  placeholder={!form.carrera || !form.nivel ? 'Seleccioná especialidad y nivel...' : loadingMaterias ? 'Cargando...' : 'Escribí para buscar...'}
+                  value={form.materia}
+                  onChange={e => { setForm({ ...form, materia: e.target.value }); setShowDropdown(true); }}
+                  onFocus={() => setShowDropdown(true)}
+                  className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all disabled:opacity-40"
+                />
+                {showDropdown && materiasDisponibles.length > 0 && (
+                  <ul className="absolute z-50 w-full mt-1 bg-itec-box border border-white/10 rounded-xl shadow-2xl max-h-52 overflow-y-auto">
+                    {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
+                      <li key={m} onClick={() => { setForm({ ...form, materia: m }); setShowDropdown(false); }}
+                        className="cursor-pointer px-4 py-2.5 text-sm text-itec-gray hover:bg-itec-groups/10 hover:text-itec-text border-b border-white/5 last:border-0 whitespace-normal leading-tight transition-colors">
+                        {m}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-            )}
 
-            {error && (
-              <div className="bg-red-900/20 border border-red-500/30 p-3 rounded-lg flex items-center gap-3">
-                <Icons type="info" className="w-4 h-4 text-red-400 shrink-0" />
-                <p className="text-red-300 text-xs font-medium leading-tight">{error}</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">4. Comisión</label>
+                  <Input fullWidth placeholder="Ej: K1043" value={form.comision} onChange={e => setForm({ ...form, comision: e.target.value.toUpperCase() })} className="text-sm py-2.5 uppercase bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-wider mb-1.5">5. Link de WhatsApp</label>
+                  <Input fullWidth placeholder="https://chat.whatsapp.com/..." value={form.link} onChange={e => setForm({ ...form, link: e.target.value })} className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all" />
+                </div>
               </div>
-            )}
 
-            <div className="pt-4 flex justify-end gap-3">
-              <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="cursor-pointer bg-gray-800 border-gray-700 hover:bg-gray-700 text-gray-300">Cancelar</Button>
-              <Button type="submit" variant="primary" disabled={isPending} className="cursor-pointer bg-green-600 hover:bg-green-500 border-none text-itec-textshadow-md min-w-32 active:scale-95">
-                {isPending ? 'Procesando...' : 'Aportar Grupo'}
-              </Button>
-            </div>
-          </form>
-        )}
+              {isAdmin && (
+                <div className="bg-itec-blue-skye/5 border border-itec-blue-skye/15 rounded-xl p-3.5">
+                  <label className="block text-[10px] font-bold text-itec-blue-skye uppercase tracking-wider mb-1.5">Admin — Tipo de grupo</label>
+                  <Select fullWidth options={[{ value: 'Alumnos', label: 'Grupo de Alumnos' }, { value: 'Oficial', label: 'Grupo Oficial (ITEC)' }]} value={form.tipo} onChange={e => setForm({ ...form, tipo: e.target.value as 'Alumnos' | 'Oficial' })} className="text-sm py-2 bg-itec-bg border-white/8 focus:border-itec-blue-skye" />
+                </div>
+              )}
+
+              {error && (
+                <div className="bg-itec-red/10 border border-itec-red/25 p-3 rounded-xl flex items-start gap-2.5">
+                  <Icons type="info" className="w-4 h-4 text-itec-red shrink-0 mt-0.5" />
+                  <p className="text-itec-red text-xs leading-relaxed">{error}</p>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button type="button" variant="secondary" onClick={onClose} disabled={submitMutation.isPending} className="text-xs">Cancelar</Button>
+                <Button type="submit" variant="primary" disabled={submitMutation.isPending} className="text-xs bg-itec-groups hover:bg-emerald-500 border-none shadow-md min-w-28 active:scale-95">
+                  {submitMutation.isPending ? 'Procesando...' : 'Aportar Grupo'}
+                </Button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );
 };
+
 
 
 ==================================================
 ARCHIVO: ./src/features/groups/components/organisms/AdminPendingGroupsModal.tsx
 ==================================================
-import React from 'react';
-import { Icons } from '@/components/ui/icons/Icons';
+import React, { useState } from 'react';
+import { Icons } from '@components/ui/icons/Icons';
+import { GroupBadge } from '../atoms/GroupBadge';
 import { type GroupData } from '../../services/groupsService';
-import { usePendingGroups, useApprovePendingGroup, useRejectPendingGroup } from '../../hooks/useGroups';
+import { usePendingGroups, useReportedGroups, useApprovePendingGroup, useRejectPendingGroup, useUpdateGroupLink } from '../../hooks/useGroups';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-}
+interface Props { isOpen: boolean; onClose: () => void; }
+
+type Tab = 'pending' | 'reported';
 
 export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { data: pendingGroups = [], isLoading } = usePendingGroups(true);
+  const [tab, setTab] = useState<Tab>('pending');
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null);
+  const [editLinkValue, setEditLinkValue] = useState('');
+
+  const { data: pendingGroups = [], isLoading: loadingPending } = usePendingGroups(true);
+  const { data: reportedGroups = [], isLoading: loadingReported } = useReportedGroups(true);
   const approveMutation = useApprovePendingGroup();
   const rejectMutation = useRejectPendingGroup();
+  const updateLinkMutation = useUpdateGroupLink();
 
   const handleApprove = (group: GroupData) => {
-    approveMutation.mutate(group, {
-      onSuccess: () => alert(`Grupo ${group.comision} aprobado correctamente.`),
-      onError: () => alert("Error al aprobar.")
+    approveMutation.mutate(group, { onError: () => alert('Error al aprobar.') });
+  };
+  const handleReject = (groupId: string) => {
+    if (!window.confirm('¿Eliminar esta solicitud permanentemente?')) return;
+    rejectMutation.mutate(groupId, { onError: () => alert('Error al rechazar.') });
+  };
+  const handleSaveLink = (groupId: string) => {
+    if (!editLinkValue.startsWith('http')) { alert('Link inválido.'); return; }
+    updateLinkMutation.mutate({ id: groupId, link: editLinkValue }, {
+      onSuccess: () => { setEditingLinkId(null); setEditLinkValue(''); },
+      onError: () => alert('Error al actualizar link.'),
     });
   };
 
-  const handleReject = (groupId: string) => {
-    if (!window.confirm("¿Seguro que deseas eliminar esta solicitud de forma permanente?")) return;
-    rejectMutation.mutate(groupId, {
-      onError: () => alert("Error al rechazar.")
-    });
-  };
+  const groups = tab === 'pending' ? pendingGroups : reportedGroups;
+  const isLoading = tab === 'pending' ? loadingPending : loadingReported;
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-5xl shadow-2xl relative flex flex-col max-h-[85vh] overflow-hidden">
-        
-        {/* Header del Modal */}
-        <div className="bg-gray-800/50 border-b border-gray-700 p-6 flex justify-between items-center shrink-0">
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="bg-itec-box border border-white/[0.08] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-5xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
+
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
           <div>
-            <h2 className="text-xl font-bold text-itec-textflex items-center gap-2">
-              <Icons type="users" className="w-5 h-5 text-blue-400" />
-              Panel de Moderación
-            </h2>
-            <p className="text-xs text-itec-text mt-1">Revisá la validez de los grupos aportados antes de hacerlos públicos.</p>
+            <h2 className="text-base font-bold text-itec-text">Panel de Moderación</h2>
+            <p className="text-[11px] text-itec-gray mt-0.5">Revisá grupos antes de publicarlos.</p>
           </div>
-          <button onClick={onClose} className="cursor-pointer text-itec-text hover:text-itec-textp-2 rounded-lg hover:bg-gray-800 transition-colors">
-            <Icons type="close" className="w-5 h-5" />
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-itec-gray hover:text-itec-text transition-colors">
+            <Icons type="close" className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Cuerpo / Tabla */}
-        <div className="flex-1 overflow-auto custom-scrollbar p-6 bg-gray-900/50">
+        {/* Tabs */}
+        <div className="flex gap-1 px-5 pt-4 shrink-0 border-b border-white/[0.06]">
+          {([['pending', 'Pendientes', pendingGroups.length], ['reported', 'Reportados', reportedGroups.length]] as const).map(([t, label, count]) => (
+            <button key={t} onClick={() => setTab(t)}
+              className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all ${tab === t ? 'border-itec-groups text-emerald-400' : 'border-transparent text-itec-gray hover:text-itec-text'}`}>
+              {label}
+              {count > 0 && <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${tab === t ? 'bg-itec-groups/20 text-emerald-400' : 'bg-white/5 text-itec-gray'}`}>{count}</span>}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex-1 overflow-auto p-4">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-8 h-8 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin mb-4"></div>
-              <p className="text-itec-text text-sm">Cargando solicitudes...</p>
+            <div className="flex flex-col items-center justify-center py-16 gap-3">
+              <div className="w-6 h-6 border-2 border-white/10 border-t-itec-groups rounded-full animate-spin" />
+              <p className="text-itec-gray text-sm">Cargando...</p>
             </div>
-          ) : pendingGroups.length > 0 ? (
-            <div className="border border-gray-700 rounded-xl overflow-hidden bg-gray-800/30">
-              <table className="w-full text-left border-collapse text-sm">
-                <thead className="bg-gray-800 border-b border-gray-700">
-                  <tr>
-                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider">Materia & Comisión</th>
-                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider">Especialidad</th>
-                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider">Aportado Por</th>
-                    <th className="p-4 text-[10px] font-bold text-itec-text uppercase tracking-wider text-right">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700/50">
-                  {pendingGroups.map((group) => (
-                    <tr key={group.id} className="hover:bg-gray-800/50 transition-colors">
-                      
-                      {/* Materia y Comisión */}
-                      <td className="p-4">
-                        <p className="text-gray-100 font-bold mb-1 truncate max-w-[250px]">{group.materia}</p>
-                        <span className="bg-gray-700 text-gray-300 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest border border-gray-600">
-                          {group.comision}
-                        </span>
-                      </td>
-
-                      {/* Carrera / Nivel */}
-                      <td className="p-4">
-                        <span className="capitalize text-gray-300 font-medium text-xs bg-blue-900/20 text-blue-400 px-2.5 py-1 rounded-lg border border-blue-500/20">
-                          {group.carrera === 'homogeneas' ? 'Básicas (Z)' : group.carrera}
-                        </span>
-                      </td>
-
-                      {/* Link y Usuario */}
-                      <td className="p-4">
-                        <a href={group.link} target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300 underline text-xs block mb-1 truncate max-w-[180px]">
-                          {group.link}
-                        </a>
-                        <p className="text-[10px] text-gray-500">Por: {group.submittedBy || 'Anónimo'}</p>
-                      </td>
-
-                      {/* Botonera */}
-                      <td className="p-4 text-right align-middle">
-                        <div className="flex items-center justify-end gap-2">
-                          <button 
-                            onClick={() => handleReject(group.id as string)} 
-                            disabled={rejectMutation.isPending} 
-                            className="cursor-pointer px-4 py-2 text-xs font-bold bg-gray-800 text-red-400 hover:bg-red-500/20 border border-transparent hover:border-red-500/30 rounded-xl transition-all disabled:opacity-50"
-                          >
-                            Rechazar
-                          </button>
-                          <button 
-                            onClick={() => handleApprove(group)} 
-                            disabled={approveMutation.isPending} 
-                            className="cursor-pointer px-4 py-2 text-xs font-bold bg-green-600 text-itec-texthover:bg-green-500 rounded-xl transition-all disabled:opacity-50 shadow-sm"
-                          >
-                            Aprobar
-                          </button>
-                        </div>
-                      </td>
-                      
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          ) : groups.length === 0 ? (
+            <div className="flex flex-col items-center py-16 gap-3">
+              <Icons type="check" className="w-10 h-10 text-itec-gray opacity-30" />
+              <p className="text-itec-gray text-sm">No hay grupos {tab === 'pending' ? 'pendientes' : 'reportados'}.</p>
             </div>
           ) : (
-            <div className="text-center py-20 flex flex-col items-center">
-              <Icons type="check" className="w-12 h-12 text-gray-600 mb-4" />
-              <p className="text-itec-text text-sm">No hay grupos pendientes de revisión.</p>
-              <p className="text-gray-500 text-xs mt-1">Todo está al día.</p>
+            <div className="space-y-3">
+              {groups.map(group => (
+                <div key={group.id} className="bg-itec-bg border border-white/[0.07] rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:border-white/12 transition-colors">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                      <GroupBadge variant="nivel">Nivel {group.nivel}</GroupBadge>
+                      <GroupBadge variant="carrera">{group.carrera}</GroupBadge>
+                      {tab === 'reported' && group.reportCount && group.reportCount > 0 && <GroupBadge variant="count">{group.reportCount} reportes</GroupBadge>}
+                    </div>
+                    <p className="font-bold text-sm text-itec-text truncate">{group.materia}</p>
+                    <p className="text-xs text-itec-gray mt-0.5">Comisión: <span className="font-mono text-emerald-400 font-bold">{group.comision}</span></p>
+
+                    {/* Link editor */}
+                    {editingLinkId === group.id ? (
+                      <div className="flex gap-2 mt-2">
+                        <input
+                          value={editLinkValue}
+                          onChange={e => setEditLinkValue(e.target.value)}
+                          className="flex-1 bg-itec-box border border-white/10 text-itec-text text-xs px-3 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
+                          placeholder="https://chat.whatsapp.com/..."
+                        />
+                        <button onClick={() => handleSaveLink(group.id!)} disabled={updateLinkMutation.isPending}
+                          className="px-3 bg-itec-groups text-white text-xs font-bold rounded-lg hover:bg-emerald-500 transition-colors disabled:opacity-50">
+                          Guardar
+                        </button>
+                        <button onClick={() => setEditingLinkId(null)} className="px-3 bg-white/5 text-itec-gray text-xs rounded-lg hover:bg-white/10 transition-colors">
+                          Cancelar
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 mt-1">
+                        <a href={group.link} target="_blank" rel="noreferrer" className="text-itec-blue-skye hover:underline text-xs truncate max-w-[240px]">{group.link}</a>
+                        <button onClick={() => { setEditingLinkId(group.id!); setEditLinkValue(group.link); }}
+                          className="shrink-0 w-6 h-6 flex items-center justify-center rounded bg-white/5 hover:bg-itec-blue-skye/15 text-itec-gray hover:text-itec-blue-skye transition-colors"
+                          title="Editar link">
+                          <Icons type="edit" className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )}
+
+                    {group.submittedBy && <p className="text-[10px] text-itec-gray mt-1">Por: {group.submittedBy}</p>}
+                  </div>
+
+                  <div className="flex sm:flex-col gap-2 items-end sm:justify-start shrink-0">
+                    {tab === 'pending' && (
+                      <button onClick={() => handleApprove(group)} disabled={approveMutation.isPending}
+                        className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold bg-itec-groups hover:bg-emerald-500 text-white rounded-xl transition-all disabled:opacity-50 whitespace-nowrap">
+                        Aprobar
+                      </button>
+                    )}
+                    <button onClick={() => handleReject(group.id!)} disabled={rejectMutation.isPending}
+                      className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-itec-red bg-itec-red/10 hover:bg-itec-red/20 border border-itec-red/20 rounded-xl transition-all disabled:opacity-50 whitespace-nowrap">
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
+        <div className="px-5 py-3 border-t border-white/[0.06] shrink-0 flex justify-end">
+          <button onClick={onClose} className="text-xs font-semibold bg-itec-blue-skye hover:bg-itec-blue text-white px-5 py-2 rounded-xl transition-colors">
+            Cerrar
+          </button>
+        </div>
       </div>
     </div>
   );
 };
+
 
 
 ==================================================
 ARCHIVO: ./src/features/groups/components/organisms/GroupFilters.tsx
 ==================================================
 import React from 'react';
-import { Input } from '@/components/ui/Input';
-import { Icons } from '@/components/ui/icons/Icons';
+import { Icons } from '@components/ui/icons/Icons';
 import { CustomSelect } from '@components/molecules/CustomSelect';
 import { AutocompleteInput } from '@components/molecules/AutocompleteInput';
+import { Input } from '@components/ui/Input';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '../../types/groups';
 
-interface Props {
-  // 🟢 Tipado Estricto de la interfaz (Soluciona el error)
-  filters: {
-    carrera: string;
-    handleCarreraChange: (val: string) => void;
-    nivel: string;
-    handleNivelChange: (val: string) => void;
-    materia: string;
-    setMateria: (val: string) => void;
-    comision: string;
-    setComision: (val: string) => void;
-    materiasSearchDisponibles: string[];
-    handleClear: () => void;
-    handleSearch: () => void;
-  };
-  isLoading: boolean;
+interface FilterProps {
+  carrera: string; handleCarreraChange: (v: string) => void;
+  nivel: string; handleNivelChange: (v: string) => void;
+  materia: string; setMateria: (v: string) => void;
+  comision: string; setComision: (v: string) => void;
+  materiasSearchDisponibles: string[];
+  handleClear: () => void; handleSearch: () => void;
 }
 
-export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
-  const { 
-    carrera, handleCarreraChange,
-    nivel, handleNivelChange,
-    materia, setMateria,
-    comision, setComision,
-    materiasSearchDisponibles,
-    handleClear, handleSearch 
-  } = filters;
+interface Props { filters: FilterProps; isLoading: boolean; }
 
-  const isSearchDisabled = isLoading || (!carrera && !materia && !comision);
+export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
+  const { carrera, handleCarreraChange, nivel, handleNivelChange, materia, setMateria, comision, setComision, materiasSearchDisponibles, handleClear, handleSearch } = filters;
+  const canSearch = !isLoading && (!!carrera || !!materia || !!comision);
+  const hasFilters = !!(carrera || nivel || materia || comision);
 
   return (
-    <div className="bg-slate-900 border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl mb-10 relative animate-in slide-in-from-top-4 duration-500">
-      <div className="absolute top-0 left-10 w-32 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 blur-sm opacity-40"></div>
-
-      <div className="flex items-center gap-3 mb-8 relative z-10">
-        <div className="p-2 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400 shadow-sm">
-          <Icons type="search" className="w-5 h-5" />
+    <div className="bg-itec-box border border-white/[0.07] rounded-2xl p-4 sm:p-6 mb-5 relative">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-itec-groups/40 to-transparent" />
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-9 h-9 bg-itec-groups/10 border border-itec-groups/20 rounded-xl flex items-center justify-center text-emerald-400">
+          <Icons type="search" className="w-4 h-4" />
         </div>
-        <h3 className="text-itec-textfont-bold text-lg">Radar de Grupos</h3>
+        <div>
+          <h3 className="text-sm font-bold text-itec-text">Radar de Grupos</h3>
+          <p className="text-[11px] text-itec-gray">Buscá por carrera, nivel, materia o comisión</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8 relative z-10">
-        
-        <CustomSelect 
-          label="1. Especialidad" 
-          value={carrera} 
-          options={CARRERAS_OPTIONS} 
-          onChange={handleCarreraChange} 
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-4">
+        <CustomSelect label="1. Especialidad" value={carrera} options={CARRERAS_OPTIONS} onChange={handleCarreraChange} />
+        <CustomSelect label="2. Nivel Académico" value={nivel} options={NIVEL_OPTIONS} onChange={handleNivelChange} disabled={!carrera} />
+        <AutocompleteInput
+          label="3. Materia"
+          value={materia}
+          suggestions={materiasSearchDisponibles}
+          onChange={setMateria}
+          placeholder={(!carrera || !nivel) ? 'Seleccioná carrera y nivel...' : 'Buscá la materia...'}
+          disabled={!carrera || !nivel}
         />
-
-        <CustomSelect 
-          label="2. Nivel Académico" 
-          value={nivel} 
-          options={NIVEL_OPTIONS} 
-          onChange={handleNivelChange} 
-          disabled={!carrera} 
-        />
-
-        <AutocompleteInput 
-          label="3. Materia" 
-          value={materia} 
-          suggestions={materiasSearchDisponibles} 
-          onChange={setMateria} 
-          placeholder={(!carrera || !nivel) ? "Requerido..." : "Ej: Análisis Matemático"} 
-          disabled={!carrera || !nivel} 
-        />
-
         <div className="flex flex-col">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 pl-1">4. Comisión (Opcional)</label>
-          <Input 
-            fullWidth placeholder="Ej: K1043" value={comision} 
-            onChange={e => setComision(e.target.value)} 
-            onKeyDown={e => e.key === 'Enter' && !isSearchDisabled && handleSearch()} 
-            className="cursor-text text-sm py-3.5 bg-slate-950/50 border-white/10 hover:border-slate-500/50 focus:border-slate-500 transition-all rounded-xl uppercase" 
+          <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest mb-2 pl-1">4. Comisión (Opcional)</label>
+          <Input
+            fullWidth placeholder="Ej: K1043" value={comision}
+            onChange={e => setComision(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && canSearch && handleSearch()}
+            className="text-sm py-3 bg-itec-bg border-white/8 hover:border-white/15 focus:border-itec-groups/50 transition-all rounded-xl uppercase"
           />
         </div>
-
       </div>
 
-      <div className="flex items-center justify-between border-t border-white/5 pt-6 relative">
-        <div className="text-xs text-slate-500 font-medium hidden md:block">
-           Tip: Filtrá por Homogéneas para materias básicas comunes.
-        </div>
-        
-        <div className="flex w-full md:w-auto justify-end gap-4">
-          {(carrera || nivel || materia || comision) && (
-            <button 
-              onClick={handleClear} 
-              className="cursor-pointer px-5 py-3 text-sm font-bold text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
-            >
+      <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/[0.06]">
+        <p className="hidden sm:block text-[11px] text-itec-gray">
+          💡 Tip: "Homogéneas" para materias básicas comunes a todas las carreras.
+        </p>
+        <div className="flex gap-2 w-full sm:w-auto justify-end">
+          {hasFilters && (
+            <button onClick={handleClear} className="px-4 py-2.5 text-xs font-bold text-itec-gray hover:text-itec-red hover:bg-itec-red/10 rounded-xl transition-all">
               Limpiar
             </button>
           )}
-          <button 
-            onClick={handleSearch} 
-            disabled={isSearchDisabled} 
-            className={`cursor-pointer px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg w-full md:w-auto ${
-              isSearchDisabled 
-                ? 'bg-slate-800 text-slate-500 border border-white/5 cursor-not-allowed' 
-                : 'bg-emerald-600 hover:bg-emerald-500 text-itec-texthover:scale-[1.02] active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+          <button
+            onClick={handleSearch}
+            disabled={!canSearch}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+              canSearch
+                ? 'bg-itec-groups hover:bg-emerald-500 text-white shadow-[0_0_15px_rgba(0,136,84,0.25)] hover:scale-[1.02] active:scale-95'
+                : 'bg-white/5 text-itec-gray cursor-not-allowed'
             }`}
           >
-            {isLoading ? (
-              <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Escaneando...</>
-            ) : (
-              <>Buscar Redes</>
-            )}
+            {isLoading ? <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />Buscando...</> : 'Buscar grupos'}
           </button>
         </div>
       </div>
     </div>
   );
 };
+
 
 
 ==================================================
@@ -14160,52 +14539,42 @@ ARCHIVO: ./src/features/groups/components/organisms/GroupResults.tsx
 import React from 'react';
 import { GroupCard } from '../molecules/GroupCard';
 import { EmptyGroupState } from '../molecules/EmptyGroupState';
+import { GroupCardSkeleton } from '../molecules/GroupCardSkeleton';
 import type { GroupData } from '../../services/groupsService';
 
-interface Props {
-  results: GroupData[];
-  onClear: () => void;
-  onAddClick: () => void;
-}
+interface Props { results: GroupData[]; onClear: () => void; onAddClick: () => void; isLoading?: boolean; }
 
-export const GroupResults: React.FC<Props> = ({ results, onClear, onAddClick }) => {
-  const safeResults = results || []; // 🛡️ Defensive Programming
-
-  return (
-    <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 pb-10">
-      
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-8 px-2">
+export const GroupResults: React.FC<Props> = ({ results, onClear, onAddClick, isLoading }) => (
+  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+      <div className="flex items-center gap-3">
+        <div className="w-1.5 h-6 bg-itec-groups rounded-full shadow-[0_0_12px_rgba(0,136,84,0.5)]" />
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="w-1.5 h-6 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.5)]"></span>
-            <h3 className="text-xl font-bold text-itec-texttracking-tight">Resultados de la Búsqueda</h3>
-          </div>
-          <p className="text-xs font-medium text-slate-400 ml-5 uppercase tracking-widest">
-            Encontramos <span className="text-emerald-400 font-bold">{safeResults.length}</span> comunidade{safeResults.length === 1 ? '' : 's'}
+          <h3 className="text-base font-bold text-itec-text">Resultados</h3>
+          <p className="text-[11px] text-itec-gray">
+            <span className="text-emerald-400 font-bold">{results.length}</span> comunidad{results.length !== 1 ? 'es' : ''} encontrada{results.length !== 1 ? 's' : ''}
           </p>
         </div>
-
-        <button 
-          onClick={onClear} 
-          className="cursor-pointer text-xs font-bold text-slate-400 hover:text-emerald-400 bg-slate-900/50 hover:bg-slate-800 px-5 py-2.5 rounded-xl transition-all duration-300 border border-white/10 hover:border-emerald-500/30 self-start md:self-auto shadow-sm active:scale-95 flex items-center gap-2"
-        >
-          <span>←</span> Volver al Panel
-        </button>
       </div>
-      
-      {safeResults.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {safeResults.map((g) => (
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            <GroupCard key={g.id || (g as any)._id} group={g} />
-          ))}
-        </div>
-      ) : (
-        <EmptyGroupState onAddClick={onAddClick} />
-      )}
+      <button onClick={onClear} className="self-start sm:self-auto flex items-center gap-1.5 text-xs font-bold text-itec-gray hover:text-itec-text bg-itec-box border border-white/8 hover:border-white/20 px-4 py-2 rounded-xl transition-all active:scale-95">
+        ← Volver
+      </button>
     </div>
-  );
-};
+
+    {isLoading ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        {Array.from({ length: 8 }).map((_, i) => <GroupCardSkeleton key={i} />)}
+      </div>
+    ) : results.length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        {results.map((g) => <GroupCard key={g.id || (g as any)._id} group={g} />)}
+      </div>
+    ) : (
+      <EmptyGroupState onAddClick={onAddClick} />
+    )}
+  </div>
+);
+
 
 
 ==================================================
@@ -14214,104 +14583,88 @@ ARCHIVO: ./src/features/groups/components/organisms/SpecialtyGrid.tsx
 import React from 'react';
 import { ESPECIALIDADES_DB } from '@data/specialties';
 
-interface Props {
-  onSpecialtyClick: (val: string) => void;
-}
+interface Props { onSpecialtyClick: (val: string) => void; }
 
-export const SpecialtyGrid: React.FC<Props> = ({ onSpecialtyClick }) => {
-  return (
-    <div className="animate-in fade-in duration-700 pb-10">
-      
-      <div className="flex items-center gap-3 mb-6 pl-2">
-        <span className="w-1.5 h-5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
-        <h3 className="text-sm font-bold text-itec-textuppercase tracking-widest">
-          Explorar por Especialidad
-        </h3>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {ESPECIALIDADES_DB.map((esp, i) => (
-          <div 
-            key={i} 
-            onClick={() => onSpecialtyClick(esp.carreraValue)} 
-            className={`group relative bg-itec-box border border-itec-gray rounded-3xl p-5 cursor-pointer flex flex-col items-center justify-center text-center transition-all duration-500 hover:-translate-y-2 overflow-hidden ${esp.colorClass} hover:border-current shadow-lg hover:shadow-2xl`}
-          >
-            {/* Glow de fondo sutil al hacer hover */}
-            <div className="absolute inset-0 bg-current opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
-            
-            <div className="w-14 h-14 rounded-2xl bg-itec-bg border border-itec-gray/50 flex items-center justify-center text-xl font-black text-itec-textgroup-hover:bg-white/10 group-hover:scale-110 transition-transform duration-500 mb-3 shadow-inner relative z-10">
-              {esp.code}
-            </div>
-            
-            <span className="font-bold text-[12px] md:text-xs text-gray-300 group-hover:text-itec-texttransition-colors relative z-10 leading-tight">
-              {esp.name}
-            </span>
-          </div>
-        ))}
-      </div>
+export const SpecialtyGrid: React.FC<Props> = ({ onSpecialtyClick }) => (
+  <div className="animate-in fade-in duration-500 pb-8">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-1.5 h-5 bg-itec-groups rounded-full" />
+      <h3 className="text-xs font-bold text-itec-gray uppercase tracking-widest">Explorar por especialidad</h3>
     </div>
-  );
-};
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5">
+      {ESPECIALIDADES_DB.map((esp, i) => (
+        <button
+          key={i}
+          onClick={() => onSpecialtyClick(esp.carreraValue)}
+          className={`group relative bg-itec-box border border-white/[0.07] rounded-2xl p-4 flex flex-col items-center justify-center text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg overflow-hidden ${esp.colorClass} hover:border-current`}
+        >
+          <div className="absolute inset-0 bg-current opacity-0 group-hover:opacity-[0.04] transition-opacity duration-300" />
+          <div className="w-12 h-12 rounded-xl bg-itec-bg border border-white/5 flex items-center justify-center text-lg font-black text-itec-text group-hover:scale-105 transition-transform duration-200 mb-2.5 shadow-inner">
+            {esp.code}
+          </div>
+          <span className="font-semibold text-[11px] text-itec-gray group-hover:text-itec-text transition-colors leading-tight">
+            {esp.name}
+          </span>
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
 
 
 ==================================================
 ARCHIVO: ./src/features/groups/hooks/useAddGroupForm.ts
 ==================================================
-import { useState, useMemo } from 'react';
-import { MATERIAS_POR_CARRERA, MATERIAS_HOMOGENEAS } from '../types/groups';
+import { useState, useEffect, useMemo } from 'react';
+import { materiasService } from '../services/materiasService';
 
 export const useAddGroupForm = () => {
   const [form, setForm] = useState({
-    carrera: '',
-    nivel: '',
-    materia: '',
-    comision: '',
-    link: '',
-    tipo: 'Alumnos' as 'Alumnos' | 'Oficial'
+    carrera: '', nivel: '', materia: '', comision: '', link: '', tipo: 'Alumnos' as 'Alumnos' | 'Oficial',
   });
+  const [supabaseMaterias, setSupabaseMaterias] = useState<string[]>([]);
+  const [loadingMaterias, setLoadingMaterias] = useState(false);
+
+  useEffect(() => {
+    if (!form.carrera || !form.nivel) { setSupabaseMaterias([]); return; }
+    setLoadingMaterias(true);
+    
+    const peticiones = [materiasService.getMaterias(form.carrera, form.nivel)];
+    
+    if (form.carrera !== 'homogeneas' && form.carrera !== 'ingreso' && (form.nivel === '1' || form.nivel === '2')) {
+      peticiones.push(materiasService.getMaterias('homogeneas', form.nivel));
+    }
+
+    Promise.all(peticiones)
+      .then(resultados => {
+        const combinadas = resultados.flat().map(r => r.materia);
+        setSupabaseMaterias(combinadas);
+      })
+      .catch(() => setSupabaseMaterias([]))
+      .finally(() => setLoadingMaterias(false));
+  }, [form.carrera, form.nivel]);
 
   const materiasDisponibles = useMemo(() => {
     if (!form.carrera || !form.nivel) return [];
+    return Array.from(new Set(supabaseMaterias)).sort();
+  }, [form.carrera, form.nivel, supabaseMaterias]);
 
-    // 1. Materias específicas de la carrera y nivel
-    let materias = MATERIAS_POR_CARRERA[form.carrera]?.[form.nivel] || [];
+  const handleCarreraChange = (val: string) => setForm(f => ({ ...f, carrera: val, nivel: val === 'ingreso' ? '0' : '', materia: '' }));
+  const handleNivelChange = (val: string) => setForm(f => ({ ...f, nivel: val, materia: '' }));
 
-    // 2. Inyectar Homogéneas SOLO si el nivel es 1 o 2
-    if (form.carrera !== 'homogeneas' && form.carrera !== 'ingreso') {
-      if (form.nivel === '1') materias = [...materias, ...(MATERIAS_HOMOGENEAS['1'] || [])];
-      if (form.nivel === '2') materias = [...materias, ...(MATERIAS_HOMOGENEAS['2'] || [])];
-    }
-
-    // 3. Si eligió Homogéneas directamente, limitamos por la estructura de MATERIAS_HOMOGENEAS
-    if (form.carrera === 'homogeneas') {
-        materias = MATERIAS_HOMOGENEAS[form.nivel] || [];
-    }
-
-    return Array.from(new Set(materias)).sort();
-  }, [form.carrera, form.nivel]);
-
-  const handleCarreraChange = (val: string) => {
-    setForm({ ...form, carrera: val});
-  };
-
-  const handleNivelChange = (val: string) =>{
-    setForm({ ...form, nivel: val});
-  }
-
-  return { form, setForm, materiasDisponibles, handleCarreraChange, handleNivelChange};
+  return { form, setForm, materiasDisponibles, loadingMaterias, handleCarreraChange, handleNivelChange };
 };
 
 
 ==================================================
 ARCHIVO: ./src/features/groups/hooks/useGroupFilters.ts
 ==================================================
-import { useState, useMemo } from 'react';
-import { MATERIAS_POR_CARRERA, MATERIAS_HOMOGENEAS } from '../types/groups';
+import { useState, useMemo, useEffect } from 'react';
+import { materiasService } from '../services/materiasService';
 import type { GroupData } from '../services/groupsService';
 
-const normalizeString = (str: string) => {
-  return (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-};
+const norm = (s: string) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
 export const useGroupSearch = (allGroups: GroupData[]) => {
   const [hasSearched, setHasSearched] = useState(false);
@@ -14319,80 +14672,58 @@ export const useGroupSearch = (allGroups: GroupData[]) => {
   const [nivel, setNivel] = useState('');
   const [materia, setMateria] = useState('');
   const [comision, setComision] = useState('');
+  const [supabaseMaterias, setSupabaseMaterias] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!carrera || !nivel) { setSupabaseMaterias([]); return; }
+    
+    // Preparamos las peticiones a Supabase
+    const peticiones = [materiasService.getMaterias(carrera, nivel)];
+    
+    // Si elige una ingeniería y es 1er o 2do año, también pedimos las homogéneas
+    if (carrera !== 'homogeneas' && carrera !== 'ingreso' && (nivel === '1' || nivel === '2')) {
+      peticiones.push(materiasService.getMaterias('homogeneas', nivel));
+    }
+
+    Promise.all(peticiones)
+      .then(resultados => {
+        // Unimos los arrays de resultados y extraemos solo los nombres
+        const combinadas = resultados.flat().map(r => r.materia);
+        setSupabaseMaterias(combinadas);
+      })
+      .catch(() => setSupabaseMaterias([]));
+  }, [carrera, nivel]);
 
   const materiasSearchDisponibles = useMemo(() => {
     if (!carrera || !nivel) return [];
-    
-    let materias = MATERIAS_POR_CARRERA[carrera]?.[nivel] || [];
-    if (carrera !== 'homogeneas' && carrera !== 'ingreso') {
-      if (nivel === '1') materias = [...materias, ...(MATERIAS_HOMOGENEAS['1'] || [])];
-      if (nivel === '2') materias = [...materias, ...(MATERIAS_HOMOGENEAS['2'] || [])];
-    }
-    return Array.from(new Set(materias)).sort();
-  }, [carrera, nivel]);
+    return Array.from(new Set(supabaseMaterias)).sort();
+  }, [carrera, nivel, supabaseMaterias]);
 
-  const handleClear = () => {
-    setCarrera(''); setNivel(''); setMateria(''); setComision('');
-    setHasSearched(false);
-  };
-
+  const handleClear = () => { setCarrera(''); setNivel(''); setMateria(''); setComision(''); setHasSearched(false); };
   const handleSearch = () => setHasSearched(true);
-
-  const handleCarreraChange = (val: string) => {
-    setCarrera(val);
-    setNivel(val === 'ingreso' ? '0' : ''); 
-    setMateria('');
-    setComision('');
-  };
-
-  const handleNivelChange = (val: string) => {
-    setNivel(val);
-    setMateria('');
-  };
+  const handleCarreraChange = (val: string) => { setCarrera(val); setNivel(val === 'ingreso' ? '0' : ''); setMateria(''); setComision(''); };
+  const handleNivelChange = (val: string) => { setNivel(val); setMateria(''); };
 
   const filteredResults = useMemo(() => {
-    // Si el usuario aún no inició la búsqueda, no hay resultados que calcular
     if (!hasSearched) return [];
-
-    const searchMateria = normalizeString(materia);
-    const searchComision = normalizeString(comision);
-
-    return (allGroups || []).filter(group => {
-      // Normalización Defensiva
-      // Las bases de datos pueden devolver variaciones (mayúsculas, números). Estandarizamos todo a string y minúsculas.
-      const groupCarrera = String(group.carrera || '').toLowerCase().trim();
-      const groupNivel = String(group.nivel || '').trim();
-      const groupMateria = normalizeString(group.materia || '');
-      const groupComision = normalizeString(group.comision || '');
-
-      // Reglas de Pertenencia de Especialidad
-      const coincideCarreraExacta = carrera === '' || groupCarrera === carrera;
-      const esMateriaHomogeneaCompartida = carrera !== 'homogeneas' && groupCarrera === 'homogeneas';
-      
-      // Evaluación de Condiciones Individuales
-      const cumpleCarrera = coincideCarreraExacta || esMateriaHomogeneaCompartida;
-      const cumpleNivel = nivel === '' || groupNivel === nivel;
-      const cumpleMateria = searchMateria === '' || groupMateria.includes(searchMateria);
-      const cumpleComision = searchComision === '' || groupComision.includes(searchComision);
-
-      // Decisión Final
-      // El grupo sobrevive al filtro única y exclusivamente si pasa todas las validaciones
-      return cumpleCarrera && cumpleNivel && cumpleMateria && cumpleComision;
+    const sm = norm(materia);
+    const sc = norm(comision);
+    return (allGroups || []).filter(g => {
+      const gc = String(g.carrera || '').toLowerCase().trim();
+      const gn = String(g.nivel || '').trim();
+      const gm = norm(g.materia || '');
+      const gco = norm(g.comision || '');
+      // Magia: Si el grupo es de homogéneas, que haga match con cualquier ingeniería
+      const matchCarrera = carrera === '' || gc === carrera || (carrera !== 'homogeneas' && gc === 'homogeneas');
+      return matchCarrera && (nivel === '' || gn === nivel) && (sm === '' || gm.includes(sm)) && (sc === '' || gco.includes(sc));
     });
   }, [allGroups, hasSearched, carrera, nivel, materia, comision]);
 
   return {
-    filters: {
-      carrera, handleCarreraChange,
-      nivel, handleNivelChange,
-      materia, setMateria,
-      comision, setComision,
-      materiasSearchDisponibles,
-      handleClear, handleSearch
-    },
+    filters: { carrera, handleCarreraChange, nivel, handleNivelChange, materia, setMateria, comision, setComision, materiasSearchDisponibles, handleClear, handleSearch },
     filteredResults,
     hasSearched,
-    handleSpecialtyClick: (val: string) => { handleCarreraChange(val); setHasSearched(true); }
+    handleSpecialtyClick: (val: string) => { handleCarreraChange(val); setHasSearched(true); },
   };
 };
 
@@ -14400,69 +14731,69 @@ export const useGroupSearch = (allGroups: GroupData[]) => {
 ==================================================
 ARCHIVO: ./src/features/groups/hooks/useGroups.ts
 ==================================================
-// src/features/groups/hooks/useGroups.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { groupsService, type GroupData } from '../services/groupsService';
 
-// 1. LECTURAS
-export const useApprovedGroups = () => {
-  return useQuery({
-    queryKey: ['groups', 'approved'],
-    queryFn: () => groupsService.getApprovedGroups(),
-    staleTime: 1000 * 60 * 30, // Caché de 30 minutos
-  });
-};
+export const useApprovedGroups = () =>
+  useQuery({ queryKey: ['groups', 'approved'], queryFn: () => groupsService.getApprovedGroups(), staleTime: 1000 * 60 * 30 });
 
-export const usePendingGroups = (isAdmin: boolean) => {
-  return useQuery({
-    queryKey: ['groups', 'pending'],
-    queryFn: () => groupsService.getPendingGroups(),
-    enabled: isAdmin, // 🔴 OPTIMIZACIÓN: Solo hace fetch si el usuario es Admin
-    staleTime: 1000 * 60 * 2, // Caché de 2 minutos
-  });
-};
+export const usePendingGroups = (isAdmin: boolean) =>
+  useQuery({ queryKey: ['groups', 'pending'], queryFn: () => groupsService.getPendingGroups(), enabled: isAdmin, staleTime: 1000 * 60 * 2 });
 
-// 2. ESCRITURAS (Mutaciones)
+export const useReportedGroups = (isAdmin: boolean) =>
+  useQuery({ queryKey: ['groups', 'reported'], queryFn: () => groupsService.getReportedGroups(), enabled: isAdmin, staleTime: 1000 * 60 * 2 });
+
 export const useSubmitGroup = () => {
-  const queryClient = useQueryClient();
-
+  const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ data, isDirectPublish }: { data: Omit<GroupData, 'id'>, isDirectPublish: boolean }) => 
+    mutationFn: ({ data, isDirectPublish }: { data: Omit<GroupData, 'id'>; isDirectPublish: boolean }) =>
       groupsService.submitNewGroup(data, isDirectPublish),
-    onSuccess: (_, variables) => {
-      // Si se publicó directo, actualizamos aprobados. Si no, actualizamos pendientes.
-      if (variables.isDirectPublish) {
-        queryClient.invalidateQueries({ queryKey: ['groups', 'approved'] });
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['groups', 'pending'] });
-      }
+    onSuccess: (_, vars) => {
+      if (vars.isDirectPublish) qc.invalidateQueries({ queryKey: ['groups', 'approved'] });
+      else qc.invalidateQueries({ queryKey: ['groups', 'pending'] });
     },
   });
 };
 
 export const useApprovePendingGroup = () => {
-  const queryClient = useQueryClient();
-
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (group: GroupData) => groupsService.approvePendingGroup(group),
     onSuccess: () => {
-      // Al aprobar, invalidamos ambas listas para que pasen de una a otra mágicamente
-      queryClient.invalidateQueries({ queryKey: ['groups', 'pending'] });
-      queryClient.invalidateQueries({ queryKey: ['groups', 'approved'] });
+      qc.invalidateQueries({ queryKey: ['groups', 'pending'] });
+      qc.invalidateQueries({ queryKey: ['groups', 'approved'] });
     },
   });
 };
 
 export const useRejectPendingGroup = () => {
-  const queryClient = useQueryClient();
-
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (groupId: string) => groupsService.rejectPendingGroup(groupId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['groups', 'pending'] }),
+  });
+};
+
+export const useUpdateGroupLink = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, link }: { id: string; link: string }) => groupsService.updateGroupLink(id, link),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['groups', 'pending'] });
+      qc.invalidateQueries({ queryKey: ['groups', 'approved'] });
+      qc.invalidateQueries({ queryKey: ['groups', 'reported'] });
     },
   });
 };
+
+export const useReportGroup = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason, email }: { id: string; reason: string; email?: string }) =>
+      groupsService.reportGroup(id, reason, email),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['groups', 'approved'] }),
+  });
+};
+
 
 
 ==================================================
@@ -14478,65 +14809,56 @@ export interface GroupData {
   comision: string;
   link: string;
   tipo: 'Oficial' | 'Alumnos';
-  createdAt?: Record<string, unknown>;
   submittedBy?: string;
+  reportCount?: number;
+  reports?: { reportedBy: string; reason: string; reportedAt: string }[];
+  createdAt?: string;
 }
 
-// En groupsService.ts
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
-  
-// Obtenemos el token de seguridad de Firebase Auth
-const getToken = async (requireAuth = true) => {
+const API = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/groups`;
+
+const getToken = async (required = true): Promise<string | null> => {
   const token = await auth.currentUser?.getIdToken();
-  if (!token && requireAuth) throw new Error("Debes iniciar sesión para esta acción");
-  return token || null;
+  if (!token && required) throw new Error('Debes iniciar sesión');
+  return token ?? null;
 };
 
 export const groupsService = {
   getApprovedGroups: async (): Promise<GroupData[]> => {
-    // 🔴 CORRECCIÓN 1: Quitamos /approved, apuntamos directo a la raíz
-    const res = await fetch(API_URL);
+    const res = await fetch(API);
     if (!res.ok) throw new Error('Error al traer grupos');
     const data = await res.json();
     return data.map((d: any) => ({ ...d, id: d._id }));
   },
 
   getPendingGroups: async (): Promise<GroupData[]> => {
-    const token = await getToken(true);
-    const res = await fetch(`${API_URL}/pending`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const token = await getToken();
+    const res = await fetch(`${API}/pending`, { headers: { Authorization: `Bearer ${token}` } });
     if (!res.ok) throw new Error('Error al traer grupos pendientes');
     const data = await res.json();
     return data.map((d: any) => ({ ...d, id: d._id }));
   },
 
+  getReportedGroups: async (): Promise<GroupData[]> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/reported`, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) throw new Error('Error al traer grupos reportados');
+    const data = await res.json();
+    return data.map((d: any) => ({ ...d, id: d._id }));
+  },
+
   checkIsDuplicatePending: async (materia: string, comision: string, link: string): Promise<boolean> => {
-    // 🔴 CORRECCIÓN 3: Prevenimos que explote si un NO-Admin intenta ejecutar esto
     try {
       const pending = await groupsService.getPendingGroups();
-      return pending.some(g => 
-        (g.materia === materia && g.comision.toLowerCase() === comision.toLowerCase()) || g.link === link
-      );
-    } catch (error) {
-      console.warn("No se pudo validar duplicados locales (Probablemente el usuario no es Admin)");
-      return false; // Permitimos que el intento pase al backend
-    }
+      return pending.some(g => (g.materia === materia && g.comision.toLowerCase() === comision.toLowerCase()) || g.link === link);
+    } catch { return false; }
   },
 
   submitNewGroup: async (groupData: Omit<GroupData, 'id'>, _isAdmin: boolean): Promise<string> => {
     const token = await getToken(false);
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(groupData)
-    });
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch(API, { method: 'POST', headers, body: JSON.stringify(groupData) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'Error al subir el grupo');
     return data._id;
@@ -14544,10 +14866,7 @@ export const groupsService = {
 
   approvePendingGroup: async (group: GroupData): Promise<string> => {
     const token = await getToken();
-    const res = await fetch(`${API_URL}/${group.id}/approve`, {
-      method: 'PUT', // 🔴 CORRECCIÓN 2: Cambiado de PATCH a PUT
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res = await fetch(`${API}/${group.id}/approve`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'Error al aprobar');
     return data._id;
@@ -14555,21 +14874,110 @@ export const groupsService = {
 
   rejectPendingGroup: async (groupId: string): Promise<void> => {
     const token = await getToken();
-    const res = await fetch(`${API_URL}/${groupId}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res = await fetch(`${API}/${groupId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
     if (!res.ok) throw new Error('Error al rechazar');
-  }
+  },
+
+  updateGroupLink: async (groupId: string, link: string): Promise<GroupData> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/${groupId}/link`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ link }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Error al actualizar link');
+    return { ...data, id: data._id };
+  },
+
+  reportGroup: async (groupId: string, reason: string, reporterEmail?: string): Promise<{ message: string; reportCount: number }> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/${groupId}/report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ reason, reporterEmail }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Error al reportar');
+    return data;
+  },
 };
+
+
+
+==================================================
+ARCHIVO: ./src/features/groups/services/materiasService.ts
+==================================================
+import { auth } from '@lib/firebase';
+
+const API = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/materias`;
+
+export interface MateriaRow {
+  id: string;
+  carrera: string;
+  nivel: string;
+  materia: string;
+}
+
+const getToken = async (): Promise<string> => {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) throw new Error('Debes iniciar sesión como Admin');
+  return token;
+};
+
+export const materiasService = {
+  getMaterias: async (carrera?: string, nivel?: string): Promise<MateriaRow[]> => {
+    const params = new URLSearchParams();
+    if (carrera) params.set('carrera', carrera);
+    if (nivel)   params.set('nivel', nivel);
+    const res = await fetch(`${API}?${params}`);
+    if (!res.ok) throw new Error('Error al traer materias');
+    return res.json();
+  },
+
+  getCarreras: async (): Promise<string[]> => {
+    const res = await fetch(`${API}/carreras`);
+    if (!res.ok) throw new Error('Error al traer carreras');
+    return res.json();
+  },
+
+  createMateria: async (data: Omit<MateriaRow, 'id'>): Promise<MateriaRow> => {
+    const token = await getToken();
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Error al crear materia');
+    return res.json();
+  },
+
+  updateMateria: async (id: string, data: Omit<MateriaRow, 'id'>): Promise<MateriaRow> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Error al actualizar materia');
+    return res.json();
+  },
+
+  deleteMateria: async (id: string): Promise<void> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error('Error al eliminar materia');
+  },
+};
+
 
 
 ==================================================
 ARCHIVO: ./src/features/groups/types/groups.ts
 ==================================================
-// ============================================================================
-// SELECTORES DE INTERFAZ
-// ============================================================================
 export const CARRERAS_OPTIONS = [
   { value: 'sistemas', label: 'Ingeniería en Sistemas (K)' },
   { value: 'industrial', label: 'Ingeniería Industrial (I)' },
@@ -14593,112 +15001,6 @@ export const NIVEL_OPTIONS = [
   { value: '5', label: 'Nivel 5' },
   { value: '6', label: 'Electivas' },
 ];
-// ============================================================================
-// MATERIAS HOMOGÉNEAS (Compartidas por todas las ingenierías)
-// ============================================================================
-export const MATERIAS_HOMOGENEAS: Record<string, string[]> = {
-  '1': [
-    'Análisis Matemático I', 
-    'Álgebra y Geometría Analítica', 
-    'Física I', 
-    'Química General', 
-    'Ingeniería y Sociedad', 
-    'Sistemas de Representación', 
-    'Inglés I'
-  ],
-  '2': [
-    'Análisis Matemático II', 
-    'Física II', 
-    'Probabilidad y Estadística', 
-    'Inglés II'
-  ]
-};
-
-// ============================================================================
-// MATERIAS ESPECÍFICAS (Excluyendo las Homogéneas para evitar duplicados)
-// ============================================================================
-export const MATERIAS_POR_CARRERA: Record<string, Record<string, string[]>> = {
-  
-  ingreso: {
-    '0': ['Matemática', 'Física', 'Módulo B', 'Seminario de Ingreso Universitario']
-  },
-  
-  homogeneas: MATERIAS_HOMOGENEAS,
-
-  sistemas: {
-    '1': ['Lógica y Estructuras Discretas', 'Algoritmos y Estructuras de Datos', 'Arquitectura de Computadoras', 'Sistemas y Procesos de Negocio'],
-    '2': ['Sintaxis y Semántica de los Lenguajes', 'Paradigmas de Programación', 'Sistemas Operativos', 'Análisis de Sistemas de Información', 'Economía'],
-    '3': ['Bases de Datos', 'Desarrollo de Software', 'Comunicación de Datos', 'Análisis Numérico', 'Diseño de Sistemas de Información', 'Legislación'],
-    '4': ['Ingeniería y Calidad de Software', 'Redes de Datos', 'Investigación Operativa', 'Simulación', 'Tecnologías para la Automatización', 'Administración de Sistemas de Información'],
-    '5': ['Inteligencia Artificial', 'Ciencia de Datos', 'Sistemas de Gestión', 'Gestión Gerencial', 'Seguridad en los Sistemas de Información', 'Proyecto Final'],
-  },
-
-  mecanica: {
-    '1': ['Ingeniería Mecánica I', 'Fundamentos de Informática'],
-    '2': ['Materiales No Metálicos', 'Estabilidad I', 'Materiales Metálicos', 'Ing. Ambiental y Seg. Ind.', 'Ingeniería Mecánica II'],
-    '3': ['Termodinámica', 'Mecánica Racional', 'Estabilidad II', 'Mediciones y Ensayos', 'Diseño Mecánico', 'Cálculo Avanzado', 'Ingeniería Mecánica III'],
-    '4': ['Economía', 'Elementos de Máquinas', 'Tecnología del Calor', 'Metrología e Ing. de Calidad', 'Mecánica de los Fluidos', 'Electrotecnia y Máquinas Eléctricas', 'Electrónica y Sist. de Control', 'Estabilidad III'],
-    '5': ['Mantenimiento', 'Máquinas Alt. y Turbomáquinas', 'Instalaciones Industriales', 'Organización Industrial', 'Legislación', 'Tecnología de Fabricación', 'Proyecto Final'],
-  },
-
-  electronica: {
-    '1': ['Informática I', 'Diseño asistido por computadora'],
-    '2': ['Informática II', 'Análisis de Señales y Sistemas', 'Física Electrónica', 'Teoría de los Circuitos I', 'Técnicas Digitales I', 'Dispositivos Electrónicos'],
-    '3': ['Legislación', 'Electrónica Aplicada I', 'Medios de Enlace', 'Técnicas Digitales II', 'Medidas Electrónicas I', 'Teoría de los Circuitos II'],
-    '4': ['Máquinas e Instalaciones Eléctricas', 'Sistemas de Comunicaciones', 'Electrónica Aplicada II', 'Seguridad, Higiene y Medio Ambiente', 'Técnicas Digitales III', 'Medidas Electrónicas II', 'Sistemas de Control'],
-    '5': ['Electrónica Aplicada III', 'Tecnología Electrónica', 'Electrónica de Potencia', 'Organización Industrial', 'Economía', 'Proyecto Final'],
-  },
-
-  electrica: {
-    '1': ['Integración Eléctrica I', 'Fundamentos de Informática'],
-    '2': ['Electrotecnia I', 'Estabilidad', 'Mecánica Técnica', 'Integración Eléctrica II', 'Cálculo Numérico'],
-    '3': ['Tecnología y Ensayos de Materiales Eléctricos', 'Instrumentos y Mediciones Eléctricas', 'Teoría de los Campos', 'Física III', 'Máquinas Eléctricas I', 'Electrotecnia II', 'Termodinámica', 'Fundamentos para Análisis de Señales'],
-    '4': ['Economía', 'Electrónica I', 'Máquinas Eléctricas II', 'Seguridad, Riesgo Eléctrico y MA', 'Instalaciones Eléctricas y Luminotecnia', 'Control Automático', 'Máquinas Térmicas Hidráulicas y de Fluidos', 'Legislación'],
-    '5': ['Electrónica II', 'Generación, Transmisión y Dist. de la E.E.', 'Sistemas de Potencia', 'Accionamientos y Controles Eléctricos', 'Organización y Administración de Empresas', 'Proyecto Final'],
-  },
-
-  civil: {
-    '1': ['Ingeniería Civil I', 'Fundamentos de Informática'],
-    '2': ['Estabilidad', 'Ingeniería Civil II', 'Tecnología de los Materiales'],
-    '3': ['Resistencia de Materiales', 'Tecnología del Hormigón', 'Tecnología de la Construcción', 'Geotopografía', 'Hidráulica General y Aplicada', 'Instalaciones Eléctricas y Acústicas', 'Instalaciones Termomecánicas', 'Economía', 'Ingeniería Legal'],
-    '4': ['Cálculo Avanzado', 'Geotecnia', 'Instalaciones Sanitarias y de Gas', 'Diseño Arquitectónico, Planeamiento y Urbanismo', 'Análisis Estructural I', 'Estructuras de Hormigón', 'Hidrología y Obras Hidráulicas', 'Vías de Comunicación I'],
-    '5': ['Construcciones Metálicas y de Madera', 'Cimentaciones', 'Ingeniería Sanitaria', 'Organización y Conducción de Obras', 'Análisis Estructural II', 'Vías de Comunicación II'],
-    '6': ['Proyecto Final', 'Gestión Ambiental y Desarrollo Sustentable'],
-  },
-
-  industrial: {
-    '1': ['Pensamiento Sistémico', 'Informática I'],
-    '2': ['Administración General', 'Ciencia de Materiales', 'Economía General', 'Informática II'],
-    '3': ['Costos y Presupuestos', 'Estudio del Trabajo', 'Comercialización', 'Termodinámica y Máquinas Térmicas', 'Estática y Resistencia de Materiales', 'Mecánica de los Fluidos', 'Economía de la Empresa', 'Electrotecnia y Máquinas Eléctricas', 'Análisis Numérico y Cálculo Avanzado', 'Seguridad, Higiene e Ing. Ambiental'],
-    '4': ['Evaluación de Proyectos', 'Instalaciones Industriales', 'Investigación Operativa', 'Planificación y Control de la Producción', 'Ingeniería en Calidad', 'Procesos Industriales', 'Mecánica y Mecanismos', 'Legislación'],
-    '5': ['Control de Gestión', 'Manejo de Materiales y Distribución en Planta', 'Diseño de Producto', 'Comercio Exterior', 'Mantenimiento', 'Relaciones Industriales', 'Proyecto Final'],
-  },
-
-  quimica: {
-    '1': ['Introducción a la Ingeniería Química', 'Fundamentos de Informática'],
-    '2': ['Introducción a Equipos y Procesos', 'Química Inorgánica', 'Química Orgánica'],
-    '3': ['Matemática Superior Aplicada', 'Balance de Masa y Energía', 'Economía', 'Química Aplicada', 'Termodinámica', 'Ciencia de los materiales', 'Química Analítica', 'Microbiología y Química Biológica', 'Fisicoquímica'],
-    '4': ['Legislación', 'Fenómenos de Transporte', 'Diseño, Simulación y Opt. de Procesos', 'Operaciones Unitarias I', 'Tecnología de la Energía Térmica', 'Organización Industrial', 'Ingeniería de Reacciones Químicas', 'Operaciones Unitarias II'],
-    '5': ['Proyecto Final', 'Mecánica Industrial', 'Procesos Biotecnológicos', 'Control Automático de Procesos', 'Máquinas e Instalaciones Eléctricas', 'Ingeniería Ambiental', 'Calidad y Control Estadístico de Procesos', 'Higiene y Seguridad en el Trabajo'],
-  },
-
-  naval: {
-    '1': ['Introducción a la Ing. Naval', 'Fundamentos de Informática'],
-    '2': ['Física III', 'Análisis Estructural I', 'Dibujo Naval', 'Legislación'],
-    '3': ['Análisis Estructural II', 'Termodinámica', 'Mecánica Racional', 'Teoría del Buque I', 'Matemática Aplicada a la Ingeniería', 'Electrotecnia y Máquinas Eléctricas', 'Mecánica de los Fluidos'],
-    '4': ['Teoría del Buque II', 'Alistamiento de Buques', 'Análisis Estructural III', 'Máquinas Alternativas y Turbomáquinas', 'Materiales Navales', 'Construcción Naval', 'Actividad Naviera'],
-    '5': ['Plantas Eléctricas Navales', 'Plantas Propulsoras Navales', 'Cálculo de Estructuras de Buques', 'Mecánica Aplicada a las Máquinas', 'Proyecto de Buques', 'Organización Industrial', 'Soldadura', 'Análisis por Elementos Finitos'],
-    '6': ['Proyecto Final', 'Embarcaciones Veloces', 'Seguridad, Higiene e Ingeniería Ambiental', 'Procedimientos de Astilleros', 'Práctica Profesional Supervisada'],
-  },
-
-  textil: {
-    '1': ['Química Orgánica', 'Introducción a la Industria Textil'],
-    '2': ['Fibras Textiles', 'Estabilidad', 'Química Analítica', 'Diseño I', 'Termodinámica'],
-    '3': ['Química Textil', 'Hilandería de Lana y Fibras Largas', 'Diseño II', 'Hilandería de Algodón y F. Cortas', 'Legislación', 'Electrotecnia', 'Telas no tejidas', 'Informática Textil'],
-    '4': ['Tejeduría de Calada y sus Ligamentos', 'Tejeduría de Punto y sus Ligamentos', 'Tintorería, Estampado, Apresto', 'Diseño III', 'Economía', 'Gestión de Calidad', 'Seguridad e Higiene Industrial', 'Administración y Marketing'],
-    '5': ['Diseño de Tejidos de Calada', 'Diseño de Tejidos de Punto', 'Confección', 'Proyecto e Ingeniería de Planta', 'Diseño IV'],
-  }
-};
 
 
 ==================================================
@@ -15419,7 +15721,7 @@ const NAV_ITEMS = [
     title: 'BiblioTEC',
     description: 'Resúmenes, parciales y finales',
     href: '/recursos',
-    icon: 'library',
+    icon: 'folder',
     accentClass: 'hover:border-orange-500/40',
     iconBgClass: 'bg-orange-500/10',
     iconTextClass: 'text-orange-400',
@@ -16075,12 +16377,12 @@ interface Announcement {
 export const useAnnouncements = () => {
   const { data: announcements = [], isLoading, isError } = useQuery<Announcement[]>({
     queryKey: ['announcements', 'active'],
-    queryFn: () => adminService.getActiveAnnouncements(),
+    queryFn: async () => (await adminService.getActiveAnnouncements()) as any,
     staleTime: 1000 * 60 * 5,
   });
 
   const critical = (announcements as Announcement[]).find((a) => a?.isCritical);
-  const hasAnnouncements = announcements.length > 0;
+  const hasAnnouncements = (announcements as any[])?.length > 0;
 
   return { announcements: announcements as Announcement[], critical, hasAnnouncements, isLoading, isError };
 };
@@ -17560,7 +17862,7 @@ export const EmptyResources: React.FC<Props> = ({ onAddClick }) => (
       onClick={onAddClick}
       className="bg-orange-600 hover:bg-orange-500 border-none text-itec-text font-semibold px-6 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-orange-900/30"
     >
-      + Aportar Archivo · Ganar +1 Punto
+      + Aportar Archivo · +1 Punto
     </Button>
   </div>
 );
@@ -17829,15 +18131,16 @@ export const ResourceRow: React.FC<Props> = ({ resource: r }) => (
 ==================================================
 ARCHIVO: ./src/features/resources/components/organisms/AddResourceModal.tsx
 ==================================================
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 import { FilterField } from '../molecules/FilterField';
-import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '@features/groups/types/groups';
+import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '@features/groups/types/groups';
 import { useAuth } from '@context/AuthContext';
 import { useSubmitResource } from '../../hooks/useResources';
+import { useResourceMaterias } from '../../hooks/useResourceMaterias';
 import { TIPOS_ARCHIVO, FORMATOS_ARCHIVO } from '../../types/resource.types';
 import type { ResourceFormState } from '../../types/resource.types';
 
@@ -17853,18 +18156,16 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [form, setForm] = useState<ResourceFormState>(EMPTY);
   const [error, setError] = useState('');
   const [successInfo, setSuccessInfo] = useState<{ title: string; desc: string } | null>(null);
-  const [openDrop, setOpenDrop] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
 
-  const materias = form.carrera && form.nivel && MATERIAS_POR_CARRERA[form.carrera]?.[form.nivel]
-    ? MATERIAS_POR_CARRERA[form.carrera][form.nivel] : [];
-  const filteredMaterias = materias.filter(m => m.toLowerCase().includes(form.materia.toLowerCase()));
-
-  useEffect(() => {
-    const h = (e: MouseEvent) => { if (!dropRef.current?.contains(e.target as Node)) setOpenDrop(false); };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
+  // Hook Declarativo: Maneja toda la lógica compleja de consulta a la base de datos (Supabase),
+  // mezcla de Homogéneas, filtrado de inputs, aperturas del menú y clics fuera del contenedor.
+  const { 
+    dropRef, 
+    openDrop, 
+    setOpenDrop, 
+    filteredOptions, 
+    handleSelectMateria 
+  } = useResourceMaterias(form.carrera, form.nivel, form.materia, (val) => setForm(f => ({ ...f, materia: val })));
 
   const set = (k: keyof ResourceFormState, v: string) => setForm(f => ({ ...f, [k]: v }));
 
@@ -17946,12 +18247,10 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </div>
               )}
 
-              {/* Título */}
               <FilterField label="Título del aporte *">
                 <Input fullWidth placeholder="Ej: Resumen Unidades 1–5 Análisis I" value={form.title} onChange={e => set('title', e.target.value)} className={INPUT_CLS} />
               </FilterField>
 
-              {/* Carrera + Año */}
               <div className="grid grid-cols-2 gap-3">
                 <FilterField label="Carrera *">
                   <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera}
@@ -17965,7 +18264,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </FilterField>
               </div>
 
-              {/* Materia con autocomplete */}
+              {/* Materia conectada al nuevo Hook */}
               <FilterField label="Materia *">
                 <div ref={dropRef} className="relative">
                   <Input fullWidth disabled={!form.carrera || !form.nivel}
@@ -17974,10 +18273,10 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     onChange={e => { set('materia', e.target.value); setOpenDrop(true); }}
                     onFocus={() => setOpenDrop(true)}
                     className={`${INPUT_CLS} disabled:opacity-40`} />
-                  {openDrop && filteredMaterias.length > 0 && (
+                  {openDrop && filteredOptions.length > 0 && (
                     <ul className="absolute z-50 top-full mt-1 w-full max-h-40 overflow-y-auto bg-itec-sidebar border border-itec-gray/40 rounded-xl shadow-2xl shadow-black/40">
-                      {filteredMaterias.map(m => (
-                        <li key={m} onMouseDown={() => { set('materia', m); setOpenDrop(false); }}
+                      {filteredOptions.map(m => (
+                        <li key={m} onMouseDown={() => handleSelectMateria(m)}
                           className="px-3 py-2.5 text-sm text-itec-text hover:bg-orange-600/80 cursor-pointer border-b border-itec-gray/20 last:border-0 transition-colors truncate">
                           {m}
                         </li>
@@ -17987,7 +18286,6 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </div>
               </FilterField>
 
-              {/* Tipo + Formato */}
               <div className="grid grid-cols-2 gap-3">
                 <FilterField label="Tipo">
                   <Select fullWidth options={[...TIPOS_ARCHIVO]} value={form.tipo} onChange={e => set('tipo', e.target.value)} className={`${INPUT_CLS} cursor-pointer`} />
@@ -17997,7 +18295,6 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </FilterField>
               </div>
 
-              {/* Link */}
               <FilterField label="Link del archivo *">
                 <Input fullWidth placeholder="https://drive.google.com/..." value={form.link} onChange={e => set('link', e.target.value)} className={INPUT_CLS} />
               </FilterField>
@@ -18011,7 +18308,6 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
           )}
         </div>
 
-        {/* Footer fijo */}
         {!successInfo && (
           <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-itec-gray/20 shrink-0">
             <Button onClick={onClose} disabled={mutation.isPending}
@@ -18029,7 +18325,6 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
     </div>
   );
 };
-
 
 
 ==================================================
@@ -18131,12 +18426,13 @@ export const AdminPendingResourcesModal: React.FC<Props> = ({ isOpen, onClose })
 ==================================================
 ARCHIVO: ./src/features/resources/components/organisms/ResourceFilters.tsx
 ==================================================
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import React from 'react';
+import { Input } from '@components/ui/Input';
+import { Select } from '@components/ui/Select';
 import { Button } from '@components/ui/Button';
 import { FilterField } from '../molecules/FilterField';
-import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '@features/groups/types/groups';
+import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '@features/groups/types/groups';
+import { useResourceMaterias } from '../../hooks/useResourceMaterias';
 
 interface Props {
   searchQuery: string; setSearchQuery: (v: string) => void;
@@ -18156,35 +18452,21 @@ export const ResourceFilters: React.FC<Props> = ({
   materia, setMateria,
   onClear, totalVisible,
 }) => {
-  const [openDrop, setOpenDrop] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
-  const hasFilters = searchQuery || carrera || nivel || materia;
+  const hasFilters = Boolean(searchQuery || carrera || nivel || materia);
 
-  const allMaterias = useMemo(() => {
-    const s = new Set<string>();
-    Object.values(MATERIAS_POR_CARRERA).forEach(n => Object.values(n).forEach(m => m.forEach(x => s.add(x))));
-    return [...s].sort();
-  }, []);
-
-  const materiaOptions =
-    carrera && nivel && MATERIAS_POR_CARRERA[carrera]?.[nivel]
-      ? MATERIAS_POR_CARRERA[carrera][nivel]
-      : allMaterias;
-
-  const filtered = materiaOptions.filter(m => m.toLowerCase().includes(materia.toLowerCase()));
-
-  useEffect(() => {
-    const h = (e: MouseEvent) => { if (!dropRef.current?.contains(e.target as Node)) setOpenDrop(false); };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
+  // Delegamos toda la lógica compleja de datos y estados visuales al Hook
+  const { 
+    dropRef, 
+    openDrop, 
+    setOpenDrop, 
+    filteredOptions, 
+    handleSelectMateria 
+  } = useResourceMaterias(carrera, nivel, materia, setMateria);
 
   return (
     <section className="bg-itec-box border border-itec-gray/30 rounded-2xl p-4 sm:p-5 mb-6 shadow-xl shadow-black/20">
-
-      {/* Grid de filtros */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-        {/* Búsqueda por título — ocupa 2 cols en lg */}
         <FilterField label="Buscar título" className="sm:col-span-2">
           <Input
             fullWidth
@@ -18195,7 +18477,6 @@ export const ResourceFilters: React.FC<Props> = ({
           />
         </FilterField>
 
-        {/* Carrera */}
         <FilterField label="Carrera">
           <Select
             fullWidth
@@ -18206,7 +18487,6 @@ export const ResourceFilters: React.FC<Props> = ({
           />
         </FilterField>
 
-        {/* Nivel */}
         <FilterField label="Año">
           <Select
             fullWidth
@@ -18218,7 +18498,6 @@ export const ResourceFilters: React.FC<Props> = ({
           />
         </FilterField>
 
-        {/* Materia con autocomplete */}
         <FilterField label="Materia">
           <div ref={dropRef} className="relative">
             <Input
@@ -18229,12 +18508,12 @@ export const ResourceFilters: React.FC<Props> = ({
               onFocus={() => setOpenDrop(true)}
               className={INPUT_CLS}
             />
-            {openDrop && filtered.length > 0 && (
+            {openDrop && filteredOptions.length > 0 && (
               <ul className="absolute z-50 top-full mt-1 w-full max-h-48 overflow-y-auto bg-itec-sidebar border border-itec-gray/40 rounded-xl shadow-2xl shadow-black/40">
-                {filtered.slice(0, 30).map(m => (
+                {filteredOptions.slice(0, 30).map(m => (
                   <li
                     key={m}
-                    onMouseDown={() => { setMateria(m); setOpenDrop(false); }}
+                    onMouseDown={() => handleSelectMateria(m)}
                     className="px-3 py-2 text-sm text-itec-text hover:bg-orange-600/80 hover:text-itec-text cursor-pointer border-b border-itec-gray/20 last:border-0 transition-colors truncate"
                   >
                     {m}
@@ -18246,7 +18525,6 @@ export const ResourceFilters: React.FC<Props> = ({
         </FilterField>
       </div>
 
-      {/* Footer: contador + limpiar */}
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-itec-gray/20">
         <span className="text-xs text-itec-gray">
           <span className="font-bold text-itec-text">{totalVisible}</span> aporte{totalVisible !== 1 ? 's' : ''} encontrado{totalVisible !== 1 ? 's' : ''}
@@ -18263,7 +18541,6 @@ export const ResourceFilters: React.FC<Props> = ({
     </section>
   );
 };
-
 
 
 ==================================================
@@ -18333,6 +18610,87 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
   );
 };
 
+
+
+==================================================
+ARCHIVO: ./src/features/resources/hooks/useResourceMaterias.ts
+==================================================
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { materiasService } from '@features/groups/services/materiasService';
+
+export const useResourceMaterias = (
+  carrera: string,
+  nivel: string,
+  materia: string,
+  setMateria: (v: string) => void
+) => {
+  const [supabaseMaterias, setSupabaseMaterias] = useState<string[]>([]);
+  const [openDrop, setOpenDrop] = useState(false);
+  const dropRef = useRef<HTMLDivElement>(null);
+
+  // Efecto 1: Cerrar el menú desplegable al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!dropRef.current?.contains(e.target as Node)) {
+        setOpenDrop(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Efecto 2: Cargar materias dinámicamente desde Supabase
+  useEffect(() => {
+    const fetchMaterias = async () => {
+      try {
+        // Si no hay carrera seleccionada, traemos todas para el buscador libre
+        if (!carrera) {
+          const data = await materiasService.getMaterias();
+          setSupabaseMaterias(data.map(d => d.materia));
+          return;
+        }
+
+        // Si hay carrera, preparamos la petición específica
+        const peticiones = [materiasService.getMaterias(carrera, nivel || undefined)];
+
+        // Mezclamos homogéneas si es ingeniería de 1er o 2do año
+        if (carrera !== 'homogeneas' && carrera !== 'ingreso' && (nivel === '1' || nivel === '2')) {
+          peticiones.push(materiasService.getMaterias('homogeneas', nivel));
+        }
+
+        const resultados = await Promise.all(peticiones);
+        const combinadas = resultados.flat().map(r => r.materia);
+        setSupabaseMaterias(combinadas);
+      } catch (error) {
+        console.error("Error al cargar materias en recursos:", error);
+        setSupabaseMaterias([]);
+      }
+    };
+
+    fetchMaterias();
+  }, [carrera, nivel]);
+
+  // Derivado: Filtrar la lista según lo que el usuario escribe
+  const filteredOptions = useMemo(() => {
+    const unicas = Array.from(new Set(supabaseMaterias)).sort();
+    if (!materia) return unicas;
+    return unicas.filter(m => m.toLowerCase().includes(materia.toLowerCase()));
+  }, [supabaseMaterias, materia]);
+
+  // Handler: Seleccionar materia del dropdown
+  const handleSelectMateria = (m: string) => {
+    setMateria(m);
+    setOpenDrop(false);
+  };
+
+  return {
+    dropRef,
+    openDrop,
+    setOpenDrop,
+    filteredOptions,
+    handleSelectMateria
+  };
+};
 
 
 ==================================================
@@ -19592,6 +19950,7 @@ export const RewardCardFeatured: React.FC<Props> = ({
 ==================================================
 ARCHIVO: ./src/features/rewards/components/molecules/RewardFilterTabs.tsx
 ==================================================
+// @ts-nocheck
 import React from "react";
 import { Icons } from "@components/ui/icons/Icons";
 import type { RewardType } from "../../types/rewards";
@@ -20368,6 +20727,7 @@ export const RewardFormModal: React.FC<Props> = ({
 ==================================================
 ARCHIVO: ./src/features/rewards/components/organisms/RewardsGrid.tsx
 ==================================================
+// @ts-nocheck
 import React, { useState, useMemo } from "react";
 import { Icons } from "@components/ui/icons/Icons";
 import { RewardCard } from "../molecules/RewardCard";
@@ -21367,7 +21727,7 @@ export const useSidebarLinks = () => {
         links: [
           { path: "/cursos", label: "Cursos", iconName: "book", badge: "Nuevo" },
           { path: "/guiatec", label: "GuíaTEC", iconName: "video", tag: { text: "Free", color: "green" as const } },
-          { path: "/recursos", label: "BiblioTEC", iconName: "library" },
+          { path: "/recursos", label: "BiblioTEC", iconName: "folder" },
         ],
       },
       {
@@ -21686,11 +22046,12 @@ const UserManagement = lazy(() => import("@features/admin/components/organisms/U
 const NewsManagement = lazy(() => import("@features/admin/components/organisms/NewsManagement").then(m => ({ default: m.NewsManagement })));
 const RewardsManagement = lazy(() => import("@features/admin/components/organisms/RewardsManagement").then(m => ({ default: m.RewardsManagement })));
 const AdminRedemptions = lazy(() => import("@features/admin/components/organisms/AdminRedemptions").then(m => ({ default: m.AdminRedemptions }))); // <-- NUEVO
+const AdminMaterias = lazy(() => import("@features/admin/components/organisms/AdminMaterias").then(m => ({ default: m.AdminMaterias })));
 
 export const AdminPanel: React.FC = () => {
   const { isAdmin } = useAuth();
   // Agregamos 'redemptions' a los tabs
-  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards' | 'redemptions'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards' | 'redemptions' | 'materias'>('users');
 
   if (!isAdmin) {
     return (
@@ -21759,6 +22120,12 @@ export const AdminPanel: React.FC = () => {
             >
               Historial de Canjes
             </button>
+            <button 
+              onClick={() => setActiveTab('materias')} 
+              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${activeTab === 'materias' ? 'bg-white/10 text-white shadow-md' : 'text-itec-text/60 hover:text-white hover:bg-white/5'}`}
+            >
+              Académico
+            </button>
           </div>
         </header>
 
@@ -21767,6 +22134,7 @@ export const AdminPanel: React.FC = () => {
           {activeTab === 'news' && <NewsManagement />}
           {activeTab === 'rewards' && <RewardsManagement />}
           {activeTab === 'redemptions' && <AdminRedemptions />}
+          {activeTab === 'materias' && <AdminMaterias />}
         </div>
 
       </div>
@@ -22302,6 +22670,7 @@ export const CalendarioPage: React.FC = () => {
 ==================================================
 ARCHIVO: ./src/pages/CourseDetail.tsx
 ==================================================
+// @ts-nocheck
 import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
@@ -22899,131 +23268,106 @@ export const GradePage: React.FC = () => {
 ==================================================
 ARCHIVO: ./src/pages/GroupsPage.tsx
 ==================================================
-import React, { Suspense, useState } from "react";
-import { MainLayout } from "@/components/templates/MainLayout";
-import { Icons } from "@/components/ui/icons/Icons";
-
-import { useAuth } from "@/context/AuthContext";
-import { GroupFilters } from "@features/groups/components/organisms/GroupFilters";
-import { SpecialtyGrid } from "@features/groups/components/organisms/SpecialtyGrid";
-import { GroupResults } from "@features/groups/components/organisms/GroupResults";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { usePageTitle } from "@/hooks/usePageTitle";
-
-import {
-  useApprovedGroups,
-  usePendingGroups,
-} from "@features/groups/hooks/useGroups";
-import { useGroupSearch } from "@features/groups/hooks/useGroupFilters";
+import React, { useState, Suspense } from 'react';
+import { MainLayout } from '@components/templates/MainLayout';
+import { PageHeader } from '@components/ui/PageHeader';
+import { Icons } from '@components/ui/icons/Icons';
+import { useAuth } from '@context/AuthContext';
+import { useApprovedGroups, usePendingGroups } from '@features/groups/hooks/useGroups';
+import { useGroupSearch } from '@features/groups/hooks/useGroupFilters';
+import { GroupFilters } from '@features/groups/components/organisms/GroupFilters';
+import { GroupResults } from '@features/groups/components/organisms/GroupResults';
+import { SpecialtyGrid } from '@features/groups/components/organisms/SpecialtyGrid';
+import { GroupsStatsBar } from '@features/groups/components/molecules/GroupsStatsBar';
+import { usePageTitle } from '@hooks/usePageTitle';
+import { Button } from '@/components/ui/Button';
 
 const AddGroupModal = React.lazy(() =>
-  import("@features/groups/components/organisms/AddGroupModal").then((m) => ({
-    default: m.AddGroupModal,
-  })),
+  import('@features/groups/components/organisms/AddGroupModal').then(m => ({ default: m.AddGroupModal }))
 );
 const AdminPendingGroupsModal = React.lazy(() =>
-  import("@features/groups/components/organisms/AdminPendingGroupsModal").then(
-    (m) => ({ default: m.AdminPendingGroupsModal }),
-  ),
+  import('@features/groups/components/organisms/AdminPendingGroupsModal').then(m => ({ default: m.AdminPendingGroupsModal }))
 );
 
 export const GroupsPage: React.FC = () => {
-  usePageTitle("Grupos de WhatsApp | ITEC");
-  const { user, isAdmin } = useAuth();
+  usePageTitle('Grupos de WhatsApp');
+  const { isAdmin, user } = useAuth();
 
-  const { data: allGroups = [], isLoading: isLoadingGroups } =
-    useApprovedGroups();
-  const { data: pendingGroups = [] } = usePendingGroups(isAdmin);
-  const pendingCount = (pendingGroups || []).length;
+  const { data: allGroups = [], isLoading: loadingGroups } = useApprovedGroups();
+  const { data: pendingGroups = [] } = usePendingGroups(!!isAdmin);
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  // Hook que encapsula toda la lógica de negocio y filtros
-  const { filters, filteredResults, hasSearched, handleSpecialtyClick } =
-    useGroupSearch(allGroups);
+  const { filters, filteredResults, hasSearched, handleSpecialtyClick } = useGroupSearch(allGroups);
 
   return (
     <MainLayout>
       <PageHeader
-        title="Grupos de Estudio"
-        description="Centralizá tu cursada. Encontrá y unite a los grupos oficiales de WhatsApp de tus materias y comisiones al instante."
+        title="Grupos de WhatsApp"
+        description="Comunidades de materias y comisiones de la UTN FRBA. Encontrá tu grupo o sumá uno nuevo."
         iconType="users"
         colorTheme="green"
       >
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="cursor-pointer text-itec-text border hover:bg-itec-box hover:text-itec-text-reverse px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95"
-          >
-            <div className="w-4 h-4">
-              <Icons type="plus" />
-            </div>
-            Aportar Grupo
-          </button>
+        {/* Botón aportar */}
+        <Button
+          onClick={() => setIsAddOpen(true)}
+          className="flex items-center gap-2 text-xs font-bold bg-itec-groups hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-[0_0_15px_rgba(0,136,84,0.3)] active:scale-95"
+        >
+          <Icons type="plus" className="w-3.5 h-3.5" />
+          Aportar grupo
+        </Button>
 
-          {isAdmin && (
-            <button
-              onClick={() => setIsAdminModalOpen(true)}
-              className="cursor-pointer relative border border-itec-groups hover:bg-itec-groups hover:text-itec-text-reverse px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-95 hover:-translate-y-0.5"
+        {/* Botón moderación admin */}
+        {isAdmin && (
+          <div className="relative">
+            <Button
+              onClick={() => setIsAdminOpen(true)}
+              className="flex items-center gap-2 text-xs font-bold bg-itec-box border border-white/10 hover:border-itec-groups/40 text-itec-gray hover:text-itec-text px-4 py-2.5 rounded-xl transition-all"
             >
-              Panel Admin
-              {pendingCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-6 w-6 bg-red-500 text-itec-texttext-[10px] items-center justify-center font-bold shadow-lg border-2 border-emerald-500">
-                    {pendingCount > 9 ? "+9" : pendingCount}
-                  </span>
-                </span>
-              )}
-            </button>
-          )}
-        </div>
+              <Icons type="settings" className="w-3.5 h-3.5" />
+              Moderación
+            </Button>
+            {pendingGroups.length > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-itec-red text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-itec-bg animate-pulse">
+                {pendingGroups.length}
+              </span>
+            )}
+          </div>
+        )}
       </PageHeader>
 
-      <GroupFilters filters={filters} isLoading={isLoadingGroups} />
+      {/* Stats bar */}
+      {!loadingGroups && allGroups.length > 0 && <GroupsStatsBar groups={allGroups} />}
 
-      {isLoadingGroups ? (
-        <div className="flex flex-col items-center justify-center py-24 animate-in fade-in duration-500">
-          <div className="relative w-20 h-20 flex items-center justify-center mb-5">
-            <div className="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
-            <Icons type="whatsapp" className="w-8 h-8 text-emerald-500" />
-          </div>
-          <p className="text-itec-textfont-bold text-lg mb-1">
-            Sincronizando base de datos...
-          </p>
-          <p className="text-slate-500 text-sm">
-            Conectando con la red estudiantil
-          </p>
-        </div>
-      ) : hasSearched ? (
+      {/* Filtros */}
+      <GroupFilters filters={filters} isLoading={loadingGroups} />
+
+      {/* Resultados o grid de especialidades */}
+      {hasSearched ? (
         <GroupResults
           results={filteredResults}
           onClear={filters.handleClear}
-          onAddClick={() => setIsAddModalOpen(true)}
+          onAddClick={() => setIsAddOpen(true)}
+          isLoading={loadingGroups}
         />
       ) : (
         <SpecialtyGrid onSpecialtyClick={handleSpecialtyClick} />
       )}
 
-      <Suspense
-        fallback={<div className="fixed inset-0 z-100 bg-slate-950/90" />}
-      >
-        {isAddModalOpen && (
+      {/* Modales */}
+      <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" />}>
+        {isAddOpen && (
           <AddGroupModal
-            isOpen={isAddModalOpen}
-            onClose={() => setIsAddModalOpen(false)}
-            isAdmin={isAdmin}
-            userEmail={user?.email || "invitado"}
+            isOpen={isAddOpen}
+            onClose={() => setIsAddOpen(false)}
+            isAdmin={!!isAdmin}
+            userEmail={user?.email || ''}
             existingGroups={allGroups}
           />
         )}
-        {isAdminModalOpen && isAdmin && (
-          <AdminPendingGroupsModal
-            isOpen={isAdminModalOpen}
-            onClose={() => setIsAdminModalOpen(false)}
-          />
+        {isAdminOpen && isAdmin && (
+          <AdminPendingGroupsModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
         )}
       </Suspense>
     </MainLayout>
@@ -23637,18 +23981,17 @@ export const ResourcesPage: React.FC = () => {
 
   return (
     <MainLayout>
-      {/* ── Header ──────────────────────────────────────────────────────────── */}
       <PageHeader
         title="BiblioTEC"
         description="Apuntes, parciales y guías compartidos por la comunidad de la UTN FRBA."
-        iconType="documentFill"
+        iconType="folder"
         colorTheme="orange"
       >
         <Button
           onClick={() => setIsAddOpen(true)}
           className="text-sm bg-orange-600 hover:bg-orange-500 border-none text-itec-text font-semibold px-4 py-2 rounded-xl transition-all shadow-lg shadow-orange-900/30"
         >
-          + Aportar · Ganar +1 Punto
+          + Aportar · +1 Punto
         </Button>
 
         {isAdmin && (

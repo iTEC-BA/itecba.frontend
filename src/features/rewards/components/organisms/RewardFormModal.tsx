@@ -226,7 +226,7 @@ export const RewardFormModal: React.FC<Props> = ({
         <div className="px-6 pb-6 pt-4 border-t border-white/5 flex gap-3 shrink-0">
           <Button
             type="button"
-            variant="secondary"
+            variant="slate" hierarchy="ghost"
             onClick={onClose}
             fullWidth
             className="h-11 rounded-2xl text-sm font-bold"

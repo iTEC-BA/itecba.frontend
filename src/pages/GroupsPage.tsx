@@ -1,128 +1,103 @@
-import React, { Suspense, useState } from "react";
-import { MainLayout } from "@/components/templates/MainLayout";
-import { Icons } from "@/components/ui/icons/Icons";
-
-import { useAuth } from "@/context/AuthContext";
-import { GroupFilters } from "@features/groups/components/organisms/GroupFilters";
-import { SpecialtyGrid } from "@features/groups/components/organisms/SpecialtyGrid";
-import { GroupResults } from "@features/groups/components/organisms/GroupResults";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { usePageTitle } from "@/hooks/usePageTitle";
-
-import {
-  useApprovedGroups,
-  usePendingGroups,
-} from "@features/groups/hooks/useGroups";
-import { useGroupSearch } from "@features/groups/hooks/useGroupFilters";
+import React, { useState, Suspense } from 'react';
+import { MainLayout } from '@components/templates/MainLayout';
+import { PageHeader } from '@components/ui/PageHeader';
+import { Icons } from '@components/ui/icons/Icons';
+import { useAuth } from '@context/AuthContext';
+import { useApprovedGroups, usePendingGroups } from '@features/groups/hooks/useGroups';
+import { useGroupSearch } from '@features/groups/hooks/useGroupFilters';
+import { GroupFilters } from '@features/groups/components/organisms/GroupFilters';
+import { GroupResults } from '@features/groups/components/organisms/GroupResults';
+import { SpecialtyGrid } from '@features/groups/components/organisms/SpecialtyGrid';
+import { GroupsStatsBar } from '@features/groups/components/molecules/GroupsStatsBar';
+import { usePageTitle } from '@hooks/usePageTitle';
+import { Button } from '@/components/ui/Button';
 
 const AddGroupModal = React.lazy(() =>
-  import("@features/groups/components/organisms/AddGroupModal").then((m) => ({
-    default: m.AddGroupModal,
-  })),
+  import('@features/groups/components/organisms/AddGroupModal').then(m => ({ default: m.AddGroupModal }))
 );
 const AdminPendingGroupsModal = React.lazy(() =>
-  import("@features/groups/components/organisms/AdminPendingGroupsModal").then(
-    (m) => ({ default: m.AdminPendingGroupsModal }),
-  ),
+  import('@features/groups/components/organisms/AdminPendingGroupsModal').then(m => ({ default: m.AdminPendingGroupsModal }))
 );
 
 export const GroupsPage: React.FC = () => {
-  usePageTitle("Grupos de WhatsApp | ITEC");
-  const { user, isAdmin } = useAuth();
+  usePageTitle('Grupos de WhatsApp');
+  const { isAdmin, user } = useAuth();
 
-  const { data: allGroups = [], isLoading: isLoadingGroups } =
-    useApprovedGroups();
-  const { data: pendingGroups = [] } = usePendingGroups(isAdmin);
-  const pendingCount = (pendingGroups || []).length;
+  const { data: allGroups = [], isLoading: loadingGroups } = useApprovedGroups();
+  const { data: pendingGroups = [] } = usePendingGroups(!!isAdmin);
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  // Hook que encapsula toda la lógica de negocio y filtros
-  const { filters, filteredResults, hasSearched, handleSpecialtyClick } =
-    useGroupSearch(allGroups);
+  const { filters, filteredResults, hasSearched, handleSpecialtyClick } = useGroupSearch(allGroups);
 
   return (
     <MainLayout>
       <PageHeader
-        title="Grupos de Estudio"
-        description="Centralizá tu cursada. Encontrá y unite a los grupos oficiales de WhatsApp de tus materias y comisiones al instante."
+        title="Grupos de WhatsApp"
+        description="Comunidades de materias y comisiones de la UTN FRBA. Encontrá tu grupo o sumá uno nuevo."
         iconType="users"
         colorTheme="green"
       >
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="cursor-pointer text-itec-text border hover:bg-itec-box hover:text-itec-text-reverse px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95"
-          >
-            <div className="w-4 h-4">
-              <Icons type="plus" />
-            </div>
-            Aportar Grupo
-          </button>
+        {/* Botón aportar */}
+        <Button
+          onClick={() => setIsAddOpen(true)}
+          className="flex items-center gap-2 text-xs font-bold bg-itec-groups hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-[0_0_15px_rgba(0,136,84,0.3)] active:scale-95"
+        >
+          <Icons type="plus" className="w-3.5 h-3.5" />
+          Aportar grupo
+        </Button>
 
-          {isAdmin && (
-            <button
-              onClick={() => setIsAdminModalOpen(true)}
-              className="cursor-pointer relative border border-itec-groups hover:bg-itec-groups hover:text-itec-text-reverse px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-95 hover:-translate-y-0.5"
+        {/* Botón moderación admin */}
+        {isAdmin && (
+          <div className="relative">
+            <Button
+              onClick={() => setIsAdminOpen(true)}
+              className="flex items-center gap-2 text-xs font-bold bg-itec-box border border-white/10 hover:border-itec-groups/40 text-itec-gray hover:text-itec-text px-4 py-2.5 rounded-xl transition-all"
             >
-              Panel Admin
-              {pendingCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-6 w-6 bg-red-500 text-itec-texttext-[10px] items-center justify-center font-bold shadow-lg border-2 border-emerald-500">
-                    {pendingCount > 9 ? "+9" : pendingCount}
-                  </span>
-                </span>
-              )}
-            </button>
-          )}
-        </div>
+              <Icons type="settings" className="w-3.5 h-3.5" />
+              Moderación
+            </Button>
+            {pendingGroups.length > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-itec-red text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-itec-bg animate-pulse">
+                {pendingGroups.length}
+              </span>
+            )}
+          </div>
+        )}
       </PageHeader>
 
-      <GroupFilters filters={filters} isLoading={isLoadingGroups} />
+      {/* Stats bar */}
+      {!loadingGroups && allGroups.length > 0 && <GroupsStatsBar groups={allGroups} />}
 
-      {isLoadingGroups ? (
-        <div className="flex flex-col items-center justify-center py-24 animate-in fade-in duration-500">
-          <div className="relative w-20 h-20 flex items-center justify-center mb-5">
-            <div className="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
-            <Icons type="whatsapp" className="w-8 h-8 text-emerald-500" />
-          </div>
-          <p className="text-itec-textfont-bold text-lg mb-1">
-            Sincronizando base de datos...
-          </p>
-          <p className="text-slate-500 text-sm">
-            Conectando con la red estudiantil
-          </p>
-        </div>
-      ) : hasSearched ? (
+      {/* Filtros */}
+      <GroupFilters filters={filters} isLoading={loadingGroups} />
+
+      {/* Resultados o grid de especialidades */}
+      {hasSearched ? (
         <GroupResults
           results={filteredResults}
           onClear={filters.handleClear}
-          onAddClick={() => setIsAddModalOpen(true)}
+          onAddClick={() => setIsAddOpen(true)}
+          isLoading={loadingGroups}
         />
       ) : (
         <SpecialtyGrid onSpecialtyClick={handleSpecialtyClick} />
       )}
 
-      <Suspense
-        fallback={<div className="fixed inset-0 z-100 bg-slate-950/90" />}
-      >
-        {isAddModalOpen && (
+      {/* Modales */}
+      <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" />}>
+        {isAddOpen && (
           <AddGroupModal
-            isOpen={isAddModalOpen}
-            onClose={() => setIsAddModalOpen(false)}
-            isAdmin={isAdmin}
-            userEmail={user?.email || "invitado"}
+            isOpen={isAddOpen}
+            onClose={() => setIsAddOpen(false)}
+            isAdmin={!!isAdmin}
+            userEmail={user?.email || ''}
             existingGroups={allGroups}
           />
         )}
-        {isAdminModalOpen && isAdmin && (
-          <AdminPendingGroupsModal
-            isOpen={isAdminModalOpen}
-            onClose={() => setIsAdminModalOpen(false)}
-          />
+        {isAdminOpen && isAdmin && (
+          <AdminPendingGroupsModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
         )}
       </Suspense>
     </MainLayout>

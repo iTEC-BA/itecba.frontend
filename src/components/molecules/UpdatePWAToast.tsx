@@ -1,4 +1,3 @@
-// src/components/molecules/UpdatePWAToast.tsx
 // Notificación de nueva versión disponible
 import React from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';

@@ -47,18 +47,17 @@ export const ResourcesPage: React.FC = () => {
 
   return (
     <MainLayout>
-      {/* ── Header ──────────────────────────────────────────────────────────── */}
       <PageHeader
         title="BiblioTEC"
         description="Apuntes, parciales y guías compartidos por la comunidad de la UTN FRBA."
-        iconType="documentFill"
+        iconType="folder"
         colorTheme="orange"
       >
         <Button
           onClick={() => setIsAddOpen(true)}
           className="text-sm bg-orange-600 hover:bg-orange-500 border-none text-itec-text font-semibold px-4 py-2 rounded-xl transition-all shadow-lg shadow-orange-900/30"
         >
-          + Aportar · Ganar +1 Punto
+          + Aportar · +1 Punto
         </Button>
 
         {isAdmin && (

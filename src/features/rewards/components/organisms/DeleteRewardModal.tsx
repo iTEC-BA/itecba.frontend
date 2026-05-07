@@ -36,7 +36,7 @@ export const DeleteRewardModal: React.FC<Props> = ({
           <div className="flex gap-3">
             <Button
               type="button"
-              variant="secondary"
+              variant="slate" hierarchy="ghost"
               onClick={onClose}
               fullWidth
               className="h-11 rounded-2xl text-sm font-bold"

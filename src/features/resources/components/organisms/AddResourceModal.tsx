@@ -1,12 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 import { FilterField } from '../molecules/FilterField';
-import { CARRERAS_OPTIONS, NIVEL_OPTIONS, MATERIAS_POR_CARRERA } from '@features/groups/types/groups';
+import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '@features/groups/types/groups';
 import { useAuth } from '@context/AuthContext';
 import { useSubmitResource } from '../../hooks/useResources';
+import { useResourceMaterias } from '../../hooks/useResourceMaterias';
 import { TIPOS_ARCHIVO, FORMATOS_ARCHIVO } from '../../types/resource.types';
 import type { ResourceFormState } from '../../types/resource.types';
 
@@ -22,18 +23,16 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [form, setForm] = useState<ResourceFormState>(EMPTY);
   const [error, setError] = useState('');
   const [successInfo, setSuccessInfo] = useState<{ title: string; desc: string } | null>(null);
-  const [openDrop, setOpenDrop] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
 
-  const materias = form.carrera && form.nivel && MATERIAS_POR_CARRERA[form.carrera]?.[form.nivel]
-    ? MATERIAS_POR_CARRERA[form.carrera][form.nivel] : [];
-  const filteredMaterias = materias.filter(m => m.toLowerCase().includes(form.materia.toLowerCase()));
-
-  useEffect(() => {
-    const h = (e: MouseEvent) => { if (!dropRef.current?.contains(e.target as Node)) setOpenDrop(false); };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
+  // Hook Declarativo: Maneja toda la lógica compleja de consulta a la base de datos (Supabase),
+  // mezcla de Homogéneas, filtrado de inputs, aperturas del menú y clics fuera del contenedor.
+  const { 
+    dropRef, 
+    openDrop, 
+    setOpenDrop, 
+    filteredOptions, 
+    handleSelectMateria 
+  } = useResourceMaterias(form.carrera, form.nivel, form.materia, (val) => setForm(f => ({ ...f, materia: val })));
 
   const set = (k: keyof ResourceFormState, v: string) => setForm(f => ({ ...f, [k]: v }));
 
@@ -115,12 +114,10 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </div>
               )}
 
-              {/* Título */}
               <FilterField label="Título del aporte *">
                 <Input fullWidth placeholder="Ej: Resumen Unidades 1–5 Análisis I" value={form.title} onChange={e => set('title', e.target.value)} className={INPUT_CLS} />
               </FilterField>
 
-              {/* Carrera + Año */}
               <div className="grid grid-cols-2 gap-3">
                 <FilterField label="Carrera *">
                   <Select fullWidth options={CARRERAS_OPTIONS} value={form.carrera}
@@ -134,7 +131,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </FilterField>
               </div>
 
-              {/* Materia con autocomplete */}
+              {/* Materia conectada al nuevo Hook */}
               <FilterField label="Materia *">
                 <div ref={dropRef} className="relative">
                   <Input fullWidth disabled={!form.carrera || !form.nivel}
@@ -143,10 +140,10 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     onChange={e => { set('materia', e.target.value); setOpenDrop(true); }}
                     onFocus={() => setOpenDrop(true)}
                     className={`${INPUT_CLS} disabled:opacity-40`} />
-                  {openDrop && filteredMaterias.length > 0 && (
+                  {openDrop && filteredOptions.length > 0 && (
                     <ul className="absolute z-50 top-full mt-1 w-full max-h-40 overflow-y-auto bg-itec-sidebar border border-itec-gray/40 rounded-xl shadow-2xl shadow-black/40">
-                      {filteredMaterias.map(m => (
-                        <li key={m} onMouseDown={() => { set('materia', m); setOpenDrop(false); }}
+                      {filteredOptions.map(m => (
+                        <li key={m} onMouseDown={() => handleSelectMateria(m)}
                           className="px-3 py-2.5 text-sm text-itec-text hover:bg-orange-600/80 cursor-pointer border-b border-itec-gray/20 last:border-0 transition-colors truncate">
                           {m}
                         </li>
@@ -156,7 +153,6 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </div>
               </FilterField>
 
-              {/* Tipo + Formato */}
               <div className="grid grid-cols-2 gap-3">
                 <FilterField label="Tipo">
                   <Select fullWidth options={[...TIPOS_ARCHIVO]} value={form.tipo} onChange={e => set('tipo', e.target.value)} className={`${INPUT_CLS} cursor-pointer`} />
@@ -166,7 +162,6 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </FilterField>
               </div>
 
-              {/* Link */}
               <FilterField label="Link del archivo *">
                 <Input fullWidth placeholder="https://drive.google.com/..." value={form.link} onChange={e => set('link', e.target.value)} className={INPUT_CLS} />
               </FilterField>
@@ -180,7 +175,6 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
           )}
         </div>
 
-        {/* Footer fijo */}
         {!successInfo && (
           <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-itec-gray/20 shrink-0">
             <Button onClick={onClose} disabled={mutation.isPending}

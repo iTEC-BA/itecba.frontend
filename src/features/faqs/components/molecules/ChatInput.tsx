@@ -44,9 +44,7 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled, canUseAI, 
             className="w-full bg-itec-bg border border-itec-gray text-itec-textpl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-teal-500 text-sm transition-all shadow-inner disabled:opacity-50"
           />
         </div>
-        <Button type="submit" disabled={!input.trim() || disabled} className="rounded-xl px-5 py-3.5 bg-teal-600 hover:bg-teal-500 border-none text-itec-textdisabled:opacity-50 shadow-lg">
-          <div className="w-5 h-5"><Icons type="send" /></div>
-        </Button>
+        <Button type="submit" variant="teal" hierarchy="solid" disabled={!input.trim() || disabled} icon="send" />
       </form>
       
       {/* Botón Mágico IA */}

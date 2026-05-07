@@ -352,3 +352,5 @@ Los archivos de redirección ya están generados para los dos hosts más comunes
 
 Estos archivos aseguran que el historyAPI de React Router funcione correctamente al navegar directamente a una URL profunda.
 ```
+
+

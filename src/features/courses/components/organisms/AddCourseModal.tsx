@@ -99,10 +99,8 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
           </div>
           {/* Footer */}
           <div className="flex gap-3 p-5 border-t border-white/8 shrink-0">
-            <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="flex-1">Cancelar</Button>
-            <Button type="submit" variant="primary" disabled={isPending} className="flex-1 bg-itec-blue-skye border-none hover:opacity-90">
-              {isPending ? "Guardando..." : existingCourse ? "Guardar cambios" : "Publicar curso"}
-            </Button>
+            <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} disabled={isPending} className="flex-1">Cancelar</Button>
+            <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isPending}>{existingCourse ? "Guardar cambios" : "Publicar curso"}</Button>
           </div>
         </form>
       </div>
