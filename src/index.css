@@ -110,3 +110,54 @@ input, select, textarea {
 /* Smooth scroll global */
 html { scroll-behavior: smooth; }
 
+
+/* ── ITEC Glassmorphism & Bento Utils ───────────────────────────────────── */
+:root {
+  --glass-bg:         rgba(28, 28, 30, 0.80);
+  --glass-border:     rgba(255, 255, 255, 0.08);
+  --glass-shadow:     0 4px 24px rgba(0, 0, 0, 0.35);
+  --glass-shadow-lg:  0 8px 40px rgba(0, 0, 0, 0.50);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(71, 71, 71, 0.5);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(71, 71, 71, 0.8); }
+
+/* Safe area padding para notch */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0.5rem); }
+
+/* Bento grid gap override */
+.bento-gap { gap: clamp(0.75rem, 2vw, 1.5rem); }
+
+/* Glassmorphism helper class */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Animaciones escalonadas Bento */
+@keyframes bento-in {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0)   scale(1); }
+}
+.bento-animate { animation: bento-in 0.4s ease-out forwards; }
+.bento-animate-delay-1 { animation-delay: 60ms;  }
+.bento-animate-delay-2 { animation-delay: 120ms; }
+.bento-animate-delay-3 { animation-delay: 180ms; }
+.bento-animate-delay-4 { animation-delay: 240ms; }
+.bento-animate-delay-5 { animation-delay: 300ms; }
+
+/* Focus ring accesible */
+*:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.5);
+  outline-offset: 2px;
+}
+

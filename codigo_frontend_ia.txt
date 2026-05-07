@@ -152,7 +152,7 @@ define(['./workbox-b9d3b234'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.eo8k9tejen"
+    "revision": "0.6j2oeqk9ulo"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -5046,12 +5046,16 @@ ARCHIVO: ./index.html
     </style>
 
     <title>iTEC BA — UTN FRBA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+
 
 
 ==================================================
@@ -5843,7 +5847,6 @@ ARCHIVO: ./src/components/molecules/ChatInput.tsx
 ==================================================
 import React, { useState, FormEvent } from 'react';
 import { Button } from '../ui/Button';
-import { Icons } from '../ui/icons/Icons';
 
 interface Props {
   onSendMessage: (text?: string) => void;
@@ -5873,13 +5876,7 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled }) => {
             className="w-full bg-itec-bg border border-itec-gray text-itec-textpl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-itec-blue text-sm transition-all shadow-inner disabled:opacity-50"
           />
         </div>
-        <Button 
-          type="submit" 
-          disabled={!input.trim() || disabled} 
-          className="rounded-xl px-5 py-3.5 bg-itec-blue border-none text-itec-textdisabled:opacity-50 hover:bg-itec-blue-skye shadow-lg transition-transform active:scale-95 flex items-center justify-center"
-        >
-          <div className="w-5 h-5"><Icons type="send" /></div>
-        </Button>
+        <Button type="submit" variant="primary" hierarchy="solid" disabled={!input.trim() || disabled} icon="send" />
       </form>
     </div>
   );
@@ -6505,11 +6502,7 @@ export const ChatbotWidget: React.FC = () => {
                 placeholder="Escribe tu duda..."
                 className="flex-1 bg-itec-box border border-itec-gray text-itec-textpx-3 py-2.5 rounded-xl focus:outline-none focus:border-itec-blue disabled:opacity-50 text-sm transition-colors"
               />
-              <Button type="submit" disabled={isLoading || !input.trim()} className="px-4 rounded-xl flex items-center justify-center">
-                 <div className="w-[18px] h-[18px]">
-                    <Icons type="send" />
-                 </div>
-              </Button>
+              <Button type="submit" variant="primary" hierarchy="solid" isLoading={isLoading} disabled={!input.trim()} icon="send" />
             </form>
           </div>
         </div>
@@ -6780,14 +6773,21 @@ export const BackgroundBlur: React.FC = () => {
 ARCHIVO: ./src/components/ui/Button.tsx
 ==================================================
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { Icons } from './icons/Icons';
+import React from "react";
+import { Icons } from "./icons/Icons";
 
-export type ButtonVariant = 
-  | 'primary' | 'secondary' | 'danger' | 'success' | 'warning' 
-  | 'purple' | 'orange' | 'teal' | 'slate';
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "danger"
+  | "success"
+  | "warning"
+  | "purple"
+  | "orange"
+  | "teal"
+  | "slate";
 
-export type ButtonHierarchy = 'solid' | 'outline' | 'ghost';
+export type ButtonHierarchy = "solid" | "outline" | "ghost";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** El color temático del botón */
@@ -6806,72 +6806,91 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  children, 
-  variant = 'primary', 
-  hierarchy = 'solid',
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  variant = "primary",
+  hierarchy = "solid",
   fullWidth = false,
   icon,
   iconRight,
   isLoading = false,
   text,
-  className = '',
+  className = "",
   disabled,
-  ...props 
+  ...props
 }) => {
   // 1. Clases Base (Estructura, tipografía, accesibilidad y animaciones)
-  const baseStyles = "inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-itec-bg active:scale-[0.98]";
+  const baseStyles =
+    "inline-flex items-center justify-center gap-2 px-3 py-1 text-sm font-semibold rounded-xl transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-itec-bg active:scale-[0.98]";
   const widthStyles = fullWidth ? "w-full" : "w-fit";
-  const disabledStyles = disabled || isLoading ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer";
+  const disabledStyles =
+    disabled || isLoading
+      ? "opacity-50 cursor-not-allowed pointer-events-none"
+      : "cursor-pointer";
 
   // 2. Diccionario de Temas (Combinación de Color + Jerarquía Visual)
   const getThemeStyles = () => {
     const themes: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
       primary: {
-        solid:   "bg-itec-blue-skye text-white hover:bg-itec-blue shadow-lg shadow-itec-blue/20",
-        outline: "border-2 border-itec-blue-skye text-itec-blue-skye hover:bg-itec-blue-skye/10",
-        ghost:   "text-itec-blue-skye hover:bg-itec-blue-skye/10"
+        solid:
+          "bg-itec-blue-skye text-white hover:bg-itec-blue shadow-lg shadow-itec-blue/20",
+        outline:
+          "border-2 border-itec-blue-skye text-itec-blue-skye hover:bg-itec-blue-skye/10",
+        ghost: "text-itec-blue-skye hover:bg-itec-blue-skye/10",
       },
       secondary: {
-        solid:   "bg-white/10 text-white hover:bg-white/20 border border-white/5",
-        outline: "border-2 border-itec-gray text-itec-gray hover:text-white hover:bg-white/5 hover:border-white/20",
-        ghost:   "text-itec-gray hover:text-white hover:bg-white/10"
+        solid: "bg-white/10 text-white hover:bg-white/20 border border-white/5",
+        outline:
+          "border-2 border-itec-gray text-itec-gray hover:text-white hover:bg-white/5 hover:border-white/20",
+        ghost: "text-itec-gray hover:text-white hover:bg-white/10",
       },
       success: {
-        solid:   "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20",
-        outline: "border-2 border-emerald-600 text-emerald-500 hover:bg-emerald-600/10",
-        ghost:   "text-emerald-500 hover:bg-emerald-600/10"
+        solid:
+          "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20",
+        outline:
+          "border-2 border-emerald-600 text-emerald-500 hover:bg-emerald-600/10",
+        ghost: "text-emerald-500 hover:bg-emerald-600/10",
       },
       danger: {
-        solid:   "bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-900/20",
+        solid:
+          "bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-900/20",
         outline: "border-2 border-rose-600 text-rose-500 hover:bg-rose-600/10",
-        ghost:   "text-rose-500 hover:bg-rose-600/10"
+        ghost: "text-rose-500 hover:bg-rose-600/10",
       },
       warning: {
-        solid:   "bg-amber-500 text-black hover:bg-amber-400 shadow-lg shadow-amber-900/20",
-        outline: "border-2 border-amber-500 text-amber-500 hover:bg-amber-500/10",
-        ghost:   "text-amber-500 hover:bg-amber-500/10"
+        solid:
+          "bg-amber-500 text-black hover:bg-amber-400 shadow-lg shadow-amber-900/20",
+        outline:
+          "border-2 border-amber-500 text-amber-500 hover:bg-amber-500/10",
+        ghost: "text-amber-500 hover:bg-amber-500/10",
       },
       purple: {
-        solid:   "bg-purple-600 text-white hover:bg-purple-500 shadow-lg shadow-purple-900/20",
-        outline: "border-2 border-purple-600 text-purple-500 hover:bg-purple-600/10",
-        ghost:   "text-purple-500 hover:bg-purple-600/10"
+        solid:
+          "bg-purple-600 text-white hover:bg-purple-500 shadow-lg shadow-purple-900/20",
+        outline:
+          "border-2 border-purple-600 text-purple-500 hover:bg-purple-600/10",
+        ghost: "text-purple-500 hover:bg-purple-600/10",
       },
       orange: {
-        solid:   "bg-orange-600 text-white hover:bg-orange-500 shadow-lg shadow-orange-900/20",
-        outline: "border-2 border-orange-600 text-orange-500 hover:bg-orange-600/10",
-        ghost:   "text-orange-500 hover:bg-orange-600/10"
+        solid:
+          "bg-orange-600 text-white hover:bg-orange-500 shadow-lg shadow-orange-900/20",
+        outline:
+          "border-2 border-orange-600 text-orange-500 hover:bg-orange-600/10",
+        ghost: "text-orange-500 hover:bg-orange-600/10",
       },
       teal: {
-        solid:   "bg-teal-600 text-white hover:bg-teal-500 shadow-lg shadow-teal-900/20",
+        solid:
+          "bg-teal-600 text-white hover:bg-teal-500 shadow-lg shadow-teal-900/20",
         outline: "border-2 border-teal-600 text-teal-500 hover:bg-teal-600/10",
-        ghost:   "text-teal-500 hover:bg-teal-600/10"
+        ghost: "text-teal-500 hover:bg-teal-600/10",
       },
       slate: {
-        solid:   "bg-slate-700 text-white hover:bg-slate-600 shadow-lg shadow-slate-900/20",
-        outline: "border-2 border-slate-600 text-slate-400 hover:text-white hover:bg-slate-600/10",
-        ghost:   "text-slate-400 hover:text-white hover:bg-slate-600/10"
-      }
+        solid:
+          "bg-slate-700 text-white hover:bg-slate-600 shadow-lg shadow-slate-900/20",
+        outline:
+          "border-2 border-slate-600 text-slate-400 hover:text-white hover:bg-slate-600/10",
+        ghost: "text-slate-400 hover:text-white hover:bg-slate-600/10",
+      },
     };
 
     // Fallback de seguridad por si envían una variante que no existe
@@ -6879,33 +6898,37 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button 
+    <button
       disabled={disabled || isLoading}
-      className={`${baseStyles} ${getThemeStyles()} ${widthStyles} ${disabledStyles} ${className}`} 
+      className={`${baseStyles} ${getThemeStyles()} ${widthStyles} ${disabledStyles} ${className}`}
       {...props}
     >
       {/* Si está cargando, reemplazamos el icono izquierdo por un spinner */}
       {isLoading ? (
         <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
       ) : icon ? (
-        <div className="w-4 h-4 shrink-0"><Icons type={icon as any} /></div>
+        <div className="w-4 h-4 shrink-0">
+          <Icons type={icon as any} />
+        </div>
       ) : null}
-      
+
       {/* Contenido (Permite combinar prop text con children) */}
       {(text || children) && (
-        <span className="truncate">
-          {text}
-          {children}
+        <span className="truncate flex items-center justify-center gap-1">
+          {text}{children}
         </span>
       )}
 
       {/* Icono a la derecha (ej: flecha de "siguiente") */}
       {iconRight && !isLoading && (
-        <div className="w-4 h-4 shrink-0"><Icons type={iconRight as any} /></div>
+        <div className="w-4 h-4 shrink-0">
+          <Icons type={iconRight as any} />
+        </div>
       )}
     </button>
   );
 };
+
 
 
 ==================================================
@@ -7355,7 +7378,7 @@ export const PageHeader: React.FC<Props> = ({
 
         {/* Lado derecho: Acciones (Botones o selectores). Si existen, los acomoda de forma natural */}
         {children && (
-          <div className="flex flex-col items-end gap-3 sm:mt-1 shrink-0">
+          <div className="flex items-center justify-center md:flex-col md:items-end gap-3 sm:mt-1 shrink-0 ">
             {children}
           </div>
         )}
@@ -8236,6 +8259,72 @@ export const NOSOTROS_DATA: NosotrosLink[] = [
 
 
 ==================================================
+ARCHIVO: ./src/features/admin/components/atoms/AdminKPICard.tsx
+==================================================
+// src/features/admin/components/atoms/AdminKPICard.tsx
+import React from "react";
+import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { cn }        from "@/lib/utils";
+
+interface AdminKPICardProps {
+  label:      string;
+  value:      string | number;
+  emoji?:     string;
+  accent?:    string;
+  trend?:     "up" | "down" | "neutral";
+  trendLabel?: string;
+  loading?:   boolean;
+  onClick?:   () => void;
+}
+
+const TREND_MAP = {
+  up:      { icon: "↑", cls: "text-itec-emerald" },
+  down:    { icon: "↓", cls: "text-itec-accent"  },
+  neutral: { icon: "→", cls: "text-itec-muted"   },
+};
+
+export const AdminKPICard: React.FC<AdminKPICardProps> = ({
+  label, value, emoji, accent = "text-itec-sky", trend, trendLabel, loading, onClick,
+}) => {
+  const t = trend ? TREND_MAP[trend] : null;
+  return (
+    <GlassCard
+      hover={!!onClick}
+      onClick={onClick}
+      className="p-5 flex flex-col gap-3 group cursor-default"
+    >
+      {/* Top row */}
+      <div className="flex items-start justify-between">
+        {emoji && (
+          <span className="text-2xl group-hover:scale-110 transition-transform">
+            {emoji}
+          </span>
+        )}
+        {t && (
+          <span className={cn("text-xs font-black", t.cls)}>
+            {t.icon} {trendLabel}
+          </span>
+        )}
+      </div>
+
+      {/* Value */}
+      {loading ? (
+        <div className="h-9 w-20 bg-itec-border/50 rounded-xl animate-pulse" />
+      ) : (
+        <span className={cn("text-4xl font-black leading-none", accent)}>
+          {value}
+        </span>
+      )}
+
+      {/* Label */}
+      <span className="text-[11px] font-bold text-itec-muted">{label}</span>
+    </GlassCard>
+  );
+};
+
+
+
+==================================================
 ARCHIVO: ./src/features/admin/components/atoms/GlobalAnnouncement.tsx
 ==================================================
 import React, { useState, useEffect } from 'react';
@@ -8389,6 +8478,98 @@ export const GlobalAnnouncement: React.FC = () => {
     </div>
   );
 };
+
+
+==================================================
+ARCHIVO: ./src/features/admin/components/atoms/HamburgerButton.tsx
+==================================================
+// src/features/admin/components/atoms/HamburgerButton.tsx
+import React from "react";
+import { cn } from "@/lib/utils";
+
+interface HamburgerButtonProps {
+  open:     boolean;
+  onToggle: () => void;
+  className?: string;
+}
+
+export const HamburgerButton: React.FC<HamburgerButtonProps> = ({
+  open, onToggle, className,
+}) => (
+  <button
+    type="button"
+    onClick={onToggle}
+    aria-label={open ? "Cerrar menú" : "Abrir menú"}
+    aria-expanded={open}
+    className={cn(
+      "w-9 h-9 flex flex-col items-center justify-center gap-[5px]",
+      "rounded-xl border border-itec-border bg-itec-surface",
+      "hover:bg-itec-box2 transition-all duration-200",
+      "focus:outline-none focus:ring-2 focus:ring-itec-sky/30",
+      className
+    )}
+  >
+    <span
+      className={cn(
+        "block w-4 h-0.5 bg-itec-text rounded transition-all duration-300",
+        open && "rotate-45 translate-y-[6.5px]"
+      )}
+    />
+    <span
+      className={cn(
+        "block w-4 h-0.5 bg-itec-text rounded transition-all duration-300",
+        open && "opacity-0 scale-x-0"
+      )}
+    />
+    <span
+      className={cn(
+        "block w-4 h-0.5 bg-itec-text rounded transition-all duration-300",
+        open && "-rotate-45 -translate-y-[6.5px]"
+      )}
+    />
+  </button>
+);
+
+
+
+==================================================
+ARCHIVO: ./src/features/admin/components/atoms/index.ts
+==================================================
+export { AdminKPICard }          from "./AdminKPICard";
+export { HamburgerButton }       from "./HamburgerButton";
+export { StatusDot }             from "./StatusDot";
+
+
+
+==================================================
+ARCHIVO: ./src/features/admin/components/atoms/StatusDot.tsx
+==================================================
+// src/features/admin/components/atoms/StatusDot.tsx
+import React from "react";
+import { cn } from "@/lib/utils";
+
+type Status = "online" | "offline" | "warning" | "error";
+
+const STATUS_MAP: Record<Status, string> = {
+  online:  "bg-itec-emerald shadow-[0_0_6px_rgba(16,185,129,0.5)]",
+  offline: "bg-itec-gray",
+  warning: "bg-itec-amber shadow-[0_0_6px_rgba(245,158,11,0.5)]",
+  error:   "bg-itec-accent shadow-[0_0_6px_rgba(212,19,19,0.5)]",
+};
+
+export const StatusDot: React.FC<{ status: Status; pulse?: boolean; className?: string }> = ({
+  status, pulse = false, className,
+}) => (
+  <span className={cn("relative inline-flex w-2.5 h-2.5 rounded-full", STATUS_MAP[status], className)}>
+    {pulse && (
+      <span className={cn(
+        "absolute inset-0 rounded-full animate-ping opacity-50",
+        STATUS_MAP[status]
+      )} />
+    )}
+  </span>
+);
+
 
 
 ==================================================
@@ -8547,13 +8728,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
           </div>
 
           {/* Botón Submit */}
-          <Button 
-            type="submit" 
-            disabled={createMutation.isPending} 
-            className="w-full py-4 rounded-xl font-black tracking-wide bg-orange-500 hover:bg-orange-600 text-itec-textborder-none mt-4 shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_25px_rgba(249,115,22,0.4)] transition-all outline-none"
-          >
-            {createMutation.isPending ? 'PUBLICANDO AVISO...' : 'PUBLICAR EN LA PLATAFORMA'}
-          </Button>
+          <Button type="submit" variant="orange" hierarchy="solid" fullWidth isLoading={createMutation.isPending}>PUBLICAR EN LA PLATAFORMA</Button>
         </form>
       </div>
     </div>
@@ -8698,6 +8873,130 @@ export const UserSearchBox: React.FC<Props> = ({ searchMutation, toggleMutation 
     </div>
   );
 };
+
+
+==================================================
+ARCHIVO: ./src/features/admin/components/organisms/AdminDashboard.tsx
+==================================================
+// src/features/admin/components/organisms/AdminDashboard.tsx
+import React from "react";
+import { AdminKPICard }  from "@features/admin/components/atoms/AdminKPICard";
+import { GlassCard }     from "@features/profile/components/atoms/GlassCard";
+import { useAdminData }  from "@features/admin/hooks/useAdminData";
+import { type AdminSection } from "@features/admin/hooks/useAdminSidebar";
+import { cn }            from "@/lib/utils";
+
+interface AdminDashboardProps {
+  onNavigate: (s: AdminSection) => void;
+}
+
+interface QuickAction {
+  emoji:   string;
+  text:    string;
+  section: AdminSection;
+  color:   string;
+}
+
+const QUICK_ACTIONS: QuickAction[] = [
+  { emoji: "📢", text: "Publicar Aviso",    section: "news",        color: "hover:border-itec-amber/40  hover:bg-itec-amber/5  hover:text-itec-amber"  },
+  { emoji: "🏷️", text: "Nuevo Beneficio",   section: "benefits",    color: "hover:border-itec-sky/40    hover:bg-itec-sky/5    hover:text-itec-sky"    },
+  { emoji: "🎁", text: "Nueva Recompensa",  section: "rewards",     color: "hover:border-itec-purple/40 hover:bg-itec-purple/5 hover:text-itec-purple" },
+  { emoji: "👥", text: "Gestionar Roles",   section: "users",       color: "hover:border-itec-accent/40 hover:bg-itec-accent/5 hover:text-itec-accent" },
+  { emoji: "📚", text: "Panel Académico",   section: "materias",    color: "hover:border-itec-emerald/40 hover:bg-itec-emerald/5 hover:text-itec-emerald" },
+  { emoji: "🧾", text: "Ver Canjes",        section: "redemptions", color: "hover:border-orange-400/40 hover:bg-orange-400/5 hover:text-orange-400"   },
+  { emoji: "🎓", text: "Tutorías",          section: "tutorias",    color: "hover:border-itec-sky/40    hover:bg-itec-sky/5    hover:text-itec-sky"    },
+];
+
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) => {
+  const { stats, loading } = useAdminData();
+
+  const kpis = [
+    { label: "Usuarios Totales",   value: stats?.totalUsers    ?? 0, emoji: "👥", accent: "text-itec-sky"     },
+    { label: "Beneficios Activos", value: stats?.totalRewards  ?? 0, emoji: "🏷️", accent: "text-itec-amber"   },
+    { label: "Canjes Realizados",  value: stats?.totalRedeemed ?? 0, emoji: "🧾", accent: "text-itec-emerald" },
+    { label: "Avisos Publicados",  value: stats?.totalNews     ?? 0, emoji: "📢", accent: "text-itec-accent"  },
+  ];
+
+  return (
+    <div className="flex flex-col gap-6 animate-fade-in">
+      {/* Título */}
+      <div>
+        <h2 className="text-2xl font-black text-itec-text font-display tracking-tight mb-1">
+          Dashboard
+        </h2>
+        <p className="text-xs text-itec-muted">
+          Resumen general de la plataforma ITEC.BA
+        </p>
+      </div>
+
+      {/* KPI Bento 4 cols */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+        {kpis.map((k) => (
+          <AdminKPICard
+            key={k.label}
+            loading={loading}
+            {...k}
+          />
+        ))}
+      </div>
+
+      {/* Acceso rápido + Actividad reciente */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Acceso rápido — 3 cols */}
+        <GlassCard className="lg:col-span-3 p-6">
+          <h3 className="text-sm font-black text-itec-text mb-4 flex items-center gap-2">
+            ⚡ Acceso Rápido
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+            {QUICK_ACTIONS.map((action) => (
+              <button
+                key={action.section}
+                type="button"
+                onClick={() => onNavigate(action.section)}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2.5 rounded-2xl",
+                  "bg-itec-surface/50 border border-itec-border",
+                  "text-xs font-bold text-itec-muted text-left",
+                  "transition-all duration-200 hover:scale-[1.02]",
+                  action.color
+                )}
+              >
+                <span className="text-base">{action.emoji}</span>
+                <span className="truncate">{action.text}</span>
+              </button>
+            ))}
+          </div>
+        </GlassCard>
+
+        {/* Estadísticas rápidas — 2 cols */}
+        <GlassCard className="lg:col-span-2 p-6">
+          <h3 className="text-sm font-black text-itec-text mb-4 flex items-center gap-2">
+            📈 Estado del Sistema
+          </h3>
+          <div className="flex flex-col gap-3">
+            {[
+              { label: "API Backend",     status: "🟢", value: "Operativo"  },
+              { label: "Firebase Auth",   status: "🟢", value: "Operativo"  },
+              { label: "MongoDB Atlas",   status: "🟢", value: "Conectado"  },
+              { label: "Groq AI",         status: "🟡", value: "Rate limit" },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center justify-between py-1.5 border-b border-itec-border/40 last:border-0">
+                <span className="text-xs text-itec-muted font-bold">{item.label}</span>
+                <span className="text-xs font-bold text-itec-text flex items-center gap-1.5">
+                  {item.status} {item.value}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-itec-border mt-4 text-right">
+            Actualizado ahora
+          </p>
+        </GlassCard>
+      </div>
+    </div>
+  );
+};
+
 
 
 ==================================================
@@ -8932,7 +9231,7 @@ const MessageModal: React.FC<{
             />
           </div>
           <div className="flex gap-3 pt-1">
-            <Button type="button" variant="secondary" onClick={onClose} fullWidth className="h-10 rounded-xl text-sm font-bold">Cancelar</Button>
+            <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} fullWidth className="h-10 rounded-xl text-sm font-bold">Cancelar</Button>
             <Button type="submit" variant="primary" fullWidth disabled={sending} className="h-10 rounded-xl text-sm font-bold">
               {sending ? "Enviando..." : "Enviar aviso"}
             </Button>
@@ -9025,7 +9324,7 @@ export const AdminRedemptions: React.FC = () => {
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <Button
-                          variant="secondary"
+                          variant="slate" hierarchy="ghost"
                           onClick={() => setContact({ uid: red.userId, email: red.userEmail })}
                           className="text-xs h-7 px-3 rounded-lg"
                           text="Contactar"
@@ -9046,6 +9345,165 @@ export const AdminRedemptions: React.FC = () => {
     </div>
   );
 };
+
+
+
+==================================================
+ARCHIVO: ./src/features/admin/components/organisms/AdminSidebar.tsx
+==================================================
+// src/features/admin/components/organisms/AdminSidebar.tsx
+import React          from "react";
+import { useAuth }    from "@context/AuthContext";
+import { SIDEBAR_LINKS, type AdminSection } from "@features/admin/hooks/useAdminSidebar";
+import { cn }         from "@/lib/utils";
+
+interface AdminSidebarProps {
+  active:       AdminSection;
+  onNavigate:   (s: AdminSection) => void;
+  mobileOpen:   boolean;
+  onClose:      () => void;
+}
+
+// ── Ítem del sidebar ──────────────────────────────────────────────────────────
+const SidebarNavItem: React.FC<{
+  link:      (typeof SIDEBAR_LINKS)[0];
+  isActive:  boolean;
+  onClick:   () => void;
+}> = ({ link, isActive, onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    title={link.description}
+    className={cn(
+      "group w-full flex items-center gap-3 px-4 py-2.5 rounded-2xl",
+      "text-sm font-bold text-left transition-all duration-200 outline-none",
+      "focus:ring-2 focus:ring-itec-sky/30",
+      isActive
+        ? "bg-itec-sky/15 text-itec-sky border border-itec-sky/25 shadow-sky/5"
+        : "text-itec-muted hover:text-itec-text hover:bg-itec-surface/70"
+    )}
+  >
+    <span className={cn(
+      "text-base shrink-0 transition-transform duration-200",
+      "group-hover:scale-110"
+    )}>
+      {link.emoji}
+    </span>
+    <span className="flex-1 truncate">{link.label}</span>
+    {link.badge !== undefined && (
+      <span className="ml-auto shrink-0 text-[10px] font-black bg-itec-accent/20 text-itec-accent px-1.5 py-0.5 rounded-md">
+        {link.badge}
+      </span>
+    )}
+    {isActive && (
+      <span className="shrink-0 w-1 h-1 rounded-full bg-itec-sky" />
+    )}
+  </button>
+);
+
+// ── Contenido del sidebar ─────────────────────────────────────────────────────
+const SidebarContent: React.FC<Omit<AdminSidebarProps, "mobileOpen">> = ({
+  active, onNavigate, onClose,
+}) => {
+  const { user } = useAuth();
+  return (
+    <aside className={cn(
+      "flex flex-col h-full",
+      "bg-itec-sidebar border-r border-itec-border",
+      "overflow-y-auto custom-scrollbar"
+    )}>
+      {/* Logo / Header */}
+      <div className="px-4 py-5 border-b border-itec-border shrink-0">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-black text-itec-muted uppercase tracking-widest mb-0.5">
+              Panel de Control
+            </p>
+            <h2 className="text-sm font-black text-itec-text flex items-center gap-1.5">
+              🔧 Admin ITEC
+            </h2>
+          </div>
+          {/* Cerrar en mobile */}
+          <button
+            onClick={onClose}
+            aria-label="Cerrar sidebar"
+            className="lg:hidden w-7 h-7 flex items-center justify-center rounded-lg text-itec-muted hover:text-itec-text hover:bg-itec-surface transition-all"
+          >
+            ✕
+          </button>
+        </div>
+        {user && (
+          <div className="mt-3 flex items-center gap-2">
+            <img
+              src={user.photoURL ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name ?? "A")}&background=1C1C1E&color=E5E6EA`}
+              alt="admin"
+              className="w-7 h-7 rounded-full border border-itec-border"
+            />
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-itec-text truncate">
+                {user.name ?? user.email?.split("@")[0]}
+              </p>
+              <p className="text-[10px] text-itec-accent font-bold">⚡ Administrador</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Links */}
+      <nav className="flex-1 p-3 space-y-1">
+        <p className="text-[9px] font-black text-itec-border uppercase tracking-widest px-4 py-2">
+          Secciones
+        </p>
+        {SIDEBAR_LINKS.map((link) => (
+          <SidebarNavItem
+            key={link.id}
+            link={link}
+            isActive={active === link.id}
+            onClick={() => onNavigate(link.id)}
+          />
+        ))}
+      </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-itec-border shrink-0">
+        <p className="text-[10px] text-itec-border text-center">
+          ITEC.BA · Panel Admin
+        </p>
+      </div>
+    </aside>
+  );
+};
+
+// ── Export principal ──────────────────────────────────────────────────────────
+export const AdminSidebar: React.FC<AdminSidebarProps> = ({
+  active, onNavigate, mobileOpen, onClose,
+}) => (
+  <>
+    {/* ── Desktop: sidebar fijo ── */}
+    <div className="hidden lg:flex w-56 shrink-0 h-full">
+      <SidebarContent active={active} onNavigate={onNavigate} onClose={onClose} />
+    </div>
+
+    {/* ── Mobile: overlay + drawer animado ── */}
+    {mobileOpen && (
+      <>
+        {/* Backdrop */}
+        <div
+          onClick={onClose}
+          aria-hidden="true"
+          className="fixed inset-0 z-40 bg-black/65 backdrop-blur-sm lg:hidden animate-fade-in"
+        />
+        {/* Drawer */}
+        <div className={cn(
+          "fixed top-0 left-0 z-50 h-full w-64 lg:hidden",
+          "animate-slide-in-left"
+        )}>
+          <SidebarContent active={active} onNavigate={onNavigate} onClose={onClose} />
+        </div>
+      </>
+    )}
+  </>
+);
 
 
 
@@ -9132,6 +9590,174 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
     </div>
   );
 };
+
+
+==================================================
+ARCHIVO: ./src/features/admin/components/organisms/BenefitsManagement.tsx
+==================================================
+import React, { useEffect, useState } from "react";
+import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { useAuth } from "@context/AuthContext";
+import { auth } from "@/lib/firebase";
+
+const BASE = import.meta.env.VITE_API_URL ?? "";
+
+interface Benefit {
+  _id: string; title: string; discount: string;
+  location: string; category: string; isActive: boolean; logoUrl?: string;
+}
+
+type BenefitForm = Omit<Benefit, "_id" | "isActive">;
+
+const EMPTY: BenefitForm = { title: "", discount: "", location: "", category: "medrano", logoUrl: "" };
+
+export const BenefitsManagement: React.FC = () => {
+  const [benefits, setBenefits] = useState<Benefit[]>([]);
+  const [loading,  setLoading]  = useState(true);
+  const [form,     setForm]     = useState<BenefitForm>(EMPTY);
+  const [saving,   setSaving]   = useState(false);
+  const [error,    setError]    = useState<string | null>(null);
+  const [editId,   setEditId]   = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    const t = await auth.currentUser?.getIdToken();
+    const res = await fetch(`${BASE}/benefits/all`, { headers: { Authorization: `Bearer ${t}` } });
+    const data = await res.json();
+    setBenefits(data.benefits ?? []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const save = async () => {
+    if (!form.title || !form.discount) { setError("Título y descuento son obligatorios."); return; }
+    setSaving(true); setError(null);
+    const t = await auth.currentUser?.getIdToken();
+    const url    = editId ? `${BASE}/benefits/${editId}` : `${BASE}/benefits`;
+    const method = editId ? "PATCH" : "POST";
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${t}` },
+      body: JSON.stringify(form),
+    });
+    if (!res.ok) { const e = await res.json(); setError(e.message ?? "Error"); setSaving(false); return; }
+    setForm(EMPTY); setEditId(null); setSaving(false); load();
+  };
+
+  const remove = async (id: string) => {
+    const t = await auth.currentUser?.getIdToken();
+    await fetch(`${BASE}/benefits/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${t}` } });
+    load();
+  };
+
+  return (
+    <div className="flex flex-col gap-6 animate-fade-in">
+      <div>
+        <h2 className="text-2xl font-black text-itec-text mb-1">Descuentos TarjeTEC</h2>
+        <p className="text-xs text-itec-muted">Administrá el catálogo de beneficios desde la base de datos.</p>
+      </div>
+
+      {/* Formulario */}
+      <GlassCard className="p-6">
+        <h3 className="text-sm font-black text-itec-text mb-4">{editId ? "Editar Beneficio" : "Nuevo Beneficio"}</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {(["title", "discount", "location", "logoUrl"] as const).map((field) => (
+            <label key={field} className="flex flex-col gap-1">
+              <span className="text-[10px] font-black text-itec-muted uppercase tracking-widest">{field}</span>
+              <input
+                className="bg-itec-surface border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-itec-sky/50"
+                value={(form as any)[field]}
+                onChange={(e) => setForm((p) => ({ ...p, [field]: e.target.value }))}
+              />
+            </label>
+          ))}
+          <label className="flex flex-col gap-1">
+            <span className="text-[10px] font-black text-itec-muted uppercase tracking-widest">Categoría</span>
+            <select
+              className="bg-itec-surface border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-itec-sky/50 appearance-none"
+              value={form.category}
+              onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
+            >
+              {["medrano", "campus", "digital"].map((c) => (
+                <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        {error && <p className="text-red-400 text-xs mt-3 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">{error}</p>}
+        <div className="flex gap-3 mt-4">
+          <button
+            onClick={save}
+            disabled={saving}
+            className="bg-itec-sky text-white text-xs font-black px-5 py-2.5 rounded-xl hover:bg-itec-sky/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? "Guardando..." : editId ? "Actualizar" : "Crear"}
+          </button>
+          {editId && (
+            <button onClick={() => { setEditId(null); setForm(EMPTY); }} className="text-xs text-itec-muted hover:text-itec-text transition-colors">
+              Cancelar
+            </button>
+          )}
+        </div>
+      </GlassCard>
+
+      {/* Listado */}
+      <GlassCard className="p-6">
+        {loading ? (
+          <div className="space-y-3">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-10 rounded-xl bg-itec-surface/40 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-itec-muted border-b border-itec-border">
+                  {["Nombre", "Descuento", "Categoría", "Estado", ""].map((h) => (
+                    <th key={h} className="text-left font-black uppercase tracking-widest pb-3 pr-4">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {benefits.map((b) => (
+                  <tr key={b._id} className="border-b border-itec-border/50 hover:bg-itec-surface/30 transition-colors">
+                    <td className="py-3 pr-4 font-bold text-itec-text">{b.title}</td>
+                    <td className="py-3 pr-4 text-itec-sky font-bold">{b.discount}</td>
+                    <td className="py-3 pr-4 capitalize text-itec-muted">{b.category}</td>
+                    <td className="py-3 pr-4">
+                      <span className={`px-2 py-0.5 rounded-md font-bold ${b.isActive ? "bg-itec-emerald/15 text-itec-emerald" : "bg-itec-muted/15 text-itec-muted"}`}>
+                        {b.isActive ? "Activo" : "Inactivo"}
+                      </span>
+                    </td>
+                    <td className="py-3 flex gap-2">
+                      <button
+                        onClick={() => { setEditId(b._id); setForm({ title: b.title, discount: b.discount, location: b.location, category: b.category, logoUrl: b.logoUrl ?? "" }); }}
+                        className="text-itec-sky hover:underline font-bold"
+                      >Editar</button>
+                      <button onClick={() => remove(b._id)} className="text-itec-accent hover:underline font-bold">Desactivar</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </GlassCard>
+    </div>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/admin/components/organisms/index.ts
+==================================================
+export { AdminSidebar }          from "./AdminSidebar";
+export { AdminDashboard }        from "./AdminDashboard";
+export { TutoriasSection }       from "./TutoriasSection";
+
 
 
 ==================================================
@@ -9353,6 +9979,159 @@ export const RewardsManagement: React.FC = () => {
 
 
 ==================================================
+ARCHIVO: ./src/features/admin/components/organisms/TutoriasSection.tsx
+==================================================
+// src/features/admin/components/organisms/TutoriasSection.tsx
+// Gestión de tutorías/mentorías (feature sugerida en chats i-TEC)
+import React, { useState } from "react";
+import { GlassCard }       from "@features/profile/components/atoms/GlassCard";
+import { cn }              from "@/lib/utils";
+
+interface Tutoria {
+  id:       string;
+  alumno:   string;
+  tutor:    string;
+  materia:  string;
+  fecha:    string;
+  estado:   "pendiente" | "confirmada" | "completada" | "cancelada";
+  tipo:     "virtual" | "presencial";
+}
+
+// Datos demo — en producción vendrían del backend
+const DEMO_TUTORIAS: Tutoria[] = [
+  { id: "1", alumno: "Ramón García", tutor: "Jairo Tumiri", materia: "Álgebra I",         fecha: "2026-05-10", estado: "confirmada",  tipo: "virtual"    },
+  { id: "2", alumno: "Gabi Niz",     tutor: "Jairo Tumiri", materia: "AM I",              fecha: "2026-05-12", estado: "pendiente",   tipo: "presencial" },
+  { id: "3", alumno: "Juan M.",      tutor: "Santiago",     materia: "Sistemas Operativos", fecha: "2026-05-14", estado: "pendiente", tipo: "virtual"    },
+];
+
+const ESTADO_MAP: Record<Tutoria["estado"], { label: string; cls: string }> = {
+  pendiente:   { label: "Pendiente",   cls: "bg-itec-amber/15  text-itec-amber  border-itec-amber/30"   },
+  confirmada:  { label: "Confirmada",  cls: "bg-itec-sky/15    text-itec-sky    border-itec-sky/30"     },
+  completada:  { label: "Completada",  cls: "bg-itec-emerald/15 text-itec-emerald border-itec-emerald/30" },
+  cancelada:   { label: "Cancelada",   cls: "bg-itec-accent/15 text-itec-accent border-itec-accent/30" },
+};
+
+export const TutoriasSection: React.FC = () => {
+  const [filter, setFilter] = useState<Tutoria["estado"] | "todas">("todas");
+
+  const filtered = DEMO_TUTORIAS.filter(
+    (t) => filter === "todas" || t.estado === filter
+  );
+
+  return (
+    <div className="flex flex-col gap-6 animate-fade-in">
+      <div>
+        <h2 className="text-2xl font-black text-itec-text font-display tracking-tight mb-1">
+          🎓 Tutorías
+        </h2>
+        <p className="text-xs text-itec-muted">
+          Sesiones personalizadas entre tutores y alumnos de la UTN.
+        </p>
+      </div>
+
+      {/* Stats rápidas */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[
+          { label: "Pendientes",  value: DEMO_TUTORIAS.filter((t) => t.estado === "pendiente").length,  accent: "text-itec-amber",   emoji: "⏳" },
+          { label: "Confirmadas", value: DEMO_TUTORIAS.filter((t) => t.estado === "confirmada").length, accent: "text-itec-sky",     emoji: "✅" },
+          { label: "Completadas", value: DEMO_TUTORIAS.filter((t) => t.estado === "completada").length, accent: "text-itec-emerald", emoji: "🏆" },
+          { label: "Total",       value: DEMO_TUTORIAS.length,                                          accent: "text-itec-text",    emoji: "📊" },
+        ].map((s) => (
+          <GlassCard key={s.label} className="p-4 flex flex-col gap-1">
+            <span className="text-xl">{s.emoji}</span>
+            <span className={cn("text-3xl font-black", s.accent)}>{s.value}</span>
+            <span className="text-[11px] text-itec-muted font-bold">{s.label}</span>
+          </GlassCard>
+        ))}
+      </div>
+
+      {/* Filtros */}
+      <div className="flex gap-2 flex-wrap">
+        {(["todas", "pendiente", "confirmada", "completada", "cancelada"] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={cn(
+              "px-3 py-1.5 rounded-xl text-xs font-bold transition-all",
+              filter === f
+                ? "bg-itec-sky text-white"
+                : "bg-itec-surface border border-itec-border text-itec-muted hover:text-itec-text"
+            )}
+          >
+            {f.charAt(0).toUpperCase() + f.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* Lista */}
+      <GlassCard variant="elevated" className="overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-itec-border bg-itec-surface/50">
+                {["Alumno", "Tutor", "Materia", "Fecha", "Tipo", "Estado", "Acciones"].map((h) => (
+                  <th key={h} className="px-4 py-3 text-[10px] font-black text-itec-muted uppercase tracking-widest whitespace-nowrap">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-itec-border/50">
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-10 text-center text-itec-muted text-sm">
+                    Sin tutorías en este estado.
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((t) => {
+                  const est = ESTADO_MAP[t.estado];
+                  return (
+                    <tr key={t.id} className="hover:bg-itec-surface/30 transition-colors">
+                      <td className="px-4 py-3 text-sm font-bold text-itec-text whitespace-nowrap">{t.alumno}</td>
+                      <td className="px-4 py-3 text-sm text-itec-muted whitespace-nowrap">{t.tutor}</td>
+                      <td className="px-4 py-3 text-sm text-itec-text whitespace-nowrap">{t.materia}</td>
+                      <td className="px-4 py-3 text-xs text-itec-muted whitespace-nowrap font-mono">{t.fecha}</td>
+                      <td className="px-4 py-3">
+                        <span className="text-xs font-bold text-itec-muted">
+                          {t.tipo === "virtual" ? "🖥️" : "🏫"} {t.tipo}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={cn("text-[10px] font-black px-2 py-1 rounded-lg border", est.cls)}>
+                          {est.label}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex gap-1.5">
+                          <button className="text-[10px] font-bold text-itec-sky hover:text-itec-blue transition-colors">
+                            Confirmar
+                          </button>
+                          <span className="text-itec-border">|</span>
+                          <button className="text-[10px] font-bold text-itec-accent hover:text-red-400 transition-colors">
+                            Cancelar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </GlassCard>
+
+      <p className="text-[10px] text-itec-border text-center">
+        ⚠️ Sección en desarrollo — conectar con endpoint <code>/api/tutorias</code>
+      </p>
+    </div>
+  );
+};
+
+
+
+==================================================
 ARCHIVO: ./src/features/admin/components/organisms/UserManagement.tsx
 ==================================================
 import React from 'react';
@@ -9448,6 +10227,67 @@ const createAnnouncementMutation = useMutation({
     deleteAnnouncementMutation
   };
 };
+
+
+==================================================
+ARCHIVO: ./src/features/admin/hooks/useAdminSidebar.ts
+==================================================
+// src/features/admin/hooks/useAdminSidebar.ts
+import { useState, useCallback } from "react";
+
+export type AdminSection =
+  | "dashboard"
+  | "users"
+  | "news"
+  | "benefits"
+  | "rewards"
+  | "redemptions"
+  | "materias"
+  | "tutorias";
+
+export interface SidebarLink {
+  id:     AdminSection;
+  label:  string;
+  emoji:  string;
+  badge?: number;
+  description?: string;
+}
+
+export const SIDEBAR_LINKS: SidebarLink[] = [
+  { id: "dashboard",   label: "Dashboard",       emoji: "🏠", description: "Resumen general" },
+  { id: "users",       label: "Usuarios",         emoji: "👥", description: "Roles y privilegios" },
+  { id: "news",        label: "Avisos",           emoji: "📢", description: "Comunicados globales" },
+  { id: "benefits",    label: "Beneficios",       emoji: "🏷️", description: "Descuentos TarjeTEC" },
+  { id: "rewards",     label: "Recompensas",      emoji: "🎁", description: "Sistema de puntos" },
+  { id: "redemptions", label: "Canjes",           emoji: "🧾", description: "Historial de canjes" },
+  { id: "materias",    label: "Académico",        emoji: "📚", description: "Materias y carreras" },
+  { id: "tutorias",    label: "Tutorías",         emoji: "🎓", description: "Sesiones personalizadas" },
+];
+
+interface UseAdminSidebarReturn {
+  active:     AdminSection;
+  navigate:   (s: AdminSection) => void;
+  mobileOpen: boolean;
+  openMobile:  () => void;
+  closeMobile: () => void;
+  toggleMobile: () => void;
+}
+
+export const useAdminSidebar = (): UseAdminSidebarReturn => {
+  const [active,     setActive]     = useState<AdminSection>("dashboard");
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navigate     = useCallback((s: AdminSection) => {
+    setActive(s);
+    setMobileOpen(false); // Auto-cierra en mobile
+  }, []);
+  const openMobile   = useCallback(() => setMobileOpen(true),  []);
+  const closeMobile  = useCallback(() => setMobileOpen(false), []);
+  const toggleMobile = useCallback(() => setMobileOpen((o) => !o), []);
+
+  return { active, navigate, mobileOpen, openMobile, closeMobile, toggleMobile };
+};
+
 
 
 ==================================================
@@ -9878,13 +10718,7 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
               onChange={e => setTargetDate(e.target.value)}
               className="w-full bg-itec-box border border-itec-gray text-itec-textpx-4 py-2 rounded-xl focus:outline-none focus:border-purple-500 text-sm"
             />
-            <Button 
-              type="submit" 
-              disabled={isSubmitting || !eventName || !targetDate} 
-              className="w-full bg-purple-600 hover:bg-purple-500 border-none text-itec-texttext-sm py-2"
-            >
-              {isSubmitting ? 'Guardando...' : 'Agregar Evento'}
-            </Button>
+            <Button type="submit" variant="purple" hierarchy="solid" fullWidth isLoading={isSubmitting} disabled={!eventName || !targetDate}>Agregar Evento</Button>
           </div>
         </form>
 
@@ -11042,10 +11876,8 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
           </div>
           {/* Footer */}
           <div className="flex gap-3 p-5 border-t border-white/8 shrink-0">
-            <Button type="button" variant="secondary" onClick={onClose} disabled={isPending} className="flex-1">Cancelar</Button>
-            <Button type="submit" variant="primary" disabled={isPending} className="flex-1 bg-itec-blue-skye border-none hover:opacity-90">
-              {isPending ? "Guardando..." : existingCourse ? "Guardar cambios" : "Publicar curso"}
-            </Button>
+            <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} disabled={isPending} className="flex-1">Cancelar</Button>
+            <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isPending}>{existingCourse ? "Guardar cambios" : "Publicar curso"}</Button>
           </div>
         </form>
       </div>
@@ -11457,9 +12289,7 @@ export const CourseVideoListEditor: React.FC<Props> = ({
       {mode === "youtube" && (
         <div className="flex flex-col sm:flex-row gap-2">
           <Input fullWidth placeholder="Link de la playlist de YouTube..." value={playlistUrl} onChange={(e: any) => setPlaylistUrl(e.target.value)} className="bg-white/[0.04] border-red-500/30 text-sm py-2.5 rounded-xl" />
-          <Button type="button" onClick={onFetchPlaylist} disabled={isFetching || !playlistUrl} className="bg-red-600 hover:bg-red-700 border-none text-white px-5 shrink-0 sm:w-auto w-full">
-            {isFetching ? "Extrayendo..." : "Importar"}
-          </Button>
+          <Button type="button" variant="danger" hierarchy="solid" onClick={onFetchPlaylist} isLoading={isFetching} disabled={!playlistUrl}>Importar</Button>
         </div>
       )}
 
@@ -12399,9 +13229,7 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled, canUseAI, 
             className="w-full bg-itec-bg border border-itec-gray text-itec-textpl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-teal-500 text-sm transition-all shadow-inner disabled:opacity-50"
           />
         </div>
-        <Button type="submit" disabled={!input.trim() || disabled} className="rounded-xl px-5 py-3.5 bg-teal-600 hover:bg-teal-500 border-none text-itec-textdisabled:opacity-50 shadow-lg">
-          <div className="w-5 h-5"><Icons type="send" /></div>
-        </Button>
+        <Button type="submit" variant="teal" hierarchy="solid" disabled={!input.trim() || disabled} icon="send" />
       </form>
       
       {/* Botón Mágico IA */}
@@ -12581,8 +13409,8 @@ export const AddDateModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
           </div>
           
           <div className="pt-4 border-t border-itec-gray flex justify-end gap-3">
-            <Button type="button" variant="secondary" onClick={onClose}>Cancelar</Button>
-            <Button type="submit" variant="primary" className="bg-orange-600 hover:bg-orange-500 border-none">Guardar Fecha</Button>
+            <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose}>Cancelar</Button>
+            <Button type="submit" variant="orange" hierarchy="solid">Guardar Fecha</Button>
           </div>
         </form>
       </div>
@@ -14274,7 +15102,7 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, exist
               )}
 
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="secondary" onClick={onClose} disabled={submitMutation.isPending} className="text-xs">Cancelar</Button>
+                <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} disabled={submitMutation.isPending} className="text-xs">Cancelar</Button>
                 <Button type="submit" variant="primary" disabled={submitMutation.isPending} className="text-xs bg-itec-groups hover:bg-emerald-500 border-none shadow-md min-w-28 active:scale-95">
                   {submitMutation.isPending ? 'Procesando...' : 'Aportar Grupo'}
                 </Button>
@@ -16608,6 +17436,206 @@ export default FormLogin;
 
 
 ==================================================
+ARCHIVO: ./src/features/profile/components/atoms/AvatarRing.tsx
+==================================================
+import React from "react";
+import { cn } from "@/lib/utils";
+interface AvatarRingProps {
+  src?: string;
+  name: string;
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+  glow?: boolean;
+  online?: boolean;
+  className?: string;
+  ring?: string;
+}
+const SIZE_MAP = {
+  xs:  { ring: "w-8 h-8 text-xs",    dot: "w-2 h-2 border-[2px]" },
+  sm:  { ring: "w-10 h-10 text-sm",  dot: "w-2.5 h-2.5 border-[2px]" },
+  md:  { ring: "w-14 h-14 text-lg",  dot: "w-3 h-3 border-[2px]" },
+  lg:  { ring: "w-20 h-20 text-2xl", dot: "w-3.5 h-3.5 border-[3px]" },
+  xl:  { ring: "w-24 h-24 text-3xl", dot: "w-4 h-4 border-[3px]" },
+  "2xl": { ring: "w-32 h-32 text-4xl", dot: "w-5 h-5 border-[3px]" },
+};
+const getInitials = (name: string) =>
+  name.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("");
+export const AvatarRing: React.FC<AvatarRingProps> = ({
+  src, name, size = "md", glow = false, online, className, ring,
+}) => {
+  const s = SIZE_MAP[size];
+  return (
+    <div className={cn("relative shrink-0", className)}>
+      {glow && (
+        <div className={cn(
+          "absolute inset-0 rounded-full opacity-20",
+          "bg-gradient-to-br from-itec-sky/30 to-itec-purple/30 blur-sm scale-105"
+        )} />
+      )}
+      <div className={cn(
+        "relative rounded-full overflow-hidden",
+        "flex items-center justify-center font-black text-itec-muted",
+        ring ? ring : "border-2 border-white/15 bg-gradient-to-br from-itec-box2 to-itec-surface",
+        s.ring
+      )}>
+        {src ? (
+          <img
+            src={src}
+            alt={name}
+            className="w-full h-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        ) : (
+          <span className="select-none tracking-tight">{getInitials(name)}</span>
+        )}
+      </div>
+      {online !== undefined && (
+        <span className={cn(
+          "absolute bottom-0 right-0 rounded-full border-itec-box",
+          s.dot,
+          online ? "bg-itec-emerald" : "bg-itec-gray"
+        )} />
+      )}
+    </div>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/atoms/CareerChip.tsx
+==================================================
+import React from "react";
+import { cn } from "@/lib/utils";
+interface CareerChipProps {
+  label: string;
+  code?: string;
+  colorClass?: string;
+  active?: boolean;
+  sm?: boolean;
+}
+export const CareerChip: React.FC<CareerChipProps> = ({
+  label, code, colorClass, active = true, sm = false,
+}) => (
+  <span className={cn(
+    "inline-flex items-center gap-1.5 border rounded-xl font-bold",
+    sm ? "text-[10px] px-2 py-0.5" : "text-xs px-2.5 py-1",
+    active && colorClass
+      ? colorClass
+      : "bg-itec-surface border-itec-border text-itec-muted"
+  )}>
+    {code && (
+      <span className="text-[9px] font-black opacity-60">{code}</span>
+    )}
+    {label}
+  </span>
+);
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/atoms/GlassCard.tsx
+==================================================
+import React from "react";
+import { cn } from "@/lib/utils";
+type GlowColor = "sky" | "accent" | "amber" | "emerald" | "purple" | "none";
+type GlassVariant = "default" | "elevated" | "sunken" | "outlined" | "solid";
+interface GlassCardProps {
+  children: React.ReactNode;
+  className?: string;
+  glow?: GlowColor;
+  hover?: boolean;
+  onClick?: () => void;
+  variant?: GlassVariant;
+  as?: "div" | "article" | "section" | "li";
+  style?: React.CSSProperties;
+}
+const GLOW_MAP: Record<GlowColor, string> = {
+  sky: "hover:shadow-[0_0_24px_rgba(56,189,248,0.18)] hover:border-itec-sky/30",
+  accent: "hover:shadow-[0_0_24px_rgba(212,19,19,0.18)] hover:border-itec-accent/30",
+  amber: "hover:shadow-[0_0_24px_rgba(245,158,11,0.18)] hover:border-itec-amber/30",
+  emerald: "hover:shadow-[0_0_24px_rgba(16,185,129,0.18)] hover:border-itec-emerald/30",
+  purple: "hover:shadow-[0_0_24px_rgba(168,85,247,0.18)] hover:border-itec-purple/30",
+  none: "",
+};
+const VARIANT_MAP: Record<GlassVariant, string> = {
+  default: "bg-itec-box/80 backdrop-blur-md border border-white/8 shadow-[0_4px_24px_rgba(0,0,0,0.35)]",
+  elevated: "bg-itec-box/90 backdrop-blur-lg border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.5)]",
+  sunken: "bg-itec-bg/60 backdrop-blur-sm border border-white/5",
+  outlined: "bg-transparent backdrop-blur-sm border border-itec-border",
+  solid: "bg-itec-box border border-itec-border shadow-[0_4px_16px_rgba(0,0,0,0.3)]",
+};
+export const GlassCard: React.FC<GlassCardProps> = ({
+  children, className, glow = "none", hover = false,
+  onClick, variant = "default", as: Tag = "div", style,
+}) => (
+  <Tag
+    onClick={onClick}
+    role={onClick ? "button" : undefined}
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
+    style={style}
+    className={cn(
+      "relative overflow-hidden rounded-3xl transition-all duration-300",
+      VARIANT_MAP[variant],
+      hover && "cursor-pointer hover:scale-[1.018] hover:-translate-y-0.5",
+      glow !== "none" && GLOW_MAP[glow],
+      className
+    )}
+  >
+    {children}
+  </Tag>
+);
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/atoms/index.ts
+==================================================
+export { GlassCard }          from "./GlassCard";
+export { AvatarRing }         from "./AvatarRing";
+export { CareerChip }         from "./CareerChip";
+export { PointsBadgeProfile } from "./PointsBadgeProfile";
+export { SpecialtyBadge }     from "./SpecialtyBadge";
+export { StatMini }           from "./StatMini";
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/atoms/PointsBadgeProfile.tsx
+==================================================
+import React from "react";
+import { cn } from "@/lib/utils";
+interface PointsBadgeProfileProps {
+  points: number;
+  size?: "xs" | "sm" | "md" | "lg";
+  pulse?: boolean;
+  showLabel?: boolean;
+}
+const SIZE = {
+  xs: "text-[10px] px-2 py-0.5 gap-1",
+  sm: "text-xs px-2.5 py-1 gap-1",
+  md: "text-sm px-3 py-1.5 gap-1.5",
+  lg: "text-base px-4 py-2 gap-2",
+};
+export const PointsBadgeProfile: React.FC<PointsBadgeProfileProps> = ({
+  points, size = "md", pulse = false, showLabel = true,
+}) => (
+  <span className={cn(
+    "inline-flex items-center rounded-xl font-black",
+    "bg-itec-amber/10 border border-itec-amber/25 text-itec-amber",
+    "shadow-[0_0_12px_rgba(245,158,11,0.12)]",
+    SIZE[size],
+    pulse && "animate-pulse"
+  )}>
+    <span className="leading-none">⭐</span>
+    {points.toLocaleString("es-AR")}
+    {showLabel && " pts"}
+  </span>
+);
+
+
+
+==================================================
 ARCHIVO: ./src/features/profile/components/atoms/ProfileTarjetecSmall.tsx
 ==================================================
 import React from "react";
@@ -16646,6 +17674,143 @@ export const ProfileTarjetecSmall: React.FC<{ user: User }> = ({ user }) => {
 
 
 ==================================================
+ARCHIVO: ./src/features/profile/components/atoms/SpecialtyBadge.tsx
+==================================================
+import React from "react";
+import { cn } from "@/lib/utils";
+const COLORS: Record<string, string> = {
+  Sistemas:    "bg-itec-sky/10   border-itec-sky/25   text-itec-sky",
+  Industrial:  "bg-yellow-500/10 border-yellow-500/25 text-yellow-400",
+  Civil:       "bg-orange-500/10 border-orange-500/25 text-orange-400",
+  Electrónica: "bg-violet-500/10 border-violet-500/25 text-violet-400",
+  Eléctrica:   "bg-amber-500/10  border-amber-500/25  text-amber-400",
+  Química:     "bg-teal-500/10   border-teal-500/25   text-teal-400",
+  Mecánica:    "bg-red-500/10    border-red-500/25    text-red-400",
+  Naval:       "bg-cyan-500/10   border-cyan-500/25   text-cyan-400",
+  Textil:      "bg-pink-500/10   border-pink-500/25   text-pink-400",
+};
+export const SpecialtyBadge: React.FC<{ specialty: string; sm?: boolean }> = ({
+  specialty, sm = false,
+}) => {
+  const cls = COLORS[specialty] ?? "bg-itec-box2 border-itec-border text-itec-muted";
+  return (
+    <span className={cn(
+      "inline-flex items-center border rounded-xl font-bold tracking-wide",
+      cls,
+      sm ? "text-[10px] px-2 py-0.5" : "text-xs px-2.5 py-1"
+    )}>
+      Ing. {specialty}
+    </span>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/atoms/StatMini.tsx
+==================================================
+import React from "react";
+import { cn } from "@/lib/utils";
+interface StatMiniProps {
+  label: string;
+  value: string | number;
+  accent?: string;
+  icon?: string;
+  loading?: boolean;
+  sublabel?: string;
+  onClick?: () => void;
+}
+export const StatMini: React.FC<StatMiniProps> = ({
+  label, value, accent = "text-itec-sky", icon, loading = false, sublabel, onClick,
+}) => (
+  <div
+    onClick={onClick}
+    role={onClick ? "button" : undefined}
+    tabIndex={onClick ? 0 : undefined}
+    className={cn(
+      "bg-itec-surface/60 border border-itec-border rounded-2xl p-4",
+      "flex flex-col gap-1.5 backdrop-blur-sm",
+      "transition-all duration-200 hover:border-itec-gray/50",
+      onClick && "cursor-pointer hover:scale-[1.02]"
+    )}
+  >
+    <div className="flex items-center justify-between">
+      <span className="text-[10px] text-itec-muted font-bold uppercase tracking-widest">
+        {label}
+      </span>
+      {icon && <span className="text-base opacity-50">{icon}</span>}
+    </div>
+    {loading ? (
+      <div className="h-7 w-16 bg-itec-border/50 rounded-lg animate-pulse" />
+    ) : (
+      <span className={cn("text-xl font-black leading-none", accent)}>
+        {value}
+      </span>
+    )}
+    {sublabel && (
+      <span className="text-[10px] text-itec-muted">{sublabel}</span>
+    )}
+  </div>
+);
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/molecules/BenefitCard.tsx
+==================================================
+import React from "react";
+import type { Benefit } from "@features/profile/services/profileService";
+import { cn } from "@/lib/utils";
+const CAT: Record<string, { border: string; badge: string; icon: string }> = {
+  medrano: { border: "border-itec-sky/20 hover:border-itec-sky/40",   badge: "bg-itec-sky/10 text-itec-sky",     icon: "🏙️" },
+  campus:  { border: "border-itec-amber/20 hover:border-itec-amber/40", badge: "bg-itec-amber/10 text-itec-amber",  icon: "🌿" },
+  digital: { border: "border-itec-purple/20 hover:border-itec-purple/40", badge: "bg-itec-purple/10 text-itec-purple", icon: "💻" },
+};
+export const BenefitCard: React.FC<{ benefit: Benefit }> = ({ benefit }) => {
+  const cat = CAT[benefit.category] ?? CAT.medrano;
+  return (
+    <div className={cn(
+      "relative group rounded-2xl p-4 flex flex-col gap-3",
+      "bg-itec-box border transition-all duration-200",
+      "hover:scale-[1.02] hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]",
+      cat.border
+    )}>
+      <div className="flex items-start justify-between gap-2">
+        <div className={cn(
+          "w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0",
+          "bg-itec-surface border border-itec-border"
+        )}>
+          {benefit.logoUrl ? (
+            <img src={benefit.logoUrl} alt="" className="w-full h-full object-contain rounded-xl" />
+          ) : (
+            cat.icon
+          )}
+        </div>
+        <span className={cn("text-[9px] font-black px-1.5 py-0.5 rounded-lg shrink-0 mt-0.5", cat.badge)}>
+          {benefit.category.toUpperCase()}
+        </span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-itec-text font-bold text-sm leading-snug line-clamp-2">
+          {benefit.title}
+        </p>
+        <p className={cn("text-xs font-black mt-1", benefit.category === "medrano" ? "text-itec-sky" : benefit.category === "campus" ? "text-itec-amber" : "text-itec-purple")}>
+          {benefit.discount}
+        </p>
+      </div>
+      {benefit.location && benefit.location !== "-" && (
+        <p className="text-[10px] text-itec-muted flex items-center gap-1 truncate">
+          <span>📍</span>
+          <span className="truncate">{benefit.location}</span>
+        </p>
+      )}
+    </div>
+  );
+};
+
+
+
+==================================================
 ARCHIVO: ./src/features/profile/components/molecules/CardCourseState.tsx
 ==================================================
 import { Icons } from '@/components/ui/icons/Icons';
@@ -16676,65 +17841,436 @@ export default function CardCourseState() {
 
 
 ==================================================
-ARCHIVO: ./src/features/profile/components/organisms/BenefitsGrid.tsx
+ARCHIVO: ./src/features/profile/components/molecules/CareerSelector.tsx
 ==================================================
-import React, { useState } from 'react';
-import { Icons } from '@/components/ui/icons/Icons';
-import { BENEFITS_DATA } from '../../types/profileData';
-
-export const BenefitsGrid: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'medrano' | 'campus' | 'digital'>('medrano');
-
-  const tabs = [
-    { id: 'medrano', label: 'Sede Medrano', icon: 'pin', color: 'sky' },
-    { id: 'campus', label: 'Sede Campus', icon: 'pin', color: 'orange' },
-    { id: 'digital', label: 'Digitales', icon: 'lightning', color: 'purple' },
-  ];
-
+import React, { useState, useRef, useEffect } from "react";
+import { CARRERAS_LIST } from "@features/profile/data/carreras";
+import { cn } from "@/lib/utils";
+export interface CareerOption {
+  code: string;
+  name: string;
+  colorClass?: string;
+}
+interface CareerSelectorProps {
+  value: CareerOption[];
+  onChange: (careers: CareerOption[]) => void;
+  max?: number;
+  disabled?: boolean;
+}
+export const CareerSelector: React.FC<CareerSelectorProps> = ({
+  value, onChange, max = 2, disabled = false,
+}) => {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  const filtered = CARRERAS_LIST.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const toggle = (career: CareerOption) => {
+    if (value.find((v) => v.code === career.code)) {
+      onChange(value.filter((v) => v.code !== career.code));
+    } else if (value.length < max) {
+      onChange([...value, career]);
+    }
+  };
+  const isSelected = (code: string) => value.some((v) => v.code === code);
   return (
-    <div className="bg-slate-900/30 border border-white/5 rounded-[2rem] p-6 md:p-8">
-      <div className="mb-8">
-        <h2 className="text-2xl font-black text-itec-textmb-1">Catálogo de Beneficios</h2>
-        <p className="text-slate-400 text-sm">Navegá por las categorías y descubrí tus ventajas.</p>
-      </div>
-      
-      {/* Selector de Pestañas */}
-      <div className="flex overflow-x-auto custom-scrollbar gap-2 mb-8 pb-2">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`
-              flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all whitespace-nowrap
-              ${activeTab === tab.id 
-                ? `bg-${tab.color}-500/10 text-${tab.color}-400 border border-${tab.color}-500/30 shadow-inner` 
-                : 'bg-slate-900/50 text-slate-400 border border-transparent hover:bg-slate-800 hover:text-slate-200'}
-            `}
+    <div ref={ref} className="relative">
+      <div
+        onClick={() => !disabled && setOpen(!open)}
+        className={cn(
+          "min-h-[40px] w-full bg-itec-surface border border-itec-border rounded-xl",
+          "flex flex-wrap gap-1.5 p-2 cursor-pointer transition-all",
+          "focus-within:border-itec-sky/50",
+          disabled && "opacity-50 cursor-not-allowed"
+        )}
+      >
+        {value.length === 0 && (
+          <span className="text-itec-muted text-sm px-1 self-center">
+            Seleccioná tu carrera...
+          </span>
+        )}
+        {value.map((c) => (
+          <span
+            key={c.code}
+            className={cn(
+              "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border",
+              c.colorClass ?? "bg-itec-box2 border-itec-border text-itec-text"
+            )}
           >
-            <div className="w-4 h-4"><Icons type={tab.icon as any} /></div>
-            {tab.label}
-          </button>
+            {c.name}
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); toggle(c); }}
+              className="text-current opacity-60 hover:opacity-100 ml-0.5"
+            >
+              ×
+            </button>
+          </span>
         ))}
+        <span className="ml-auto self-center text-itec-muted text-xs pr-1">
+          {open ? "▲" : "▼"}
+        </span>
       </div>
+      {open && (
+        <div className={cn(
+          "absolute z-50 top-full mt-1.5 w-full",
+          "bg-itec-box border border-itec-border rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
+          "overflow-hidden max-h-56 flex flex-col"
+        )}>
+          <div className="p-2 border-b border-itec-border shrink-0">
+            <input
+              autoFocus
+              type="text"
+              placeholder="Buscar carrera..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-itec-surface border border-itec-border text-itec-text text-sm px-3 py-2 rounded-xl outline-none placeholder:text-itec-muted"
+            />
+          </div>
+          <div className="overflow-y-auto custom-scrollbar">
+            {filtered.map((c) => {
+              const sel = isSelected(c.code);
+              const atMax = value.length >= max && !sel;
+              return (
+                <button
+                  key={c.code}
+                  type="button"
+                  disabled={atMax}
+                  onClick={() => toggle(c)}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-all",
+                    sel
+                      ? "bg-itec-sky/10 text-itec-sky"
+                      : "text-itec-text hover:bg-itec-surface",
+                    atMax && "opacity-30 cursor-not-allowed"
+                  )}
+                >
+                  <span className={cn(
+                    "w-4 h-4 rounded border flex items-center justify-center text-[10px] shrink-0",
+                    sel ? "bg-itec-sky border-itec-sky" : "border-itec-border"
+                  )}>
+                    {sel && "✓"}
+                  </span>
+                  <span className="font-bold">{c.name}</span>
+                  <span className="ml-auto text-[10px] text-itec-muted">{c.code}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="p-2 border-t border-itec-border shrink-0">
+            <p className="text-[10px] text-itec-muted text-center">
+              {value.length}/{max} seleccionadas
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
-      {/* Grid de Contenido Activo */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {BENEFITS_DATA[activeTab].map((b, i) => (
-          <div key={i} className="flex items-center gap-4 bg-slate-950/50 border border-white/5 p-4 rounded-2xl hover:border-slate-700 transition-colors cursor-pointer group">
-            <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 bg-slate-900 border border-white/5 group-hover:scale-105 transition-transform`}>
-               <span className="font-black text-sm text-white">{b.discount.replace(/[^0-9%]/g, '') || '%'}</span>
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/molecules/EditProfileModal.tsx
+==================================================
+import React, { useEffect, useRef } from "react";
+import { useEditProfile } from "@features/profile/hooks/useEditProfile";
+import { CareerSelector } from "@features/profile/components/molecules/CareerSelector";
+import { cn } from "@/lib/utils";
+interface EditProfileModalProps { onClose: () => void; }
+export const EditProfileModal: React.FC<EditProfileModalProps> = ({ onClose }) => {
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const { form, setField, careers, setCareers, saving, error, handleSubmit } = useEditProfile(onClose);
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+  const inputCls = cn(
+    "w-full bg-itec-surface border border-itec-border text-itec-text",
+    "text-sm px-3 py-2.5 rounded-xl outline-none transition-all",
+    "focus:border-itec-sky/50 focus:ring-1 focus:ring-itec-sky/20",
+    "placeholder:text-itec-muted"
+  );
+  const labelCls = "block text-[10px] font-black text-itec-muted uppercase tracking-widest mb-1.5";
+  return (
+    <div
+      ref={backdropRef}
+      onClick={(e) => e.target === backdropRef.current && onClose()}
+      className="fixed inset-0 z-[200] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
+    >
+      <div className={cn(
+        "w-full max-w-lg bg-itec-box border border-itec-border rounded-3xl shadow-[0_24px_64px_rgba(0,0,0,0.7)]",
+        "animate-[scale-in_0.2s_ease] overflow-y-auto max-h-[90vh]"
+      )}>
+        <div className="flex items-center justify-between p-6 border-b border-itec-border">
+          <div>
+            <h2 className="text-lg font-black text-itec-text">Editar Perfil</h2>
+            <p className="text-xs text-itec-muted mt-0.5">Tu información académica en ITEC</p>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Cerrar"
+            className="w-8 h-8 flex items-center justify-center rounded-xl text-itec-muted hover:text-itec-text hover:bg-itec-surface transition-all text-xl"
+          >
+            ×
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <label className={labelCls}>Nombre completo</label>
+              <input
+                className={inputCls}
+                placeholder="Ej: María González"
+                value={form.name}
+                onChange={(e) => setField("name", e.target.value)}
+              />
             </div>
             <div>
-              <h4 className="text-slate-200 font-bold text-sm mb-0.5 leading-tight">{b.title}</h4>
-              <p className={`text-${tabs.find(t => t.id === activeTab)?.color}-400 text-xs font-bold mb-1`}>{b.discount}</p>
-              <span className="text-[10px] text-slate-500 line-clamp-1">{b.location}</span>
+              <label className={labelCls}>DNI</label>
+              <input
+                className={inputCls}
+                placeholder="12345678"
+                value={form.dni}
+                maxLength={8}
+                onChange={(e) => setField("dni", e.target.value.replace(/\D/g, ""))}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>N° Legajo</label>
+              <input
+                className={inputCls}
+                placeholder="172XXXXX"
+                value={form.legajo}
+                onChange={(e) => setField("legajo", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Teléfono</label>
+              <input
+                className={inputCls}
+                placeholder="+54 11 XXXX-XXXX"
+                value={form.phone ?? ""}
+                onChange={(e) => setField("phone", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Año de inicio</label>
+              <input
+                type="number"
+                className={inputCls}
+                placeholder={String(new Date().getFullYear())}
+                value={form.startYear ?? ""}
+                min={2000}
+                max={new Date().getFullYear()}
+                onChange={(e) => setField("startYear", Number(e.target.value))}
+              />
             </div>
           </div>
-        ))}
+          <div>
+            <label className={labelCls}>Carrera(s) — máx. 2</label>
+            <CareerSelector value={careers} onChange={setCareers} max={2} />
+            <p className="text-[10px] text-itec-muted mt-1.5">
+              Podés cursar dos carreras (doble título).
+            </p>
+          </div>
+          {error && (
+            <p className="text-itec-accent text-xs font-bold bg-itec-accent/10 border border-itec-accent/20 rounded-xl px-3 py-2">
+              ⚠️ {error}
+            </p>
+          )}
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-itec-muted bg-itec-surface hover:bg-itec-border transition-all"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className={cn(
+                "flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition-all",
+                "bg-itec-sky hover:bg-itec-blue disabled:opacity-50 disabled:cursor-not-allowed"
+              )}
+            >
+              {saving ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Guardando...
+                </span>
+              ) : "Guardar Cambios"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/molecules/index.ts
+==================================================
+export { BenefitCard }      from "./BenefitCard";
+export { CareerSelector }   from "./CareerSelector";
+export type { CareerOption } from "./CareerSelector";
+export { EditProfileModal }  from "./EditProfileModal";
+export { ProfileQuickLinks } from "./ProfileQuickLinks";
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/molecules/ProfileQuickLinks.tsx
+==================================================
+import React from "react";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+interface QuickLink {
+  href: string;
+  emoji: string;
+  label: string;
+  sublabel?: string;
+  color: string;
+  bg: string;
+}
+const LINKS: QuickLink[] = [
+  { href: "/grupos",   emoji: "💬", label: "Grupos",    sublabel: "WhatsApp",  color: "text-itec-emerald", bg: "hover:bg-itec-emerald/8 hover:border-itec-emerald/30" },
+  { href: "/cursos",   emoji: "🎥", label: "Cursos",    sublabel: "Videos",    color: "text-itec-sky",     bg: "hover:bg-itec-sky/8 hover:border-itec-sky/30" },
+  { href: "/aportes",  emoji: "📂", label: "BiblioTEC", sublabel: "Archivos",  color: "text-orange-400",   bg: "hover:bg-orange-400/8 hover:border-orange-400/30" },
+  { href: "/progreso", emoji: "📊", label: "Progreso",  sublabel: "Académico", color: "text-itec-purple",  bg: "hover:bg-itec-purple/8 hover:border-itec-purple/30" },
+  { href: "/rewards",  emoji: "🎁", label: "Canjes",    sublabel: "Puntos",    color: "text-itec-amber",   bg: "hover:bg-itec-amber/8 hover:border-itec-amber/30" },
+  { href: "/faqs",     emoji: "🤖", label: "IA iTEC",   sublabel: "Chatbot",   color: "text-itec-sky",     bg: "hover:bg-itec-sky/8 hover:border-itec-sky/30" },
+];
+export const ProfileQuickLinks: React.FC = () => (
+  <div className="grid grid-cols-3 gap-2">
+    {LINKS.map((link) => (
+      <Link
+        key={link.href}
+        to={link.href}
+        className={cn(
+          "flex flex-col items-center gap-1.5 px-2 py-3 rounded-2xl text-center",
+          "bg-itec-surface/60 border border-itec-border",
+          "transition-all duration-200 hover:scale-[1.04]",
+          link.bg
+        )}
+      >
+        <span className="text-xl">{link.emoji}</span>
+        <span className={cn("text-[11px] font-black", link.color)}>{link.label}</span>
+        {link.sublabel && (
+          <span className="text-[9px] text-itec-muted">{link.sublabel}</span>
+        )}
+      </Link>
+    ))}
+  </div>
+);
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/organisms/BenefitsGrid.tsx
+==================================================
+import React from "react";
+import { useProfileBenefits } from "@features/profile/hooks/useProfileBenefits";
+import { BenefitCard } from "@features/profile/components/molecules/BenefitCard";
+import { cn } from "@/lib/utils";
+type Tab = { id: "medrano" | "campus" | "digital"; label: string; emoji: string; color: string; active: string };
+const TABS: Tab[] = [
+  { id: "medrano", label: "Medrano",  emoji: "🏙️", color: "text-itec-muted hover:text-itec-sky",    active: "bg-itec-sky/10 text-itec-sky border-itec-sky/25"    },
+  { id: "campus",  label: "Campus",   emoji: "🌿", color: "text-itec-muted hover:text-itec-amber",  active: "bg-itec-amber/10 text-itec-amber border-itec-amber/25" },
+  { id: "digital", label: "Digital",  emoji: "💻", color: "text-itec-muted hover:text-itec-purple", active: "bg-itec-purple/10 text-itec-purple border-itec-purple/25" },
+];
+export const BenefitsGrid: React.FC = () => {
+  const { benefits, loading, error, activeTab, setActiveTab, refetch } = useProfileBenefits();
+  return (
+    <div className="bg-itec-box/80 backdrop-blur-md border border-white/8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.35)] overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-itec-border">
+        <div>
+          <h2 className="text-sm font-black text-itec-text">Beneficios TarjeTEC</h2>
+          <p className="text-[10px] text-itec-muted mt-0.5">Descuentos exclusivos para estudiantes UTN</p>
+        </div>
+        <button
+          onClick={refetch}
+          aria-label="Actualizar"
+          className="w-7 h-7 flex items-center justify-center rounded-xl text-itec-muted hover:text-itec-text hover:bg-itec-surface transition-all text-sm"
+        >
+          🔄
+        </button>
+      </div>
+      <div className="flex gap-1 p-3 border-b border-itec-border bg-itec-sidebar/50">
+        {TABS.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all",
+                "border",
+                isActive ? tab.active : cn("border-transparent", tab.color)
+              )}
+            >
+              <span>{tab.emoji}</span>
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="p-4">
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-28 rounded-2xl bg-itec-surface/50 animate-pulse" style={{ animationDelay: `${i * 60}ms` }} />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-8">
+            <p className="text-itec-accent text-sm font-bold mb-2">⚠️ Error al cargar beneficios</p>
+            <p className="text-itec-muted text-xs mb-4">{error}</p>
+            <button onClick={refetch} className="text-xs text-itec-sky hover:underline font-bold">
+              Reintentar
+            </button>
+          </div>
+        ) : benefits.length === 0 ? (
+          <div className="text-center py-10">
+            <p className="text-4xl mb-3">🎁</p>
+            <p className="text-itec-muted text-sm font-bold">Sin beneficios en esta categoría</p>
+            <p className="text-itec-muted text-xs mt-1">Próximamente se agregarán más descuentos</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {benefits.map((b) => (
+              <BenefitCard key={b._id} benefit={b} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/components/organisms/index.ts
+==================================================
+export { ProfileHeader }         from "./ProfileHeader";
+export { ProfileStatsWidget }    from "./ProfileStatsWidget";
+export { BenefitsGrid }          from "./BenefitsGrid";
+export { TarjeTec }              from "./TarjeTec";
+export { ProfileForm }           from "./ProfileForm";
+
 
 
 ==================================================
@@ -16833,9 +18369,7 @@ export const ProfileForm: React.FC = () => {
             {error && <p className="text-red-400 text-xs font-bold text-center mt-2 bg-red-400/10 py-2 rounded-lg border border-red-400/20">{error}</p>}
             
             <div className="pt-4 flex flex-col gap-3">
-              <Button type="submit" disabled={isSaving} className="w-full py-3.5 font-bold text-sm bg-sky-600 hover:bg-sky-500 text-itec-textrounded-xl transition-all shadow-lg shadow-sky-500/25 disabled:opacity-50 cursor-pointer">
-                {isSaving ? 'Generando...' : 'Generar Credencial'}
-              </Button>
+              <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isSaving}>Generar Credencial</Button>
               <button type="button" onClick={logout} className="text-xs text-slate-500 hover:text-slate-300 transition-colors font-medium cursor-pointer">
                 Cancelar y salir
               </button>
@@ -16851,142 +18385,427 @@ export const ProfileForm: React.FC = () => {
 ==================================================
 ARCHIVO: ./src/features/profile/components/organisms/ProfileHeader.tsx
 ==================================================
-import React from 'react';
-import { useAuth } from '@context/AuthContext';
-import { Icons } from '@/components/ui/icons/Icons';
-
+import React, { useState } from "react";
+import { useAuth } from "@context/AuthContext";
+import { useMultiCareer } from "@features/profile/hooks/useMultiCareer";
+import { AvatarRing } from "@features/profile/components/atoms/AvatarRing";
+import { PointsBadgeProfile } from "@features/profile/components/atoms/PointsBadgeProfile";
+import { CareerChip } from "@features/profile/components/atoms/CareerChip";
+import { EditProfileModal } from "@features/profile/components/molecules/EditProfileModal";
+import { cn } from "@/lib/utils";
 export const ProfileHeader: React.FC = () => {
-  const { user, logout } = useAuth();
-
+  const { user } = useAuth();
+  const { careers, isDoubleMajor, startYear } = useMultiCareer();
+  const [editing, setEditing] = useState(false);
+  if (!user) return null;
+  const currentYear = new Date().getFullYear();
+  const yearsIn = startYear ? currentYear - startYear + 1 : null;
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 bg-slate-900/50 border border-white/5 rounded-3xl p-6 gap-6">
-      <div className="flex items-center gap-6">
-        {user?.photoURL ? (
-            <div className="w-20 h-20 rounded-2xl bg-slate-800 border border-white/10 p-1 shrink-0 shadow-xl">
-              <img src={user.photoURL} alt="Perfil" className="w-full h-full object-cover rounded-xl" />
+    <>
+      <div className="relative mb-5">
+        <div className="h-28 sm:h-36 rounded-3xl overflow-hidden bg-gradient-to-br from-itec-primary via-itec-box to-itec-bg border border-itec-border">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(56,189,248,0.12),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(168,85,247,0.08),transparent_60%)]" />
+          <div className="absolute top-3 right-4">
+            <button
+              onClick={() => setEditing(true)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold",
+                "bg-black/30 border border-white/15 text-white/80",
+                "hover:bg-black/50 hover:text-white transition-all backdrop-blur-sm"
+              )}
+            >
+              ✏️ Editar perfil
+            </button>
+          </div>
+        </div>
+        <div className="px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-5 -mt-10 sm:-mt-12">
+            <AvatarRing
+              src={user.photoURL ?? undefined}
+              name={user.name ?? user.email ?? "U"}
+              size="xl"
+              ring="border-4 border-itec-bg bg-itec-surface"
+              className="shrink-0 z-10"
+            />
+            <div className="flex-1 min-w-0 pb-2 sm:pb-3">
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <h1 className="text-xl sm:text-2xl font-black text-itec-text tracking-tight">
+                  {user.name ?? "Sin nombre"}
+                </h1>
+                {user.role === "admin" && (
+                  <span className="text-[9px] font-black px-2 py-0.5 bg-itec-accent/15 border border-itec-accent/30 text-itec-accent rounded-lg tracking-widest uppercase">
+                    Admin
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-itec-muted font-mono mb-2 truncate">
+                {user.email}
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                {careers.length > 0 ? careers.map((c) => (
+                  <CareerChip key={c.code} label={c.name} code={c.code} colorClass={c.colorClass} />
+                )) : (
+                  <CareerChip label="Sin carrera" active={false} />
+                )}
+                {isDoubleMajor && (
+                  <span className="text-[9px] font-black bg-itec-amber/10 border border-itec-amber/20 text-itec-amber px-2 py-0.5 rounded-lg">
+                    🎓 Doble Título
+                  </span>
+                )}
+              </div>
             </div>
-        ) : (
-            <div className="w-20 h-20 rounded-2xl bg-slate-800 border border-white/10 p-1 shrink-0 flex items-center justify-center shadow-xl text-3xl">
-              👨‍🎓
+            <div className="flex flex-wrap gap-2 pb-2 sm:pb-3 shrink-0">
+              <PointsBadgeProfile points={user.points ?? 0} size="sm" />
+              {user.legajo && (
+                <span className="text-[10px] font-mono text-itec-muted bg-itec-surface border border-itec-border px-2.5 py-1 rounded-xl">
+                  #{user.legajo}
+                </span>
+              )}
+              {yearsIn && (
+                <span className="text-[10px] text-itec-muted bg-itec-surface border border-itec-border px-2.5 py-1 rounded-xl">
+                  🗓 {yearsIn}° año
+                </span>
+              )}
             </div>
-        )}
-        <div>
-          <h1 className="text-3xl font-black text-itec-textmb-2 tracking-tight">{user?.name}</h1>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400 font-medium">
-            <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="users" /></div>{user?.specialty}</span>
-            <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="documentFill" /></div>{user?.dni}</span>
-            <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="message" /></div>{user?.email}</span>
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-end gap-3 w-full md:w-auto border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-6">
-          <span className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 px-4 py-2 rounded-xl text-sm font-bold shadow-inner">
-            <span className="text-lg">⭐</span> {user?.points || 0} Puntos
-          </span>
-          <button onClick={logout} className="text-xs text-slate-500 hover:text-red-400 transition-colors font-medium cursor-pointer">
-            Cerrar Sesión
-          </button>
-      </div>
-    </div>
+      {editing && <EditProfileModal onClose={() => setEditing(false)} />}
+    </>
   );
 };
+
 
 
 ==================================================
 ARCHIVO: ./src/features/profile/components/organisms/ProfileStatsWidget.tsx
 ==================================================
-import React from 'react';
-import CardCourseState from '../molecules/CardCourseState';
-
+import React from "react";
+import { useAuth } from "@context/AuthContext";
+import { StatMini } from "@features/profile/components/atoms/StatMini";
+import { useQuery } from "@tanstack/react-query";
+import { profileService } from "@features/profile/services/profileService";
+import { useMultiCareer } from "@features/profile/hooks/useMultiCareer";
 export const ProfileStatsWidget: React.FC = () => {
+  const { user } = useAuth();
+  const { startYear } = useMultiCareer();
+  const { data: benefits = [] } = useQuery({
+    queryKey: ["benefits", "all"],
+    queryFn: () => profileService.getBenefits(),
+    staleTime: 5 * 60 * 1000,
+  });
+  const currentYear = new Date().getFullYear();
+  const yearsIn = startYear ? currentYear - startYear + 1 : null;
+  const stats = [
+    {
+      label: "Puntos TarjeTEC",
+      value: (user?.points ?? 0).toLocaleString("es-AR"),
+      accent: "text-itec-amber",
+      icon: "⭐",
+    },
+    {
+      label: "Beneficios",
+      value: benefits.length,
+      accent: "text-itec-emerald",
+      icon: "🎁",
+    },
+    {
+      label: "Cuenta",
+      value: user?.role === "admin" ? "Admin" : "Activa",
+      accent: user?.role === "admin" ? "text-itec-accent" : "text-itec-emerald",
+      icon: "✅",
+    },
+  ];
   return (
-    <div className="flex flex-col gap-4">
-      
-      {/* Widget 1: Progreso de Carrera */}
-      <div className="md:col-span-2 bg-slate-900/40 border border-white/5 rounded-3xl p-6 hover:border-sky-500/30 transition-colors group">
-        <h3 className="text-sm font-black text-slate-200 uppercase tracking-widest mb-6 flex items-center gap-2">
-          <span className="text-sky-400">📊</span> Mi Progreso
-        </h3>
-        
-        <div className="flex flex-col gap-8 items-center">
-          {/* Gráfico circular simulado */}
-          <div className="relative w-28 h-28 shrink-0 flex items-center justify-center rounded-full bg-slate-800 border-[8px] border-slate-950">
-            <svg className="absolute inset-0 w-full h-full transform -rotate-90">
-              <circle cx="56" cy="56" r="48" fill="transparent" stroke="#0ea5e9" strokeWidth="8" strokeDasharray="301" strokeDashoffset="210" className="transition-all duration-1000 ease-out" />
-            </svg>
-            <div className="text-center">
-              <span className="block text-2xl font-black text-white">15%</span>
-            </div>
-          </div>
-
-          <div className="flex-1 grid grid-cols-2 gap-4 w-full">
-            <div className="bg-slate-950/50 p-4 rounded-2xl border border-white/5">
-              <span className="block text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Materias Aprobadas</span>
-              <span className="text-xl font-black text-emerald-400">6 <span className="text-sm text-slate-600">/ 42</span></span>
-            </div>
-            <div className="bg-slate-950/50 p-4 rounded-2xl border border-white/5">
-              <span className="block text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Promedio General</span>
-              <span className="text-xl font-black text-sky-400">8.50</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-        <CardCourseState />
-
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {stats.map((s) => (
+        <StatMini key={s.label} {...s} />
+      ))}
     </div>
   );
 };
+
 
 
 ==================================================
 ARCHIVO: ./src/features/profile/components/organisms/TarjeTec.tsx
 ==================================================
 import React from "react";
-import tarjeTEC from "@assets/TarjeTec/iTEC-tarjeta.svg";
-import styles from "@/styles/TarjeTec.module.css"
 import type { User } from "@context/AuthContext";
-
+import SvgTarjeTec from "@/components/ui/icons/SvgTarjeTec";
 export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
+  const formattedLegajo = user.legajo
+    ? user.legajo.replace(/(.{7})(?!$)/g, "$1 ")
+    : "PENDIENTE";
   return (
-
-    // Contenedor Tarjeta
-    <div className={styles.tarjeta}>
-      
-      <div className={styles.tarjetaQR}>
-          <img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(user.legajo || 'SinLegajo')}`}
-            alt="QR de acceso"
-            className="w-full h-full rounded-sm"
-          />
+    <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] group">
+      <SvgTarjeTec className="w-full h-auto" />
+      <div className="absolute inset-0 flex flex-col justify-end px-5 pb-5 pt-3">
+        <div className="mt-auto space-y-0.5">
+          <p className="text-white/90 text-sm font-black tracking-[0.2em] font-mono">
+            {formattedLegajo}
+          </p>
+          <p className="text-white/55 text-xs truncate">{user.email}</p>
+          <p className="text-xs">
+            <span className="text-red-400 font-bold">Ing. </span>
+            <span className="text-white/70">{user.specialty ?? "—"}</span>
+          </p>
+        </div>
       </div>
-
-      {/* Tarjeta Datos */}
-      <div className={styles.tarjetaDatos}>
-
-        {/* Número de Legajo formateado */}
-        <p className={styles.tarjetaLegajo}>
-          {user.legajo ? user.legajo.replace(/(.{7})(?!$)/g, "$1 ") : 'PENDIENTE'}
-        </p>
-
-        {/* Mail del usuario */}
-        <p className={styles.tarjetaMail}>
-          {user.email}
-        </p>
-
-        {/* Carrera del usuario */}
-        <p className={styles.tarjetaCarrera}>
-          <span className={styles.tarjetaCarreraIng}>Ing. </span>
-          <span className={styles.tarjetaCarreraNombre}>{user.specialty}</span>
-        </p>
-
+      <div className="absolute top-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+        <a
+          href={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(user.legajo || "SinLegajo")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[9px] text-white/50 hover:text-white/80 transition-colors"
+        >
+          Ver QR ↗
+        </a>
       </div>
-
-      {/*SVG de la Tarjeta*/}
-      <img src={tarjeTEC} alt="tarjeTec" />
     </div>
   );
 };
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/data/carreras.ts
+==================================================
+// src/features/profile/data/carreras.ts
+// Lista de carreras ITEC-FRBA para el selector de perfil
+import type { CareerOption } from "@features/profile/components/molecules/CareerSelector";
+
+export const CARRERAS_LIST: CareerOption[] = [
+  { code: "E",  name: "Ingreso",        colorClass: "bg-green-500/15  border-green-500/30  text-green-400"  },
+  { code: "I",  name: "Industrial",     colorClass: "bg-yellow-500/15 border-yellow-500/30 text-yellow-400" },
+  { code: "K",  name: "Sistemas",       colorClass: "bg-itec-sky/15   border-itec-sky/30   text-itec-sky"   },
+  { code: "O",  name: "Civil",          colorClass: "bg-orange-500/15 border-orange-500/30 text-orange-400" },
+  { code: "Q",  name: "Eléctrica",      colorClass: "bg-amber-500/15  border-amber-500/30  text-amber-400"  },
+  { code: "R",  name: "Electrónica",    colorClass: "bg-red-500/15    border-red-500/30    text-red-400"    },
+  { code: "S",  name: "Mecánica",       colorClass: "bg-gray-400/15   border-gray-400/30   text-gray-300"   },
+  { code: "U",  name: "Naval",          colorClass: "bg-cyan-500/15   border-cyan-500/30   text-cyan-400"   },
+  { code: "V",  name: "Química",        colorClass: "bg-purple-500/15 border-purple-500/30 text-purple-400" },
+  { code: "W",  name: "Textil",         colorClass: "bg-pink-500/15   border-pink-500/30   text-pink-400"   },
+];
+
+export default CARRERAS_LIST;
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/hooks/useEditProfile.ts
+==================================================
+import { useState, useCallback } from "react";
+import { useAuth } from "@context/AuthContext";
+import type { CareerOption } from "@features/profile/components/molecules/CareerSelector";
+import { CARRERAS_LIST } from "@features/profile/data/carreras";
+interface ProfileForm {
+  name: string;
+  dni: string;
+  legajo: string;
+  phone?: string;
+  startYear?: number;
+}
+export const useEditProfile = (onSuccess?: () => void) => {
+  const { user, updateProfile } = useAuth();
+  const getInitialCareers = (): CareerOption[] => {
+    if (!user?.specialty) return [];
+    const specs = Array.isArray((user as any).specialty)
+      ? (user as any).specialty
+      : [(user as any).specialty];
+    return specs
+      .map((s: string) => CARRERAS_LIST.find((c) => c.name === s))
+      .filter(Boolean) as CareerOption[];
+  };
+  const [form, setForm] = useState<ProfileForm>({
+    name: user?.name ?? "",
+    dni: user?.dni ?? "",
+    legajo: user?.legajo ?? "",
+    phone: (user as any)?.phone ?? "",
+    startYear: (user as any)?.startYear ?? undefined,
+  });
+  const [careers, setCareers] = useState<CareerOption[]>(getInitialCareers);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const setField = useCallback(
+    <K extends keyof ProfileForm>(key: K, value: ProfileForm[K]) => {
+      setForm((prev) => ({ ...prev, [key]: value }));
+    },
+    [],
+  );
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!user) return;
+      if (!form.name.trim()) {
+        setError("El nombre es obligatorio.");
+        return;
+      }
+      if (!form.dni.trim()) {
+        setError("El DNI es obligatorio.");
+        return;
+      }
+      if (careers.length === 0) {
+        setError("Seleccioná al menos 1 carrera.");
+        return;
+      }
+      setSaving(true);
+      setError(null);
+      try {
+        await updateProfile({
+          name: form.name.trim(),
+          dni: form.dni.trim(),
+          legajo: form.legajo.trim(),
+          phone: form.phone?.trim(),
+          specialty: careers[0].name,
+          ...(careers as any),
+          startYear: form.startYear,
+        } as any);
+        onSuccess?.();
+      } catch (err: any) {
+        setError(err.message ?? "Error al guardar. Intentá de nuevo.");
+      } finally {
+        setSaving(false);
+      }
+    },
+    [form, careers, user, updateProfile, onSuccess],
+  );
+  return { form, setField, careers, setCareers, saving, error, handleSubmit };
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/hooks/useMultiCareer.ts
+==================================================
+// src/features/profile/hooks/useMultiCareer.ts
+// Gestión de multi-carrera con persistencia en Firestore via AuthContext
+import { useMemo } from "react";
+import { useAuth } from "@context/AuthContext";
+import { CARRERAS_LIST } from "@features/profile/data/carreras";
+import type { CareerOption } from "@features/profile/components/molecules/CareerSelector";
+
+interface MultiCareerReturn {
+  /** Carreras activas del usuario (max 2) */
+  careers:        CareerOption[];
+  /** Carrera principal (primera) */
+  primaryCareer:  CareerOption | null;
+  /** ¿El usuario cursa doble carrera? */
+  isDoubleMajor:  boolean;
+  /** Año de inicio (si existe) */
+  startYear?:     number;
+}
+
+export const useMultiCareer = (): MultiCareerReturn => {
+  const { user } = useAuth();
+
+  const careers = useMemo<CareerOption[]>(() => {
+    // Soporta campo "careers" (nuevo) o fallback a "specialty" (legado)
+    if (Array.isArray((user as any)?.careers) && (user as any).careers.length > 0) {
+      return (user as any).careers.map((c: { code: string; name: string }) => {
+        const found = CARRERAS_LIST.find((l) => l.code === c.code);
+        return found ?? { code: c.code, name: c.name };
+      });
+    }
+    if (user?.specialty) {
+      const found = CARRERAS_LIST.find((l) => l.name === user.specialty);
+      return found ? [found] : [];
+    }
+    return [];
+  }, [user]);
+
+  return {
+    careers,
+    primaryCareer:  careers[0] ?? null,
+    isDoubleMajor:  careers.length > 1,
+    startYear:      (user as any)?.startYear,
+  };
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/hooks/useProfileBenefits.ts
+==================================================
+import { useEffect, useState } from "react";
+import { profileService, type Benefit } from "../services/profileService";
+
+type Category = "medrano" | "campus" | "digital";
+
+interface UseProfileBenefitsReturn {
+  benefits:    Benefit[];
+  loading:     boolean;
+  error:       string | null;
+  activeTab:   Category;
+  setActiveTab:(cat: Category) => void;
+  refetch:     () => void;
+}
+
+export const useProfileBenefits = (): UseProfileBenefitsReturn => {
+  const [benefits,  setBenefits]  = useState<Benefit[]>([]);
+  const [loading,   setLoading]   = useState(true);
+  const [error,     setError]     = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<Category>("medrano");
+  const [tick,      setTick]      = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    profileService
+      .getBenefits(activeTab)
+      .then((data) => { if (!cancelled) setBenefits(data); })
+      .catch((e)   => { if (!cancelled) setError(e.message); })
+      .finally(()  => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [activeTab, tick]);
+
+  return { benefits, loading, error, activeTab, setActiveTab, refetch: () => setTick((t) => t + 1) };
+};
+
+
+
+==================================================
+ARCHIVO: ./src/features/profile/services/profileService.ts
+==================================================
+const BASE_URL = import.meta.env.VITE_API_URL ?? "";
+
+export interface Benefit {
+  _id:      string;
+  title:    string;
+  discount: string;
+  location: string;
+  category: "medrano" | "campus" | "digital";
+  logoUrl?: string;
+}
+
+export interface BenefitsResponse {
+  benefits: Benefit[];
+}
+
+export const profileService = {
+  async getBenefits(category?: string): Promise<Benefit[]> {
+    const params = category ? `?category=${category}` : "";
+    const res = await fetch(`${BASE_URL}/benefits${params}`);
+    if (!res.ok) throw new Error("Error al cargar beneficios");
+    const data: BenefitsResponse = await res.json();
+    return data.benefits;
+  },
+
+  async updateProfile(uid: string, token: string, data: Record<string, unknown>): Promise<void> {
+    const res = await fetch(`${BASE_URL}/users/${uid}/profile`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error((err as any).message ?? "Error al actualizar perfil");
+    }
+  },
+};
+
 
 
 ==================================================
@@ -17147,7 +18966,7 @@ export const GradeModal: React.FC<Props> = ({ subject, targetStatus, onClose, on
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-6">
-            <Button variant="secondary" onClick={onClose} type="button">Cancelar</Button>
+            <Button variant="slate" hierarchy="ghost" onClick={onClose} type="button">Cancelar</Button>
             <Button variant="primary" type="submit">Guardar</Button>
           </div>
         </form>
@@ -17858,12 +19677,7 @@ export const EmptyResources: React.FC<Props> = ({ onAddClick }) => (
     <p className="text-sm text-itec-gray mb-8 max-w-xs leading-relaxed">
       No hay apuntes que coincidan con tu búsqueda. ¡Sé el primero en aportar!
     </p>
-    <Button
-      onClick={onAddClick}
-      className="bg-orange-600 hover:bg-orange-500 border-none text-itec-text font-semibold px-6 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-orange-900/30"
-    >
-      + Aportar Archivo · +1 Punto
-    </Button>
+    <Button variant="orange" hierarchy="solid" onClick={onAddClick} icon="plus">Aportar Archivo · +1 Punto</Button>
   </div>
 );
 
@@ -18530,12 +20344,7 @@ export const ResourceFilters: React.FC<Props> = ({
           <span className="font-bold text-itec-text">{totalVisible}</span> aporte{totalVisible !== 1 ? 's' : ''} encontrado{totalVisible !== 1 ? 's' : ''}
         </span>
         {hasFilters && (
-          <Button
-            onClick={onClear}
-            className="text-xs py-1.5 px-3 bg-itec-red/10 text-itec-red-skye border border-itec-red/20 hover:bg-itec-red hover:text-itec-text hover:border-itec-red transition-all rounded-lg"
-          >
-            Limpiar filtros
-          </Button>
+          <Button variant="danger" hierarchy="ghost" onClick={onClear} icon="trash">Limpiar filtros</Button>
         )}
       </div>
     </section>
@@ -20134,7 +21943,7 @@ export const DeleteRewardModal: React.FC<Props> = ({
           <div className="flex gap-3">
             <Button
               type="button"
-              variant="secondary"
+              variant="slate" hierarchy="ghost"
               onClick={onClose}
               fullWidth
               className="h-11 rounded-2xl text-sm font-bold"
@@ -20387,7 +22196,7 @@ export const RedeemModal: React.FC<Props> = ({
             <div className="flex gap-3 pt-1">
               <Button
                 type="button"
-                variant="secondary"
+                variant="slate" hierarchy="ghost"
                 onClick={onClose}
                 fullWidth
                 className="h-11 rounded-2xl text-sm font-bold"
@@ -20425,29 +22234,14 @@ export const RedeemModal: React.FC<Props> = ({
             <div className="flex gap-3 pt-1">
               <Button
                 type="button"
-                variant="secondary"
+                variant="slate" hierarchy="ghost"
                 onClick={onClose}
                 fullWidth
                 className="h-11 rounded-2xl text-sm font-bold"
               >
                 Cancelar
               </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                fullWidth
-                disabled={isLoading}
-                className="h-11 rounded-2xl text-sm font-bold shadow-[0_0_24px_rgba(0,74,173,0.3)]"
-              >
-                {isLoading ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Procesando...
-                  </span>
-                ) : (
-                  "Confirmar canje"
-                )}
-              </Button>
+              <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isLoading}>Confirmar canje</Button>
             </div>
           </form>
         )}
@@ -20689,7 +22483,7 @@ export const RewardFormModal: React.FC<Props> = ({
         <div className="px-6 pb-6 pt-4 border-t border-white/5 flex gap-3 shrink-0">
           <Button
             type="button"
-            variant="secondary"
+            variant="slate" hierarchy="ghost"
             onClick={onClose}
             fullWidth
             className="h-11 rounded-2xl text-sm font-bold"
@@ -21928,6 +23722,57 @@ input, select, textarea {
 html { scroll-behavior: smooth; }
 
 
+/* ── ITEC Glassmorphism & Bento Utils ───────────────────────────────────── */
+:root {
+  --glass-bg:         rgba(28, 28, 30, 0.80);
+  --glass-border:     rgba(255, 255, 255, 0.08);
+  --glass-shadow:     0 4px 24px rgba(0, 0, 0, 0.35);
+  --glass-shadow-lg:  0 8px 40px rgba(0, 0, 0, 0.50);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(71, 71, 71, 0.5);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(71, 71, 71, 0.8); }
+
+/* Safe area padding para notch */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0.5rem); }
+
+/* Bento grid gap override */
+.bento-gap { gap: clamp(0.75rem, 2vw, 1.5rem); }
+
+/* Glassmorphism helper class */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Animaciones escalonadas Bento */
+@keyframes bento-in {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0)   scale(1); }
+}
+.bento-animate { animation: bento-in 0.4s ease-out forwards; }
+.bento-animate-delay-1 { animation-delay: 60ms;  }
+.bento-animate-delay-2 { animation-delay: 120ms; }
+.bento-animate-delay-3 { animation-delay: 180ms; }
+.bento-animate-delay-4 { animation-delay: 240ms; }
+.bento-animate-delay-5 { animation-delay: 300ms; }
+
+/* Focus ring accesible */
+*:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.5);
+  outline-offset: 2px;
+}
+
+
 
 
 ==================================================
@@ -21970,6 +23815,18 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
+
+
+==================================================
+ARCHIVO: ./src/lib/utils.ts
+==================================================
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 
 
 ==================================================
@@ -22037,110 +23894,125 @@ export const AboutPage: React.FC = () => {
 ==================================================
 ARCHIVO: ./src/pages/AdminPanel.tsx
 ==================================================
-import React, { useState, lazy } from 'react';
-import { MainLayout } from '@/components/templates/MainLayout';
-import { useAuth } from '@context/AuthContext';
+// src/pages/AdminPanel.tsx
+// Rediseño radical: Sidebar/Hamburger + Bento Dashboard + Glassmorphism
+import React, { lazy, Suspense } from "react";
+import { MainLayout }          from "@/components/templates/MainLayout";
+import { useAuth }             from "@context/AuthContext";
+import { useAdminSidebar }     from "@features/admin/hooks/useAdminSidebar";
+import { AdminSidebar }        from "@features/admin/components/organisms/AdminSidebar";
+import { AdminDashboard }      from "@features/admin/components/organisms/AdminDashboard";
+import { HamburgerButton }     from "@features/admin/components/atoms/HamburgerButton";
+import { GlassCard }           from "@features/profile/components/atoms/GlassCard";
+import { usePageTitle }        from "@hooks/usePageTitle";
+import { cn }                  from "@/lib/utils";
 
-// Importaciones Lazy
-const UserManagement = lazy(() => import("@features/admin/components/organisms/UserManagement").then(m => ({ default: m.UserManagement })));
-const NewsManagement = lazy(() => import("@features/admin/components/organisms/NewsManagement").then(m => ({ default: m.NewsManagement })));
-const RewardsManagement = lazy(() => import("@features/admin/components/organisms/RewardsManagement").then(m => ({ default: m.RewardsManagement })));
-const AdminRedemptions = lazy(() => import("@features/admin/components/organisms/AdminRedemptions").then(m => ({ default: m.AdminRedemptions }))); // <-- NUEVO
-const AdminMaterias = lazy(() => import("@features/admin/components/organisms/AdminMaterias").then(m => ({ default: m.AdminMaterias })));
+// ── Lazy imports de secciones ──────────────────────────────────────────────────
+const UserManagement    = lazy(() => import("@features/admin/components/organisms/UserManagement")    .then((m) => ({ default: m.UserManagement    })));
+const NewsManagement    = lazy(() => import("@features/admin/components/organisms/NewsManagement")    .then((m) => ({ default: m.NewsManagement    })));
+const RewardsManagement = lazy(() => import("@features/admin/components/organisms/RewardsManagement") .then((m) => ({ default: m.RewardsManagement })));
+const AdminRedemptions  = lazy(() => import("@features/admin/components/organisms/AdminRedemptions")  .then((m) => ({ default: m.AdminRedemptions  })));
+const AdminMaterias     = lazy(() => import("@features/admin/components/organisms/AdminMaterias")     .then((m) => ({ default: m.AdminMaterias     })));
+const BenefitsManagement = lazy(() => import("@features/admin/components/organisms/BenefitsManagement").then((m) => ({ default: m.BenefitsManagement })));
+const TutoriasSection   = lazy(() => import("@features/admin/components/organisms/TutoriasSection")  .then((m) => ({ default: m.TutoriasSection   })));
 
+// ── Skeleton de carga ─────────────────────────────────────────────────────────
+const SectionSkeleton: React.FC = () => (
+  <div className="space-y-4 animate-pulse">
+    <div className="h-8 w-64 bg-itec-surface rounded-2xl" />
+    <div className="h-4 w-48 bg-itec-border rounded-xl" />
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="h-28 bg-itec-surface rounded-3xl" style={{ animationDelay: `${i * 80}ms` }} />
+      ))}
+    </div>
+  </div>
+);
+
+// ── Vista denegada ─────────────────────────────────────────────────────────────
+const AccessDenied: React.FC = () => (
+  <MainLayout>
+    <div className="flex items-center justify-center h-[70vh] px-4">
+      <GlassCard variant="elevated" className="max-w-md w-full p-12 text-center">
+        <span className="text-6xl block mb-6 drop-shadow-[0_0_20px_rgba(212,19,19,0.4)]">
+          🔒
+        </span>
+        <h2 className="text-2xl font-black text-itec-text mb-3 tracking-tight">
+          Acceso Restringido
+        </h2>
+        <p className="text-itec-muted text-sm leading-relaxed mb-6">
+          No tenés los privilegios necesarios para acceder al panel de administración.
+          Contactá a un administrador si creés que esto es un error.
+        </p>
+        <a
+          href="/"
+          className="inline-flex items-center gap-2 bg-itec-surface border border-itec-border text-itec-text text-sm font-bold px-5 py-2.5 rounded-2xl hover:bg-itec-box2 transition-all"
+        >
+          ← Volver al inicio
+        </a>
+      </GlassCard>
+    </div>
+  </MainLayout>
+);
+
+// ── Panel principal ────────────────────────────────────────────────────────────
 export const AdminPanel: React.FC = () => {
-  const { isAdmin } = useAuth();
-  // Agregamos 'redemptions' a los tabs
-  const [activeTab, setActiveTab] = useState<'users' | 'news' | 'rewards' | 'redemptions' | 'materias'>('users');
+  usePageTitle("Panel Admin — ITEC");
+  const { isAdmin }                                           = useAuth();
+  const { active, navigate, mobileOpen, closeMobile, toggleMobile } = useAdminSidebar();
 
-  if (!isAdmin) {
-    return (
-      <MainLayout>
-        <div className="flex items-center justify-center h-[70vh]">
-          <div className="text-center p-12 bg-itec-box/50 border border-red-500/10 rounded-[2rem] max-w-md shadow-2xl">
-            <span className="text-5xl block mb-6 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]">🔒</span>
-            <h2 className="text-xl font-bold text-itec-textmb-2 tracking-wide">Acceso Restringido</h2>
-            <p className="text-itec-text text-sm leading-relaxed">No tienes los privilegios necesarios para acceder a la configuración global del sistema.</p>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
+  if (!isAdmin) return <AccessDenied />;
 
   return (
     <MainLayout>
-      <div className="max-w-[1100px] mx-auto pb-20 pt-8 px-6 lg:px-0 animate-fade-in">
-        
-        {/* Encabezado Clean */}
-        <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-itec-texttracking-tight mb-2">
-              Panel de Administración
-            </h1>
-            <p className="text-itec-text text-sm font-medium">Control de accesos y comunicaciones globales.</p>
+      {/* Layout: sidebar + main */}
+      <div className="flex min-h-[calc(100vh-4rem)] relative">
+
+        {/* ── Sidebar ── */}
+        <AdminSidebar
+          active={active}
+          onNavigate={navigate}
+          mobileOpen={mobileOpen}
+          onClose={closeMobile}
+        />
+
+        {/* ── Main content ── */}
+        <main className="flex-1 min-w-0 overflow-y-auto">
+          {/* Topbar mobile */}
+          <div className={cn(
+            "lg:hidden sticky top-0 z-30 flex items-center gap-3 px-4 py-3",
+            "bg-itec-sidebar/95 backdrop-blur-md border-b border-itec-border"
+          )}>
+            <HamburgerButton open={mobileOpen} onToggle={toggleMobile} />
+            <div>
+              <p className="text-[10px] font-black text-itec-muted uppercase tracking-widest">
+                Panel Admin
+              </p>
+              <p className="text-sm font-black text-itec-text capitalize">
+                {active}
+              </p>
+            </div>
           </div>
 
-          {/* Segmented Control (Pestañas estilo iOS/SaaS) */}
-          <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner w-fit overflow-x-auto">
-            <button 
-              onClick={() => setActiveTab('users')} 
-              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
-                activeTab === 'users' 
-                  ? 'bg-itec-box text-itec-textshadow-md border border-white/10' 
-                  : 'text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              Privilegios
-            </button>
-            <button 
-              onClick={() => setActiveTab('news')} 
-              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
-                activeTab === 'news' 
-                  ? 'bg-itec-box text-itec-textshadow-md border border-white/10' 
-                  : 'text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              Avisos Web
-            </button>
-            <button 
-              onClick={() => setActiveTab('rewards')} 
-              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
-                activeTab === 'rewards' 
-                  ? 'bg-itec-box text-itec-textshadow-md border border-white/10' 
-                  : 'text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              Beneficios
-            </button>
-            <button 
-              onClick={() => setActiveTab('redemptions')} 
-              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all duration-300 outline-none whitespace-nowrap ${
-                activeTab === 'redemptions' ? 'bg-itec-box text-itec-textshadow-md border border-white/10' : 'text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              Historial de Canjes
-            </button>
-            <button 
-              onClick={() => setActiveTab('materias')} 
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${activeTab === 'materias' ? 'bg-white/10 text-white shadow-md' : 'text-itec-text/60 hover:text-white hover:bg-white/5'}`}
-            >
-              Académico
-            </button>
+          {/* Content area */}
+          <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] animate-fade-in">
+            <Suspense fallback={<SectionSkeleton />}>
+              {active === "dashboard"   && <AdminDashboard onNavigate={navigate} />}
+              {active === "users"       && <UserManagement />}
+              {active === "news"        && <NewsManagement />}
+              {active === "benefits"    && <BenefitsManagement />}
+              {active === "rewards"     && <RewardsManagement />}
+              {active === "redemptions" && <AdminRedemptions />}
+              {active === "materias"    && <AdminMaterias />}
+              {active === "tutorias"    && <TutoriasSection />}
+            </Suspense>
           </div>
-        </header>
-
-        <div className="transition-all duration-500 ease-in-out">
-          {activeTab === 'users' && <UserManagement />}
-          {activeTab === 'news' && <NewsManagement />}
-          {activeTab === 'rewards' && <RewardsManagement />}
-          {activeTab === 'redemptions' && <AdminRedemptions />}
-          {activeTab === 'materias' && <AdminMaterias />}
-        </div>
-
+        </main>
       </div>
     </MainLayout>
   );
 };
+
 
 
 ==================================================
@@ -22961,7 +24833,7 @@ export const CourseEditDetail: React.FC = () => {
 
         {/* Acciones */}
         <div className="flex flex-col sm:flex-row gap-3 mt-5">
-          <Button variant="secondary" onClick={() => navigate(`/cursos/${id}`)} className="flex-1">Cancelar</Button>
+          <Button variant="slate" hierarchy="ghost" onClick={() => navigate(`/cursos/${id}`)} className="flex-1">Cancelar</Button>
           <Button variant="primary" onClick={handleSave} disabled={updateMutation.isPending} className="flex-1 bg-itec-blue-skye border-none hover:opacity-90">
             {updateMutation.isPending ? "Guardando..." : "Guardar cambios"}
           </Button>
@@ -23787,36 +25659,113 @@ export const PluginsPage: React.FC = () => {
 ==================================================
 ARCHIVO: ./src/pages/ProfilePage.tsx
 ==================================================
+// src/pages/ProfilePage.tsx
+// Rediseño radical: Bento Grid + Glassmorphism + Multi-carrera
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { useAuth } from "@context/AuthContext";
-import { LoadingState } from "@/components/ui/LoadingState"; // O el spinner que prefieras usar
-
-import { TarjeTec } from "@features/profile/components/organisms/TarjeTec";
-import { ProfileForm } from "@features/profile/components/organisms/ProfileForm";
-import { ProfileHeader } from "@features/profile/components/organisms/ProfileHeader";
-import { BenefitsGrid } from "@features/profile/components/organisms/BenefitsGrid";
-import { ProfileStatsWidget } from "@features/profile/components/organisms/ProfileStatsWidget";
+import { LoadingState } from "@/components/ui/LoadingState";
 import { usePageTitle } from "@hooks/usePageTitle";
 
+// Organismos del perfil
+import { ProfileHeader } from "@features/profile/components/organisms/ProfileHeader";
+import { TarjeTec } from "@features/profile/components/organisms/TarjeTec";
+import { ProfileStatsWidget } from "@features/profile/components/organisms/ProfileStatsWidget";
+import { BenefitsGrid } from "@features/profile/components/organisms/BenefitsGrid";
+import { ProfileForm } from "@features/profile/components/organisms/ProfileForm";
+
+// Moléculas
+import { ProfileQuickLinks } from "@features/profile/components/molecules/ProfileQuickLinks";
+
+// Atoms
+import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { useMultiCareer } from "@features/profile/hooks/useMultiCareer";
+
+// ── Sub-componente: Bento hero section ────────────────────────────────────────
+const ProfileBentoHero: React.FC = () => {
+  const { user } = useAuth();
+  const { careers, isDoubleMajor } = useMultiCareer();
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* TarjeTEC — ocupa 1 columna en md */}
+      <div
+        className="md:col-span-1 animate-fade-up"
+        style={{ animationDelay: "100ms" }}
+      >
+        {user && <TarjeTec user={user} />}
+      </div>
+
+      <div
+        className="md:col-span-2 flex flex-col gap-4 animate-fade-up"
+        style={{ animationDelay: "150ms" }}
+      >
+        <ProfileStatsWidget />
+        <ProfileQuickLinks />
+      </div>
+    </div>
+  );
+};
+
+// ── Sub-componente: Panel de carrera (doble título) ───────────────────────────
+const CareerPanel: React.FC = () => {
+  const { careers, isDoubleMajor, startYear } = useMultiCareer();
+  if (careers.length === 0) return null;
+
+  return (
+    <GlassCard
+      className="p-5 mb-6 animate-fade-up"
+      style={{ animationDelay: "200ms" } as React.CSSProperties}
+    >
+      <h3 className="text-[10px] font-black text-itec-muted uppercase tracking-widest mb-3">
+        Mi Carrera{isDoubleMajor ? "s" : ""}
+      </h3>
+      <div className="flex flex-col gap-3">
+        {careers.map((c, idx) => (
+          <div key={c.code} className="flex items-center gap-3">
+            <div
+              className={`w-1.5 h-12 rounded-full ${idx === 0 ? "bg-itec-sky" : "bg-itec-purple"}`}
+            />
+            <div>
+              <p className="text-sm font-black text-itec-text">
+                {idx === 0 ? "🎓 Carrera Principal" : "📘 Segunda Carrera"}
+              </p>
+              <p className="text-xs text-itec-muted">Ing. {c.name}</p>
+              {startYear && idx === 0 && (
+                <p className="text-[10px] text-itec-muted mt-0.5">
+                  Desde {startYear} · {new Date().getFullYear() - startYear + 1}
+                  ° año aprox.
+                </p>
+              )}
+            </div>
+            <span className="ml-auto text-2xl font-black text-itec-border opacity-40">
+              {c.code}
+            </span>
+          </div>
+        ))}
+      </div>
+    </GlassCard>
+  );
+};
+
+// ── Página principal ──────────────────────────────────────────────────────────
 export const ProfilePage: React.FC = () => {
-  usePageTitle("Perfil")
+  usePageTitle("Perfil");
   const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
-  const { username } = useParams(); 
+  const { username } = useParams();
 
-  const hasCard = isAuthenticated && user && user.dni && user.dni.trim() !== '';
+  const hasCard = isAuthenticated && user && user.dni && user.dni.trim() !== "";
 
-  // Redirección amigable con URLs
+  // Redirect amigable
   useEffect(() => {
     if (isAuthenticated && user?.email) {
-      const expectedUsername = user.email.split('@')[0];
-      if (username !== expectedUsername) {
-        navigate(`/perfil/${expectedUsername}`, { replace: true });
-      }
+      const expected = user.email.split("@")[0];
+      if (username !== expected)
+        navigate(`/perfil/${expected}`, { replace: true });
     } else if (!isAuthenticated && username) {
-      navigate('/perfil', { replace: true });
+      navigate("/perfil", { replace: true });
     }
   }, [isAuthenticated, user, username, navigate]);
 
@@ -23828,7 +25777,7 @@ export const ProfilePage: React.FC = () => {
     );
   }
 
-  // Vista 1: Necesita llenar sus datos
+  // Vista 1: Necesita llenar datos
   if (isAuthenticated && !hasCard) {
     return (
       <MainLayout>
@@ -23837,20 +25786,58 @@ export const ProfilePage: React.FC = () => {
     );
   }
 
-  // Vista 2: Perfil Completo
-  return (
-<MainLayout>
-      <div className="max-w-5xl mx-auto pb-12 relative z-10">
-        <ProfileHeader />
-        <div className="mb-12 flex flex-col md:flex-row gap-4">
-          {user && <TarjeTec user={user} />}
-          <ProfileStatsWidget />
+  // Vista 2: No autenticado
+  if (!isAuthenticated) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center h-[70vh] px-4">
+          <GlassCard
+            variant="elevated"
+            className="max-w-sm w-full p-10 text-center"
+          >
+            <span className="text-5xl block mb-5">🔒</span>
+            <h2 className="text-xl font-black text-itec-text mb-2">
+              Iniciá sesión para ver tu perfil
+            </h2>
+            <p className="text-sm text-itec-muted mb-6">
+              Accedé con tu cuenta de Google de la UTN.
+            </p>
+            <a
+              href="/login"
+              className="inline-flex items-center gap-2 bg-itec-sky text-white font-bold px-6 py-2.5 rounded-2xl hover:bg-itec-blue transition-all"
+            >
+              Iniciar Sesión
+            </a>
+          </GlassCard>
         </div>
-        <BenefitsGrid />
+      </MainLayout>
+    );
+  }
+
+  // Vista 3: Perfil completo — Bento Grid
+  return (
+    <MainLayout>
+      <div className="max-w-5xl mx-auto pb-20 pt-6 px-4 lg:px-0">
+        {/* Header (avatar + nombre + carreras + editar) */}
+        <div className="animate-fade-up" style={{ animationDelay: "50ms" }}>
+          <ProfileHeader />
+        </div>
+
+        {/* Bento hero: TarjeTEC + Stats + Quick Links */}
+        <ProfileBentoHero />
+
+        {/* Panel de carreras */}
+        <CareerPanel />
+
+        {/* Beneficios desde DB */}
+        <div className="animate-fade-up" style={{ animationDelay: "250ms" }}>
+          <BenefitsGrid />
+        </div>
       </div>
     </MainLayout>
   );
 };
+
 
 
 ==================================================
@@ -24462,46 +26449,179 @@ ARCHIVO: ./src/vite-pwa.d.ts
 ==================================================
 ARCHIVO: ./tailwind.config.js
 ==================================================
-// tailwind.config.js
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js — ITEC.BA paleta completa + glassmorphism + bento
+/** @type {import("tailwindcss").Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
-        // Combinación de colores para la web itec.ba
-        "itec-bg": "#1A1A1A", // Fondo principal de la web itec.ba
-        "itec-text": "#E5E6EA", // Texto principal
-        "itec-accent": "#D41313", // Color de acento (rojo)
-        "itec-primary": "#022A5E", // Color primario (azul oscuro)
-        "itec-gray": "#474747", // Gris secundario
+        // ── Palette base ──────────────────────────────────────────────────
+        "itec-bg":      "#111113",   // fondo raíz (más oscuro, mejor contraste)
+        "itec-text":    "#E5E6EA",   // texto principal
+        "itec-accent":  "#D41313",   // rojo ITEC
+        "itec-primary": "#022A5E",   // azul oscuro
+        "itec-gray":    "#474747",   // gris medio
 
-        // Azul principal aproximado del diseño
-        itecBlue: {
-          DEFAULT: "#3B82F6", // blue-500
-          dark: "#2563EB", // blue-600
-        },
-        // Gris de fondo principal para el dashboard
-        bgMain: "#F3F4F6", // gray-100
+        // ── Superficies (dark-glass hierarchy) ────────────────────────────
+        "itec-sidebar":  "#161618",  // sidebar/nav bg
+        "itec-box":      "#1C1C1E",  // cards / contenedores primarios
+        "itec-box2":     "#242426",  // contenedores secundarios
+        "itec-surface":  "#2A2A2D",  // inputs, hover states
+        "itec-border":   "#2E2E32",  // bordes sutiles
+
+        // ── Semánticos ────────────────────────────────────────────────────
+        "itec-muted":    "#6B6B75",  // texto secundario
+
+        // ── Azules ────────────────────────────────────────────────────────
+        "itec-sky":       "#38BDF8", // azul cielo / links
+        "itec-blue":      "#2563EB", // azul acción
+        "itec-blue-skye": "#0EA5E9", // azul vibrante
+
+        // ── Accentos semánticos ───────────────────────────────────────────
+        "itec-amber":    "#F59E0B",  // puntos / dorado
+        "itec-emerald":  "#10B981",  // éxito / aprobada
+        "itec-purple":   "#A855F7",  // digital / IA
+        "itec-groups":   "#059669",  // grupos / verde oscuro
+        "itec-red":      "#EF4444",  // errores / crítico
+        "itec-red-skye": "#F87171",  // rojo suave
+
+        // ── Legado (compatibilidad con componentes existentes) ────────────
+        itecBlue: { DEFAULT: "#3B82F6", dark: "#2563EB" },
+        bgMain:   "#F3F4F6",
+
+        // ── Glassmorphism token ───────────────────────────────────────────
+        "glass-border":  "rgba(255,255,255,0.08)",
       },
+
+      // ── Box shadows glassmorphism ────────────────────────────────────────
+      boxShadow: {
+        glass:    "0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05)",
+        "glass-lg": "0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+        sky:      "0 0 24px rgba(56,189,248,0.18)",
+        accent:   "0 0 24px rgba(212,19,19,0.18)",
+        amber:    "0 0 24px rgba(245,158,11,0.18)",
+        emerald:  "0 0 24px rgba(16,185,129,0.18)",
+        purple:   "0 0 24px rgba(168,85,247,0.18)",
+        "inner-sm": "inset 0 1px 0 rgba(255,255,255,0.04)",
+      },
+
+      // ── Backdrop blur ─────────────────────────────────────────────────────
+      backdropBlur: {
+        xs: "2px",
+        sm: "4px",
+        DEFAULT: "8px",
+        md: "12px",
+        lg: "16px",
+        xl: "24px",
+      },
+
+      // ── Border radius ─────────────────────────────────────────────────────
+      borderRadius: {
+        "4xl":  "2rem",
+        "5xl":  "2.5rem",
+      },
+
+      // ── Typography ────────────────────────────────────────────────────────
       fontFamily: {
-        // Asegúrate de usar una fuente sans-serif limpia como Inter o Roboto
-        sans: ["Inter", "sans-serif"],
+        sans:    ["Plus Jakarta Sans", "Inter", "sans-serif"],
+        display: ["Syne", "Plus Jakarta Sans", "sans-serif"],
+        mono:    ["JetBrains Mono", "Fira Code", "monospace"],
       },
-      // Agregamos los Keyframes para las animaciones del Loading universal
+
+      // ── Keyframes ─────────────────────────────────────────────────────────
       keyframes: {
         "fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
+          "0%":   { opacity: "0", transform: "translateY(6px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "fade-up": {
+          "0%":   { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-in-left": {
+          "0%":   { opacity: "0", transform: "translateX(-20px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "slide-in-right": {
+          "0%":   { opacity: "0", transform: "translateX(20px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "scale-in": {
+          "0%":   { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        pulse: {
+          "0%, 100%": { opacity: "1" },
+          "50%":      { opacity: "0.5" },
         },
         blink: {
           "0%, 100%": { opacity: "0.2" },
-          "50%": { opacity: "1" },
+          "50%":      { opacity: "1" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 8px rgba(56,189,248,0.3)" },
+          "50%":      { boxShadow: "0 0 20px rgba(56,189,248,0.6)" },
+        },
+        shimmer: {
+          "0%":   { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        "spin-slow": {
+          "0%":   { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "bounce-x": {
+          "0%, 100%": { transform: "translateX(0)" },
+          "50%":      { transform: "translateX(4px)" },
         },
       },
       animation: {
-        "fade-in": "fade-in 0.3s ease-out forwards",
-        blink: "blink 0.8s ease-in-out infinite",
+        "fade-in":        "fade-in 0.3s ease-out forwards",
+        "fade-up":        "fade-up 0.4s ease-out forwards",
+        "slide-in-left":  "slide-in-left 0.3s ease-out forwards",
+        "slide-in-right": "slide-in-right 0.3s ease-out forwards",
+        "scale-in":       "scale-in 0.25s ease-out forwards",
+        blink:            "blink 0.8s ease-in-out infinite",
+        "glow-pulse":     "glow-pulse 2s ease-in-out infinite",
+        shimmer:          "shimmer 2.5s linear infinite",
+        "spin-slow":      "spin-slow 3s linear infinite",
+        "bounce-x":       "bounce-x 1s ease-in-out infinite",
+      },
+
+      // ── Spacing extras ────────────────────────────────────────────────────
+      spacing: {
+        "18": "4.5rem",
+        "22": "5.5rem",
+        "30": "7.5rem",
+        "safe": "env(safe-area-inset-bottom, 0.5rem)",
+      },
+
+      // ── Grid cols para bento ──────────────────────────────────────────────
+      gridTemplateColumns: {
+        "bento-3": "repeat(3, minmax(0, 1fr))",
+        "bento-4": "repeat(4, minmax(0, 1fr))",
+        "bento-5": "repeat(5, minmax(0, 1fr))",
+        "profile": "1fr 2fr",
+        "admin":   "14rem 1fr",
+      },
+
+      // ── Transition timing ─────────────────────────────────────────────────
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        "out-expo": "cubic-bezier(0.19, 1, 0.22, 1)",
+      },
+
+      // ── Width extras ──────────────────────────────────────────────────────
+      width: {
+        "55": "13.75rem",
+        "62": "15.5rem",
+      },
+
+      // ── Screens extras ───────────────────────────────────────────────────
+      screens: {
+        "xs":  "375px",
+        "3xl": "1920px",
       },
     },
   },

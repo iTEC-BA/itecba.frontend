@@ -1,39 +1,90 @@
-import React from 'react';
-import { useAuth } from '@context/AuthContext';
-import { Icons } from '@/components/ui/icons/Icons';
-
+import React, { useState } from "react";
+import { useAuth } from "@context/AuthContext";
+import { useMultiCareer } from "@features/profile/hooks/useMultiCareer";
+import { AvatarRing } from "@features/profile/components/atoms/AvatarRing";
+import { PointsBadgeProfile } from "@features/profile/components/atoms/PointsBadgeProfile";
+import { CareerChip } from "@features/profile/components/atoms/CareerChip";
+import { EditProfileModal } from "@features/profile/components/molecules/EditProfileModal";
+import { cn } from "@/lib/utils";
 export const ProfileHeader: React.FC = () => {
-  const { user, logout } = useAuth();
-
+  const { user } = useAuth();
+  const { careers, isDoubleMajor, startYear } = useMultiCareer();
+  const [editing, setEditing] = useState(false);
+  if (!user) return null;
+  const currentYear = new Date().getFullYear();
+  const yearsIn = startYear ? currentYear - startYear + 1 : null;
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 bg-slate-900/50 border border-white/5 rounded-3xl p-6 gap-6">
-      <div className="flex items-center gap-6">
-        {user?.photoURL ? (
-            <div className="w-20 h-20 rounded-2xl bg-slate-800 border border-white/10 p-1 shrink-0 shadow-xl">
-              <img src={user.photoURL} alt="Perfil" className="w-full h-full object-cover rounded-xl" />
+    <>
+      <div className="relative mb-5">
+        <div className="h-28 sm:h-36 rounded-3xl overflow-hidden bg-gradient-to-br from-itec-primary via-itec-box to-itec-bg border border-itec-border">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(56,189,248,0.12),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(168,85,247,0.08),transparent_60%)]" />
+          <div className="absolute top-3 right-4">
+            <button
+              onClick={() => setEditing(true)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold",
+                "bg-black/30 border border-white/15 text-white/80",
+                "hover:bg-black/50 hover:text-white transition-all backdrop-blur-sm"
+              )}
+            >
+              ✏️ Editar perfil
+            </button>
+          </div>
+        </div>
+        <div className="px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-5 -mt-10 sm:-mt-12">
+            <AvatarRing
+              src={user.photoURL ?? undefined}
+              name={user.name ?? user.email ?? "U"}
+              size="xl"
+              ring="border-4 border-itec-bg bg-itec-surface"
+              className="shrink-0 z-10"
+            />
+            <div className="flex-1 min-w-0 pb-2 sm:pb-3">
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <h1 className="text-xl sm:text-2xl font-black text-itec-text tracking-tight">
+                  {user.name ?? "Sin nombre"}
+                </h1>
+                {user.role === "admin" && (
+                  <span className="text-[9px] font-black px-2 py-0.5 bg-itec-accent/15 border border-itec-accent/30 text-itec-accent rounded-lg tracking-widest uppercase">
+                    Admin
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-itec-muted font-mono mb-2 truncate">
+                {user.email}
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                {careers.length > 0 ? careers.map((c) => (
+                  <CareerChip key={c.code} label={c.name} code={c.code} colorClass={c.colorClass} />
+                )) : (
+                  <CareerChip label="Sin carrera" active={false} />
+                )}
+                {isDoubleMajor && (
+                  <span className="text-[9px] font-black bg-itec-amber/10 border border-itec-amber/20 text-itec-amber px-2 py-0.5 rounded-lg">
+                    🎓 Doble Título
+                  </span>
+                )}
+              </div>
             </div>
-        ) : (
-            <div className="w-20 h-20 rounded-2xl bg-slate-800 border border-white/10 p-1 shrink-0 flex items-center justify-center shadow-xl text-3xl">
-              👨‍🎓
+            <div className="flex flex-wrap gap-2 pb-2 sm:pb-3 shrink-0">
+              <PointsBadgeProfile points={user.points ?? 0} size="sm" />
+              {user.legajo && (
+                <span className="text-[10px] font-mono text-itec-muted bg-itec-surface border border-itec-border px-2.5 py-1 rounded-xl">
+                  #{user.legajo}
+                </span>
+              )}
+              {yearsIn && (
+                <span className="text-[10px] text-itec-muted bg-itec-surface border border-itec-border px-2.5 py-1 rounded-xl">
+                  🗓 {yearsIn}° año
+                </span>
+              )}
             </div>
-        )}
-        <div>
-          <h1 className="text-3xl font-black text-itec-textmb-2 tracking-tight">{user?.name}</h1>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400 font-medium">
-            <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="users" /></div>{user?.specialty}</span>
-            <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="documentFill" /></div>{user?.dni}</span>
-            <span className="flex items-center gap-1.5 bg-slate-950/50 px-2 py-1 rounded-md border border-white/5"><div className="w-4 h-4 text-sky-400"><Icons type="message" /></div>{user?.email}</span>
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-end gap-3 w-full md:w-auto border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-6">
-          <span className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 px-4 py-2 rounded-xl text-sm font-bold shadow-inner">
-            <span className="text-lg">⭐</span> {user?.points || 0} Puntos
-          </span>
-          <button onClick={logout} className="text-xs text-slate-500 hover:text-red-400 transition-colors font-medium cursor-pointer">
-            Cerrar Sesión
-          </button>
-      </div>
-    </div>
+      {editing && <EditProfileModal onClose={() => setEditing(false)} />}
+    </>
   );
 };
