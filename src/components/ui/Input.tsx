@@ -1,14 +1,21 @@
-import React from 'react';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   fullWidth?: boolean;
 }
 
-export const Input: React.FC<InputProps> = ({ fullWidth, className = '', ...props }) => {
-  const widthClass = fullWidth ? 'w-full' : '';
+export const Input: React.FC<InputProps> = ({ fullWidth, className = "", ...props }) => {
   return (
     <input
-      className={`bg-[#0a0a0a] border border-[#262626] text-itec-text px-4 py-2 rounded-lg focus:outline-none focus:border-itec-blue transition-colors ${widthClass} ${className}`}
+      className={cn(
+        "bg-itec-surface/80 border border-itec-border text-itec-text",
+        "px-4 py-3 rounded-2xl shadow-inner shadow-black/10",
+        "placeholder:text-itec-muted/80 outline-none transition-all",
+        "focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10",
+        fullWidth && "w-full",
+        className
+      )}
       {...props}
     />
   );

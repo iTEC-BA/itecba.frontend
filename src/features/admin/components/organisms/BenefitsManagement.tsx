@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { GlassCard } from "@features/profile/components/atoms/GlassCard";
-import { useAuth } from "@context/AuthContext";
 import { auth } from "@/lib/firebase";
 
 const BASE = import.meta.env.VITE_API_URL ?? "";

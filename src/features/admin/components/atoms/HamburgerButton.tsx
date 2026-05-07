@@ -3,13 +3,15 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 interface HamburgerButtonProps {
-  open:     boolean;
+  open: boolean;
   onToggle: () => void;
   className?: string;
 }
 
 export const HamburgerButton: React.FC<HamburgerButtonProps> = ({
-  open, onToggle, className,
+  open,
+  onToggle,
+  className,
 }) => (
   <button
     type="button"
@@ -17,30 +19,14 @@ export const HamburgerButton: React.FC<HamburgerButtonProps> = ({
     aria-label={open ? "Cerrar menú" : "Abrir menú"}
     aria-expanded={open}
     className={cn(
-      "w-9 h-9 flex flex-col items-center justify-center gap-[5px]",
-      "rounded-xl border border-itec-border bg-itec-surface",
-      "hover:bg-itec-box2 transition-all duration-200",
-      "focus:outline-none focus:ring-2 focus:ring-itec-sky/30",
+      "group inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px]",
+      "rounded-2xl border border-itec-border bg-itec-box shadow-[0_12px_30px_rgba(0,0,0,0.28)]",
+      "transition-all duration-200 hover:bg-itec-box2 focus:outline-none focus:ring-2 focus:ring-itec-sky/30",
       className
     )}
   >
-    <span
-      className={cn(
-        "block w-4 h-0.5 bg-itec-text rounded transition-all duration-300",
-        open && "rotate-45 translate-y-[6.5px]"
-      )}
-    />
-    <span
-      className={cn(
-        "block w-4 h-0.5 bg-itec-text rounded transition-all duration-300",
-        open && "opacity-0 scale-x-0"
-      )}
-    />
-    <span
-      className={cn(
-        "block w-4 h-0.5 bg-itec-text rounded transition-all duration-300",
-        open && "-rotate-45 -translate-y-[6.5px]"
-      )}
-    />
+    <span className={cn("block h-0.5 w-4 rounded bg-itec-text transition-all duration-300", open && "translate-y-[6px] rotate-45")} />
+    <span className={cn("block h-0.5 w-4 rounded bg-itec-text transition-all duration-300", open && "scale-x-0 opacity-0")} />
+    <span className={cn("block h-0.5 w-4 rounded bg-itec-text transition-all duration-300", open && "-translate-y-[6px] -rotate-45")} />
   </button>
 );

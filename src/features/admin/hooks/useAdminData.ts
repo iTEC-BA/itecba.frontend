@@ -53,14 +53,25 @@ const createAnnouncementMutation = useMutation({
       queryClient.invalidateQueries({ queryKey: ['announcements', 'active'] });
     },
   });
+  const stats = {
+    totalUsers: admins.length,
+    totalRewards: 0,
+    totalRedeemed: 0,
+    totalNews: announcements.length,
+  };
+
+  const loading = isLoadingAdmins || isLoadingAnnouncements;
+
   return {
     admins,
     isLoadingAdmins,
     announcements,
     isLoadingAnnouncements,
+    stats,
+    loading,
     searchUserMutation,
     toggleRoleMutation,
     createAnnouncementMutation,
-    deleteAnnouncementMutation
+    deleteAnnouncementMutation,
   };
 };

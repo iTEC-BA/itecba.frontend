@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Icons } from "./icons/Icons";
+import { cn } from "@/lib/utils";
 
 export type ButtonVariant =
   | "primary"
@@ -16,21 +16,62 @@ export type ButtonVariant =
 export type ButtonHierarchy = "solid" | "outline" | "ghost";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /** El color temático del botón */
   variant?: ButtonVariant;
-  /** El peso visual del botón */
   hierarchy?: ButtonHierarchy;
-  /** Si debe ocupar el 100% del contenedor */
   fullWidth?: boolean;
-  /** Icono a la izquierda del texto */
   icon?: string;
-  /** Icono a la derecha del texto */
   iconRight?: string;
-  /** Estado de carga (muestra un spinner y deshabilita el botón) */
   isLoading?: boolean;
-  /** Texto del botón (opcional, también se puede usar children) */
   text?: string;
 }
+
+const THEMES: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
+  primary: {
+    solid: "bg-itec-blue-skye text-white shadow-lg shadow-itec-blue-skye/20 hover:bg-itec-blue active:translate-y-px",
+    outline: "border border-itec-sky/40 text-itec-sky hover:bg-itec-sky/10",
+    ghost: "text-itec-sky hover:bg-itec-sky/10",
+  },
+  secondary: {
+    solid: "bg-itec-surface text-itec-text border border-itec-border hover:bg-itec-box2",
+    outline: "border border-itec-border text-itec-text hover:bg-itec-surface/70",
+    ghost: "text-itec-text hover:bg-itec-surface/70",
+  },
+  danger: {
+    solid: "bg-itec-accent text-white shadow-lg shadow-itec-accent/20 hover:bg-rose-600",
+    outline: "border border-rose-500/40 text-rose-300 hover:bg-rose-500/10",
+    ghost: "text-rose-300 hover:bg-rose-500/10",
+  },
+  success: {
+    solid: "bg-itec-emerald text-white shadow-lg shadow-emerald-900/20 hover:brightness-110",
+    outline: "border border-itec-emerald/40 text-itec-emerald hover:bg-itec-emerald/10",
+    ghost: "text-itec-emerald hover:bg-itec-emerald/10",
+  },
+  warning: {
+    solid: "bg-itec-amber text-black shadow-lg shadow-amber-900/20 hover:brightness-110",
+    outline: "border border-itec-amber/40 text-itec-amber hover:bg-itec-amber/10",
+    ghost: "text-itec-amber hover:bg-itec-amber/10",
+  },
+  purple: {
+    solid: "bg-itec-purple text-white shadow-lg shadow-purple-900/20 hover:brightness-110",
+    outline: "border border-itec-purple/40 text-itec-purple hover:bg-itec-purple/10",
+    ghost: "text-itec-purple hover:bg-itec-purple/10",
+  },
+  orange: {
+    solid: "bg-orange-500 text-white shadow-lg shadow-orange-900/20 hover:bg-orange-400",
+    outline: "border border-orange-400/40 text-orange-300 hover:bg-orange-500/10",
+    ghost: "text-orange-300 hover:bg-orange-500/10",
+  },
+  teal: {
+    solid: "bg-teal-500 text-white shadow-lg shadow-teal-900/20 hover:bg-teal-400",
+    outline: "border border-teal-400/40 text-teal-300 hover:bg-teal-500/10",
+    ghost: "text-teal-300 hover:bg-teal-500/10",
+  },
+  slate: {
+    solid: "bg-itec-box2 text-itec-text border border-itec-border hover:bg-itec-surface",
+    outline: "border border-itec-border text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
+    ghost: "text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
+  },
+};
 
 export const Button: React.FC<ButtonProps> = ({
   children,
@@ -45,111 +86,34 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  // 1. Clases Base (Estructura, tipografía, accesibilidad y animaciones)
-  const baseStyles =
-    "inline-flex items-center justify-center gap-2 px-3 py-1 text-sm font-semibold rounded-xl transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-itec-bg active:scale-[0.98]";
+  const baseStyles = [
+    "inline-flex items-center justify-center gap-2",
+    "px-4 py-2.5 text-sm font-semibold rounded-2xl",
+    "transition-all duration-200 outline-none",
+    "focus-visible:ring-2 focus-visible:ring-itec-sky/30 focus-visible:ring-offset-0",
+    "active:scale-[0.98]",
+  ].join(" ");
+
   const widthStyles = fullWidth ? "w-full" : "w-fit";
-  const disabledStyles =
-    disabled || isLoading
-      ? "opacity-50 cursor-not-allowed pointer-events-none"
-      : "cursor-pointer";
-
-  // 2. Diccionario de Temas (Combinación de Color + Jerarquía Visual)
-  const getThemeStyles = () => {
-    const themes: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
-      primary: {
-        solid:
-          "bg-itec-blue-skye text-white hover:bg-itec-blue shadow-lg shadow-itec-blue/20",
-        outline:
-          "border-2 border-itec-blue-skye text-itec-blue-skye hover:bg-itec-blue-skye/10",
-        ghost: "text-itec-blue-skye hover:bg-itec-blue-skye/10",
-      },
-      secondary: {
-        solid: "bg-white/10 text-white hover:bg-white/20 border border-white/5",
-        outline:
-          "border-2 border-itec-gray text-itec-gray hover:text-white hover:bg-white/5 hover:border-white/20",
-        ghost: "text-itec-gray hover:text-white hover:bg-white/10",
-      },
-      success: {
-        solid:
-          "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20",
-        outline:
-          "border-2 border-emerald-600 text-emerald-500 hover:bg-emerald-600/10",
-        ghost: "text-emerald-500 hover:bg-emerald-600/10",
-      },
-      danger: {
-        solid:
-          "bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-900/20",
-        outline: "border-2 border-rose-600 text-rose-500 hover:bg-rose-600/10",
-        ghost: "text-rose-500 hover:bg-rose-600/10",
-      },
-      warning: {
-        solid:
-          "bg-amber-500 text-black hover:bg-amber-400 shadow-lg shadow-amber-900/20",
-        outline:
-          "border-2 border-amber-500 text-amber-500 hover:bg-amber-500/10",
-        ghost: "text-amber-500 hover:bg-amber-500/10",
-      },
-      purple: {
-        solid:
-          "bg-purple-600 text-white hover:bg-purple-500 shadow-lg shadow-purple-900/20",
-        outline:
-          "border-2 border-purple-600 text-purple-500 hover:bg-purple-600/10",
-        ghost: "text-purple-500 hover:bg-purple-600/10",
-      },
-      orange: {
-        solid:
-          "bg-orange-600 text-white hover:bg-orange-500 shadow-lg shadow-orange-900/20",
-        outline:
-          "border-2 border-orange-600 text-orange-500 hover:bg-orange-600/10",
-        ghost: "text-orange-500 hover:bg-orange-600/10",
-      },
-      teal: {
-        solid:
-          "bg-teal-600 text-white hover:bg-teal-500 shadow-lg shadow-teal-900/20",
-        outline: "border-2 border-teal-600 text-teal-500 hover:bg-teal-600/10",
-        ghost: "text-teal-500 hover:bg-teal-600/10",
-      },
-      slate: {
-        solid:
-          "bg-slate-700 text-white hover:bg-slate-600 shadow-lg shadow-slate-900/20",
-        outline:
-          "border-2 border-slate-600 text-slate-400 hover:text-white hover:bg-slate-600/10",
-        ghost: "text-slate-400 hover:text-white hover:bg-slate-600/10",
-      },
-    };
-
-    // Fallback de seguridad por si envían una variante que no existe
-    return themes[variant]?.[hierarchy] || themes.primary.solid;
-  };
+  const disabledStyles = disabled || isLoading ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer";
 
   return (
     <button
+      className={cn(baseStyles, widthStyles, THEMES[variant][hierarchy], disabledStyles, className)}
       disabled={disabled || isLoading}
-      className={`${baseStyles} ${getThemeStyles()} ${widthStyles} ${disabledStyles} ${className}`}
       {...props}
     >
-      {/* Si está cargando, reemplazamos el icono izquierdo por un spinner */}
       {isLoading ? (
-        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
-      ) : icon ? (
-        <div className="w-4 h-4 shrink-0">
-          <Icons type={icon as any} />
-        </div>
-      ) : null}
-
-      {/* Contenido (Permite combinar prop text con children) */}
-      {(text || children) && (
-        <span className="truncate flex items-center justify-center gap-1">
-          {text}{children}
-        </span>
-      )}
-
-      {/* Icono a la derecha (ej: flecha de "siguiente") */}
-      {iconRight && !isLoading && (
-        <div className="w-4 h-4 shrink-0">
-          <Icons type={iconRight as any} />
-        </div>
+        <>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <span>Cargando...</span>
+        </>
+      ) : (
+        <>
+          {icon ? <span className="text-base leading-none">{icon}</span> : null}
+          {text ?? children}
+          {iconRight ? <span className="text-base leading-none">{iconRight}</span> : null}
+        </>
       )}
     </button>
   );

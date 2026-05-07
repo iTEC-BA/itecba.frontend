@@ -1,6 +1,8 @@
-import React from 'react';
-import type { User } from '@/context/AuthContext';
-import type { UseMutationResult } from '@tanstack/react-query';
+import React from "react";
+import type { User } from "@/context/AuthContext";
+import type { UseMutationResult } from "@tanstack/react-query";
+import { Button } from "@components/ui/Button";
+import { GlassCard } from "@features/profile/components/atoms/GlassCard";
 
 interface Props {
   admins: User[];
@@ -11,62 +13,69 @@ interface Props {
 
 export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmail, toggleMutation }) => {
   return (
-    <div className="bg-itec-box/40 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
-      <div className="p-6 md:p-8 border-b border-white/5 flex items-center justify-between">
+    <GlassCard className="overflow-hidden" variant="elevated">
+      <div className="flex items-center justify-between gap-4 border-b border-itec-border px-5 py-5 sm:px-6">
         <div>
-          <h3 className="text-itec-textfont-bold">Personal Autorizado</h3>
-          <p className="text-gray-500 text-xs mt-1">Usuarios con nivel de Administrador.</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Usuarios</p>
+          <h3 className="mt-1 text-sm font-black text-itec-text">Personal autorizado</h3>
         </div>
-        <span className="bg-itecBlue/10 text-itecBlue text-xs font-bold px-3 py-1">
-          {admins.length} Activos
+        <span className="rounded-full border border-itec-sky/20 bg-itec-sky/10 px-3 py-1 text-xs font-black text-itec-sky">
+          {admins.length} activos
         </span>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-black/20">
+        <table className="min-w-full border-collapse text-left">
+          <thead className="bg-itec-box2/70">
             <tr>
-              <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Perfil</th>
-              <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-right">Gestión</th>
+              <th className="px-5 py-4 text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted sm:px-6">Perfil</th>
+              <th className="px-5 py-4 text-right text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted sm:px-6">Gestión</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-itec-border">
             {isLoading ? (
-              <tr><td colSpan={2} className="px-8 py-10 text-center text-gray-500 text-sm animate-pulse">Cargando datos...</td></tr>
+              <tr>
+                <td colSpan={2} className="px-5 py-10 text-center text-sm text-itec-muted animate-pulse sm:px-6">Cargando datos...</td>
+              </tr>
             ) : admins.length === 0 ? (
-              <tr><td colSpan={2} className="px-8 py-10 text-center text-gray-500 text-sm">Sin administradores.</td></tr>
+              <tr>
+                <td colSpan={2} className="px-5 py-10 text-center text-sm text-itec-muted sm:px-6">Sin administradores.</td>
+              </tr>
             ) : (
               admins.map((admin) => {
-                const isSuperAdmin = admin.email === 'jtumiricuellar@frba.utn.edu.ar';
+                const isSuperAdmin = admin.email === "jtumiricuellar@frba.utn.edu.ar";
                 const isMe = currentUserEmail === admin.email;
 
                 return (
-                  <tr key={admin.id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="px-8 py-4 flex items-center gap-4">
-                      <div className="relative">
-                        <img src={admin.photoURL || `https://ui-avatars.com/api/?name=${admin.name}`} className="w-10 h-10 rounded-full border border-white/10" alt="avatar" />
-                        <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-itec-box rounded-full"></div>
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-itec-textflex items-center gap-2">
-                          {admin.name} 
-                          {isMe && <span className="bg-white/10 text-gray-300 text-[9px] px-1.5 py-0.5 rounded">TÚ</span>}
-                        </p>
-                        <p className="text-xs text-gray-500 font-mono mt-0.5">{admin.email}</p>
+                  <tr key={admin.id} className="group hover:bg-itec-surface/50">
+                    <td className="px-5 py-4 sm:px-6">
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <img
+                            src={admin.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(admin.name ?? "A")}`}
+                            className="h-11 w-11 rounded-2xl border border-itec-border object-cover"
+                            alt="avatar"
+                          />
+                          <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-itec-box bg-itec-emerald" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="flex items-center gap-2 text-sm font-bold text-itec-text">
+                            {admin.name}
+                            {isMe && <span className="rounded-md bg-itec-surface px-1.5 py-0.5 text-[9px] font-black text-itec-muted">TÚ</span>}
+                          </p>
+                          <p className="truncate font-mono text-xs text-itec-muted">{admin.email}</p>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-8 py-4 text-right">
-                      <button
-                        onClick={() => toggleMutation.mutate({ userId: admin.id!, role: 'student' })}
+                    <td className="px-5 py-4 text-right sm:px-6">
+                      <Button
+                        variant="danger"
+                        hierarchy="ghost"
+                        onClick={() => toggleMutation.mutate({ userId: admin.id!, role: "student" })}
                         disabled={isSuperAdmin || toggleMutation.isPending}
-                        className={`text-xs font-bold px-4 py-2 rounded-xl transition-all outline-none ${
-                          isSuperAdmin 
-                            ? 'text-gray-600 cursor-not-allowed' 
-                            : 'text-itec-text hover:text-red-400 hover:bg-red-500/10'
-                        }`}
                       >
-                        {isSuperAdmin ? 'Inamovible' : 'Revocar'}
-                      </button>
+                        {isSuperAdmin ? "Inamovible" : "Revocar"}
+                      </Button>
                     </td>
                   </tr>
                 );
@@ -75,6 +84,6 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
           </tbody>
         </table>
       </div>
-    </div>
+    </GlassCard>
   );
 };

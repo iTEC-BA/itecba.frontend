@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@components/ui/Button';
-import { Icons } from '@/components/ui/icons/Icons';
 
 interface Props {
   onSendMessage: (text?: string, forceAI?: boolean) => void;
@@ -41,7 +40,7 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled, canUseAI, 
             onChange={(e) => setInput(e.target.value)}
             disabled={disabled}
             placeholder="Escribe tu consulta aquí..."
-            className="w-full bg-itec-bg border border-itec-gray text-itec-textpl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-teal-500 text-sm transition-all shadow-inner disabled:opacity-50"
+            className="w-full bg-itec-bg border border-itec-gray text-itec-text px-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-teal-500 text-sm transition-all shadow-inner disabled:opacity-50"
           />
         </div>
         <Button type="submit" variant="teal" hierarchy="solid" disabled={!input.trim() || disabled} icon="send" />

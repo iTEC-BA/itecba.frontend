@@ -2,77 +2,80 @@ import React from "react";
 import { useProfileBenefits } from "@features/profile/hooks/useProfileBenefits";
 import { BenefitCard } from "@features/profile/components/molecules/BenefitCard";
 import { cn } from "@/lib/utils";
-type Tab = { id: "medrano" | "campus" | "digital"; label: string; emoji: string; color: string; active: string };
+import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { Button } from "@components/ui/Button";
+
+type Tab = {
+  id: "medrano" | "campus" | "digital";
+  label: string;
+  emoji: string;
+  color: string;
+  active: string;
+};
+
 const TABS: Tab[] = [
-  { id: "medrano", label: "Medrano",  emoji: "🏙️", color: "text-itec-muted hover:text-itec-sky",    active: "bg-itec-sky/10 text-itec-sky border-itec-sky/25"    },
-  { id: "campus",  label: "Campus",   emoji: "🌿", color: "text-itec-muted hover:text-itec-amber",  active: "bg-itec-amber/10 text-itec-amber border-itec-amber/25" },
-  { id: "digital", label: "Digital",  emoji: "💻", color: "text-itec-muted hover:text-itec-purple", active: "bg-itec-purple/10 text-itec-purple border-itec-purple/25" },
+  { id: "medrano", label: "Medrano", emoji: "🏙️", color: "text-itec-muted hover:text-itec-sky", active: "bg-itec-sky/10 text-itec-sky border-itec-sky/25" },
+  { id: "campus", label: "Campus", emoji: "🌿", color: "text-itec-muted hover:text-itec-amber", active: "bg-itec-amber/10 text-itec-amber border-itec-amber/25" },
+  { id: "digital", label: "Digital", emoji: "💻", color: "text-itec-muted hover:text-itec-purple", active: "bg-itec-purple/10 text-itec-purple border-itec-purple/25" },
 ];
+
 export const BenefitsGrid: React.FC = () => {
   const { benefits, loading, error, activeTab, setActiveTab, refetch } = useProfileBenefits();
+
   return (
-    <div className="bg-itec-box/80 backdrop-blur-md border border-white/8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.35)] overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-itec-border">
+    <GlassCard className="p-5 sm:p-6 lg:p-7" variant="elevated" glow="sky">
+      <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h2 className="text-sm font-black text-itec-text">Beneficios TarjeTEC</h2>
-          <p className="text-[10px] text-itec-muted mt-0.5">Descuentos exclusivos para estudiantes UTN</p>
+          <h2 className="text-sm font-black uppercase tracking-[0.22em] text-itec-muted">Beneficios TarjeTEC</h2>
+          <p className="mt-1 text-sm text-itec-muted">Descuentos exclusivos para estudiantes UTN.</p>
         </div>
-        <button
-          onClick={refetch}
-          aria-label="Actualizar"
-          className="w-7 h-7 flex items-center justify-center rounded-xl text-itec-muted hover:text-itec-text hover:bg-itec-surface transition-all text-sm"
-        >
-          🔄
-        </button>
+        <Button variant="secondary" hierarchy="outline" icon="↻" onClick={refetch}>
+          Actualizar
+        </Button>
       </div>
-      <div className="flex gap-1 p-3 border-b border-itec-border bg-itec-sidebar/50">
-        {TABS.map((tab) => {
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all",
-                "border",
-                isActive ? tab.active : cn("border-transparent", tab.color)
-              )}
-            >
-              <span>{tab.emoji}</span>
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
+
+      <div className="mb-5 flex flex-wrap gap-2">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition-all",
+              activeTab === tab.id
+                ? tab.active
+                : "border-itec-border bg-itec-surface/70 text-itec-muted hover:bg-itec-box2 hover:text-itec-text"
+            )}
+          >
+            <span>{tab.emoji}</span>
+            {tab.label}
+          </button>
+        ))}
       </div>
-      <div className="p-4">
-        {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-28 rounded-2xl bg-itec-surface/50 animate-pulse" style={{ animationDelay: `${i * 60}ms` }} />
-            ))}
-          </div>
-        ) : error ? (
-          <div className="text-center py-8">
-            <p className="text-itec-accent text-sm font-bold mb-2">⚠️ Error al cargar beneficios</p>
-            <p className="text-itec-muted text-xs mb-4">{error}</p>
-            <button onClick={refetch} className="text-xs text-itec-sky hover:underline font-bold">
-              Reintentar
-            </button>
-          </div>
-        ) : benefits.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-4xl mb-3">🎁</p>
-            <p className="text-itec-muted text-sm font-bold">Sin beneficios en esta categoría</p>
-            <p className="text-itec-muted text-xs mt-1">Próximamente se agregarán más descuentos</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {benefits.map((b) => (
-              <BenefitCard key={b._id} benefit={b} />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+
+      {error && (
+        <div className="mb-4 rounded-2xl border border-itec-accent/20 bg-itec-accent/10 px-4 py-3 text-sm text-rose-200">
+          {error}
+        </div>
+      )}
+
+      {loading ? (
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-40 animate-pulse rounded-[1.5rem] border border-itec-border bg-itec-surface/60" />
+          ))}
+        </div>
+      ) : benefits.length === 0 ? (
+        <div className="rounded-[1.5rem] border border-dashed border-itec-border bg-itec-surface/40 p-8 text-center">
+          <p className="text-sm font-bold text-itec-text">No hay beneficios para esta categoría.</p>
+          <p className="mt-1 text-xs text-itec-muted">Probá otra pestaña o recargá la sección.</p>
+        </div>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {benefits.map((benefit) => (
+            <BenefitCard key={benefit._id} benefit={benefit} />
+          ))}
+        </div>
+      )}
+    </GlassCard>
   );
 };
