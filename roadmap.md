@@ -1,90 +1,126 @@
-A partir del análisis de los chats proporcionados y del código de tu proyecto que hemos trabajado anteriormente, he estructurado todas las funcionalidades solicitadas por las distintas áreas de la agrupación. 
+# ROADMAP TECNICO - PLATAFORMA ITEC.BA
 
-El proyecto actualmente cuenta con una arquitectura muy sólida (React/Vite en el frontend y Node.js/Express en el backend). Para mantener todo en la **capa gratuita (Free Tier)**, la estrategia óptima es:
-* **Autenticación y Sesiones:** Firebase Authentication (Gratis e ilimitado para usuarios activos mensuales básicos).
-* **Datos Relacionales y Metadatos:** MongoDB Atlas (Tier M0 gratuito ofrece 512MB, suficiente para cientos de miles de registros de texto, beneficios, usuarios y transacciones).
-* **Archivos pesados (PDFs, Imágenes de apuntes):** Firebase Storage o Supabase Storage (ofrecen entre 1GB y 5GB gratuitos). En MongoDB solo se guardará la URL del archivo.
+Este documento detalla el estado actual, requerimientos tecnicos y estrategia de notificaciones de la plataforma. La infraestructura esta diseñada para operar bajo capas gratuitas (Free Tier) utilizando MongoDB Atlas, Firebase y Vercel.
 
-A continuación, el detalle técnico y estado de cada funcionalidad para tu `README.md`.
+---
 
-***
+## 1. INFRAESTRUCTURA Y CORE (BACKEND/FRONTEND)
 
-### [✅] AUTENTICACIÓN Y GESTIÓN DE PERFILES
-Esta sección centraliza el acceso y la identidad de los estudiantes dentro de la plataforma, requisito fundamental mencionado por "Santiago" y "Códigotec".
+[✅] [SISTEMA DE AUTENTICACION]: Implementacion robusta con Firebase Auth y sincronizacion en MongoDB.
+ - Estado: Funcional e integrado.
+ - Ubicacion: `src/context/AuthContext.tsx` y `src/modules/users/`.
+ - Justificacion: Centraliza la identidad y permite el uso de roles (admin/estudiante) para proteccion de rutas.
+ - Notificaciones:
+   - Email: Alumno (Bienvenida y cambio de contraseña).
+   - Web: Alumno (Confirmacion de inicio de sesion en dispositivo nuevo).
 
-- [✅] [VISTA DE LOGIN / RUTAS PROTEGIDAS]: Integración con Firebase Auth.
-  * Requerimiento Técnico: Permitir acceso prioritario con correo institucional. Manejo de sesiones persistentes y protección de rutas en React (ProtectedRoutes).
-  * Implementación actual: Implementado en el contexto `AuthContext` y middleware del backend.
-  * Base de Datos: Firebase Auth maneja las credenciales; MongoDB Atlas almacena el rol del usuario (estudiante, admin) y sus referencias.
-- [✅] [SECCIÓN PROFILE / FORMULARIO DE ALTA]: Perfil extendido del estudiante.
-  * Requerimiento Técnico: Capturar y permitir edición de nombre, legajo, especialidad/carreras (soporte multi-carrera) y año de ingreso. Debe ser responsivo y usar diseño Bento.
-  * Implementación actual: Implementado en `features/profile/components/organisms/ProfileHeader` y `ProfileForm`.
-  * Base de Datos: MongoDB Atlas (Colección `users`). Muy económico en capa gratuita al ser solo cadenas de texto.
+[✅] [ARQUITECTURA DE DISEÑO]: Estilo Bento Grid y Glassmorphism unificado.
+ - Estado: Funcional.
+ - Ubicacion: `tailwind.config.js` y componentes de `ui/`.
+ - Justificacion: Proporciona una experiencia de usuario moderna y limpia, optimizada para PWA con fuentes Jakarta Sans y Syne.
 
-### [✅] CREDENCIAL VIRTUAL (TarjeTEC) Y BENEFICIOS
-Núcleo del proyecto impulsado por la "Lista 10" para digitalizar los beneficios en comercios locales.
+---
 
-- [✅] [SECCIÓN PROFILE / TARJETEC]: Credencial digital con código QR.
-  * Requerimiento Técnico: Generación en cliente de un QR escaneable (`react-qr-code`) que contenga el legajo o ID del usuario. Diseño UI con efecto cristal que simule una tarjeta física.
-  * Implementación actual: Implementado en `features/profile/components/organisms/TarjeTec`.
-  * Base de Datos: No requiere base de datos adicional. El QR se genera al vuelo con los datos del usuario ya traídos de MongoDB/Firebase.
-- [✅] [VISTA DE BENEFICIOS / CATÁLOGO]: Listado de descuentos en comercios.
-  * Requerimiento Técnico: Visualización de tarjetas de comercios adheridos con filtrado.
-  * Implementación actual: Se encuentra estructurado en el frontend y gestionado desde el `AdminPanel`.
-  * Base de Datos: MongoDB Atlas (Colección `benefits`). Almacena título, descripción, % de descuento y URL de imagen.
+## 2. MODULO DE PERFIL Y CREDENCIAL DIGITAL
 
-### [🟧] GAMIFICACIÓN Y RECOMPENSAS
-Propuesta de "Códigotec" para incentivar la participación (subir apuntes, asistir a tutorías) mediante puntos canjeables.
+[✅] [TARJETEC - CREDENCIAL QR]: Generacion de identificacion digital unica.
+ - Estado: Funcional.
+ - Ubicacion: `features/profile/components/organisms/TarjeTec.tsx`.
+ - Justificacion: Reemplaza la necesidad de carnets fisicos mediante un SVG dinamico basado en el legajo del usuario.
+ - Notificaciones: No requiere.
 
-- [✅] [SECCIÓN REWARDS / CATÁLOGO DE CANJES]: Visualización de recompensas disponibles.
-  * Requerimiento Técnico: Listado de ítems canjeables por puntos. UI de confirmación de canje verificando saldo del usuario.
-  * Implementación actual: Interfaz y gestión básica en `features/admin/components/organisms/RewardsManagement`.
-  * Base de Datos: MongoDB Atlas (Colecciones `rewards` y `redemptions` para historial).
-- [🟧] [LÓGICA DE ASIGNACIÓN DE PUNTOS]: Motor de gamificación.
-  * Requerimiento Técnico: Endpoints en el backend que sumen puntos automáticamente cuando un usuario realiza una acción (ej. aportar un archivo).
-  * Implementación actual: Existen las insignias visuales (PointsBadgeProfile), pero falta automatizar los disparadores ("triggers") en el backend cuando se sube un recurso.
-  * Base de Datos: MongoDB Atlas. Se actualiza el campo `points` en el documento del usuario. Transacciones ACID requeridas para evitar inconsistencias en canjes.
+[✅] [GESTION DE DATOS ACADEMICOS]: Soporte multi-carrera y edicion de perfil.
+ - Estado: Funcional.
+ - Ubicacion: `features/profile/hooks/useEditProfile.ts` y backend `updateUserProfile`.
+ - Justificacion: Permite al backend manejar arrays de carreras y años de ingreso para segmentar informacion futura.
+ - Notificaciones:
+   - Email: Alumno (Aviso de modificacion de datos sensibles como DNI o Legajo).
 
-### [🟧] ÁREA ACADÉMICA Y RECURSOS
-Mencionado extensamente por "Asuntos académicos" y "Lista 10" para centralizar material de estudio.
+---
 
-- [🟧] [VISTA DE MATERIAS / APUNTES]: Repositorio colaborativo.
-  * Requerimiento Técnico: Grid de materias. Dentro de cada materia, lista de recursos (PDFs, resúmenes) subidos por los alumnos, con sistema de validación o "votos".
-  * Implementación actual: Existe el esqueleto de materias (`CourseGrid`), pero falta la vista pública detallada para listar y subir archivos (`EmptyResources` / `ResourceFilters`).
-  * Base de Datos: MongoDB Atlas para estructurar las materias y los metadatos de los apuntes (título, autor, fecha). Los archivos físicos (PDFs) DEBEN ir obligatoriamente a Firebase Storage o Supabase Storage (capa gratuita) para no saturar la base de datos.
-- [🟧] [SECCIÓN TUTORÍAS]: Gestión de clases de apoyo.
-  * Requerimiento Técnico: Formulario para solicitar o postularse como tutor, y un calendario/lista de turnos disponibles.
-  * Implementación actual: Existe la gestión en `AdminPanel` (`TutoriasSection`), falta la interfaz pública para el alumno (el equivalente al Google Form mencionado en el chat).
-  * Base de Datos: MongoDB Atlas (Colección `tutorships` o `appointments`).
+## 3. GAMIFICACION Y ECONOMIA DE PUNTOS
 
-### [🟥] COMUNIDAD Y HERRAMIENTAS ADICIONALES
-Funcionalidades secundarias solicitadas por las distintas áreas para mejorar la comunicación.
+[🟧] [SISTEMA DE PUNTOS]: Motor de asignacion por acciones.
+ - Estado: Interfaz funcional, logica de triggers incompleta.
+ - Ubicacion: `features/admin/components/organisms/RewardsManagement.tsx`.
+ - Justificacion: Incentiva la participacion. Requiere transacciones ACID en MongoDB para evitar duplicacion de puntos durante canjes simultaneos.
+ - Notificaciones:
+   - Web: Alumno (Al recibir puntos por subir material o participar en tutorias).
+   - Web: Alumno (Confirmacion de canje exitoso).
 
-- [✅] [VISTA DE AVISOS / NEWS]: Cartelera digital.
-  * Requerimiento Técnico: Sistema de noticias globales o por carrera para comunicados oficiales de la agrupación.
-  * Implementación actual: Componentes de UI creados y administrados desde `NewsManagement`.
-  * Base de Datos: MongoDB Atlas.
-- [🟧] [CHATBOT DE CONSULTAS / FAQS]: Asistente virtual institucional.
-  * Requerimiento Técnico: Interfaz de chat flotante o sección dedicada para responder dudas frecuentes sobre trámites, horarios, etc.
-  * Implementación actual: Existen los componentes de UI (`ChatInputs`), falta integrar la lógica de respuesta (puede ser un simple motor de búsqueda de palabras clave o conexión a un LLM ligero).
-  * Base de Datos: MongoDB Atlas (Colección `faqs` predefinidas).
-- [🟥] [SECCIÓN BOLSA DE TRABAJO]: Ofertas laborales para estudiantes.
-  * Requerimiento Técnico: Tablón de anuncios donde se puedan publicar y filtrar pasantías o empleos IT.
-  * Implementación actual: Falta por completo (No existen componentes ni rutas).
-  * Base de Datos: MongoDB Atlas.
-- [🟥] [CALENDARIO ACADÉMICO / EVENTOS]: Fechas importantes.
-  * Requerimiento Técnico: Vista tipo calendario o línea de tiempo con fechas de exámenes, feriados e inscripciones.
-  * Implementación actual: Hay rastros de botones para "Guardar Fecha" en eventos, pero no una vista de calendario consolidada para el usuario final.
-  * Base de Datos: MongoDB Atlas (Colección `events`).
+---
 
-### [✅] PANEL DE ADMINISTRACIÓN (BACKOFFICE)
-El núcleo de gestión para los miembros de la agrupación I-TEC.
+## 4. GESTION DE RECURSOS Y ACADEMICO
 
-- [✅] [LAYOUT / ADMIN DASHBOARD]: Centro de control.
-  * Requerimiento Técnico: Interfaz protegida solo para roles "admin". Diseño modular (Bento) con accesos rápidos y KPIs globales. Sidebar responsivo.
-  * Implementación actual: Totalmente implementado, refactorizado y estilizado en `AdminPanel` y `AdminDashboard`.
-  * Base de Datos: Consultas de agregación (Count) en MongoDB Atlas para generar las estadísticas del Dashboard.
-- [✅] [MÓDULOS DE GESTIÓN]: CRUDs del sistema.
-  * Requerimiento Técnico: Tablas de administración para Usuarios (cambio de roles), Noticias, Beneficios, Recompensas y Canjes.
-  * Implementación actual: Secciones creadas e integradas en el Sidebar (`UserManagement`, `BenefitsManagement`, etc.).
-  * Base de Datos: Conexión directa a todas las colecciones de MongoDB Atlas mediante endpoints protegidos.
+[🟧] [REPOSITORIO COLABORATIVO]: Sistema de carga y descarga de apuntes.
+ - Estado: Estructura de materias funcional, carga de archivos incompleta.
+ - Ubicacion: `features/courses/` (Frontend) y `modules/courses/` (Backend).
+ - Justificacion: Debe integrarse con Firebase Storage para no saturar los 512MB de MongoDB Atlas. MongoDB solo guarda metadatos y URLs.
+ - Notificaciones:
+   - Web: Alumnos de la carrera (Aviso de nuevo apunte disponible en una materia seguida).
+
+[🟧] [SISTEMA DE TUTORIAS]: Coordinacion de clases de apoyo.
+ - Estado: Gestion administrativa creada, falta interfaz de solicitud para el alumno.
+ - Ubicacion: `features/admin/components/organisms/TutoriasSection.tsx`.
+ - Justificacion: Implementar un sistema de turnos con estados (Pendiente, Confirmada, Finalizada).
+ - Notificaciones:
+   - Web y Email: Alumno y Tutor (Confirmacion de turno y recordatorio 2 horas antes).
+   - Web: Admin (Al recibir una nueva solicitud de tutoria).
+
+---
+
+## 5. BENEFICIOS Y COMERCIO
+
+[✅] [CATALOGO DE BENEFICIOS]: Listado de descuentos para la comunidad.
+ - Estado: Funcional.
+ - Ubicacion: `features/admin/components/organisms/BenefitsManagement.tsx`.
+ - Justificacion: CRUD administrable que permite activar/desactivar beneficios segun convenios vigentes.
+ - Notificaciones:
+   - Web: Todos los roles (Notificacion de 'Nuevo Beneficio' en comercios cercanos).
+
+---
+
+## 6. COMUNICACION Y ADMINISTRACION
+
+[✅] [CARTELERA DE AVISOS (NEWS)]: Comunicados oficiales.
+ - Estado: Funcional.
+ - Ubicacion: `features/admin/components/organisms/NewsManagement.tsx`.
+ - Justificacion: Reemplaza los grupos de WhatsApp masivos, centralizando la info oficial.
+ - Notificaciones:
+   - Web: Todos los roles (Push global para avisos de alta prioridad o urgentes).
+
+[✅] [PANEL DE ADMINISTRACION]: Dashboard central de operaciones.
+ - Estado: Funcional.
+ - Ubicacion: `pages/AdminPanel.tsx` y `AdminDashboard.tsx`.
+ - Justificacion: Proporciona una vista bento con KPIs en tiempo real consumiendo agregaciones de MongoDB.
+ - Notificaciones:
+   - Email: Admin (Reporte semanal de usuarios nuevos y canjes realizados).
+   - Web: Admin (Alerta de canjes de recompensas de alto valor que requieran entrega fisica).
+
+---
+
+## 7. FUNCIONALIDADES FALTANTES (BACKLOG)
+
+[🟥] [BOLSA DE TRABAJO IT]: Tablon de anuncios laborales.
+ - Estado: Pendiente.
+ - Ubicacion propuesta: `features/jobs/`.
+ - Justificacion: Vincular a los estudiantes con empresas del sector tecnológico.
+ - Notificaciones:
+   - Web: Alumno (Segun tags de interes configurados en el perfil).
+
+[🟥] [CALENDARIO ACADEMICO]: Agenda de fechas criticas.
+ - Estado: Pendiente.
+ - Ubicacion propuesta: `features/calendar/`.
+ - Justificacion: Evita la desinformacion sobre fechas de finales, parciales e inscripciones.
+ - Notificaciones:
+   - Web: Alumno (Recordatorio de inicio de inscripcion a materias).
+
+---
+
+## ESTRATEGIA DE BASE DE DATOS (CAPA GRATUITA)
+
+1. Firebase Authentication: Gestion de identidad (Gratis).
+2. MongoDB Atlas (M0): Usuarios, News, Benefits, Rewards, Materias, Tutorships (Gratis < 512MB).
+3. Firebase/Supabase Storage: Almacenamiento de PDFs de apuntes e imagenes de beneficios (Gratis < 1GB/5GB).
+4. Web Push API: Notificaciones de navegador nativas via Service Workers (Gratis).
+5. Resend/SendGrid: Envio de correos transaccionales (Capa gratuita limitada a 100-300 envios/dia).
