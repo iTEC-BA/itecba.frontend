@@ -4,12 +4,10 @@ import { PageHeader } from "@components/ui/PageHeader";
 import { PointsHeader } from "@features/rewards/components/molecules/PointsHeader";
 import { RewardStats } from "@features/rewards/components/molecules/RewardStats";
 import { RewardsGrid } from "@features/rewards/components/organisms/RewardsGrid";
-import { InboxWidget } from "@features/rewards/components/organisms/InboxWidget";
 import { usePageTitle } from "@hooks/usePageTitle";
 import { useAuth } from "@context/AuthContext";
 import { useRewards } from "@features/rewards/hooks/useRewards";
 import { useRewardStore } from "@features/rewards/store/useRewardStore";
-import { Icons } from "@components/ui/icons/Icons";
 import { Button } from "@/components/ui/Button";
 
 const RewardsContent: React.FC = () => {

@@ -68,8 +68,8 @@ export const RewardsManagement: React.FC = () => {
   );
 
   return (
-    <div className="bg-itec-card border border-white/5 rounded-3xl overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+    <div className="bg-itec-box border border-itec-border rounded-3xl overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-itec-border">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-itec-rewards/12 border border-itec-rewards/20 flex items-center justify-center">
             <Icons type="star" className="size-4 text-itec-rewards" />
@@ -90,7 +90,7 @@ export const RewardsManagement: React.FC = () => {
         </button>
       </div>
 
-      <div className="px-4 py-3 border-b border-white/5">
+      <div className="px-4 py-3 border-b border-itec-border">
         <div className="relative">
           <Icons
             type="search"
@@ -101,12 +101,12 @@ export const RewardsManagement: React.FC = () => {
             placeholder="Buscar beneficio..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-itec-bg border border-white/8 rounded-xl pl-8 pr-3 py-2.5 text-xs text-itec-text placeholder:text-itec-text/30 focus:outline-none focus:border-white/20 transition-colors"
+            className="w-full bg-itec-bg border border-itec-border rounded-xl pl-8 pr-3 py-2.5 text-xs text-itec-text placeholder:text-itec-text/30 focus:outline-none focus:border-white/20 transition-colors"
           />
         </div>
       </div>
 
-      <div className="divide-y divide-white/4">
+      <div className="divide-y divide-itec-border/50">
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-16 px-5 py-3 animate-pulse">
@@ -123,7 +123,7 @@ export const RewardsManagement: React.FC = () => {
             return (
               <div
                 key={id}
-                className="group flex items-center gap-3 px-5 py-3 hover:bg-white/2 transition-colors"
+                className="group flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-colors"
               >
                 <RewardStatusDot active={r.isActive !== false} />
                 <div className="flex-1 min-w-0">

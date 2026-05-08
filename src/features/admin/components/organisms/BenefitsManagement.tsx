@@ -1,17 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { Icons } from "@components/ui/icons/Icons";
 import { auth } from "@/lib/firebase";
 
 const BASE = import.meta.env.VITE_API_URL ?? "";
 
 interface Benefit {
-  _id: string; title: string; discount: string;
-  location: string; category: string; isActive: boolean; logoUrl?: string;
+  _id: string;
+  title: string;
+  discount: string;
+  location: string;
+  category: string;
+  isActive: boolean;
+  logoUrl?: string;
 }
 
 type BenefitForm = Omit<Benefit, "_id" | "isActive">;
 
-const EMPTY: BenefitForm = { title: "", discount: "", location: "", category: "medrano", logoUrl: "" };
+const EMPTY: BenefitForm = {
+  title: "", discount: "", location: "", category: "medrano", logoUrl: "",
+};
+
+const FIELD_LABELS: Record<keyof BenefitForm, string> = {
+  title:    "Título",
+  discount: "Descuento",
+  location: "Ubicación",
+  logoUrl:  "URL del logo",
+  category: "Categoría",
+};
 
 export const BenefitsManagement: React.FC = () => {
   const [benefits, setBenefits] = useState<Benefit[]>([]);
@@ -24,7 +40,9 @@ export const BenefitsManagement: React.FC = () => {
   const load = async () => {
     setLoading(true);
     const t = await auth.currentUser?.getIdToken();
-    const res = await fetch(`${BASE}/benefits/all`, { headers: { Authorization: `Bearer ${t}` } });
+    const res = await fetch(`${BASE}/benefits/all`, {
+      headers: { Authorization: `Bearer ${t}` },
+    });
     const data = await res.json();
     setBenefits(data.benefits ?? []);
     setLoading(false);
@@ -33,9 +51,13 @@ export const BenefitsManagement: React.FC = () => {
   useEffect(() => { load(); }, []);
 
   const save = async () => {
-    if (!form.title || !form.discount) { setError("Título y descuento son obligatorios."); return; }
-    setSaving(true); setError(null);
-    const t = await auth.currentUser?.getIdToken();
+    if (!form.title || !form.discount) {
+      setError("Título y descuento son obligatorios.");
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    const t      = await auth.currentUser?.getIdToken();
     const url    = editId ? `${BASE}/benefits/${editId}` : `${BASE}/benefits`;
     const method = editId ? "PATCH" : "POST";
     const res = await fetch(url, {
@@ -43,102 +65,196 @@ export const BenefitsManagement: React.FC = () => {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${t}` },
       body: JSON.stringify(form),
     });
-    if (!res.ok) { const e = await res.json(); setError(e.message ?? "Error"); setSaving(false); return; }
-    setForm(EMPTY); setEditId(null); setSaving(false); load();
+    if (!res.ok) {
+      const e = await res.json();
+      setError(e.message ?? "Error al guardar");
+      setSaving(false);
+      return;
+    }
+    setForm(EMPTY);
+    setEditId(null);
+    setSaving(false);
+    load();
   };
 
   const remove = async (id: string) => {
+    if (!window.confirm("¿Desactivar este beneficio?")) return;
     const t = await auth.currentUser?.getIdToken();
-    await fetch(`${BASE}/benefits/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${t}` } });
+    await fetch(`${BASE}/benefits/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${t}` },
+    });
     load();
   };
+
+  const startEdit = (b: Benefit) => {
+    setEditId(b._id);
+    setForm({
+      title:    b.title,
+      discount: b.discount,
+      location: b.location,
+      category: b.category,
+      logoUrl:  b.logoUrl ?? "",
+    });
+  };
+
+  const cancelEdit = () => { setEditId(null); setForm(EMPTY); };
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
       <div>
-        <h2 className="text-2xl font-bold text-itec-text mb-1">Descuentos TarjeTEC</h2>
-        <p className="text-xs text-itec-muted">Administrá el catálogo de beneficios desde la base de datos.</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">TarjeTEC</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight text-itec-text">Descuentos y beneficios</h2>
+        <p className="text-xs text-itec-muted">Administrá el catálogo desde la base de datos.</p>
       </div>
 
-      {/* Formulario */}
-      <GlassCard className="p-6">
-        <h3 className="text-sm font-bold text-itec-text mb-4">{editId ? "Editar Beneficio" : "Nuevo Beneficio"}</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* ── Formulario ─────────────────────────────────────────────────────── */}
+      <GlassCard className="p-6" variant="elevated" glow="sky">
+        <div className="mb-5 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Formulario</p>
+            <h3 className="mt-1 text-base font-bold text-itec-text">
+              {editId ? "Editar beneficio" : "Nuevo beneficio"}
+            </h3>
+          </div>
+          {editId && (
+            <button
+              onClick={cancelEdit}
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box2 hover:text-itec-text active:scale-95"
+            >
+              <Icons type="close" className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {(["title", "discount", "location", "logoUrl"] as const).map((field) => (
-            <label key={field} className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-itec-muted uppercase tracking-widest">{field}</span>
+            <label key={field} className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
+                {FIELD_LABELS[field]}
+              </span>
               <input
-                className="bg-itec-surface border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-itec-sky/50"
-                value={(form as any)[field]}
+                className="rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none backdrop-blur-sm transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+                value={(form as Record<string, string>)[field]}
+                placeholder={`Ej: ${field === "title" ? "Burger King" : field === "discount" ? "20% OFF" : field === "location" ? "Av. Corrientes 1234" : "https://..."}`}
                 onChange={(e) => setForm((p) => ({ ...p, [field]: e.target.value }))}
               />
             </label>
           ))}
-          <label className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold text-itec-muted uppercase tracking-widest">Categoría</span>
+
+          <label className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
+              {FIELD_LABELS.category}
+            </span>
             <select
-              className="bg-itec-surface border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-itec-sky/50 appearance-none"
+              className="appearance-none rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none backdrop-blur-sm transition-all focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
               value={form.category}
               onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
             >
               {["medrano", "campus", "digital"].map((c) => (
-                <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
+                <option key={c} value={c} className="bg-itec-box">
+                  {c.charAt(0).toUpperCase() + c.slice(1)}
+                </option>
               ))}
             </select>
           </label>
         </div>
-        {error && <p className="text-red-400 text-xs mt-3 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">{error}</p>}
-        <div className="flex gap-3 mt-4">
+
+        {error && (
+          <p className="mt-3 rounded-2xl border border-itec-accent/20 bg-itec-accent/10 px-3 py-2 text-xs text-itec-accent">
+            {error}
+          </p>
+        )}
+
+        <div className="mt-5 flex gap-3">
           <button
             onClick={save}
             disabled={saving}
-            className="bg-itec-sky text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-itec-sky/90 transition-colors disabled:opacity-50"
+            className="rounded-2xl border border-itec-sky/30 bg-itec-sky/20 px-5 py-2.5 text-xs font-bold text-itec-sky transition-all hover:bg-itec-sky/30 active:scale-95 disabled:opacity-50"
           >
             {saving ? "Guardando..." : editId ? "Actualizar" : "Crear"}
           </button>
           {editId && (
-            <button onClick={() => { setEditId(null); setForm(EMPTY); }} className="text-xs text-itec-muted hover:text-itec-text transition-colors">
+            <button
+              onClick={cancelEdit}
+              className="rounded-2xl border border-itec-border bg-itec-surface/60 px-5 py-2.5 text-xs font-bold text-itec-muted transition-all hover:text-itec-text active:scale-95"
+            >
               Cancelar
             </button>
           )}
         </div>
       </GlassCard>
 
-      {/* Listado */}
-      <GlassCard className="p-6">
+      {/* ── Listado ─────────────────────────────────────────────────────────── */}
+      <GlassCard className="overflow-hidden" variant="elevated">
+        <div className="flex items-center justify-between gap-4 border-b border-itec-border px-5 py-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Catálogo</p>
+            <h3 className="mt-1 text-sm font-bold text-itec-text">Beneficios activos</h3>
+          </div>
+          <span className="rounded-full border border-itec-sky/20 bg-itec-sky/10 px-3 py-1 text-xs font-bold text-itec-sky">
+            {benefits.filter((b) => b.isActive).length} activos
+          </span>
+        </div>
+
         {loading ? (
-          <div className="space-y-3">
+          <div className="space-y-3 p-5">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-10 rounded-xl bg-itec-surface/40 animate-pulse" />
+              <div key={i} className="h-10 animate-pulse rounded-2xl bg-itec-surface/40" />
             ))}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead>
-                <tr className="text-itec-muted border-b border-itec-border">
+              <thead className="border-b border-itec-border bg-itec-box2/50">
+                <tr>
                   {["Nombre", "Descuento", "Categoría", "Estado", ""].map((h) => (
-                    <th key={h} className="text-left font-bold uppercase tracking-widest pb-3 pr-4">{h}</th>
+                    <th
+                      key={h}
+                      className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted"
+                    >
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-itec-border/40">
                 {benefits.map((b) => (
-                  <tr key={b._id} className="border-b border-itec-border/50 hover:bg-itec-surface/30 transition-colors">
-                    <td className="py-3 pr-4 font-bold text-itec-text">{b.title}</td>
-                    <td className="py-3 pr-4 text-itec-sky font-bold">{b.discount}</td>
-                    <td className="py-3 pr-4 capitalize text-itec-muted">{b.category}</td>
-                    <td className="py-3 pr-4">
-                      <span className={`px-2 py-0.5 rounded-md font-bold ${b.isActive ? "bg-itec-emerald/15 text-itec-emerald" : "bg-itec-muted/15 text-itec-muted"}`}>
+                  <tr
+                    key={b._id}
+                    className="group transition-colors hover:bg-itec-surface/30"
+                  >
+                    <td className="px-5 py-3 font-bold text-itec-text">{b.title}</td>
+                    <td className="px-5 py-3 font-bold text-itec-sky">{b.discount}</td>
+                    <td className="px-5 py-3 capitalize text-itec-muted">{b.category}</td>
+                    <td className="px-5 py-3">
+                      <span
+                        className={`rounded-xl border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                          b.isActive
+                            ? "border-itec-emerald/20 bg-itec-emerald/10 text-itec-emerald"
+                            : "border-itec-border bg-itec-surface/50 text-itec-muted"
+                        }`}
+                      >
                         {b.isActive ? "Activo" : "Inactivo"}
                       </span>
                     </td>
-                    <td className="py-3 flex gap-2">
-                      <button
-                        onClick={() => { setEditId(b._id); setForm({ title: b.title, discount: b.discount, location: b.location, category: b.category, logoUrl: b.logoUrl ?? "" }); }}
-                        className="text-itec-sky hover:underline font-bold"
-                      >Editar</button>
-                      <button onClick={() => remove(b._id)} className="text-itec-accent hover:underline font-bold">Desactivar</button>
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                        <button
+                          onClick={() => startEdit(b)}
+                          className="rounded-xl border border-itec-sky/20 bg-itec-sky/10 p-1.5 text-itec-sky transition-all hover:bg-itec-sky/20 active:scale-95"
+                          aria-label="Editar"
+                        >
+                          <Icons type="edit" className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => remove(b._id)}
+                          className="rounded-xl border border-itec-accent/20 bg-itec-accent/10 p-1.5 text-itec-accent transition-all hover:bg-itec-accent/20 active:scale-95"
+                          aria-label="Desactivar"
+                        >
+                          <Icons type="trash" className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
