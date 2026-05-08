@@ -24,7 +24,7 @@ const LinksSkeletons: React.FC = () => (
 );
 
 const EmptyLinks: React.FC<{ isAdmin: boolean; onAdd: () => void }> = ({ isAdmin, onAdd }) => (
-  <div className="flex flex-col items-center justify-center py-5 gap-2.5 text-center border border-dashed border-white/10 rounded-xl">
+  <div className="flex flex-col items-center justify-center py-5 gap-2.5 text-center border border-dashed border-itec-border rounded-xl">
     <div className="w-9 h-9 bg-white/5 rounded-xl flex items-center justify-center">
       <Icons type="externalLink" className="w-4 h-4 text-itec-gray" />
     </div>

@@ -26,7 +26,7 @@ const GLOW_MAP: Record<GlowColor, string> = {
 
 const VARIANT_MAP: Record<GlassVariant, string> = {
   default: "bg-itec-box/82 backdrop-blur-xl border border-itec-border shadow-[0_10px_30px_rgba(0,0,0,0.28)]",
-  elevated: "bg-itec-box/92 backdrop-blur-xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
+  elevated: "bg-itec-box/92 backdrop-blur-xl border border-itec-border shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
   sunken: "bg-itec-surface/70 backdrop-blur-xl border border-white/6 shadow-inner shadow-black/20",
   outlined: "bg-transparent backdrop-blur-xl border border-itec-border/90 shadow-[0_12px_30px_rgba(0,0,0,0.22)]",
   solid: "bg-itec-box2 border border-itec-border shadow-[0_16px_42px_rgba(0,0,0,0.36)]",

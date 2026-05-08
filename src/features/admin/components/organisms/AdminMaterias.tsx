@@ -76,7 +76,7 @@ export const AdminMaterias: React.FC = () => {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-fade-in">
       {/* Formulario Lateral */}
-      <div className="xl:col-span-1 bg-itec-box border border-white/10 rounded-2xl p-6 h-fit sticky top-6">
+      <div className="xl:col-span-1 bg-itec-box border border-itec-border rounded-2xl p-6 h-fit sticky top-6">
         <h3 className="text-sm font-bold text-itec-text mb-4 uppercase tracking-widest text-itec-gray">
           {isEditing ? '✏️ Editar Materia' : '➕ Nueva Materia'}
         </h3>
@@ -107,8 +107,8 @@ export const AdminMaterias: React.FC = () => {
       </div>
 
       {/* Tabla Central */}
-      <div className="xl:col-span-2 bg-itec-box border border-white/10 rounded-2xl flex flex-col h-[75vh]">
-        <div className="p-5 border-b border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="xl:col-span-2 bg-itec-box border border-itec-border rounded-2xl flex flex-col h-[75vh]">
+        <div className="p-5 border-b border-itec-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h2 className="text-base font-bold text-itec-text">Base de Datos de Materias</h2>
             <p className="text-xs text-itec-gray">Total registradas: {materias.length}</p>

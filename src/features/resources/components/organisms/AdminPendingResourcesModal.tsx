@@ -26,7 +26,7 @@ export const AdminPendingResourcesModal: React.FC<Props> = ({ isOpen, onClose })
       <div className="w-full sm:max-w-4xl bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-3xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[85vh]">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-itec-gray/20 shrink-0">
+        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-itec-border shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/20 flex items-center justify-center text-orange-400 text-lg">
               🛡️
@@ -55,7 +55,7 @@ export const AdminPendingResourcesModal: React.FC<Props> = ({ isOpen, onClose })
           ) : pending.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-itec-bg border-b border-itec-gray/20 sticky top-0 z-10">
+                <thead className="bg-itec-bg border-b border-itec-border sticky top-0 z-10">
                   <tr>
                     {['Título / Materia', 'Carrera', 'Tipo', 'Acciones'].map((h, i) => (
                       <th key={h}

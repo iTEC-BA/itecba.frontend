@@ -30,7 +30,7 @@ export const RewardCard: React.FC<Props> = ({
       className={`group relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${
         canAfford
           ? "bg-itec-card border-itec-rewards/15 hover:border-itec-rewards/35 hover:shadow-[0_0_30px_rgba(240,177,0,0.07)]"
-          : "bg-itec-card border-white/5 hover:border-white/10"
+          : "bg-itec-card border-white/5 hover:border-itec-border"
       }`}
     >
       {!canAfford && (

@@ -5,7 +5,7 @@ import { auth } from "@/lib/firebase";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
 
-const FIELD_CLS = "w-full bg-white/[0.04] border border-white/10 text-itec-text text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-itec-blue-skye/60 focus:ring-2 focus:ring-itec-blue-skye/10 transition-all placeholder:text-itec-gray/50";
+const FIELD_CLS = "w-full bg-white/[0.04] border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-itec-blue-skye/60 focus:ring-2 focus:ring-itec-blue-skye/10 transition-all placeholder:text-itec-gray/50";
 const LABEL_CLS = "block text-[10px] font-bold text-itec-gray uppercase tracking-widest mb-1.5";
 
 interface Props { isOpen: boolean; onClose: () => void; courseTitle: string; materia: string; }
@@ -40,7 +40,7 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
 
   return (
     <div className="fixed inset-0 z-[200] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="bg-itec-box border border-white/10 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md flex flex-col shadow-2xl">
+      <div className="bg-itec-box border border-itec-border rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-white/8">
           <div>
             <h2 className="text-sm font-black text-itec-text">Vincular archivo</h2>

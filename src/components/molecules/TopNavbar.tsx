@@ -111,7 +111,7 @@ export const TopNavbar = () => {
           <div className="hidden lg:block h-5 w-px mx-1 bg-white/10"></div>
 
           {/* Puntos de recompensa */}
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full border text-sm bg-white/5 border-white/10 mr-1">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full border text-sm bg-white/5 border-itec-border mr-1">
             <RewardsWidgetPoints />
           </div>
 
@@ -132,7 +132,7 @@ export const TopNavbar = () => {
             {user?.photoURL ? (
               <Link
                 to="/perfil"
-                className="w-8 h-8 rounded-lg overflow-hidden flex cursor-pointer hover:opacity-80 transition-opacity border border-white/10"
+                className="w-8 h-8 rounded-lg overflow-hidden flex cursor-pointer hover:opacity-80 transition-opacity border border-itec-border"
               >
                 <img
                   src={user.photoURL}
@@ -143,7 +143,7 @@ export const TopNavbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 text-xs font-medium transition-colors bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-itec-border text-xs font-medium transition-colors bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
               >
                 <Icons type="google" className="w-4 h-4" />
                 <span className="hidden sm:inline">Iniciar sesión</span>

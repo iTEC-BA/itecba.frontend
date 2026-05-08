@@ -8,7 +8,7 @@ const MATERIAS: string[] = [
   "Inglés Técnico", "Otra...",
 ];
 
-const FIELD_CLS = "w-full bg-white/[0.04] border border-white/10 text-itec-text text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-itec-blue-skye/60 focus:ring-2 focus:ring-itec-blue-skye/10 transition-all";
+const FIELD_CLS = "w-full bg-white/[0.04] border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-itec-blue-skye/60 focus:ring-2 focus:ring-itec-blue-skye/10 transition-all";
 const LABEL_CLS = "block text-[10px] font-bold text-itec-gray uppercase tracking-widest mb-1.5";
 
 interface Props {
@@ -41,17 +41,17 @@ export const CourseGeneralData: React.FC<Props> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={LABEL_CLS}>Título</label>
-          <Input fullWidth placeholder="Ej: Clase de Paradigmas..." value={title} onChange={(e: any) => setTitle(e.target.value)} className="bg-white/[0.04] border-white/10 text-sm py-2.5 rounded-xl" />
+          <Input fullWidth placeholder="Ej: Clase de Paradigmas..." value={title} onChange={(e: any) => setTitle(e.target.value)} className="bg-white/[0.04] border-itec-border text-sm py-2.5 rounded-xl" />
         </div>
         <div>
           <label className={LABEL_CLS}>URL Portada (opcional)</label>
-          <Input fullWidth placeholder="https://..." value={image} onChange={(e: any) => setImage(e.target.value)} className="bg-white/[0.04] border-white/10 text-sm py-2.5 rounded-xl" />
+          <Input fullWidth placeholder="https://..." value={image} onChange={(e: any) => setImage(e.target.value)} className="bg-white/[0.04] border-itec-border text-sm py-2.5 rounded-xl" />
         </div>
         <div>
           <label className={LABEL_CLS}>Materia</label>
           {customMateria ? (
             <div className="flex gap-2">
-              <Input fullWidth placeholder="Escribí la materia..." value={materia} onChange={(e: any) => setMateria(e.target.value)} className="bg-white/[0.04] border-white/10 text-sm py-2.5 rounded-xl flex-1" />
+              <Input fullWidth placeholder="Escribí la materia..." value={materia} onChange={(e: any) => setMateria(e.target.value)} className="bg-white/[0.04] border-itec-border text-sm py-2.5 rounded-xl flex-1" />
               <button type="button" onClick={() => { setCustomMateria(false); setMateria(""); }} className="text-itec-gray hover:text-itec-text text-xs px-3 transition-colors">↩</button>
             </div>
           ) : (
@@ -70,7 +70,7 @@ export const CourseGeneralData: React.FC<Props> = ({
         </div>
         <div className="sm:col-span-2">
           <label className={LABEL_CLS}>Descripción corta</label>
-          <Input fullWidth placeholder="Ej: Repaso para el final..." value={desc} onChange={(e: any) => setDesc(e.target.value)} className="bg-white/[0.04] border-white/10 text-sm py-2.5 rounded-xl" />
+          <Input fullWidth placeholder="Ej: Repaso para el final..." value={desc} onChange={(e: any) => setDesc(e.target.value)} className="bg-white/[0.04] border-itec-border text-sm py-2.5 rounded-xl" />
         </div>
       </div>
     </div>

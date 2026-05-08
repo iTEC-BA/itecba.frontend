@@ -45,7 +45,7 @@ export const AvatarRing: React.FC<AvatarRingProps> = ({
       <div
         className={cn(
           "relative overflow-hidden rounded-full flex items-center justify-center font-black text-itec-muted",
-          "bg-gradient-to-br from-itec-box2 to-itec-surface border border-white/10 shadow-[0_16px_30px_rgba(0,0,0,0.3)]",
+          "bg-gradient-to-br from-itec-box2 to-itec-surface border border-itec-border shadow-[0_16px_30px_rgba(0,0,0,0.3)]",
           ring,
           s.ring
         )}

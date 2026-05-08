@@ -1,15 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '@context/AuthContext';
-import { BentoCard } from '@features/home/components/atoms/BentoCard';
-import { GlowDot } from '@features/home/components/atoms/GlowDot';
-import { Icons } from '@components/ui/icons/Icons';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@context/AuthContext";
+import { BentoCard } from "@features/home/components/atoms/BentoCard";
+import { GlowDot } from "@features/home/components/atoms/GlowDot";
+import { Icons } from "@components/ui/icons/Icons";
 
 export const WelcomeWidget: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
-  const firstName = user?.name ? user.name.split(' ')[0] : null;
+  const firstName = user?.name ? user.name.split(" ")[0] : null;
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+  const greeting =
+    hour < 12 ? "Buenos días" : hour < 19 ? "Buenas tardes" : "Buenas noches";
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-5">
@@ -25,15 +26,15 @@ export const WelcomeWidget: React.FC = () => {
             <h1 className="text-xl sm:text-2xl font-bold text-itec-text leading-tight">
               {firstName ? (
                 <>
-                  {greeting},{' '}
+                  {greeting},{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-itec-red to-itec-red-skye">
                     {firstName}
-                  </span>
-                  {' '}👋
+                  </span>{" "}
+                  👋
                 </>
               ) : (
                 <>
-                  Bienvenido a{' '}
+                  Bienvenido a{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-itec-red to-itec-red-skye">
                     iTEC BA
                   </span>
@@ -42,8 +43,8 @@ export const WelcomeWidget: React.FC = () => {
             </h1>
             <p className="text-itec-gray text-[12px] mt-1 leading-relaxed">
               {isAuthenticated
-                ? 'Tu campus universitario, todo en un lugar.'
-                : 'La plataforma estudiantil de UTN Buenos Aires.'}
+                ? "Tu campus universitario, todo en un lugar."
+                : "La plataforma estudiantil de UTN Buenos Aires."}
             </p>
           </div>
           {user?.photoURL && (
@@ -51,7 +52,7 @@ export const WelcomeWidget: React.FC = () => {
               <img
                 src={user.photoURL}
                 alt="Perfil"
-                className="w-10 h-10 rounded-xl border border-white/10 object-cover hover:opacity-80 transition-opacity"
+                className="w-10 h-10 rounded-xl border border-itec-border object-cover hover:opacity-80 transition-opacity"
               />
             </Link>
           )}

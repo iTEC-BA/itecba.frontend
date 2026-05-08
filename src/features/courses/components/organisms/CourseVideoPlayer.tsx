@@ -62,7 +62,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide transition-all active:scale-95 ${
               isWatched
                 ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 hover:bg-emerald-500/20"
-                : "bg-white/5 text-itec-text border border-white/10 hover:bg-white/10"
+                : "bg-white/5 text-itec-text border border-itec-border hover:bg-white/10"
             }`}
           >
             <div className="w-3.5 h-3.5">
@@ -73,7 +73,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
 
           <button
             onClick={onOpenMaterialModal}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide bg-white/5 text-itec-text border border-white/10 hover:bg-white/10 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide bg-white/5 text-itec-text border border-itec-border hover:bg-white/10 transition-all active:scale-95"
           >
             <div className="w-3.5 h-3.5"><Icons type="documentFill" /></div>
             Recursos
@@ -86,7 +86,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
 
           <button
             onClick={onShare}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide bg-white/5 text-itec-text border border-white/10 hover:bg-white/10 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide bg-white/5 text-itec-text border border-itec-border hover:bg-white/10 transition-all active:scale-95"
           >
             <div className="w-3.5 h-3.5">
               {copySuccess ? <Icons type="check" /> : <Icons type="shareNetwork" />}

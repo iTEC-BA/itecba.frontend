@@ -74,7 +74,7 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/75 p-0 sm:p-4">
-      <div className="bg-itec-bg border border-white/10 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[85vh] flex flex-col shadow-2xl">
+      <div className="bg-itec-bg border border-itec-border rounded-t-3xl sm:rounded-3xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[85vh] flex flex-col shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-white/8 shrink-0">
           <div>

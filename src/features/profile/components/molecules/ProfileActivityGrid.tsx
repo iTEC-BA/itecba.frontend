@@ -13,10 +13,6 @@ interface ProfileActivityGridProps {
   className?: string;
 }
 
-/**
- * Grid de tarjetas de actividad reciente del perfil.
- * Corresponde a .activity-grid del HTML de referencia.
- */
 export const ProfileActivityGrid: React.FC<ProfileActivityGridProps> = ({
   cards,
   className,
@@ -36,3 +32,4 @@ export const ProfileActivityGrid: React.FC<ProfileActivityGridProps> = ({
     ))}
   </div>
 );
+

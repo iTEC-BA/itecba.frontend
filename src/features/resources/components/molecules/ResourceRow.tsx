@@ -7,7 +7,7 @@ import type { ResourceData } from '../../types/resource.types';
 interface Props { resource: ResourceData }
 
 export const ResourceRow: React.FC<Props> = ({ resource: r }) => (
-  <tr className="group border-b border-itec-gray/20 hover:bg-orange-500/5 transition-colors">
+  <tr className="group border-b border-itec-border hover:bg-orange-500/5 transition-colors">
     {/* Título + Formato */}
     <td className="p-4">
       <div className="flex items-center gap-3">

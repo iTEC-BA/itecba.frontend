@@ -100,7 +100,7 @@ export const UniversalSearch: React.FC = () => {
             <Icons type="close" className="w-3.5 h-3.5" />
           </button>
         )}
-        <span className="hidden sm:inline text-[10px] text-itec-gray/40 font-mono border border-white/10 rounded px-1 shrink-0">
+        <span className="hidden sm:inline text-[10px] text-itec-gray/40 font-mono border border-itec-border rounded px-1 shrink-0">
           ⌘K
         </span>
       </div>

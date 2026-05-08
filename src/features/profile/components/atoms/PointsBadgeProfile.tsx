@@ -23,9 +23,8 @@ export const PointsBadgeProfile: React.FC<PointsBadgeProfileProps> = ({
 }) => (
   <span
     className={cn(
-      "inline-flex items-center rounded-2xl font-black",
-      "bg-itec-amber/10 border border-itec-amber/25 text-itec-amber",
-      "shadow-[0_0_16px_rgba(245,158,11,0.12)]",
+      "inline-flex items-center rounded-2xl font-semibold",
+      "bg-itec-amber/10 text-itec-amber",
       SIZE[size],
       pulse && "animate-pulse"
     )}

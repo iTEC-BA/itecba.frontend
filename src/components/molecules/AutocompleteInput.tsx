@@ -39,10 +39,10 @@ export const AutocompleteInput: React.FC<Props> = ({
         value={value} 
         onChange={e => { onChange(e.target.value); setIsOpen(true); }} 
         onFocus={() => setIsOpen(true)} 
-        className="cursor-text text-sm py-3.5 bg-itec-box/50 border-white/10 hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl disabled:cursor-not-allowed" 
+        className="cursor-text text-sm py-3.5 bg-itec-box/50 border-itec-border hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl disabled:cursor-not-allowed" 
       />
       {isOpen && filteredSuggestions.length > 0 && !disabled && (
-        <ul className="absolute z-50 w-full top-full mt-2 bg-slate-800 border border-white/10 rounded-2xl shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
+        <ul className="absolute z-50 w-full top-full mt-2 bg-slate-800 border border-itec-border rounded-2xl shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
           {filteredSuggestions.map((s, idx) => (
             <li 
               key={idx} onClick={() => { onChange(s); setIsOpen(false); }} 

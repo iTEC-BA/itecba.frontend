@@ -83,7 +83,7 @@ export const CourseEditDetail: React.FC = () => {
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <Link to={`/cursos/${id}`} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-itec-gray hover:text-itec-text transition-all">
+          <Link to={`/cursos/${id}`} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 border border-itec-border text-itec-gray hover:text-itec-text transition-all">
             <Icons type="arrowLeft" className="w-4 h-4" />
           </Link>
           <div>

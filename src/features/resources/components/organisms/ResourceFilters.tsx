@@ -86,7 +86,7 @@ export const ResourceFilters: React.FC<Props> = ({
                   <li
                     key={m}
                     onMouseDown={() => handleSelectMateria(m)}
-                    className="px-3 py-2 text-sm text-itec-text hover:bg-orange-600/80 hover:text-itec-text cursor-pointer border-b border-itec-gray/20 last:border-0 transition-colors truncate"
+                    className="px-3 py-2 text-sm text-itec-text hover:bg-orange-600/80 hover:text-itec-text cursor-pointer border-b border-itec-border last:border-0 transition-colors truncate"
                   >
                     {m}
                   </li>
@@ -97,7 +97,7 @@ export const ResourceFilters: React.FC<Props> = ({
         </FilterField>
       </div>
 
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-itec-gray/20">
+      <div className="flex items-center justify-between mt-4 pt-4 border-t border-itec-border">
         <span className="text-xs text-itec-gray">
           <span className="font-bold text-itec-text">{totalVisible}</span> aporte{totalVisible !== 1 ? 's' : ''} encontrado{totalVisible !== 1 ? 's' : ''}
         </span>

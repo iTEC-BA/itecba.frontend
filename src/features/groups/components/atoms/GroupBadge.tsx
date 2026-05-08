@@ -5,7 +5,7 @@ type BadgeVariant = 'nivel' | 'tipo' | 'carrera' | 'count';
 const VARIANT_CLASSES: Record<BadgeVariant, string> = {
   nivel:   'bg-itec-groups/12 text-emerald-400 border-itec-groups/20',
   tipo:    'bg-itec-blue-skye/12 text-blue-400 border-itec-blue-skye/20',
-  carrera: 'bg-white/5 text-itec-gray border-white/10',
+  carrera: 'bg-white/5 text-itec-gray border-itec-border',
   count:   'bg-itec-red/12 text-itec-red border-itec-red/20',
 };
 

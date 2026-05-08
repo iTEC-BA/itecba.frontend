@@ -13,7 +13,7 @@ export const ProfileTarjetecSmall: React.FC<{ user: User }> = ({ user }) => {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="relative w-full h-max overflow-hidden rounded-xl border border-white/10 bg-slate-900 shadow-2xl">
+    <div className="relative w-full h-max overflow-hidden rounded-xl border border-itec-border bg-slate-900 shadow-2xl">
       <SvgTarjeTec />
       <div className="absolute h-full top-0 flex flex-col justify-center gap-2 px-4 py-4 text-xs text-white/50">
         <div className="mt-auto">

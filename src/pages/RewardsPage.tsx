@@ -10,6 +10,7 @@ import { useAuth } from "@context/AuthContext";
 import { useRewards } from "@features/rewards/hooks/useRewards";
 import { useRewardStore } from "@features/rewards/store/useRewardStore";
 import { Icons } from "@components/ui/icons/Icons";
+import { Button } from "@/components/ui/Button";
 
 const RewardsContent: React.FC = () => {
   const { rewards, pointsBalance, affordableRewards } = useRewards();
@@ -34,31 +35,28 @@ const RewardsContent: React.FC = () => {
             </h2>
             {isAdmin && (
               <div className="flex items-center gap-2">
-                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold text-itec-rewards/60 bg-itec-rewards/8 border border-itec-rewards/15 px-2 py-1 rounded-lg">
-                  <Icons type="settings" className="size-3" />
-                  Modo admin
-                </span>
-                <button
+                <Button
                   onClick={openAddModal}
-                  className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl bg-itec-rewards/12 border border-itec-rewards/25 text-itec-rewards text-xs font-bold hover:bg-itec-rewards/20 hover:border-itec-rewards/40 transition-all active:scale-95 shadow-[0_0_12px_rgba(240,177,0,0.1)]"
-                >
-                  <Icons type="plus" className="size-3.5" />
-                  Agregar
-                </button>
+                  variant="primary"
+                  hierarchy="ghost"
+                  icon="➕"
+                  text="Agregar"
+                  className="text-xs"
+                />
               </div>
             )}
           </div>
           <RewardsGrid isAdmin={isAdmin} />
         </div>
 
-        <aside className="w-full lg:w-80 shrink-0">
+        {/* <aside className="w-full lg:w-80 shrink-0">
           <h2 className="text-[11px] font-bold uppercase tracking-widest text-itec-text/40 mb-4">
             Buzón de avisos
           </h2>
           <div className="lg:sticky lg:top-4">
             <InboxWidget />
           </div>
-        </aside>
+        </aside> */}
       </div>
     </div>
   );
@@ -74,20 +72,23 @@ const LoginPrompt: React.FC = () => (
         Iniciá sesión para ver tus beneficios
       </p>
       <p className="text-itec-text/40 text-sm max-w-sm leading-relaxed">
-        Necesitás una cuenta de Google institucional de la UTN BA para acceder al club de beneficios.
+        Necesitás una cuenta de Google institucional de la UTN BA para acceder
+        al club de beneficios.
       </p>
     </div>
     <div className="flex flex-wrap justify-center gap-3 mt-2">
-      {["⭐ Puntos por actividades", "🎁 Beneficios exclusivos", "📩 Avisos del equipo"].map(
-        (text) => (
-          <span
-            key={text}
-            className="text-xs text-itec-text/50 bg-white/4 border border-white/8 rounded-xl px-3 py-1.5"
-          >
-            {text}
-          </span>
-        )
-      )}
+      {[
+        "⭐ Puntos por actividades",
+        "🎁 Beneficios exclusivos",
+        "📩 Avisos del equipo",
+      ].map((text) => (
+        <span
+          key={text}
+          className="text-xs text-itec-text/50 bg-white/4 border border-white/8 rounded-xl px-3 py-1.5"
+        >
+          {text}
+        </span>
+      ))}
     </div>
   </div>
 );

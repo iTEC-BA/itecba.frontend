@@ -63,7 +63,7 @@ export const CourseDetailHeader: React.FC<Props> = ({ course, isAdmin, copySucce
         {isAdmin && (
           <Link
             to={`/cursos/editar/${courseId}`}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-itec-border text-slate-400 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold active:scale-95"
           >
             <div className="w-4 h-4"><Icons type="edit" /></div>
             Editar

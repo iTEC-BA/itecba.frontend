@@ -42,11 +42,11 @@ export const CustomSelect: React.FC<Props> = ({
           fullWidth readOnly disabled={disabled}
           placeholder={placeholder} 
           value={selectedLabel} 
-          className="cursor-pointer text-sm py-3.5 bg-slate-950/50 border-white/10 hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl disabled:cursor-not-allowed select-none" 
+          className="cursor-pointer text-sm py-3.5 bg-slate-950/50 border-itec-border hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl disabled:cursor-not-allowed select-none" 
         />
       </div>
       {isOpen && !disabled && (
-        <ul className="absolute z-100 w-full top-full mt-2 bg-slate-800 border border-white/10 rounded-2xl shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
+        <ul className="absolute z-100 w-full top-full mt-2 bg-slate-800 border border-itec-border rounded-2xl shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
           {options.map((opt) => (
             <li 
               key={opt.value} onClick={() => { onChange(opt.value); setIsOpen(false); }} 

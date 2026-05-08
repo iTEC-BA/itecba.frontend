@@ -114,7 +114,7 @@ export const EditLinksModal: React.FC<Props> = ({
             </p>
             {isLoading ? (
               <div className="flex items-center justify-center py-6">
-                <div className="w-5 h-5 border-2 border-white/10 border-t-itec-blue-skye rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-itec-border border-t-itec-blue-skye rounded-full animate-spin" />
               </div>
             ) : links.length === 0 ? (
               <p className="text-center py-6 text-itec-gray text-sm">

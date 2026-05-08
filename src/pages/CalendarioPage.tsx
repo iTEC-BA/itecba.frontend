@@ -29,7 +29,7 @@ const EVENTS: CalEvent[] = [
 const TYPE_CONFIG: Record<EventType, { label: string; color: string; dot: string }> = {
   examen:       { label: "Examen",       color: "bg-itec-red/12 text-[#e01540] border-itec-red/20",   dot: "bg-[#e01540]" },
   institucional:{ label: "Institucional",color: "bg-[#004aad]/12 text-[#5b9cf6] border-[#004aad]/20",dot: "bg-[#5b9cf6]" },
-  feriado:      { label: "Feriado",      color: "bg-white/8 text-[#9aa3b0] border-white/10",          dot: "bg-[#9aa3b0]" },
+  feriado:      { label: "Feriado",      color: "bg-white/8 text-[#9aa3b0] border-itec-border",          dot: "bg-[#9aa3b0]" },
   beca:         { label: "Beca",         color: "bg-[#f0b100]/12 text-[#f0b100] border-[#f0b100]/20", dot: "bg-[#f0b100]" },
   actividad:    { label: "Actividad",    color: "bg-[#008854]/12 text-[#2fcc8a] border-[#008854]/20", dot: "bg-[#2fcc8a]" },
 };
@@ -68,7 +68,7 @@ export const CalendarioPage: React.FC = () => {
             className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors capitalize ${
               filter === t
                 ? "bg-itec-red border-itec-red text-white"
-                : "bg-transparent border-white/10 text-[#9aa3b0] hover:border-white/20"
+                : "bg-transparent border-itec-border text-[#9aa3b0] hover:border-white/20"
             }`}
           >
             {t === "Todos" ? "Todos" : TYPE_CONFIG[t].label}

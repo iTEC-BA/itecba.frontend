@@ -23,7 +23,7 @@ export const SearchDropdown: React.FC<Props> = ({ results, isLoading, query, onC
     <div className="absolute top-full left-0 right-0 mt-2 bg-itec-box border border-white/[0.08] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden z-50 max-h-[70vh] flex flex-col">
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-8 gap-3">
-          <div className="w-5 h-5 border-2 border-white/10 border-t-itec-blue-skye rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-itec-border border-t-itec-blue-skye rounded-full animate-spin" />
           <p className="text-xs text-itec-gray">Buscando...</p>
         </div>
       )}

@@ -67,7 +67,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
         <div className="flex-1 overflow-auto p-4">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
-              <div className="w-6 h-6 border-2 border-white/10 border-t-itec-groups rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-itec-border border-t-itec-groups rounded-full animate-spin" />
               <p className="text-itec-gray text-sm">Cargando...</p>
             </div>
           ) : groups.length === 0 ? (
@@ -94,7 +94,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
                         <input
                           value={editLinkValue}
                           onChange={e => setEditLinkValue(e.target.value)}
-                          className="flex-1 bg-itec-box border border-white/10 text-itec-text text-xs px-3 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
+                          className="flex-1 bg-itec-box border border-itec-border text-itec-text text-xs px-3 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
                           placeholder="https://chat.whatsapp.com/..."
                         />
                         <button onClick={() => handleSaveLink(group.id!)} disabled={updateLinkMutation.isPending}

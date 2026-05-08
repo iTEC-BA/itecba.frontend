@@ -113,7 +113,7 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose, isAdmin, exist
                   className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all disabled:opacity-40"
                 />
                 {showDropdown && materiasDisponibles.length > 0 && (
-                  <ul className="absolute z-50 w-full mt-1 bg-itec-box border border-white/10 rounded-xl shadow-2xl max-h-52 overflow-y-auto">
+                  <ul className="absolute z-50 w-full mt-1 bg-itec-box border border-itec-border rounded-xl shadow-2xl max-h-52 overflow-y-auto">
                     {materiasDisponibles.filter(m => m.toLowerCase().includes(form.materia.toLowerCase())).map(m => (
                       <li key={m} onClick={() => { setForm({ ...form, materia: m }); setShowDropdown(false); }}
                         className="cursor-pointer px-4 py-2.5 text-sm text-itec-gray hover:bg-itec-groups/10 hover:text-itec-text border-b border-white/5 last:border-0 whitespace-normal leading-tight transition-colors">

@@ -101,7 +101,7 @@ export const BuscaTECPage: React.FC = () => {
             className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors border ${
               activeFilter === f
                 ? "bg-itec-red border-itec-red text-white"
-                : "bg-transparent border-white/10 text-[#9aa3b0] hover:border-white/20"
+                : "bg-transparent border-itec-border text-[#9aa3b0] hover:border-white/20"
             }`}
           >
             {f}

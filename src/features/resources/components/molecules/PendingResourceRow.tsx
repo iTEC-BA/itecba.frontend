@@ -13,7 +13,7 @@ interface Props {
 export const PendingResourceRow: React.FC<Props> = ({
   resource: r, onApprove, onReject, isApproving, isRejecting,
 }) => (
-  <tr className="border-b border-itec-gray/20 hover:bg-itec-box/60 transition-colors">
+  <tr className="border-b border-itec-border hover:bg-itec-box/60 transition-colors">
     <td className="p-3 md:p-4">
       <p className="text-sm font-semibold text-itec-text truncate max-w-[180px] md:max-w-xs">{r.title}</p>
       <p className="text-xs text-itec-gray mt-0.5 truncate">{r.materia}</p>

@@ -142,7 +142,7 @@ export const ChatbotWidget: React.FC = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-12 h-12 rounded-full shadow-lg transition-transform hover:scale-105 flex items-center justify-center cursor-pointer border border-white/10 ${isOpen ? 'bg-itec-sidebar text-itec-text hover:bg-itec-gray' : 'bg-itec-blue text-itec-texthover:bg-blue-700'}`}
+        className={`w-12 h-12 rounded-full shadow-lg transition-transform hover:scale-105 flex items-center justify-center cursor-pointer border border-itec-border ${isOpen ? 'bg-itec-sidebar text-itec-text hover:bg-itec-gray' : 'bg-itec-blue text-itec-texthover:bg-blue-700'}`}
       >
         <div className={isOpen ? "w-6 h-6" : "w-7 h-7"}>
            <Icons type={isOpen ? "close" : "message"} />

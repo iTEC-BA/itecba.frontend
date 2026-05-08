@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const LinkListItem: React.FC<Props> = ({ link, onEdit, onDelete }) => (
-  <div className="flex items-center gap-3 bg-itec-bg border border-white/[0.06] p-3 rounded-xl group hover:border-white/10 transition-colors">
+  <div className="flex items-center gap-3 bg-itec-bg border border-white/[0.06] p-3 rounded-xl group hover:border-itec-border transition-colors">
     <span className="text-xl shrink-0 w-8 text-center">{link.icon}</span>
     <div className="flex-1 min-w-0">
       <p className="text-sm font-semibold text-itec-text truncate">{link.title}</p>

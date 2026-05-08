@@ -21,7 +21,7 @@ export const InboxMessageCard: React.FC<Props> = ({ msg, onRead }) => {
         w-full text-left p-4 rounded-2xl border transition-all duration-200 active:scale-[0.98]
         ${
           msg.isRead
-            ? "bg-itec-card border-white/5 hover:border-white/10 hover:bg-white/2"
+            ? "bg-itec-card border-white/5 hover:border-itec-border hover:bg-white/2"
             : "bg-itec-blue/8 border-itec-blue-skye/20 hover:border-itec-blue-skye/40 shadow-[0_0_16px_rgba(0,74,173,0.1)]"
         }
       `}

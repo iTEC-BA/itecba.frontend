@@ -30,10 +30,7 @@ export const PointsHeader: React.FC = () => {
   const ringMaxRelative = ringMax - ringBase;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-itec-rewards/12 bg-gradient-to-br from-itec-rewards/6 via-itec-card to-itec-card p-5 sm:p-7">
-      <div className="absolute -top-12 -right-12 w-40 h-40 bg-itec-rewards/8 blur-[60px] rounded-full pointer-events-none" />
-      <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-itec-blue/15 blur-[50px] rounded-full pointer-events-none" />
-
+    <div className="relative overflow-hidden rounded-3xl border border-itec-rewards/12 bg-itec-box p-5 sm:p-7">
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-5">
         <div className="flex items-center gap-4 sm:gap-0">
           <PointsRing
@@ -69,8 +66,7 @@ export const PointsHeader: React.FC = () => {
             <span className="text-sm font-bold text-itec-text/80">{level.label}</span>
             {level.next && (
               <>
-                <Icons type="chevron-right" className="size-3 text-itec-text/30" />
-                <span className="text-xs text-itec-text/40">{level.next}: {level.nextPts.toLocaleString()} pts</span>
+                <span className="text-xs text-itec-text/40">→ {level.next}: {level.nextPts.toLocaleString()} pts</span>
               </>
             )}
           </div>
@@ -79,7 +75,7 @@ export const PointsHeader: React.FC = () => {
         </div>
 
         <div className="hidden lg:flex flex-col items-end gap-1.5 shrink-0">
-          <div className="flex items-center gap-2 bg-itec-rewards/8 border border-itec-rewards/15 rounded-2xl px-4 py-2.5">
+          <div className="flex items-center gap-2 bg-itec-box border border-itec-rewards/15 rounded-2xl px-4 py-2.5">
             <Icons type="star" className="size-5 text-itec-rewards" />
             <div>
               <p className="text-[10px] text-itec-rewards/70 font-bold uppercase tracking-wider leading-none mb-0.5">

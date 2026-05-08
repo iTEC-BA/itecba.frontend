@@ -8,7 +8,7 @@ export const CategoryPill: React.FC<Props> = ({ label, isActive, onClick }) => (
     className={`shrink-0 px-5 py-2 rounded-full text-xs font-bold tracking-wide whitespace-nowrap transition-all duration-200 active:scale-95 ${
       isActive
         ? "bg-itec-blue-skye text-white border border-itec-blue-skye"
-        : "bg-transparent text-itec-gray border border-white/10 hover:border-white/25 hover:text-itec-text"
+        : "bg-transparent text-itec-gray border border-itec-border hover:border-white/25 hover:text-itec-text"
     }`}
   >
     {label}
