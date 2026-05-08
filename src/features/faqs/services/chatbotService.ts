@@ -37,7 +37,7 @@ export const chatbotService = {
     history: { role: string; parts: { text: string }[] }[]
   ): Promise<ChatResponse> => {
     const token = await getToken();
-    const [chatRes, deductRes] = await Promise.allSettled([
+    const [chatRes] = await Promise.allSettled([
       fetch(`${API}/ai/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -53,7 +53,7 @@ export const chatbotService = {
     const chatResponse = chatRes.value;
     if (!chatResponse.ok) {
       const err = await chatResponse.json().catch(() => ({}));
-      throw new Error((err as any).error || "Error en la IA");
+      throw new Error((err as { error?: string }).error || "Error en la IA");
     }
     const data = await chatResponse.json();
     return { response: data.response, isAI: true };

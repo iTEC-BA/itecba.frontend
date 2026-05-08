@@ -1,7 +1,6 @@
 import React from "react";
 import type { User } from "@context/AuthContext";
 import SvgTarjeTec from "@/components/ui/icons/SvgTarjeTec";
-import QRCode from "react-qr-code";
 
 export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
   const formattedLegajo = user.legajo
@@ -9,6 +8,9 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
     : "PENDIENTE";
 
   const qrValue = user.legajo ? `ITEC-${user.legajo}` : user.email;
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=112x112&data=${encodeURIComponent(
+    qrValue || "GUEST"
+  )}`;
 
   return (
     <div
@@ -28,12 +30,11 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
           
           {/* ACA VA EL QR - Fondo blanco necesario para el contraste del lector */}
           <div className="bg-white p-1.5 rounded-xl shadow-lg shrink-0 transition-transform hover:scale-105">
-            <QRCode
-              value={qrValue || "GUEST"}
-              size={56} 
-              bgColor="#ffffff"
-              fgColor="#000000"
-              level="L"
+            <img
+              src={qrSrc}
+              alt="Código QR"
+              width={56}
+              height={56}
               className="h-auto max-w-full"
             />
           </div>
