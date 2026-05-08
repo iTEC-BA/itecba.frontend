@@ -50,7 +50,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
 
       {/* Meta + acciones */}
       <div className="flex flex-col gap-3">
-        <h1 className="text-lg md:text-xl font-black text-itec-text leading-snug">
+        <h1 className="text-lg md:text-xl font-bold text-itec-text leading-snug">
           {activeVideo.title ?? "Lección sin título"}
         </h1>
 
@@ -78,7 +78,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
             <div className="w-3.5 h-3.5"><Icons type="documentFill" /></div>
             Recursos
             {relatedResourcesCount > 0 && (
-              <span className="bg-itec-blue-skye text-white text-[9px] font-black px-1.5 py-0.5 rounded ml-1">
+              <span className="bg-itec-blue-skye text-white text-[9px] font-bold px-1.5 py-0.5 rounded ml-1">
                 {relatedResourcesCount}
               </span>
             )}

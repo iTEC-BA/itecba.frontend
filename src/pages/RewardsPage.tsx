@@ -68,7 +68,7 @@ const LoginPrompt: React.FC = () => (
       <span className="text-4xl">🔒</span>
     </div>
     <div>
-      <p className="text-itec-text font-black text-xl mb-2">
+      <p className="text-itec-text font-bold text-xl mb-2">
         Iniciá sesión para ver tus beneficios
       </p>
       <p className="text-itec-text/40 text-sm max-w-sm leading-relaxed">

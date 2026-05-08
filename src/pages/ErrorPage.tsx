@@ -15,7 +15,7 @@ export const ErrorPage: React.FC = () => {
 
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-itec-blue/10 blur-[120px] pointer-events-none rounded-full"></div>
         <div className="relative z-10 mb-8 mt-10 animate-in slide-in-from-bottom-4 duration-700">
-          <h1 className="text-8xl md:text-[140px] font-black bg-clip-text text-itec-red-skye leading-none mb-2 drop-shadow-lg">
+          <h1 className="text-8xl md:text-[140px] font-bold bg-clip-text text-itec-red-skye leading-none mb-2 drop-shadow-lg">
             404
           </h1>
           <h2 className="text-2xl md:text-3xl font-bold text-itec-textmb-3">

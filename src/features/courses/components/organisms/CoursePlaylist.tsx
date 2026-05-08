@@ -32,7 +32,7 @@ export const CoursePlaylist: React.FC<Props> = ({
       {/* Header progreso */}
       <div className="p-4 border-b border-white/8 shrink-0">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-black text-itec-text uppercase tracking-widest">Lecciones</span>
+          <span className="text-xs font-bold text-itec-text uppercase tracking-widest">Lecciones</span>
           <span className={`text-xs font-bold ${pct === 100 ? "text-emerald-400" : "text-itec-blue-skye"}`}>
             {watchedCount}/{total} · {pct}%
           </span>

@@ -18,7 +18,7 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
     return (
       <GlassCard className="flex min-h-[280px] flex-col items-center justify-center p-10 text-center" variant="default">
         <span className="text-4xl">📭</span>
-        <p className="mt-3 text-xs font-black uppercase tracking-[0.22em] text-itec-muted">Bandeja vacía</p>
+        <p className="mt-3 text-xs font-bold uppercase tracking-[0.22em] text-itec-muted">Bandeja vacía</p>
         <p className="mt-1 text-sm text-itec-muted">No hay avisos activos por ahora.</p>
       </GlassCard>
     );
@@ -32,7 +32,7 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
             <div className="min-w-0">
               <div className="mb-2 flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-itec-amber shadow-[0_0_10px_rgba(245,158,11,0.8)]" />
-                <h4 className="truncate text-sm font-black text-itec-text">{a.title}</h4>
+                <h4 className="truncate text-sm font-bold text-itec-text">{a.title}</h4>
               </div>
               <p className="text-sm leading-relaxed text-itec-muted">{a.message}</p>
             </div>
@@ -49,7 +49,7 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
           </div>
 
           <div className="mt-4">
-            <span className="inline-flex rounded-full border border-itec-border bg-itec-surface px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-itec-muted">
+            <span className="inline-flex rounded-full border border-itec-border bg-itec-surface px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-itec-muted">
               Vence: {a.expiresAt.toDate().toLocaleDateString()}
             </span>
           </div>

@@ -50,7 +50,7 @@ export const PointsRing: React.FC<Props> = ({
         </defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-xl font-black text-itec-text tabular-nums leading-none">
+        <span className="text-xl font-bold text-itec-text tabular-nums leading-none">
           {points.toLocaleString()}
         </span>
         <span className="text-[9px] font-bold text-itec-rewards/80 uppercase tracking-wider mt-0.5">

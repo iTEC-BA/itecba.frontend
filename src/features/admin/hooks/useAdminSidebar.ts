@@ -12,44 +12,33 @@ export type AdminSection =
   | "tutorias";
 
 export interface SidebarLink {
-  id:     AdminSection;
-  label:  string;
-  emoji:  string;
-  badge?: number;
-  description?: string;
+  id: AdminSection;
+  label: string;
+  icon: string;
 }
 
 export const SIDEBAR_LINKS: SidebarLink[] = [
-  { id: "dashboard",   label: "Dashboard",       emoji: "🏠", description: "Resumen general" },
-  { id: "users",       label: "Usuarios",         emoji: "👥", description: "Roles y privilegios" },
-  { id: "news",        label: "Avisos",           emoji: "📢", description: "Comunicados globales" },
-  { id: "benefits",    label: "Beneficios",       emoji: "🏷️", description: "Descuentos TarjeTEC" },
-  { id: "rewards",     label: "Recompensas",      emoji: "🎁", description: "Sistema de puntos" },
-  { id: "redemptions", label: "Canjes",           emoji: "🧾", description: "Historial de canjes" },
-  { id: "materias",    label: "Académico",        emoji: "📚", description: "Materias y carreras" },
-  { id: "tutorias",    label: "Tutorías",         emoji: "🎓", description: "Sesiones personalizadas" },
+  { id: "dashboard", label: "Dashboard", icon: "chart" },
+  { id: "users", label: "Usuarios", icon: "users" },
+  { id: "news", label: "Avisos", icon: "bell" },
+  { id: "benefits", label: "Beneficios", icon: "star" },
+  { id: "rewards", label: "Recompensas", icon: "gift" },
+  { id: "redemptions", label: "Canjes", icon: "ticket" },
+  { id: "materias", label: "Académico", icon: "book" },
+  { id: "tutorias", label: "Tutorías", icon: "video" },
 ];
 
-interface UseAdminSidebarReturn {
-  active:     AdminSection;
-  navigate:   (s: AdminSection) => void;
-  mobileOpen: boolean;
-  openMobile:  () => void;
-  closeMobile: () => void;
-  toggleMobile: () => void;
-}
+export const useAdminSidebar = () => {
+  const [active, setActive] = useState<AdminSection>("dashboard");
+  const [isOpen, setIsOpen] = useState(false);
 
-export const useAdminSidebar = (): UseAdminSidebarReturn => {
-  const [active,     setActive]     = useState<AdminSection>("dashboard");
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const navigate     = useCallback((s: AdminSection) => {
+  const navigate = useCallback((s: AdminSection) => {
     setActive(s);
-    setMobileOpen(false); // Auto-cierra en mobile
+    setIsOpen(false);
   }, []);
-  const openMobile   = useCallback(() => setMobileOpen(true),  []);
-  const closeMobile  = useCallback(() => setMobileOpen(false), []);
-  const toggleMobile = useCallback(() => setMobileOpen((o) => !o), []);
 
-  return { active, navigate, mobileOpen, openMobile, closeMobile, toggleMobile };
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+  const close = useCallback(() => setIsOpen(false), []);
+
+  return { active, navigate, isOpen, toggle, close };
 };

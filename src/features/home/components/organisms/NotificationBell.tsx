@@ -73,7 +73,7 @@ export const NotificationBell: React.FC = () => {
         </svg>
 
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-itec-text text-xs font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-itec-bg shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-bounce-short">
+          <span className="absolute -top-1 -right-1 bg-red-500 text-itec-text text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-itec-bg shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-bounce-short">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

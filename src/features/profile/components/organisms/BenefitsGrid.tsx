@@ -26,7 +26,7 @@ export const BenefitsGrid: React.FC = () => {
     <GlassCard className="p-5 sm:p-6 lg:p-7" variant="elevated" glow="sky">
       <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h2 className="text-sm font-black uppercase tracking-[0.22em] text-itec-muted">Beneficios TarjeTEC</h2>
+          <h2 className="text-sm font-bold uppercase tracking-[0.22em] text-itec-muted">Beneficios TarjeTEC</h2>
           <p className="mt-1 text-sm text-itec-muted">Descuentos exclusivos para estudiantes UTN.</p>
         </div>
         <Button variant="secondary" hierarchy="outline" icon="↻" onClick={refetch}>

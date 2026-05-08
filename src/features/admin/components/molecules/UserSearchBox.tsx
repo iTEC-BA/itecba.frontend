@@ -33,8 +33,8 @@ export const UserSearchBox: React.FC<Props> = ({ searchMutation, toggleMutation 
   return (
     <GlassCard className="p-5 sm:p-6 lg:p-7" variant="elevated" glow="sky">
       <div className="mb-5">
-        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Usuarios</p>
-        <h3 className="mt-1 text-xl font-black text-itec-text">Buscar usuario</h3>
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Usuarios</p>
+        <h3 className="mt-1 text-xl font-bold text-itec-text">Buscar usuario</h3>
         <p className="mt-2 text-sm text-itec-muted">Encontrá un alumno por correo para revisar o ajustar su rol.</p>
       </div>
 
@@ -73,7 +73,7 @@ export const UserSearchBox: React.FC<Props> = ({ searchMutation, toggleMutation 
             </div>
 
             <div className="flex items-center gap-2">
-              <span className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] ${searchMutation.data.role === "admin" ? "border-itec-accent/20 bg-itec-accent/10 text-itec-accent" : "border-itec-sky/20 bg-itec-sky/10 text-itec-sky"}`}>
+              <span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] ${searchMutation.data.role === "admin" ? "border-itec-accent/20 bg-itec-accent/10 text-itec-accent" : "border-itec-sky/20 bg-itec-sky/10 text-itec-sky"}`}>
                 Rol: {searchMutation.data.role}
               </span>
               <Button

@@ -20,7 +20,7 @@ export const ProgressPage: React.FC = () => {
         <div className="flex items-center justify-center h-[70vh]">
           <div className="text-center p-10 bg-itec-bg border border-itec-gray rounded-3xl max-w-lg shadow-xl">
             <span className="text-6xl block mb-6">🔒</span>
-            <h2 className="text-2xl font-black text-itec-text mb-3">Acceso Restringido</h2>
+            <h2 className="text-2xl font-bold text-itec-text mb-3">Acceso Restringido</h2>
             <p className="text-itec-text mb-8 text-sm">Debes iniciar sesión para llevar el registro de tu progreso académico y calcular correlativas.</p>
             <Link to="/login" className="bg-itec-primary hover:bg-itecBlue text-itec-textpx-8 py-3 rounded-full font-bold transition-all inline-block shadow-lg">
               Iniciar Sesión

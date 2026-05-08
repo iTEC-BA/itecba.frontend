@@ -43,7 +43,7 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
       <div className="bg-itec-box border border-itec-border rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-white/8">
           <div>
-            <h2 className="text-sm font-black text-itec-text">Vincular archivo</h2>
+            <h2 className="text-sm font-bold text-itec-text">Vincular archivo</h2>
             <p className="text-xs text-itec-gray">Se publicará en <span className="text-itec-text font-bold">{courseTitle}</span></p>
           </div>
           <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 text-itec-gray hover:text-itec-text transition-all">
@@ -60,7 +60,7 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
             <label className={LABEL_CLS}>Enlace (Drive, PDF...)</label>
             <input type="url" required placeholder="https://drive.google.com/..." value={driveUrl} onChange={(e) => setDriveUrl(e.target.value)} className={FIELD_CLS} />
           </div>
-          <button type="submit" disabled={mutation.isPending} className="w-full py-3 rounded-xl bg-itec-blue-skye text-white text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all active:scale-[0.98] mt-2">
+          <button type="submit" disabled={mutation.isPending} className="w-full py-3 rounded-xl bg-itec-blue-skye text-white text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all active:scale-[0.98] mt-2">
             {mutation.isPending ? "Guardando..." : "Vincular archivo"}
           </button>
         </form>

@@ -43,7 +43,7 @@ export const PointsHeader: React.FC = () => {
             <p className="text-[10px] font-bold uppercase tracking-widest text-itec-rewards/70 mb-0.5">
               Tu saldo
             </p>
-            <p className="text-3xl font-black text-itec-text tracking-tight tabular-nums leading-none">
+            <p className="text-3xl font-bold text-itec-text tracking-tight tabular-nums leading-none">
               {pts.toLocaleString()}
               <span className="text-sm font-bold text-itec-rewards/60 ml-1.5">PTS</span>
             </p>
@@ -55,7 +55,7 @@ export const PointsHeader: React.FC = () => {
             <p className="text-[10px] font-bold uppercase tracking-widest text-itec-rewards/70 mb-0.5">
               Tu saldo de puntos
             </p>
-            <p className="text-4xl font-black text-itec-text tracking-tight tabular-nums leading-none">
+            <p className="text-4xl font-bold text-itec-text tracking-tight tabular-nums leading-none">
               {pts.toLocaleString()}
               <span className="text-lg font-bold text-itec-rewards/60 ml-2">PTS</span>
             </p>
@@ -81,7 +81,7 @@ export const PointsHeader: React.FC = () => {
               <p className="text-[10px] text-itec-rewards/70 font-bold uppercase tracking-wider leading-none mb-0.5">
                 Disponibles
               </p>
-              <p className="text-xl font-black text-itec-text tabular-nums leading-none">
+              <p className="text-xl font-bold text-itec-text tabular-nums leading-none">
                 {pts.toLocaleString()}
               </p>
             </div>

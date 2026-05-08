@@ -38,7 +38,7 @@ export const TutoriasSection: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
       <div>
-        <h2 className="text-2xl font-black text-itec-text font-display tracking-tight mb-1">
+        <h2 className="text-2xl font-bold text-itec-text font-display tracking-tight mb-1">
           🎓 Tutorías
         </h2>
         <p className="text-xs text-itec-muted">
@@ -56,7 +56,7 @@ export const TutoriasSection: React.FC = () => {
         ].map((s) => (
           <GlassCard key={s.label} className="p-4 flex flex-col gap-1">
             <span className="text-xl">{s.emoji}</span>
-            <span className={cn("text-3xl font-black", s.accent)}>{s.value}</span>
+            <span className={cn("text-3xl font-bold", s.accent)}>{s.value}</span>
             <span className="text-[11px] text-itec-muted font-bold">{s.label}</span>
           </GlassCard>
         ))}
@@ -87,7 +87,7 @@ export const TutoriasSection: React.FC = () => {
             <thead>
               <tr className="border-b border-itec-border bg-itec-surface/50">
                 {["Alumno", "Tutor", "Materia", "Fecha", "Tipo", "Estado", "Acciones"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-[10px] font-black text-itec-muted uppercase tracking-widest whitespace-nowrap">
+                  <th key={h} className="px-4 py-3 text-[10px] font-bold text-itec-muted uppercase tracking-widest whitespace-nowrap">
                     {h}
                   </th>
                 ))}
@@ -115,7 +115,7 @@ export const TutoriasSection: React.FC = () => {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={cn("text-[10px] font-black px-2 py-1 rounded-lg border", est.cls)}>
+                        <span className={cn("text-[10px] font-bold px-2 py-1 rounded-lg border", est.cls)}>
                           {est.label}
                         </span>
                       </td>

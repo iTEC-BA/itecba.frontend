@@ -120,9 +120,9 @@ export const CourseDetail: React.FC = () => {
 
         {/* Título + badge */}
         <div className="flex flex-wrap items-start gap-2 mb-6">
-          <h1 className="text-xl md:text-2xl font-black text-itec-text leading-snug flex-1">{course.title}</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-itec-text leading-snug flex-1">{course.title}</h1>
           {course.categoria === "Oficial" && (
-            <span className="shrink-0 mt-0.5 bg-itec-blue/20 text-itec-blue-skye border border-itec-blue-skye/30 text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">
+            <span className="shrink-0 mt-0.5 bg-itec-blue/20 text-itec-blue-skye border border-itec-blue-skye/30 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest">
               Oficial
             </span>
           )}

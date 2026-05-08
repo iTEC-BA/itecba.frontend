@@ -75,7 +75,7 @@ export const RewardsManagement: React.FC = () => {
             <Icons type="star" className="size-4 text-itec-rewards" />
           </div>
           <div>
-            <p className="text-sm font-black text-itec-text leading-none">Beneficios</p>
+            <p className="text-sm font-bold text-itec-text leading-none">Beneficios</p>
             <p className="text-[10px] text-itec-text/40 mt-0.5">
               {rewards.length} beneficios
             </p>

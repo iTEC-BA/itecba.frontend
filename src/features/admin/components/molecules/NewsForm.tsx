@@ -22,14 +22,14 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
   return (
     <GlassCard className="p-5 sm:p-6 lg:p-7" variant="elevated" glow="amber">
       <div className="mb-6">
-        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Comunicados</p>
-        <h3 className="mt-1 text-xl font-black text-itec-text">Redactar aviso</h3>
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Comunicados</p>
+        <h3 className="mt-1 text-xl font-bold text-itec-text">Redactar aviso</h3>
         <p className="mt-2 text-sm text-itec-muted">Compartí novedades con toda la comunidad ITEC.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
-          <label className="block pl-1 text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Título</label>
+          <label className="block pl-1 text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Título</label>
           <Input
             type="text"
             required
@@ -41,7 +41,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
         </div>
 
         <div className="space-y-1.5">
-          <label className="block pl-1 text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Mensaje</label>
+          <label className="block pl-1 text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Mensaje</label>
           <textarea
             required
             placeholder="Detallá la información aquí..."
@@ -53,7 +53,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-[1.3rem] border border-itec-border bg-itec-surface/60 p-4">
-            <label className="mb-1 block text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Tiempo visible</label>
+            <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Tiempo visible</label>
             <select
               value={form.hours}
               onChange={(e) => setForm({ ...form, hours: e.target.value })}
@@ -67,7 +67,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
           </div>
 
           <div className="rounded-[1.3rem] border border-itec-border bg-itec-surface/60 p-4">
-            <label className="mb-1 block text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Criticidad</label>
+            <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Criticidad</label>
             <label className="flex items-center gap-3 text-sm text-itec-text">
               <input
                 type="checkbox"

@@ -16,10 +16,10 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
     <GlassCard className="overflow-hidden" variant="elevated">
       <div className="flex items-center justify-between gap-4 border-b border-itec-border px-5 py-5 sm:px-6">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Usuarios</p>
-          <h3 className="mt-1 text-sm font-black text-itec-text">Personal autorizado</h3>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Usuarios</p>
+          <h3 className="mt-1 text-sm font-bold text-itec-text">Personal autorizado</h3>
         </div>
-        <span className="rounded-full border border-itec-sky/20 bg-itec-sky/10 px-3 py-1 text-xs font-black text-itec-sky">
+        <span className="rounded-full border border-itec-sky/20 bg-itec-sky/10 px-3 py-1 text-xs font-bold text-itec-sky">
           {admins.length} activos
         </span>
       </div>
@@ -28,8 +28,8 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
         <table className="min-w-full border-collapse text-left">
           <thead className="bg-itec-box2/70">
             <tr>
-              <th className="px-5 py-4 text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted sm:px-6">Perfil</th>
-              <th className="px-5 py-4 text-right text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted sm:px-6">Gestión</th>
+              <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted sm:px-6">Perfil</th>
+              <th className="px-5 py-4 text-right text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted sm:px-6">Gestión</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-itec-border">
@@ -61,7 +61,7 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
                         <div className="min-w-0">
                           <p className="flex items-center gap-2 text-sm font-bold text-itec-text">
                             {admin.name}
-                            {isMe && <span className="rounded-md bg-itec-surface px-1.5 py-0.5 text-[9px] font-black text-itec-muted">TÚ</span>}
+                            {isMe && <span className="rounded-md bg-itec-surface px-1.5 py-0.5 text-[9px] font-bold text-itec-muted">TÚ</span>}
                           </p>
                           <p className="truncate font-mono text-xs text-itec-muted">{admin.email}</p>
                         </div>

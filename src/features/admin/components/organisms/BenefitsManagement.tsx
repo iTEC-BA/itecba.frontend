@@ -56,17 +56,17 @@ export const BenefitsManagement: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
       <div>
-        <h2 className="text-2xl font-black text-itec-text mb-1">Descuentos TarjeTEC</h2>
+        <h2 className="text-2xl font-bold text-itec-text mb-1">Descuentos TarjeTEC</h2>
         <p className="text-xs text-itec-muted">Administrá el catálogo de beneficios desde la base de datos.</p>
       </div>
 
       {/* Formulario */}
       <GlassCard className="p-6">
-        <h3 className="text-sm font-black text-itec-text mb-4">{editId ? "Editar Beneficio" : "Nuevo Beneficio"}</h3>
+        <h3 className="text-sm font-bold text-itec-text mb-4">{editId ? "Editar Beneficio" : "Nuevo Beneficio"}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {(["title", "discount", "location", "logoUrl"] as const).map((field) => (
             <label key={field} className="flex flex-col gap-1">
-              <span className="text-[10px] font-black text-itec-muted uppercase tracking-widest">{field}</span>
+              <span className="text-[10px] font-bold text-itec-muted uppercase tracking-widest">{field}</span>
               <input
                 className="bg-itec-surface border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-itec-sky/50"
                 value={(form as any)[field]}
@@ -75,7 +75,7 @@ export const BenefitsManagement: React.FC = () => {
             </label>
           ))}
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] font-black text-itec-muted uppercase tracking-widest">Categoría</span>
+            <span className="text-[10px] font-bold text-itec-muted uppercase tracking-widest">Categoría</span>
             <select
               className="bg-itec-surface border border-itec-border text-itec-text text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-itec-sky/50 appearance-none"
               value={form.category}
@@ -92,7 +92,7 @@ export const BenefitsManagement: React.FC = () => {
           <button
             onClick={save}
             disabled={saving}
-            className="bg-itec-sky text-white text-xs font-black px-5 py-2.5 rounded-xl hover:bg-itec-sky/90 transition-colors disabled:opacity-50"
+            className="bg-itec-sky text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-itec-sky/90 transition-colors disabled:opacity-50"
           >
             {saving ? "Guardando..." : editId ? "Actualizar" : "Crear"}
           </button>
@@ -118,7 +118,7 @@ export const BenefitsManagement: React.FC = () => {
               <thead>
                 <tr className="text-itec-muted border-b border-itec-border">
                   {["Nombre", "Descuento", "Categoría", "Estado", ""].map((h) => (
-                    <th key={h} className="text-left font-black uppercase tracking-widest pb-3 pr-4">{h}</th>
+                    <th key={h} className="text-left font-bold uppercase tracking-widest pb-3 pr-4">{h}</th>
                   ))}
                 </tr>
               </thead>

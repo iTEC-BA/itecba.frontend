@@ -23,7 +23,7 @@ export const DeleteRewardModal: React.FC<Props> = ({
           <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-5">
             <Icons type="trash" className="size-7 text-red-400" />
           </div>
-          <h2 className="text-lg font-black text-itec-text mb-2">
+          <h2 className="text-lg font-bold text-itec-text mb-2">
             ¿Eliminar beneficio?
           </h2>
           <p className="text-sm text-itec-text/60 leading-relaxed mb-1">

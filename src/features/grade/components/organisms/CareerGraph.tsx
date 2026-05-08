@@ -23,7 +23,7 @@ const CustomMateriaNode = ({ data }: { data: MateriaNodeData }) => {
       {/* HEADER DEL NODO */}
       <div className={`${style.header} p-2.5 text-center border-b border-inherit`}>
         <h3 className="font-bold text-[13px] leading-tight drop-shadow-md">{data.title}</h3>
-        <p className="text-[9px] font-black uppercase tracking-widest mt-1 opacity-80">
+        <p className="text-[9px] font-bold uppercase tracking-widest mt-1 opacity-80">
           NIVEL {data.level} • {data.codigo}
         </p>
         <span className="text-[10px] font-bold text-gray-300 text-right">Cursada: {data.cursada}</span>

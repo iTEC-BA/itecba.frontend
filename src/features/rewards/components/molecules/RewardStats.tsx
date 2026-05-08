@@ -61,7 +61,7 @@ export const RewardStats: React.FC<Props> = ({
               {s.label}
             </span>
           </div>
-          <p className={`text-xl font-black tabular-nums leading-none ${s.colorCls}`}>
+          <p className={`text-xl font-bold tabular-nums leading-none ${s.colorCls}`}>
             {s.value}
           </p>
         </div>

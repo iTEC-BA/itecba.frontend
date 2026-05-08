@@ -35,7 +35,7 @@ export const CourseGeneralData: React.FC<Props> = ({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xs font-black text-itec-text uppercase tracking-widest border-b border-white/8 pb-2">
+      <h3 className="text-xs font-bold text-itec-text uppercase tracking-widest border-b border-white/8 pb-2">
         Datos del curso
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

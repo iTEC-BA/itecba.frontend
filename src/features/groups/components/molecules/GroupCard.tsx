@@ -46,7 +46,7 @@ export const GroupCard: React.FC<Props> = ({ group }) => {
     <GroupGlowCard glowColor="green" className="flex flex-col overflow-hidden group relative">
       {/* Tipo ribbon */}
       {group.tipo === 'Oficial' && (
-        <div className="absolute -right-6 top-4 bg-itec-blue-skye text-[8px] font-black text-white px-8 py-1 rotate-45 shadow-sm uppercase tracking-widest z-10">
+        <div className="absolute -right-6 top-4 bg-itec-blue-skye text-[8px] font-bold text-white px-8 py-1 rotate-45 shadow-sm uppercase tracking-widest z-10">
           Oficial
         </div>
       )}

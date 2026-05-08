@@ -21,7 +21,7 @@ export const IngresoStepsWidget: React.FC<Props> = ({ steps, completedSteps, onT
             <p className="text-[11px] text-itec-text uppercase tracking-widest">Paso a paso</p>
           </div>
         </div>
-        <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-600">
+        <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-600">
           {progressPercentage}%
         </span>
       </div>

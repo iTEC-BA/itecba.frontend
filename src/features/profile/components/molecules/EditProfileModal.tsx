@@ -12,7 +12,7 @@ interface EditProfileModalProps {
 export const EditProfileModal: React.FC<EditProfileModalProps> = ({ onClose }) => {
   const { form, setField, careers, setCareers, saving, error, handleSubmit } = useEditProfile(onClose);
 
-  const labelCls = "block text-[10px] font-black text-itec-muted uppercase tracking-[0.15em] mb-2";
+  const labelCls = "block text-[10px] font-bold text-itec-muted uppercase tracking-[0.15em] mb-2";
 
   return (
     <LayoutModal

@@ -59,7 +59,7 @@ export const GroupsPage: React.FC = () => {
               Moderación
             </Button>
             {pendingGroups.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-itec-red text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-itec-bg animate-pulse">
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-itec-red text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-itec-bg animate-pulse">
                 {pendingGroups.length}
               </span>
             )}

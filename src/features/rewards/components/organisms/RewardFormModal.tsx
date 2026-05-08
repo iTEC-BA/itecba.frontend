@@ -87,7 +87,7 @@ export const RewardFormModal: React.FC<Props> = ({
               <p className="text-[10px] font-bold uppercase tracking-widest text-itec-text/40 mb-0.5">
                 {isEditing ? "Editar beneficio" : "Nuevo beneficio"}
               </p>
-              <h2 className="text-base font-black text-itec-text">
+              <h2 className="text-base font-bold text-itec-text">
                 {isEditing ? editingReward?.title : "Crear beneficio"}
               </h2>
             </div>

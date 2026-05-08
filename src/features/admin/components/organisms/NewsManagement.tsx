@@ -12,10 +12,10 @@ export const NewsManagement: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-end justify-between px-1">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Avisos</p>
-            <h3 className="mt-1 text-sm font-black text-itec-text">Feed de comunicados</h3>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Avisos</p>
+            <h3 className="mt-1 text-sm font-bold text-itec-text">Feed de comunicados</h3>
           </div>
-          <span className="rounded-full border border-itec-amber/20 bg-itec-amber/10 px-3 py-1 text-xs font-black text-itec-amber">
+          <span className="rounded-full border border-itec-amber/20 bg-itec-amber/10 px-3 py-1 text-xs font-bold text-itec-amber">
             {announcements.length} activos
           </span>
         </div>

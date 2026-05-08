@@ -48,7 +48,7 @@ export const RedeemModal: React.FC<Props> = ({
               <p className="text-[10px] font-bold uppercase tracking-widest text-itec-text/40 mb-0.5">
                 Confirmar canje
               </p>
-              <h2 className="text-base font-black text-itec-text leading-snug">
+              <h2 className="text-base font-bold text-itec-text leading-snug">
                 {reward.title}
               </h2>
             </div>

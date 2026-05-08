@@ -12,7 +12,7 @@ export const CourseMaterialModal: React.FC<Props> = ({ isOpen, onClose, relatedR
       <div className="bg-itec-box border border-itec-border rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg max-h-[80vh] flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-white/8 shrink-0">
           <div>
-            <h2 className="text-base font-black text-itec-text">Material de apoyo</h2>
+            <h2 className="text-base font-bold text-itec-text">Material de apoyo</h2>
             <p className="text-xs text-itec-gray">Archivos y recursos de esta materia.</p>
           </div>
           <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 text-itec-gray hover:text-itec-text transition-all">

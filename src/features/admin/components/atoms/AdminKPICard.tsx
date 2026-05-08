@@ -41,13 +41,13 @@ export const AdminKPICard: React.FC<AdminKPICardProps> = ({
     >
       <div className="flex items-start justify-between">
         {emoji && <span className="text-2xl transition-transform group-hover:scale-110">{emoji}</span>}
-        {t && <span className={cn("text-xs font-black", t.cls)}>{t.icon} {trendLabel}</span>}
+        {t && <span className={cn("text-xs font-bold", t.cls)}>{t.icon} {trendLabel}</span>}
       </div>
 
       {loading ? (
         <div className="h-10 w-24 animate-pulse rounded-2xl bg-itec-border/50" />
       ) : (
-        <span className={cn("text-4xl font-black leading-none", accent)}>{value}</span>
+        <span className={cn("text-4xl font-bold leading-none", accent)}>{value}</span>
       )}
 
       <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-itec-muted">{label}</span>

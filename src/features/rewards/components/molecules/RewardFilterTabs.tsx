@@ -46,7 +46,7 @@ export const RewardFilterTabs: React.FC<Props> = ({ activeFilter, onFilter, coun
             {tab.label}
             {count !== undefined && count > 0 && (
               <span
-                className={`text-[10px] font-black rounded-full px-1.5 py-0.5 leading-none ${
+                className={`text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none ${
                   isActive
                     ? "bg-itec-rewards/20 text-itec-rewards"
                     : "bg-white/8 text-itec-text/40"

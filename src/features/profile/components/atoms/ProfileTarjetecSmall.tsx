@@ -1,5 +1,7 @@
+// ProfileTarjetecSmall.tsx
+// Versión compacta de la TarjeTEC para el sidebar lateral.
+// Usada por: src/components/organisms/Sidebar.tsx
 import React from "react";
-// import tarjeTEC from "@assets/TarjeTec/iTEC-tarjeta.svg";
 import { useAuth, type User } from "@context/AuthContext";
 import SvgTarjeTec from "@/components/ui/icons/SvgTarjeTec";
 

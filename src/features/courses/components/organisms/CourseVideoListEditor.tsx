@@ -39,13 +39,13 @@ export const CourseVideoListEditor: React.FC<Props> = ({
       {/* Header + tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/8 pb-3">
         <div>
-          <h3 className="text-xs font-black text-itec-text uppercase tracking-widest">Contenido</h3>
+          <h3 className="text-xs font-bold text-itec-text uppercase tracking-widest">Contenido</h3>
           <p className="text-[10px] text-itec-gray mt-0.5">Arrastrá el ⋮⋮ para reordenar.</p>
         </div>
         <div className="flex bg-itec-box border border-itec-border rounded-xl p-1 self-start sm:self-auto">
           {(["manual", "youtube"] as const).map((m) => (
             <button key={m} type="button" onClick={() => setMode(m)}
-              className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wide transition-all ${mode === m ? (m === "youtube" ? "bg-red-600 text-white" : "bg-itec-blue-skye text-white") : "text-itec-gray hover:text-itec-text"}`}>
+              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wide transition-all ${mode === m ? (m === "youtube" ? "bg-red-600 text-white" : "bg-itec-blue-skye text-white") : "text-itec-gray hover:text-itec-text"}`}>
               {m}
             </button>
           ))}
@@ -65,8 +65,8 @@ export const CourseVideoListEditor: React.FC<Props> = ({
         {videos.map((v, i) => (
           <div key={i} draggable onDragStart={() => setDragged(i)} onDragOver={(e) => e.preventDefault()} onDrop={() => drop(i)}
             className={`flex items-center gap-2 p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-transparent hover:border-white/8 transition-all group ${dragged === i ? "opacity-40 border-dashed border-white/20" : ""}`}>
-            <span className="text-itec-gray cursor-grab active:cursor-grabbing px-1 text-lg font-black leading-none">⋮⋮</span>
-            <span className="w-5 h-5 rounded-full bg-itec-bg border border-itec-border flex items-center justify-center text-[9px] font-black text-itec-gray shrink-0">{i + 1}</span>
+            <span className="text-itec-gray cursor-grab active:cursor-grabbing px-1 text-lg font-bold leading-none">⋮⋮</span>
+            <span className="w-5 h-5 rounded-full bg-itec-bg border border-itec-border flex items-center justify-center text-[9px] font-bold text-itec-gray shrink-0">{i + 1}</span>
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
               <input type="text" placeholder="Título del video..." value={v.title} onChange={(e) => update(i, "title", e.target.value)}
                 className="sm:col-span-7 bg-transparent border border-transparent focus:border-itec-blue-skye/40 focus:bg-white/[0.04] rounded-lg px-2 py-1.5 text-xs text-itec-text placeholder-itec-gray/40 outline-none transition-all" />

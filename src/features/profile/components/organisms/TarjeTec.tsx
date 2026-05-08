@@ -22,7 +22,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
       
       <div className="absolute inset-x-0 bottom-0 p-5">
         <div className="w-full h-max flex flex-row justify-between items-end mb-4">
-          <p className="truncate text-base md:text-3xl font-black tracking-[0.5rem] text-white/90 font-mono">
+          <p className="truncate text-base md:text-3xl font-bold tracking-[0.5rem] text-white/90 font-mono">
             {formattedLegajo}
           </p>
           

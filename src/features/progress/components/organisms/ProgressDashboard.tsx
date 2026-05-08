@@ -78,7 +78,7 @@ export const ProgressDashboard: React.FC<Props> = ({ data, onUpdateStatus, onSwi
       {/* Header y Alertas */}
       <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-itec-text tracking-tight mb-2">Tu Seguimiento</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-itec-text tracking-tight mb-2">Tu Seguimiento</h1>
           <p className="text-itecBlue font-medium flex items-center gap-2">🎓 {data.careerName}</p>
         </div>
 

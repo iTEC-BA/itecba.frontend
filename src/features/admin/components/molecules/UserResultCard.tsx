@@ -27,8 +27,8 @@ export const UserResultCard: React.FC<Props> = ({ user, isUpdating, onToggleRole
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-lg font-black text-itec-text">{user.name}</h3>
-              <span className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] ${isAdmin ? "border-itec-accent/20 bg-itec-accent/10 text-itec-accent" : "border-itec-sky/20 bg-itec-sky/10 text-itec-sky"}`}>
+              <h3 className="text-lg font-bold text-itec-text">{user.name}</h3>
+              <span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] ${isAdmin ? "border-itec-accent/20 bg-itec-accent/10 text-itec-accent" : "border-itec-sky/20 bg-itec-sky/10 text-itec-sky"}`}>
                 {user.role}
               </span>
             </div>

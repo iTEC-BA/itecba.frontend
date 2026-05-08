@@ -87,7 +87,7 @@ export const CourseEditDetail: React.FC = () => {
             <Icons type="arrowLeft" className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-lg font-black text-itec-text">Editar curso</h1>
+            <h1 className="text-lg font-bold text-itec-text">Editar curso</h1>
             <p className="text-xs text-itec-gray line-clamp-1">{course.title}</p>
           </div>
         </div>

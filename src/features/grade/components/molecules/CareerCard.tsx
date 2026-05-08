@@ -51,12 +51,12 @@ export const CareerCard: React.FC<Props> = ({ career, isAvailable, onClick }) =>
           <div className="flex items-center gap-3 pt-4 border-t border-itec-gray/50">
             <div className="flex flex-col">
               <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Materias</span>
-              <span className={`text-sm font-black ${career.color}`}>{career.subjectsCount}</span>
+              <span className={`text-sm font-bold ${career.color}`}>{career.subjectsCount}</span>
             </div>
             <div className="w-px h-6 bg-itec-gray/50"></div>
             <div className="flex flex-col">
               <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Duración</span>
-              <span className="text-sm font-black text-white">{career.yearsCount} Niveles</span>
+              <span className="text-sm font-bold text-white">{career.yearsCount} Niveles</span>
             </div>
           </div>
         ) : (

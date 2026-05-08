@@ -76,7 +76,7 @@ export const RewardCardFeatured: React.FC<Props> = ({
               <RewardTypeBadge type={reward.type} size="md" />
             </div>
             <h3
-              className={`text-lg font-black leading-snug ${
+              className={`text-lg font-bold leading-snug ${
                 canAfford ? "text-itec-text" : "text-itec-text/50"
               }`}
             >
@@ -99,7 +99,7 @@ export const RewardCardFeatured: React.FC<Props> = ({
         <button
           onClick={() => canAfford && onSelect(reward)}
           disabled={!canAfford}
-          className={`mt-5 w-full h-12 rounded-2xl text-base font-black transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] ${
+          className={`mt-5 w-full h-12 rounded-2xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] ${
             canAfford
               ? "bg-itec-rewards text-itec-bg hover:bg-amber-400 shadow-[0_4px_24px_rgba(240,177,0,0.3)]"
               : "bg-white/4 border border-white/5 text-itec-text/25 cursor-not-allowed"

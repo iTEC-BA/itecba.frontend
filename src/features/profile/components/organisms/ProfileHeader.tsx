@@ -20,7 +20,7 @@ export const ProfileHeader: React.FC = () => {
   return (
     <>
       <section className="relative overflow-hidden rounded-3xl bg-itex-box p-6 sm:p-8 shadow-2xl">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-6 lg:items-center lg:justify-between">
           
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
             <AvatarRing
@@ -81,7 +81,7 @@ export const ProfileHeader: React.FC = () => {
           </div>
 
           {/* Lado Derecho: Acciones */}
-          <div className="flex flex-col sm:flex-row w-full lg:w-auto gap-3 mt-2 lg:mt-0">
+          <div className="flex flex-col sm:flex-row w-full gap-3 mt-2 lg:mt-0">
             <Button
               variant="slate"
               hierarchy="outline"

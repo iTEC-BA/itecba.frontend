@@ -43,7 +43,7 @@ export const BenefitCard: React.FC<{ benefit: Benefit }> = ({ benefit }) => {
             cat.icon
           )}
         </div>
-        <span className={cn("rounded-full px-2.5 py-1 text-[9px] font-black tracking-[0.2em]", cat.badge)}>
+        <span className={cn("rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.2em]", cat.badge)}>
           {benefit.category.toUpperCase()}
         </span>
       </div>
@@ -52,7 +52,7 @@ export const BenefitCard: React.FC<{ benefit: Benefit }> = ({ benefit }) => {
         <h4 className="line-clamp-2 text-sm font-bold leading-snug text-itec-text">
           {benefit.title}
         </h4>
-        <p className={cn("text-sm font-black", benefit.category === "medrano" ? "text-itec-sky" : benefit.category === "campus" ? "text-itec-amber" : "text-itec-purple")}>
+        <p className={cn("text-sm font-bold", benefit.category === "medrano" ? "text-itec-sky" : benefit.category === "campus" ? "text-itec-amber" : "text-itec-purple")}>
           {benefit.discount}
         </p>
       </div>

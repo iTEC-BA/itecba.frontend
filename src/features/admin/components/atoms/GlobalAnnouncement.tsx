@@ -92,8 +92,8 @@ export const GlobalAnnouncement: React.FC = () => {
       <GlassCard variant="elevated" className={`p-4 sm:p-5 ${isExiting ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"} transition-all duration-300`}>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted">Comunicado crítico</p>
-            <h3 className="mt-1 truncate text-sm font-black text-itec-text">{currentAnnouncement.title}</h3>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Comunicado crítico</p>
+            <h3 className="mt-1 truncate text-sm font-bold text-itec-text">{currentAnnouncement.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-itec-muted">{currentAnnouncement.message}</p>
           </div>
           <button
@@ -105,10 +105,10 @@ export const GlobalAnnouncement: React.FC = () => {
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="rounded-full border border-itec-border bg-itec-surface px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-itec-muted">
+          <span className="rounded-full border border-itec-border bg-itec-surface px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-itec-muted">
             {dateObj.toLocaleDateString()}
           </span>
-          <span className="rounded-full border border-itec-accent/20 bg-itec-accent/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-itec-accent">
+          <span className="rounded-full border border-itec-accent/20 bg-itec-accent/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-itec-accent">
             Crítico
           </span>
           <div className="ml-auto flex gap-2">

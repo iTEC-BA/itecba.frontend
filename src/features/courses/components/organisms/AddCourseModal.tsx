@@ -78,7 +78,7 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-white/8 shrink-0">
           <div>
-            <h2 className="text-base font-black text-itec-text">{existingCourse ? "Editar curso" : "Nuevo curso"}</h2>
+            <h2 className="text-base font-bold text-itec-text">{existingCourse ? "Editar curso" : "Nuevo curso"}</h2>
             <p className="text-xs text-itec-gray">{existingCourse ? "Modificá la información o los videos." : "Completá los datos y publicá el contenido."}</p>
           </div>
           <button onClick={onClose} disabled={isPending} className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 text-itec-gray hover:text-itec-text hover:bg-white/10 transition-all">

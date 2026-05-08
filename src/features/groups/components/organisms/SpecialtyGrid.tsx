@@ -17,7 +17,7 @@ export const SpecialtyGrid: React.FC<Props> = ({ onSpecialtyClick }) => (
           className={`group relative bg-itec-box border border-white/[0.07] rounded-2xl p-4 flex flex-col items-center justify-center text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg overflow-hidden ${esp.colorClass} hover:border-current`}
         >
           <div className="absolute inset-0 bg-current opacity-0 group-hover:opacity-[0.04] transition-opacity duration-300" />
-          <div className="w-12 h-12 rounded-xl bg-itec-bg border border-white/5 flex items-center justify-center text-lg font-black text-itec-text group-hover:scale-105 transition-transform duration-200 mb-2.5 shadow-inner">
+          <div className="w-12 h-12 rounded-xl bg-itec-bg border border-white/5 flex items-center justify-center text-lg font-bold text-itec-text group-hover:scale-105 transition-transform duration-200 mb-2.5 shadow-inner">
             {esp.code}
           </div>
           <span className="font-semibold text-[11px] text-itec-gray group-hover:text-itec-text transition-colors leading-tight">

@@ -16,7 +16,7 @@ export const AboutProjectWidget: React.FC = () => {
               <div className="p-2.5 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 shadow-sm">
                 <div className="w-6 h-6"><Icons type="info" /></div>
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-itec-texttracking-tight">Nuestra Misión</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-itec-texttracking-tight">Nuestra Misión</h2>
             </div>
             <p className="text-gray-300 text-sm md:text-base leading-relaxed max-w-2xl">
               ITEC es una plataforma colaborativa e independiente creada <strong className="text-white">exclusivamente por y para estudiantes</strong> de la UTN BA. Nuestro objetivo es democratizar el acceso a la información académica, centralizando herramientas clave, material de estudio y conectando a la comunidad para facilitar tu recorrido universitario.

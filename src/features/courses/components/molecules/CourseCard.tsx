@@ -33,13 +33,13 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
         </div>
         {/* Badge oficial */}
         {isOficial && (
-          <span className="absolute top-2 left-2 bg-itec-blue text-itec-text text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest border border-itec-blue-skye/40">
+          <span className="absolute top-2 left-2 bg-itec-blue text-itec-text text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest border border-itec-blue-skye/40">
             Oficial
           </span>
         )}
         {/* Badge completado */}
         {isComplete && (
-          <span className="absolute top-2 right-2 bg-emerald-500/90 text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest">
+          <span className="absolute top-2 right-2 bg-emerald-500/90 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
             ✓ Listo
           </span>
         )}
@@ -57,7 +57,7 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
         <div className="mt-auto pt-2 border-t border-white/5">
           <div className="flex justify-between items-center mb-1.5">
             <span className="text-[10px] text-itec-gray font-medium uppercase tracking-wide">Progreso</span>
-            <span className={`text-[11px] font-black ${isComplete ? "text-emerald-400" : "text-itec-blue-skye"}`}>
+            <span className={`text-[11px] font-bold ${isComplete ? "text-emerald-400" : "text-itec-blue-skye"}`}>
               {Math.round(progress)}%
             </span>
           </div>

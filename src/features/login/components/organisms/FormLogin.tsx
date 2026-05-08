@@ -25,7 +25,7 @@ const FormLogin: React.FC = () => {
           className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500 relative z-10 text-center"
         />
         <div className="flex flex-col gap-2">
-          <h2 className="text-3xl sm:text-4xl font-black text-itec-text-reverse tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold text-itec-text-reverse tracking-tight">
             Portal ITEC
           </h2>
           <p className="text-slate-400 text-sm leading-relaxed px-2">

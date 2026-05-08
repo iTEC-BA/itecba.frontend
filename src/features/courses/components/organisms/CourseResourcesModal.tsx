@@ -13,7 +13,7 @@ export const CourseResourcesModal: React.FC<Props> = ({ isOpen, onClose, resourc
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-itec-blue/20 border border-itec-blue-skye/25 text-itec-blue-skye flex items-center justify-center text-base">📚</div>
             <div>
-              <h2 className="text-sm font-black text-itec-text">Archivos de la clase</h2>
+              <h2 className="text-sm font-bold text-itec-text">Archivos de la clase</h2>
               <p className="text-[10px] text-itec-gray uppercase tracking-widest">{resources.length} recurso{resources.length !== 1 ? "s" : ""}</p>
             </div>
           </div>
@@ -46,7 +46,7 @@ export const CourseResourcesModal: React.FC<Props> = ({ isOpen, onClose, resourc
           )}
         </div>
         <div className="p-4 border-t border-white/8 shrink-0">
-          <button onClick={onClose} className="w-full py-3 rounded-xl bg-itec-blue-skye text-white text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all active:scale-[0.98]">
+          <button onClick={onClose} className="w-full py-3 rounded-xl bg-itec-blue-skye text-white text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all active:scale-[0.98]">
             Volver al curso
           </button>
         </div>

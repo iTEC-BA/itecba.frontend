@@ -11,7 +11,7 @@ export const MetricCard = ({ title, value, subtitle, icon, highlight }: any) => 
       <span className="text-itec-text text-xs font-bold uppercase tracking-widest">{title}</span>
     </div>
     <div className="relative z-10">
-      <span className={`text-4xl font-black ${highlight ? highlight : 'text-itec-text'}`}>{value}</span>
+      <span className={`text-4xl font-bold ${highlight ? highlight : 'text-itec-text'}`}>{value}</span>
       {subtitle && <p className="text-xs text-gray-500 mt-2 font-medium">{subtitle}</p>}
     </div>
   </div>
@@ -33,7 +33,7 @@ export const StressMonitor = ({ horas, nivel }: { horas: number, nivel: Progress
         <span>⚡</span>
       </div>
       <div>
-        <div className="text-3xl font-black">{horas} <span className="text-sm opacity-70 font-medium">hrs/sem</span></div>
+        <div className="text-3xl font-bold">{horas} <span className="text-sm opacity-70 font-medium">hrs/sem</span></div>
         <div className="text-[10px] font-bold mt-2 tracking-widest uppercase bg-black/20 inline-block px-2 py-1 rounded">ESTADO: {nivel}</div>
       </div>
     </div>

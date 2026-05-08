@@ -33,7 +33,7 @@ export const RewardSuccessModal: React.FC<Props> = ({
             <p className="text-[11px] font-bold uppercase tracking-widest text-green-400/70 mb-2">
               ¡Canje exitoso!
             </p>
-            <h2 className="text-xl font-black text-itec-text mb-1">{rewardTitle}</h2>
+            <h2 className="text-xl font-bold text-itec-text mb-1">{rewardTitle}</h2>
             <p className="text-sm text-itec-text/60 mb-6 leading-relaxed">
               Se descontaron{" "}
               <strong className="text-itec-text">{pointsCost.toLocaleString()} pts</strong>.

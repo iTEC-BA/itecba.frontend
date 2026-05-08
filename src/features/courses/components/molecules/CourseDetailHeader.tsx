@@ -36,7 +36,7 @@ export const CourseDetailHeader: React.FC<Props> = ({ course, isAdmin, copySucce
 
       {/* Título y badges */}
       <div className="flex flex-wrap items-start gap-3 mb-2">
-        <h1 className="text-2xl md:text-4xl font-black text-white leading-tight flex-1">
+        <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight flex-1">
           {course.title}
         </h1>
         {isOficial && (
