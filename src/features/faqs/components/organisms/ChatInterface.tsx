@@ -1,25 +1,47 @@
-import React, { useRef, useEffect } from 'react';
-import { useAuth } from '@context/AuthContext';
-import { Icons } from '@/components/ui/icons/Icons';
-import { ChatMessage } from '../molecules/ChatMessage';
-import { ChatInput } from '../molecules/ChatInput';
-import { useChatbot } from '../../hooks/useChatbot';
+// src/features/faqs/components/organisms/ChatInterface.tsx
+import React, { useRef, useEffect } from "react";
+import { Icons } from "@/components/ui/icons/Icons";
+import { ChatMessage } from "../molecules/ChatMessage";
+import { ChatInput } from "../molecules/ChatInput";
+import { useChatbot } from "../../hooks/useChatbot";
+import { cn } from "@/lib/utils";
 
 export interface Message {
-  role: 'user' | 'model';
+  role: "user" | "model";
   text?: string;
   timestamp: Date;
   isAiGenerated?: boolean;
-  suggestions?: string[]; // 🟢 AÑADIMOS EL TIPO AQUÍ
+  suggestions?: string[];
 }
 
-const INITIAL_SUGGESTIONS = ["¿Cuándo me anoto a cursar?", "¿Cómo veo los grupos de WhatsApp?", "¿Cuándo son los exámenes finales?"];
+const INITIAL_SUGGESTIONS = [
+  "¿Cuándo me anoto a cursar?",
+  "¿Cómo veo los grupos de WhatsApp?",
+  "¿Cuándo son los exámenes finales?",
+];
+
+// SVG Trash inline para el botón de limpiar chat
+const TrashIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+    strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+    <path d="M10 11v6M14 11v6" />
+    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+  </svg>
+);
 
 export const ChatInterface: React.FC = () => {
-  const { user } = useAuth();
-  const userEmail = user?.email || 'invitado'; 
-  
-  const { messages, isTyping, canUseAI, timeLeftAI, handleSendMessage, clearChat } = useChatbot(userEmail);
+  const {
+    messages,
+    isTyping,
+    canUseAI,
+    userPoints,
+    isCheckingPoints,
+    handleSendMessage,
+    clearChat,
+  } = useChatbot();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,41 +49,68 @@ export const ChatInterface: React.FC = () => {
   }, [messages, isTyping]);
 
   return (
-    <div className="bg-itec-box border border-itec-gray rounded-3xl shadow-2xl flex flex-col h-[650px] relative overflow-hidden animate-in fade-in duration-500">
-      
-      {/* HEADER */}
-      <div className="px-6 py-4 border-b border-itec-gray bg-itec-sidebar flex items-center justify-between shrink-0 z-10 shadow-sm">
+    <div className="relative flex h-full flex-col overflow-hidden rounded-none lg:rounded-3xl border-0 lg:border border-itec-border bg-itec-box shadow-glass animate-in fade-in duration-500">
+
+      {/* Glow sutil de fondo */}
+      <div className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-itec-sky/5 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-itec-emerald/5 blur-3xl" />
+
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-itec-border bg-itec-box/80 px-5 py-3.5 backdrop-blur-xl shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-full flex items-center justify-center shadow-md relative p-1">
-             <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full z-10"></span>
-             <img src="/logo.png" alt="ITEC Logo" className="w-full h-full object-contain rounded-full" onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }} />
+          {/* Avatar del bot */}
+          <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-itec-border bg-itec-surface p-1.5">
+            <img
+              src="/logo.png"
+              alt="ITEC Bot"
+              className="h-full w-full object-contain"
+            />
+            {/* Dot "en línea" */}
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-itec-box bg-itec-emerald" />
           </div>
+
           <div>
-            <h2 className="font-bold text-itec-texttext-lg leading-tight">ITEC Bot</h2>
-            <p className="text-[11px] text-teal-400 font-medium uppercase tracking-widest flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span> En línea
+            <h2 className="text-sm font-bold leading-tight text-itec-text">ITEC Bot</h2>
+            <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-itec-emerald">
+              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-itec-emerald" />
+              En línea
             </p>
           </div>
         </div>
-        <button onClick={clearChat} title="Limpiar chat" className="w-8 h-8 flex items-center justify-center rounded-full bg-itec-bg border border-itec-gray text-itec-text hover:text-itec-texthover:bg-itec-gray transition-colors">
-          <Icons type="close" className="w-4 h-4" />
+
+        {/* Botón limpiar chat */}
+        <button
+          onClick={clearChat}
+          title="Limpiar chat"
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box2 hover:text-itec-text active:scale-95"
+        >
+          <TrashIcon className="h-4 w-4" />
         </button>
       </div>
 
-      {/* ÁREA DE MENSAJES */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar flex flex-col gap-6 bg-gradient-to-b from-itec-bg/30 to-itec-bg/10">
-        
+      {/* ── Área de mensajes ─────────────────────────────────────────────── */}
+      <div className="relative z-10 flex flex-1 flex-col gap-5 overflow-y-auto p-4 md:p-5">
+
         {messages.map((msg, index) => (
-          <div key={index} className="flex flex-col w-full">
-            <ChatMessage role={msg.role} text={msg.text} timestamp={msg.timestamp} />
-            
-            {/* 🟢 RENDERIZAMOS LAS SUGERENCIAS DEL BOT SI EXISTEN */}
+          <div key={index} className="flex w-full flex-col">
+            <ChatMessage
+              role={msg.role}
+              text={msg.text}
+              timestamp={msg.timestamp}
+              isAiGenerated={msg.isAiGenerated}
+            />
+
+            {/* Sugerencias dinámicas del bot */}
             {msg.suggestions && msg.suggestions.length > 0 && (
-              <div className="flex flex-wrap gap-2 justify-start mt-3 ml-12 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="ml-10 mt-2 flex flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
                 {msg.suggestions.map((sug, i) => (
-                  <button 
-                    key={i} onClick={() => handleSendMessage(sug)}
-                    className="bg-itec-sidebar border border-itec-gray text-teal-400 hover:bg-teal-600 hover:border-teal-500 hover:text-itec-texttransition-all px-4 py-2 rounded-xl text-[11px] md:text-xs shadow-sm font-medium"
+                  <button
+                    key={i}
+                    onClick={() => handleSendMessage(sug)}
+                    className={cn(
+                      "rounded-xl border border-itec-sky/20 bg-itec-sky/10 px-3 py-1.5 text-xs font-medium text-itec-sky",
+                      "transition-all hover:bg-itec-sky/20 hover:border-itec-sky/40 active:scale-95"
+                    )}
                   >
                     {sug}
                   </button>
@@ -71,36 +120,55 @@ export const ChatInterface: React.FC = () => {
           </div>
         ))}
 
-        {/* Sugerencias Iniciales */}
+        {/* Sugerencias iniciales (primer mensaje) */}
         {messages.length === 1 && (
-          <div className="flex flex-wrap gap-2 justify-start mt-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="flex flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {INITIAL_SUGGESTIONS.map((sug, i) => (
-              <button key={i} onClick={() => handleSendMessage(sug)} className="bg-itec-bg border border-itec-gray text-gray-300 hover:border-teal-500 hover:text-itec-texttransition-all px-4 py-2.5 rounded-xl text-xs shadow-sm hover:shadow-teal-500/10">
+              <button
+                key={i}
+                onClick={() => handleSendMessage(sug)}
+                className={cn(
+                  "rounded-2xl border border-itec-border bg-itec-surface/60 px-4 py-2.5 text-xs font-medium text-itec-muted",
+                  "transition-all hover:border-itec-sky/30 hover:bg-itec-sky/10 hover:text-itec-sky active:scale-95"
+                )}
+              >
                 {sug}
               </button>
             ))}
           </div>
         )}
 
-        {/* Escribiendo... */}
+        {/* Typing indicator */}
         {isTyping && (
-          <div className="flex w-full justify-start animate-in fade-in duration-200">
+          <div className="flex w-full animate-in fade-in duration-200 justify-start">
             <div className="flex items-end gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mb-1 overflow-hidden p-1 shadow-sm bg-white">
-                 <img src="/logo.png" alt="ITEC Logo" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }} />
+              <div className="mb-1 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-itec-border bg-itec-surface p-1.5">
+                <img src="/logo.png" alt="Bot" className="h-full w-full object-contain" />
               </div>
-              <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-itec-box border border-itec-gray flex gap-1.5 items-center h-[42px] shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-teal-500/70 animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                <span className="w-1.5 h-1.5 rounded-full bg-teal-500/70 animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                <span className="w-1.5 h-1.5 rounded-full bg-teal-500/70 animate-bounce" style={{ animationDelay: '300ms' }}></span>
+              <div className="flex h-10 items-center gap-1.5 rounded-2xl rounded-bl-sm border border-itec-border bg-itec-box px-4 py-3">
+                {[0, 150, 300].map((delay) => (
+                  <span
+                    key={delay}
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-itec-sky/60"
+                    style={{ animationDelay: `${delay}ms` }}
+                  />
+                ))}
               </div>
             </div>
           </div>
         )}
+
         <div ref={messagesEndRef} className="h-1" />
       </div>
 
-      <ChatInput onSendMessage={handleSendMessage} disabled={isTyping} canUseAI={canUseAI} timeLeftAI={timeLeftAI} />
+      {/* ── Input ─────────────────────────────────────────────────────────── */}
+      <ChatInput
+        onSendMessage={handleSendMessage}
+        disabled={isTyping}
+        canUseAI={canUseAI}
+        userPoints={userPoints}
+        isCheckingPoints={isCheckingPoints}
+      />
     </div>
   );
 };

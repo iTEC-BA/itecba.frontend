@@ -1,30 +1,44 @@
-import { FAQ_DATABASE } from '../types/faqs';
-import type { Message } from '../components/organisms/ChatInterface';
+// src/features/faqs/services/chatbotService.ts
+import { FAQ_DATABASE } from "../types/faqs";
+import type { Message } from "../components/organisms/ChatInterface";
+import { auth } from "@lib/firebase";
+import { db } from "@lib/firebase";
+import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 
-const normalizeText = (text?: string) => (text || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, "").trim();
+const normalizeText = (text?: string) =>
+  (text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[¿?¡!.,]/g, "")
+    .trim();
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'; 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+
+// Costo en puntos por usar la IA avanzada
+export const AI_POINTS_COST = 5;
 
 export const chatbotService = {
-  
-  // 🟢 AHORA DEVUELVE UN OBJETO CON TEXTO Y SUGERENCIAS
-  searchFaqAnswer: (query: string): { text?: string, suggestions?: string[] } => {
-    const cleanQuery = normalizeText(query);
-    const queryWords = cleanQuery.split(' ');
 
-    if (['hola', 'buenas', 'holis', 'que tal', 'saludos'].includes(cleanQuery)) {
-      return { text: "¡Hola! ¿En qué te puedo ayudar hoy? Podes escribirme tu consulta o elegir una de las opciones rápidas." };
+  /* ── Búsqueda local en FAQ_DATABASE ───────────────────────────────────── */
+  searchFaqAnswer: (query: string): { text?: string; suggestions?: string[] } => {
+    const cleanQuery = normalizeText(query);
+    const queryWords = cleanQuery.split(" ");
+
+    if (["hola", "buenas", "holis", "que tal", "saludos"].includes(cleanQuery)) {
+      return {
+        text: "Hola. ¿En qué te puedo ayudar hoy? Escribime tu consulta o elegí una opción rápida.",
+      };
     }
 
     let bestMatch = null;
     let maxScore = 0;
 
-    // Búsqueda Exacta
     for (const faq of FAQ_DATABASE) {
       let score = 0;
       for (const kw of faq.keywords) {
         const cleanKw = normalizeText(kw);
-        if (cleanKw.includes(' ')) {
+        if (cleanKw.includes(" ")) {
           if (cleanQuery.includes(cleanKw)) score += 3;
         } else {
           if (queryWords.includes(cleanKw)) score += 1;
@@ -37,50 +51,60 @@ export const chatbotService = {
       return { text: bestMatch.answer };
     }
 
-    // 🟢 SI FALLA: Búsqueda de Coincidencias Parciales
-    const looseWords = queryWords.filter(w => w.length >= 4); // Palabras clave largas
+    // Coincidencias parciales → sugerencias como botones
+    const looseWords = queryWords.filter((w) => w.length >= 4);
     let relatedSuggestions: string[] = [];
 
     if (looseWords.length > 0) {
-      const relatedFaqs = FAQ_DATABASE.filter(faq =>
-        looseWords.some(lw =>
-          normalizeText(faq.answer).includes(lw) || faq.keywords.some(kw => normalizeText(kw).includes(lw))
+      const relatedFaqs = FAQ_DATABASE.filter((faq) =>
+        looseWords.some(
+          (lw) =>
+            normalizeText(faq.answer).includes(lw) ||
+            faq.keywords.some((kw) => normalizeText(kw).includes(lw))
         )
       );
-
-      // Convertimos las keywords encontradas en botones de pregunta
-      relatedSuggestions = relatedFaqs.slice(0, 3).map(faq => {
-          const keyword = faq.keywords[0];
-          return `¿Información sobre ${keyword}?`;
-      });
+      relatedSuggestions = relatedFaqs.slice(0, 3).map(
+        (faq) => `¿Información sobre ${faq.keywords[0]}?`
+      );
     }
 
-    // Si no encontró nada ni parcialmente, damos 3 por defecto
     if (relatedSuggestions.length === 0) {
-      relatedSuggestions = ["¿Trámites de Bedelía?", "¿Fechas de exámenes?", "¿Grupos de WhatsApp?"];
+      relatedSuggestions = [
+        "¿Trámites de Bedelía?",
+        "¿Fechas de exámenes?",
+        "¿Grupos de WhatsApp?",
+      ];
     }
 
     return {
-      text: "No encontré una respuesta exacta en mi base rápida para eso. ¿Quizás te referías a alguna de estas opciones? 👇\n\n*(Tip: También podés usar el botón **✨ Buscar con IA Avanzada** para analizar tu pregunta a fondo).* ",
-      suggestions: relatedSuggestions
+      text: "No encontré una respuesta exacta en mi base rápida. ¿Quizás te referías a alguna de estas opciones?\n\n*(Tip: También podés usar el botón **Consultar con IA** para analizar tu pregunta a fondo — cuesta 5 puntos).*",
+      suggestions: relatedSuggestions,
     };
   },
 
+  /* ── Consulta a la IA avanzada (Groq via backend) ─────────────────────── */
   askAdvancedAI: async (query: string, rawHistory: Message[]): Promise<string> => {
     try {
-      const formattedHistory = rawHistory.slice(1).map(msg => ({
-        role: msg.role === 'model' ? 'model' : 'user', 
-        parts: [{ text: msg.text }]
+      // Obtener Firebase ID token — requerido por verifyToken en el backend
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) {
+        return "Para usar la IA avanzada necesitás estar logueado.";
+      }
+
+      const formattedHistory = rawHistory.slice(1).map((msg) => ({
+        role: msg.role === "model" ? "model" : "user",
+        parts: [{ text: msg.text }],
       }));
 
+      // Construir contexto FAQ enriquecido (top-5 más relevantes)
       const cleanQuery = normalizeText(query);
-      const queryWords = cleanQuery.split(' ');
+      const queryWords = cleanQuery.split(" ");
 
-      const scoredFaqs = FAQ_DATABASE.map(faq => {
+      const scoredFaqs = FAQ_DATABASE.map((faq) => {
         let score = 0;
         for (const kw of faq.keywords) {
           const cleanKw = normalizeText(kw);
-          if (cleanKw.includes(' ')) {
+          if (cleanKw.includes(" ")) {
             if (cleanQuery.includes(cleanKw)) score += 3;
           } else {
             if (queryWords.includes(cleanKw)) score += 1;
@@ -89,60 +113,83 @@ export const chatbotService = {
         return { ...faq, score };
       });
 
-      const top5Faqs = scoredFaqs.sort((a, b) => b.score - a.score).slice(0, 5);
-      const faqContextString = top5Faqs.map(faq => `- Tema: ${faq.keywords.join(", ")} | Respuesta Oficial: ${faq.answer}`).join("\n");
-      
-      const hiddenContextQuery = `
-[CONTEXTO OFICIAL FILTRADO DE ITEC]:
-${faqContextString}
+      const top5 = scoredFaqs.sort((a, b) => b.score - a.score).slice(0, 5);
+      const faqContext = top5
+        .map((f) => `• [${f.keywords.slice(0, 3).join(" / ")}]: ${f.answer}`)
+        .join("\n\n");
 
-[INSTRUCCIÓN AL MODELO]: Basándote en el contexto oficial de arriba y en tu conocimiento como ITEC Bot, responde de forma natural a la siguiente consulta del alumno. Si la respuesta no está clara en el contexto, guíalo con tus conocimientos generales sobre la UTN.
-
-Consulta del Alumno: "${query}"
-      `;
+      // Prompt mejorado para respuestas precisas y acotadas
+      const enrichedMessage = [
+        "=== CONTEXTO OFICIAL ITEC / UTN FRBA ===",
+        faqContext,
+        "=== FIN CONTEXTO ===",
+        "",
+        "INSTRUCCIÓN: Respondé la siguiente consulta de forma DIRECTA, BREVE y PRECISA.",
+        "Basate PRIMERO en el contexto oficial de arriba.",
+        "Si la respuesta está ahí, no inventes ni agregues información innecesaria.",
+        "Si no hay información suficiente en el contexto, guiá al estudiante a los recursos oficiales (SIGA, web UTN, etc).",
+        "Usá formato markdown solo cuando aporte claridad (listas, negritas).",
+        "Máximo 250 palabras.",
+        "",
+        `Consulta: "${query}"`,
+      ].join("\n");
 
       const response = await fetch(`${API_URL}/ai/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: hiddenContextQuery, history: formattedHistory })
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: enrichedMessage,
+          history: formattedHistory,
+        }),
       });
 
-      if (!response.ok) throw new Error(`Error en servidor: ${response.statusText}`);
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        console.error("AI endpoint error:", response.status, errData);
+        throw new Error(`Error ${response.status}: ${errData.message ?? response.statusText}`);
+      }
 
       const data = await response.json();
-      return data.response; 
-
+      return data.response ?? "Sin respuesta del servidor.";
     } catch (error) {
-      console.error("❌ Error comunicándose con la IA:", error);
-      return "⚠️ Lo siento, no me pude conectar con el cerebro principal. Intenta de nuevo más tarde.";
+      console.error("Error en askAdvancedAI:", error);
+      return "No me pude conectar con el servidor de IA. Intentá de nuevo en unos segundos.";
     }
   },
 
-canUseAI: (userEmail: string): boolean => {
-    const lastUsed = localStorage.getItem(`itec_ai_last_${userEmail}`);
-    if (!lastUsed) return true;
-    const diff = Date.now() - parseInt(lastUsed, 10);
-    
-    // 🟢 CAMBIO AQUÍ: 1 hora = 60 mins * 60 segs * 1000 ms
-    return diff > 60 * 60 * 1000; 
+  /* ── Sistema de puntos para IA ─────────────────────────────────────────── */
+
+  /** Obtiene los puntos actuales del usuario desde Firestore */
+  getUserPoints: async (uid: string): Promise<number> => {
+    try {
+      const snap = await getDoc(doc(db, "users", uid));
+      return snap.exists() ? (snap.data().points ?? 0) : 0;
+    } catch {
+      return 0;
+    }
   },
 
-  markAIUsed: (userEmail: string) => {
-    localStorage.setItem(`itec_ai_last_${userEmail}`, Date.now().toString());
+  /** Verifica si el usuario tiene puntos suficientes para usar la IA */
+  canUseAI: async (uid: string): Promise<boolean> => {
+    const points = await chatbotService.getUserPoints(uid);
+    return points >= AI_POINTS_COST;
   },
 
-  getTimeLeftToUseAI: (userEmail: string): string | null => {
-    const lastUsed = localStorage.getItem(`itec_ai_last_${userEmail}`);
-    if (!lastUsed) return null;
-    const diff = Date.now() - parseInt(lastUsed, 10);
-    
-    // 🟢 CAMBIO AQUÍ: Restamos desde 1 hora (60 * 60 * 1000)
-    const remaining = (60 * 60 * 1000) - diff;
-    if (remaining <= 0) return null;
-    
-    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    
-    // Como ahora es máximo 1 hora, mostramos solo los minutos para que quede más limpio
-    return `${minutes}m`; 
-  }
+  /** Descuenta AI_POINTS_COST puntos en Firestore */
+  deductAIPoints: async (uid: string): Promise<boolean> => {
+    try {
+      const points = await chatbotService.getUserPoints(uid);
+      if (points < AI_POINTS_COST) return false;
+      await updateDoc(doc(db, "users", uid), {
+        points: increment(-AI_POINTS_COST),
+      });
+      return true;
+    } catch (err) {
+      console.error("Error al descontar puntos:", err);
+      return false;
+    }
+  },
 };
