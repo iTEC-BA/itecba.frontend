@@ -1,1422 +1,1426 @@
 #!/usr/bin/env bash
 # =============================================================================
-# fix_faqs.sh — Aplica estilo oscuro premium Bento/Glassmorphism
-# a FaqsPage + features/faqs/*, corrige endpoint AI (auth token),
-# descuenta 5 puntos por consulta IA, y hace mobile = solo chat fullscreen.
-#
-# Ejecutar desde la RAIZ del proyecto itecba-frontend:
-#   chmod +x fix_faqs.sh && ./fix_faqs.sh
+# setup-faqs.sh — Refactor completo del módulo FAQs + Chat IA para ITEC.BA
+# Ejecutar desde la raíz del FRONTEND: bash setup-faqs.sh
 # =============================================================================
-set -euo pipefail
+set -e
 
-CYAN='\033[0;36m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RESET='\033[0m'
-info() { echo -e "${CYAN}[INFO]${RESET}  $1"; }
-ok()   { echo -e "${GREEN}[OK]${RESET}    $1"; }
+GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC='\033[0m'
+log()  { echo -e "${GREEN}✓${NC} $1"; }
+info() { echo -e "${CYAN}→${NC} $1"; }
+warn() { echo -e "${YELLOW}⚠${NC} $1"; }
 
-info "Iniciando fix de FaqsPage + features/faqs/*..."
+echo ""
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${CYAN}  ITEC.BA — FAQs + Chat IA — Setup Script      ${NC}"
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
 
-mkdir -p src/features/faqs/components/molecules
-mkdir -p src/features/faqs/components/organisms
-mkdir -p src/features/faqs/hooks
-mkdir -p src/features/faqs/services
-mkdir -p src/features/faqs/types
-
-
-# =============================================================================
-# 1. src/pages/FaqsPage.tsx
-#    - Mobile: solo ChatInterface a fullscreen (ImportantDatesWidget hidden)
-#    - Desktop: layout 2/3 + 1/3 bento grid
-#    - Elimina PageHeader (ya está en el header del chat)
-# =============================================================================
-info "Patching: src/pages/FaqsPage.tsx"
-cat > src/pages/FaqsPage.tsx << 'HEREDOC'
-// src/pages/FaqsPage.tsx
-import React from "react";
-import { MainLayout } from "@/components/templates/MainLayout";
-import { usePageTitle } from "@hooks/usePageTitle";
-import { useAuth } from "@context/AuthContext";
-import { ChatInterface } from "@features/faqs/components/organisms/ChatInterface";
-import { ImportantDatesWidget } from "@features/faqs/components/organisms/ImportantDatesWidget";
-
-export const FaqsPage: React.FC = () => {
-  usePageTitle("Consultas — ITEC");
-  const { isAdmin } = useAuth();
-
-  return (
-    <MainLayout>
-      {/*
-        Mobile: ChatInterface ocupa toda la pantalla disponible.
-        El calendario está oculto. Se muestra un layout de "un solo panel".
-        Desktop (lg+): Grid 2/3 chat + 1/3 calendario.
-      */}
-      <div className="grid grid-cols-1 gap-0 lg:gap-6 lg:grid-cols-3 max-w-7xl mx-auto">
-
-        {/* Chat — fullscreen en mobile, 2/3 en desktop */}
-        <div className="lg:col-span-2 h-[calc(100dvh-4rem)] lg:h-auto">
-          <ChatInterface />
-        </div>
-
-        {/* Calendario — OCULTO en mobile, visible en lg+ */}
-        <div className="hidden lg:block lg:col-span-1">
-          <ImportantDatesWidget isAdmin={isAdmin} />
-        </div>
-
-      </div>
-    </MainLayout>
-  );
-};
-HEREDOC
-ok "FaqsPage.tsx patched"
-
+# ── Crear directorios ─────────────────────────────────────────────────────────
+info "Creando estructura de carpetas..."
+mkdir -p src/features/faqs/{types,services,hooks,components/{atoms,molecules,organisms}}
+log "Carpetas creadas"
 
 # =============================================================================
-# 2. src/features/faqs/services/chatbotService.ts
-#    FIXES:
-#    - Agrega token de Firebase Auth en askAdvancedAI (el endpoint requiere verifyToken)
-#    - Mejora el hiddenContextQuery para respuestas más precisas
-#    - Descuenta 5 puntos en Firestore al usar IA (deductAIPoints)
-#    - Elimina emoji 👇 del texto de fallback
-#    - canUseAI ahora delega en puntos, no en tiempo
+# TIPOS TypeScript
 # =============================================================================
-info "Patching: chatbotService.ts"
-cat > src/features/faqs/services/chatbotService.ts << 'HEREDOC'
-// src/features/faqs/services/chatbotService.ts
-import { FAQ_DATABASE } from "../types/faqs";
-import type { Message } from "../components/organisms/ChatInterface";
-import { auth } from "@lib/firebase";
-import { db } from "@lib/firebase";
-import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
-
-const normalizeText = (text?: string) =>
-  (text || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[¿?¡!.,]/g, "")
-    .trim();
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
-
-// Costo en puntos por usar la IA avanzada
-export const AI_POINTS_COST = 5;
-
-export const chatbotService = {
-
-  /* ── Búsqueda local en FAQ_DATABASE ───────────────────────────────────── */
-  searchFaqAnswer: (query: string): { text?: string; suggestions?: string[] } => {
-    const cleanQuery = normalizeText(query);
-    const queryWords = cleanQuery.split(" ");
-
-    if (["hola", "buenas", "holis", "que tal", "saludos"].includes(cleanQuery)) {
-      return {
-        text: "Hola. ¿En qué te puedo ayudar hoy? Escribime tu consulta o elegí una opción rápida.",
-      };
-    }
-
-    let bestMatch = null;
-    let maxScore = 0;
-
-    for (const faq of FAQ_DATABASE) {
-      let score = 0;
-      for (const kw of faq.keywords) {
-        const cleanKw = normalizeText(kw);
-        if (cleanKw.includes(" ")) {
-          if (cleanQuery.includes(cleanKw)) score += 3;
-        } else {
-          if (queryWords.includes(cleanKw)) score += 1;
-        }
-      }
-      if (score > maxScore) { maxScore = score; bestMatch = faq; }
-    }
-
-    if (bestMatch && maxScore > 0) {
-      return { text: bestMatch.answer };
-    }
-
-    // Coincidencias parciales → sugerencias como botones
-    const looseWords = queryWords.filter((w) => w.length >= 4);
-    let relatedSuggestions: string[] = [];
-
-    if (looseWords.length > 0) {
-      const relatedFaqs = FAQ_DATABASE.filter((faq) =>
-        looseWords.some(
-          (lw) =>
-            normalizeText(faq.answer).includes(lw) ||
-            faq.keywords.some((kw) => normalizeText(kw).includes(lw))
-        )
-      );
-      relatedSuggestions = relatedFaqs.slice(0, 3).map(
-        (faq) => `¿Información sobre ${faq.keywords[0]}?`
-      );
-    }
-
-    if (relatedSuggestions.length === 0) {
-      relatedSuggestions = [
-        "¿Trámites de Bedelía?",
-        "¿Fechas de exámenes?",
-        "¿Grupos de WhatsApp?",
-      ];
-    }
-
-    return {
-      text: "No encontré una respuesta exacta en mi base rápida. ¿Quizás te referías a alguna de estas opciones?\n\n*(Tip: También podés usar el botón **Consultar con IA** para analizar tu pregunta a fondo — cuesta 5 puntos).*",
-      suggestions: relatedSuggestions,
-    };
-  },
-
-  /* ── Consulta a la IA avanzada (Groq via backend) ─────────────────────── */
-  askAdvancedAI: async (query: string, rawHistory: Message[]): Promise<string> => {
-    try {
-      // Obtener Firebase ID token — requerido por verifyToken en el backend
-      const token = await auth.currentUser?.getIdToken();
-      if (!token) {
-        return "Para usar la IA avanzada necesitás estar logueado.";
-      }
-
-      const formattedHistory = rawHistory.slice(1).map((msg) => ({
-        role: msg.role === "model" ? "model" : "user",
-        parts: [{ text: msg.text }],
-      }));
-
-      // Construir contexto FAQ enriquecido (top-5 más relevantes)
-      const cleanQuery = normalizeText(query);
-      const queryWords = cleanQuery.split(" ");
-
-      const scoredFaqs = FAQ_DATABASE.map((faq) => {
-        let score = 0;
-        for (const kw of faq.keywords) {
-          const cleanKw = normalizeText(kw);
-          if (cleanKw.includes(" ")) {
-            if (cleanQuery.includes(cleanKw)) score += 3;
-          } else {
-            if (queryWords.includes(cleanKw)) score += 1;
-          }
-        }
-        return { ...faq, score };
-      });
-
-      const top5 = scoredFaqs.sort((a, b) => b.score - a.score).slice(0, 5);
-      const faqContext = top5
-        .map((f) => `• [${f.keywords.slice(0, 3).join(" / ")}]: ${f.answer}`)
-        .join("\n\n");
-
-      // Prompt mejorado para respuestas precisas y acotadas
-      const enrichedMessage = [
-        "=== CONTEXTO OFICIAL ITEC / UTN FRBA ===",
-        faqContext,
-        "=== FIN CONTEXTO ===",
-        "",
-        "INSTRUCCIÓN: Respondé la siguiente consulta de forma DIRECTA, BREVE y PRECISA.",
-        "Basate PRIMERO en el contexto oficial de arriba.",
-        "Si la respuesta está ahí, no inventes ni agregues información innecesaria.",
-        "Si no hay información suficiente en el contexto, guiá al estudiante a los recursos oficiales (SIGA, web UTN, etc).",
-        "Usá formato markdown solo cuando aporte claridad (listas, negritas).",
-        "Máximo 250 palabras.",
-        "",
-        `Consulta: "${query}"`,
-      ].join("\n");
-
-      const response = await fetch(`${API_URL}/ai/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          message: enrichedMessage,
-          history: formattedHistory,
-        }),
-      });
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        console.error("AI endpoint error:", response.status, errData);
-        throw new Error(`Error ${response.status}: ${errData.message ?? response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data.response ?? "Sin respuesta del servidor.";
-    } catch (error) {
-      console.error("Error en askAdvancedAI:", error);
-      return "No me pude conectar con el servidor de IA. Intentá de nuevo en unos segundos.";
-    }
-  },
-
-  /* ── Sistema de puntos para IA ─────────────────────────────────────────── */
-
-  /** Obtiene los puntos actuales del usuario desde Firestore */
-  getUserPoints: async (uid: string): Promise<number> => {
-    try {
-      const snap = await getDoc(doc(db, "users", uid));
-      return snap.exists() ? (snap.data().points ?? 0) : 0;
-    } catch {
-      return 0;
-    }
-  },
-
-  /** Verifica si el usuario tiene puntos suficientes para usar la IA */
-  canUseAI: async (uid: string): Promise<boolean> => {
-    const points = await chatbotService.getUserPoints(uid);
-    return points >= AI_POINTS_COST;
-  },
-
-  /** Descuenta AI_POINTS_COST puntos en Firestore */
-  deductAIPoints: async (uid: string): Promise<boolean> => {
-    try {
-      const points = await chatbotService.getUserPoints(uid);
-      if (points < AI_POINTS_COST) return false;
-      await updateDoc(doc(db, "users", uid), {
-        points: increment(-AI_POINTS_COST),
-      });
-      return true;
-    } catch (err) {
-      console.error("Error al descontar puntos:", err);
-      return false;
-    }
-  },
-};
-HEREDOC
-ok "chatbotService.ts patched"
-
-
-# =============================================================================
-# 3. src/features/faqs/hooks/useChatbot.ts
-#    FIXES:
-#    - canUseAI ahora es async (consulta puntos en Firestore)
-#    - deductAIPoints antes de llamar a la IA
-#    - Bloquea el envío si no tiene puntos
-#    - Elimina todo el sistema localStorage de tiempo
-#    - Muestra puntos disponibles en lugar de tiempo restante
-#    - Elimina emoji ✅ y ⚠️
-# =============================================================================
-info "Patching: useChatbot.ts"
-cat > src/features/faqs/hooks/useChatbot.ts << 'HEREDOC'
-// src/features/faqs/hooks/useChatbot.ts
-import { useState, useEffect, useCallback } from "react";
-import type { Message } from "../components/organisms/ChatInterface";
-import { chatbotService, AI_POINTS_COST } from "../services/chatbotService";
-import { ITEC_FOOTER } from "../types/faqs";
-import { useAuth } from "@context/AuthContext";
-
-const WELCOME_MESSAGE: Message = {
-  role: "model",
-  text: "Hola. Soy **ITEC Bot**.\n\nEstoy aquí para resolver tus dudas sobre la UTN BA. Escribime tu consulta o elegí una opción rápida.",
-  timestamp: new Date(),
-};
-
-export const useChatbot = () => {
-  const { user } = useAuth();
-  const uid = user?.uid ?? null;
-
-  const [messages, setMessages]       = useState<Message[]>([WELCOME_MESSAGE]);
-  const [isTyping, setIsTyping]       = useState(false);
-  const [canUseAI, setCanUseAI]       = useState(false);
-  const [userPoints, setUserPoints]   = useState<number>(0);
-  const [isCheckingPoints, setIsCheckingPoints] = useState(false);
-
-  // Recarga puntos desde Firestore
-  const refreshPoints = useCallback(async () => {
-    if (!uid) { setCanUseAI(false); setUserPoints(0); return; }
-    setIsCheckingPoints(true);
-    try {
-      const pts = await chatbotService.getUserPoints(uid);
-      setUserPoints(pts);
-      setCanUseAI(pts >= AI_POINTS_COST);
-    } finally {
-      setIsCheckingPoints(false);
-    }
-  }, [uid]);
-
-  useEffect(() => {
-    refreshPoints();
-  }, [refreshPoints]);
-
-  const handleSendMessage = async (text?: string, forceAI = false) => {
-    if (!text?.trim()) return;
-
-    setMessages((prev) => [...prev, { role: "user", text, timestamp: new Date() }]);
-    setIsTyping(true);
-
-    try {
-      if (forceAI) {
-        // Verificar puntos antes de llamar a la IA
-        if (!uid) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "model",
-              text: "Necesitás estar logueado para usar la IA avanzada.",
-              timestamp: new Date(),
-            },
-          ]);
-          return;
-        }
-
-        const pts = await chatbotService.getUserPoints(uid);
-        if (pts < AI_POINTS_COST) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "model",
-              text: `No tenés suficientes puntos para usar la IA avanzada. Necesitás **${AI_POINTS_COST} puntos** y tenés **${pts}**.\n\nPodés ganar puntos subiendo aportes o participando en la comunidad.`,
-              timestamp: new Date(),
-            },
-          ]);
-          return;
-        }
-
-        // Descontar puntos primero
-        const deducted = await chatbotService.deductAIPoints(uid);
-        if (!deducted) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "model",
-              text: "No se pudieron descontar los puntos. Intentá de nuevo.",
-              timestamp: new Date(),
-            },
-          ]);
-          return;
-        }
-
-        // Llamar a la IA
-        const aiResponse = await chatbotService.askAdvancedAI(text, messages);
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "model",
-            text: aiResponse,
-            timestamp: new Date(),
-            isAiGenerated: true,
-          },
-        ]);
-
-        // Refrescar puntos en UI
-        await refreshPoints();
-      } else {
-        // Respuesta del FAQ local (con pequeño delay natural)
-        await new Promise((r) => setTimeout(r, Math.floor(Math.random() * 400) + 400));
-
-        const isGreeting = ["hola", "buenas", "holis"].includes(
-          text.toLowerCase().trim()
-        );
-        const responseData = chatbotService.searchFaqAnswer(text);
-        const finalAnswer = responseData.text + (isGreeting ? "" : "\n\n" + ITEC_FOOTER);
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "model",
-            text: finalAnswer,
-            timestamp: new Date(),
-            suggestions: responseData.suggestions,
-          },
-        ]);
-      }
-    } finally {
-      setIsTyping(false);
-    }
-  };
-
-  const clearChat = () => {
-    if (window.confirm("¿Querés limpiar el historial de esta conversación?")) {
-      setMessages([{ ...WELCOME_MESSAGE, timestamp: new Date() }]);
-    }
-  };
-
-  return {
-    messages,
-    isTyping,
-    canUseAI,
-    userPoints,
-    isCheckingPoints,
-    handleSendMessage,
-    clearChat,
-    refreshPoints,
-  };
-};
-HEREDOC
-ok "useChatbot.ts patched"
-
-
-# =============================================================================
-# 4. src/features/faqs/components/molecules/ChatInput.tsx
-#    FIXES:
-#    - Glassmorphism: bg-itec-box/80 backdrop-blur-xl
-#    - Tokens itec: border-itec-border, focus:border-itec-sky
-#    - Botón IA: tone-on-tone con itec-sky, sin purple crudo
-#    - Elimina emojis ✨ ⏳
-#    - Muestra puntos disponibles en el botón IA
-#    - Microinteracciones active:scale-95
-#    - Props: userPoints en lugar de timeLeftAI
-# =============================================================================
-info "Patching: ChatInput.tsx"
-cat > src/features/faqs/components/molecules/ChatInput.tsx << 'HEREDOC'
-// src/features/faqs/components/molecules/ChatInput.tsx
-import React, { useState, useRef, useEffect } from "react";
-import { Icons } from "@/components/ui/icons/Icons";
-import { cn } from "@/lib/utils";
-import { AI_POINTS_COST } from "../../services/chatbotService";
-
-interface Props {
-  onSendMessage: (text?: string, forceAI?: boolean) => void;
-  disabled?: boolean;
-  canUseAI: boolean;
-  userPoints: number;
-  isCheckingPoints: boolean;
+info "Escribiendo tipos TypeScript..."
+cat > src/features/faqs/types/faqs.ts << 'TYPES_EOF'
+export interface FAQ {
+  _id: string;
+  question: string;
+  answer: string;
+  keywords: string[];
+  category: string;
+  popularity: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export const ChatInput: React.FC<Props> = ({
-  onSendMessage,
-  disabled,
-  canUseAI,
-  userPoints,
-  isCheckingPoints,
-}) => {
-  const [input, setInput]   = useState("");
-  const inputRef            = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!disabled) inputRef.current?.focus();
-  }, [disabled]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || disabled) return;
-    onSendMessage(input, false);
-    setInput("");
-  };
-
-  const handleForceAI = () => {
-    if (!input.trim() || disabled || !canUseAI) return;
-    onSendMessage(input, true);
-    setInput("");
-  };
-
-  const aiButtonActive = input.trim() && !disabled && canUseAI && !isCheckingPoints;
-
-  return (
-    <div className="shrink-0 border-t border-itec-border bg-itec-box/80 px-4 py-3 backdrop-blur-xl">
-      {/* Input principal */}
-      <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={disabled}
-            placeholder="Escribí tu consulta..."
-            className={cn(
-              "w-full rounded-2xl border bg-itec-surface/80 px-4 py-3 pr-10 text-sm text-itec-text outline-none backdrop-blur-sm transition-all",
-              "placeholder:text-itec-muted/60",
-              "border-itec-border focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10",
-              "disabled:cursor-not-allowed disabled:opacity-50"
-            )}
-          />
-        </div>
-
-        {/* Botón enviar */}
-        <button
-          type="submit"
-          disabled={!input.trim() || disabled}
-          className={cn(
-            "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border transition-all",
-            "border-itec-sky/30 bg-itec-sky/20 text-itec-sky",
-            "hover:bg-itec-sky/30 active:scale-95",
-            "disabled:cursor-not-allowed disabled:opacity-40 disabled:scale-100"
-          )}
-          aria-label="Enviar mensaje"
-        >
-          <Icons type="send" className="h-4 w-4" />
-        </button>
-      </form>
-
-      {/* Botón IA Avanzada */}
-      <div className="mt-2 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={handleForceAI}
-          disabled={!aiButtonActive}
-          title={
-            !canUseAI
-              ? `Necesitás ${AI_POINTS_COST} puntos (tenés ${userPoints})`
-              : `Cuesta ${AI_POINTS_COST} puntos`
-          }
-          className={cn(
-            "flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all",
-            aiButtonActive
-              ? "cursor-pointer border-itec-sky/25 bg-itec-sky/10 text-itec-sky hover:bg-itec-sky/20 active:scale-95 shadow-[0_0_12px_rgba(56,189,248,0.1)]"
-              : "cursor-not-allowed border-itec-border/50 bg-transparent text-itec-muted/50"
-          )}
-        >
-          {/* Icono IA */}
-          <div className="h-3.5 w-3.5 shrink-0">
-            <Icons type="star" />
-          </div>
-          <span>
-            {isCheckingPoints
-              ? "Verificando..."
-              : canUseAI
-              ? `Consultar con IA · ${AI_POINTS_COST} pts`
-              : `Sin puntos suficientes (${userPoints}/${AI_POINTS_COST})`}
-          </span>
-        </button>
-
-        {/* Indicador de puntos disponibles */}
-        {!isCheckingPoints && (
-          <span className={cn(
-            "text-[10px] font-bold uppercase tracking-[0.2em]",
-            canUseAI ? "text-itec-emerald" : "text-itec-muted"
-          )}>
-            {userPoints} pts
-          </span>
-        )}
-      </div>
-    </div>
-  );
-};
-HEREDOC
-ok "ChatInput.tsx patched"
-
-
-# =============================================================================
-# 5. src/features/faqs/components/molecules/ChatMessage.tsx
-#    FIXES:
-#    - Elimina emojis ✓ y 📋
-#    - Corrige bug de clase concatenada: `text-itec-textrounded-2xl` → separado
-#    - Reemplaza bg-gradient-to-tr from-blue-600 con itec-sky tone-on-tone
-#    - Reemplaza text-gray-200/300/500 con tokens itec
-#    - Reemplaza text-teal-400/text-blue-400 con tokens
-#    - Copy button: usa Icons type="copy" (si existe) o un SVG inline
-# =============================================================================
-info "Patching: ChatMessage.tsx"
-cat > src/features/faqs/components/molecules/ChatMessage.tsx << 'HEREDOC'
-// src/features/faqs/components/molecules/ChatMessage.tsx
-import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import { Icons } from "@/components/ui/icons/Icons";
-import { cn } from "@/lib/utils";
-
-interface Props {
-  role: "user" | "model";
-  text?: string;
-  timestamp: Date;
-  isAiGenerated?: boolean;
+export interface FAQSearchResult extends FAQ {
+  score: number;
 }
 
-// SVG Copy inline (no depende de Icons si no existe "copy" ahí)
-const CopyIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-    strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-  </svg>
-);
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  text: string;
+  isAI?: boolean;
+  isLoading?: boolean;
+  suggestions?: string[];
+  timestamp: number;
+}
 
-const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-    strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
+export interface AIContext {
+  _id?: string;
+  personality: string;
+  institutionalContext: string;
+  rules: string[];
+  updatedAt?: string;
+}
 
-// Icono usuario inline
-const UserIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-    strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-    <circle cx="12" cy="7" r="4" />
-  </svg>
-);
-
-export const ChatMessage: React.FC<Props> = ({ role, text, timestamp, isAiGenerated }) => {
-  const isUser = role === "user";
-  const [copied, setCopied] = useState(false);
-
-  const timeString = timestamp.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text ?? "");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div
-      className={cn(
-        "group flex w-full animate-in fade-in slide-in-from-bottom-2 duration-300",
-        isUser ? "justify-end" : "justify-start"
-      )}
-    >
-      <div
-        className={cn(
-          "flex max-w-[90%] gap-2 md:max-w-[85%] items-end",
-          isUser ? "flex-row-reverse" : "flex-row"
-        )}
-      >
-        {/* Avatar */}
-        <div
-          className={cn(
-            "mb-1 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full",
-            isUser
-              ? "border border-itec-sky/30 bg-itec-sky/20"
-              : "p-1 border border-itec-border bg-itec-surface"
-          )}
-        >
-          {isUser ? (
-            <UserIcon className="h-4 w-4 text-itec-sky" />
-          ) : (
-            <img
-              src="/logo.png"
-              alt="ITEC Bot"
-              className="h-full w-full object-contain"
-            />
-          )}
-        </div>
-
-        {/* Burbuja + metadata */}
-        <div className={cn("flex flex-col", isUser ? "items-end" : "items-start")}>
-          {/* Burbuja */}
-          <div
-            className={cn(
-              "relative px-4 py-3 text-sm shadow-sm",
-              isUser
-                ? "rounded-2xl rounded-br-sm border border-itec-sky/20 bg-itec-sky/15 text-itec-text"
-                : "rounded-2xl rounded-bl-sm border border-itec-border bg-itec-box text-itec-text/90"
-            )}
-          >
-            {isAiGenerated && (
-              <div className="mb-2 flex items-center gap-1.5">
-                <div className="h-3 w-3 text-itec-sky">
-                  <Icons type="star" />
-                </div>
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-itec-sky">
-                  IA
-                </span>
-              </div>
-            )}
-
-            {isUser ? (
-              <p className="leading-relaxed">{text}</p>
-            ) : (
-              <ReactMarkdown
-                components={{
-                  strong: ({ ...props }) => (
-                    <span className="font-bold text-itec-text" {...props} />
-                  ),
-                  p: ({ ...props }) => (
-                    <p className="mb-3 last:mb-0 leading-relaxed text-itec-text/90" {...props} />
-                  ),
-                  ul: ({ ...props }) => (
-                    <ul className="mb-3 list-disc space-y-1 pl-5 text-itec-muted" {...props} />
-                  ),
-                  li: ({ ...props }) => (
-                    <li className="marker:text-itec-sky" {...props} />
-                  ),
-                  a: ({ ...props }) => (
-                    <a
-                      className="inline-flex items-center gap-1 font-medium text-itec-sky hover:underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      {...props}
-                    />
-                  ),
-                  code: ({ ...props }) => (
-                    <code
-                      className="rounded-lg border border-itec-border bg-itec-surface/80 px-1.5 py-0.5 font-mono text-xs text-itec-sky"
-                      {...props}
-                    />
-                  ),
-                  hr: () => (
-                    <hr className="my-3 border-itec-border/50" />
-                  ),
-                }}
-              >
-                {text}
-              </ReactMarkdown>
-            )}
-          </div>
-
-          {/* Hora + copiar */}
-          <div className="mt-1 flex items-center gap-3 px-1">
-            <span className="text-[10px] font-medium text-itec-muted">{timeString}</span>
-
-            {!isUser && (
-              <button
-                onClick={handleCopy}
-                className={cn(
-                  "flex items-center gap-1 rounded-lg border px-1.5 py-0.5 text-[10px] font-bold transition-all",
-                  "opacity-0 group-hover:opacity-100 focus:opacity-100",
-                  copied
-                    ? "border-itec-emerald/20 bg-itec-emerald/10 text-itec-emerald"
-                    : "border-itec-border bg-itec-surface/60 text-itec-muted hover:text-itec-text"
-                )}
-              >
-                {copied ? (
-                  <>
-                    <CheckIcon className="h-2.5 w-2.5" />
-                    <span>Copiado</span>
-                  </>
-                ) : (
-                  <>
-                    <CopyIcon className="h-2.5 w-2.5" />
-                    <span>Copiar</span>
-                  </>
-                )}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-HEREDOC
-ok "ChatMessage.tsx patched"
-
-
-# =============================================================================
-# 6. src/features/faqs/components/organisms/ChatInterface.tsx
-#    FIXES:
-#    - h-full en lugar de h-[650px] fijo → se adapta al padre
-#    - Header glassmorphism: bg-itec-box/80 backdrop-blur-xl border-itec-border
-#    - Elimina bg-green-500 → bg-itec-emerald para el dot de "en línea"
-#    - Elimina bg-itec-sidebar → bg-itec-box/80
-#    - Sugerencias tone-on-tone: border-itec-sky/20 bg-itec-sky/10 text-itec-sky
-#    - Typing dots con itec-sky
-#    - Glow sutil de fondo
-#    - useChatbot ya no recibe userEmail (lo obtiene internamente)
-#    - Props actualizadas: userPoints, isCheckingPoints en lugar de timeLeftAI
-# =============================================================================
-info "Patching: ChatInterface.tsx"
-cat > src/features/faqs/components/organisms/ChatInterface.tsx << 'HEREDOC'
-// src/features/faqs/components/organisms/ChatInterface.tsx
-import React, { useRef, useEffect } from "react";
-import { Icons } from "@/components/ui/icons/Icons";
-import { ChatMessage } from "../molecules/ChatMessage";
-import { ChatInput } from "../molecules/ChatInput";
-import { useChatbot } from "../../hooks/useChatbot";
-import { cn } from "@/lib/utils";
-
-export interface Message {
-  role: "user" | "model";
-  text?: string;
-  timestamp: Date;
-  isAiGenerated?: boolean;
+export interface ChatResponse {
+  response: string;
+  isAI: boolean;
+  faqUsed?: FAQ;
   suggestions?: string[];
 }
 
-const INITIAL_SUGGESTIONS = [
-  "¿Cuándo me anoto a cursar?",
-  "¿Cómo veo los grupos de WhatsApp?",
-  "¿Cuándo son los exámenes finales?",
-];
+export type ChatMode = "faq" | "ai";
+TYPES_EOF
+log "Tipos escritos"
 
-// SVG Trash inline para el botón de limpiar chat
-const TrashIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-    strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="3 6 5 6 21 6" />
-    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-    <path d="M10 11v6M14 11v6" />
-    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-  </svg>
+# =============================================================================
+# SERVICIO: FAQ
+# =============================================================================
+info "Escribiendo faqService.ts..."
+cat > src/features/faqs/services/faqService.ts << 'FAQ_SVC_EOF'
+import { auth } from "@lib/firebase";
+import type { FAQ, AIContext } from "../types/faqs";
+
+const API = `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}`;
+
+const getToken = async (): Promise<string | null> => {
+  try {
+    return (await auth.currentUser?.getIdToken()) ?? null;
+  } catch {
+    return null;
+  }
+};
+
+export const faqService = {
+  // ── Públicos ─────────────────────────────────────────────────────────────
+  getAll: async (): Promise<FAQ[]> => {
+    const res = await fetch(`${API}/faqs`);
+    if (!res.ok) return [];
+    return res.json();
+  },
+
+  search: async (query: string): Promise<FAQ[]> => {
+    if (!query.trim()) return [];
+    const res = await fetch(`${API}/faqs/search?q=${encodeURIComponent(query)}`);
+    if (!res.ok) return [];
+    return res.json();
+  },
+
+  getTop: async (): Promise<FAQ[]> => {
+    const res = await fetch(`${API}/faqs/top`);
+    if (!res.ok) return [];
+    return res.json();
+  },
+
+  trackUsage: async (faqId: string): Promise<void> => {
+    await fetch(`${API}/faqs/${faqId}/use`, { method: "PATCH" }).catch(() => {});
+  },
+
+  // ── Admin ─────────────────────────────────────────────────────────────────
+  create: async (data: Partial<FAQ>): Promise<FAQ> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/faqs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Error al crear FAQ");
+    return res.json();
+  },
+
+  update: async (id: string, data: Partial<FAQ>): Promise<FAQ> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/faqs/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Error al actualizar FAQ");
+    return res.json();
+  },
+
+  remove: async (id: string): Promise<void> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/faqs/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error("Error al eliminar FAQ");
+  },
+
+  // ── Contexto IA ────────────────────────────────────────────────────────────
+  getAIContext: async (): Promise<AIContext> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/ai/context`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) return { personality: "", institutionalContext: "", rules: [] };
+    return res.json();
+  },
+
+  updateAIContext: async (data: Partial<AIContext>): Promise<AIContext> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/ai/context`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Error al actualizar contexto");
+    return res.json();
+  },
+};
+FAQ_SVC_EOF
+log "faqService.ts escrito"
+
+# =============================================================================
+# SERVICIO: Chatbot
+# =============================================================================
+info "Escribiendo chatbotService.ts..."
+cat > src/features/faqs/services/chatbotService.ts << 'CHAT_SVC_EOF'
+import { auth } from "@lib/firebase";
+import type { ChatResponse } from "../types/faqs";
+
+const API = `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}`;
+
+export const AI_COST = 2; // puntos por consulta IA
+
+const getToken = async (): Promise<string> => {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) throw new Error("Debes iniciar sesión");
+  return token;
+};
+
+export const chatbotService = {
+  // Búsqueda FAQ local (sin IA)
+  searchFAQ: async (query: string): Promise<ChatResponse> => {
+    const res = await fetch(
+      `${API}/faqs/search?q=${encodeURIComponent(query)}`
+    );
+    const faqs = res.ok ? await res.json() : [];
+    if (faqs.length === 0) {
+      return {
+        response: "No encontré una respuesta exacta para tu consulta. Podés activar la IA avanzada para obtener una respuesta más detallada.",
+        isAI: false,
+        suggestions: ["¿Cómo me inscribo?", "¿Dónde están los grupos?", "¿Qué es el SIU?"],
+      };
+    }
+    const top = faqs[0];
+    // Track de uso en background
+    fetch(`${API}/faqs/${top._id}/use`, { method: "PATCH" }).catch(() => {});
+    return { response: top.answer, isAI: false, faqUsed: top };
+  },
+
+  // Consulta IA avanzada (consume puntos)
+  askAI: async (
+    message: string,
+    history: { role: string; parts: { text: string }[] }[]
+  ): Promise<ChatResponse> => {
+    const token = await getToken();
+    const [chatRes, deductRes] = await Promise.allSettled([
+      fetch(`${API}/ai/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ message, history }),
+      }),
+      fetch(`${API}/ai/deduct-points`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ points: AI_COST }),
+      }),
+    ]);
+    if (chatRes.status === "rejected") throw new Error("Error al conectar con la IA");
+    const chatResponse = chatRes.value;
+    if (!chatResponse.ok) {
+      const err = await chatResponse.json().catch(() => ({}));
+      throw new Error((err as any).error || "Error en la IA");
+    }
+    const data = await chatResponse.json();
+    return { response: data.response, isAI: true };
+  },
+
+  getUserPoints: async (): Promise<number> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/users/me/points`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return 0;
+    const data = await res.json();
+    return data.points ?? 0;
+  },
+};
+CHAT_SVC_EOF
+log "chatbotService.ts escrito"
+
+# =============================================================================
+# HOOK: useChatbot
+# =============================================================================
+info "Escribiendo useChatbot.ts..."
+cat > src/features/faqs/hooks/useChatbot.ts << 'HOOK_CHAT_EOF'
+import { useState, useCallback, useRef } from "react";
+import { chatbotService, AI_COST } from "../services/chatbotService";
+import { useAuth } from "@context/AuthContext";
+import type { ChatMessage, ChatMode } from "../types/faqs";
+
+const WELCOME: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  text: "Hola, soy el asistente de ITEC BA. Puedo ayudarte con dudas sobre trámites, inscripciones, grupos, materias y más. También podés activar la IA avanzada para preguntas más complejas.",
+  suggestions: [
+    "¿Cómo me inscribo a materias?",
+    "¿Dónde están los grupos de WhatsApp?",
+    "¿Qué es el SIU Guaraní?",
+    "¿Cuándo son los finales?",
+  ],
+  timestamp: Date.now(),
+};
+
+export const useChatbot = () => {
+  const { user, addPoints } = useAuth();
+  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
+  const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<ChatMode>("faq");
+  const [error, setError] = useState<string | null>(null);
+  const historyRef = useRef<{ role: string; parts: { text: string }[] }[]>([]);
+
+  const canUseAI = (user?.points ?? 0) >= AI_COST;
+
+  const addMsg = (msg: Omit<ChatMessage, "id" | "timestamp">) => {
+    const full: ChatMessage = { ...msg, id: crypto.randomUUID(), timestamp: Date.now() };
+    setMessages(p => [...p, full]);
+    return full;
+  };
+
+  const sendMessage = useCallback(async (text: string) => {
+    if (!text.trim() || loading) return;
+    setError(null);
+
+    // Agregar mensaje del usuario
+    addMsg({ role: "user", text });
+    historyRef.current.push({ role: "user", parts: [{ text }] });
+
+    // Placeholder de carga
+    const loadingId = crypto.randomUUID();
+    setMessages(p => [...p, { id: loadingId, role: "assistant", text: "", isLoading: true, timestamp: Date.now() }]);
+    setLoading(true);
+
+    try {
+      let response;
+      if (mode === "ai") {
+        if (!canUseAI) {
+          throw new Error(`Necesitás al menos ${AI_COST} puntos para usar la IA avanzada.`);
+        }
+        response = await chatbotService.askAI(text, historyRef.current.slice(-10));
+        // Descontar puntos localmente
+        await addPoints(-AI_COST);
+      } else {
+        response = await chatbotService.searchFAQ(text);
+      }
+
+      historyRef.current.push({ role: "model", parts: [{ text: response.response }] });
+
+      setMessages(p =>
+        p.map(m =>
+          m.id === loadingId
+            ? { ...m, text: response.response, isLoading: false, isAI: response.isAI, suggestions: response.suggestions }
+            : m
+        )
+      );
+    } catch (err: any) {
+      setError(err.message ?? "Error desconocido");
+      setMessages(p => p.filter(m => m.id !== loadingId));
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, mode, canUseAI, addPoints]);
+
+  const toggleMode = useCallback(() => {
+    setMode(p => p === "faq" ? "ai" : "faq");
+    setError(null);
+  }, []);
+
+  const clearChat = useCallback(() => {
+    setMessages([WELCOME]);
+    historyRef.current = [];
+    setError(null);
+  }, []);
+
+  return {
+    messages, loading, mode, error, canUseAI,
+    userPoints: user?.points ?? 0,
+    sendMessage, toggleMode, clearChat,
+    AI_COST,
+  };
+};
+HOOK_CHAT_EOF
+log "useChatbot.ts escrito"
+
+# =============================================================================
+# HOOK: useFAQs
+# =============================================================================
+info "Escribiendo useFAQs.ts..."
+cat > src/features/faqs/hooks/useFAQs.ts << 'HOOK_FAQS_EOF'
+import { useState, useEffect, useCallback } from "react";
+import { faqService } from "../services/faqService";
+import type { FAQ, AIContext } from "../types/faqs";
+
+export const useFAQs = () => {
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [topFaqs, setTopFaqs] = useState<FAQ[]>([]);
+  const [aiContext, setAIContext] = useState<AIContext | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [all, top] = await Promise.all([faqService.getAll(), faqService.getTop()]);
+      setFaqs(all);
+      setTopFaqs(top);
+    } catch {
+      setError("Error cargando FAQs");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const loadContext = useCallback(async () => {
+    try {
+      const ctx = await faqService.getAIContext();
+      setAIContext(ctx);
+    } catch {}
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const create = async (data: Partial<FAQ>) => {
+    const faq = await faqService.create(data);
+    setFaqs(p => [faq, ...p]);
+    return faq;
+  };
+
+  const update = async (id: string, data: Partial<FAQ>) => {
+    const updated = await faqService.update(id, data);
+    setFaqs(p => p.map(f => f._id === id ? updated : f));
+    return updated;
+  };
+
+  const remove = async (id: string) => {
+    await faqService.remove(id);
+    setFaqs(p => p.filter(f => f._id !== id));
+  };
+
+  const updateContext = async (data: Partial<AIContext>) => {
+    const ctx = await faqService.updateAIContext(data);
+    setAIContext(ctx);
+    return ctx;
+  };
+
+  return { faqs, topFaqs, aiContext, loading, error, load, loadContext, create, update, remove, updateContext };
+};
+HOOK_FAQS_EOF
+log "useFAQs.ts escrito"
+
+# =============================================================================
+# ÁTOMO: TypingDots
+# =============================================================================
+info "Escribiendo átomos..."
+cat > src/features/faqs/components/atoms/TypingDots.tsx << 'TYPING_EOF'
+import React from "react";
+export const TypingDots: React.FC = () => (
+  <span className="inline-flex items-center gap-1 px-1">
+    {[0,1,2].map(i => (
+      <span key={i} className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce"
+        style={{ animationDelay: `${i * 150}ms`, animationDuration: "0.9s" }} />
+    ))}
+  </span>
 );
+TYPING_EOF
 
-export const ChatInterface: React.FC = () => {
-  const {
-    messages,
-    isTyping,
-    canUseAI,
-    userPoints,
-    isCheckingPoints,
-    handleSendMessage,
-    clearChat,
-  } = useChatbot();
+cat > src/features/faqs/components/atoms/AIBadge.tsx << 'BADGE_EOF'
+import React from "react";
+interface Props { cost: number; active?: boolean }
+export const AIBadge: React.FC<Props> = ({ cost, active = false }) => (
+  <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider transition-colors ${
+    active
+      ? "bg-violet-500/15 border-violet-500/30 text-violet-300"
+      : "bg-white/5 border-white/10 text-white/40"
+  }`}>
+    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+    IA · {cost} pts
+  </span>
+);
+BADGE_EOF
+log "Átomos escritos"
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+# =============================================================================
+# MOLÉCULA: ChatMessage
+# =============================================================================
+info "Escribiendo ChatMessage.tsx..."
+cat > src/features/faqs/components/molecules/ChatMessage.tsx << 'MSG_EOF'
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import { TypingDots } from "../atoms/TypingDots";
+import type { ChatMessage as Msg } from "../../types/faqs";
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+interface Props { msg: Msg }
+
+export const ChatMessage: React.FC<Props> = ({ msg }) => {
+  const isUser = msg.role === "user";
+
+  if (isUser) {
+    return (
+      <div className="flex justify-end mb-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="max-w-[78%] bg-[#1d4ed8] text-white px-4 py-3 rounded-2xl rounded-br-sm text-sm leading-relaxed shadow-lg">
+          {msg.text}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden rounded-none lg:rounded-3xl border-0 lg:border border-itec-border bg-itec-box shadow-glass animate-in fade-in duration-500">
-
-      {/* Glow sutil de fondo */}
-      <div className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-itec-sky/5 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-itec-emerald/5 blur-3xl" />
-
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-itec-border bg-itec-box/80 px-5 py-3.5 backdrop-blur-xl shadow-sm">
-        <div className="flex items-center gap-3">
-          {/* Avatar del bot */}
-          <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-itec-border bg-itec-surface p-1.5">
-            <img
-              src="/logo.png"
-              alt="ITEC Bot"
-              className="h-full w-full object-contain"
-            />
-            {/* Dot "en línea" */}
-            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-itec-box bg-itec-emerald" />
-          </div>
-
-          <div>
-            <h2 className="text-sm font-bold leading-tight text-itec-text">ITEC Bot</h2>
-            <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-itec-emerald">
-              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-itec-emerald" />
-              En línea
-            </p>
-          </div>
-        </div>
-
-        {/* Botón limpiar chat */}
-        <button
-          onClick={clearChat}
-          title="Limpiar chat"
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box2 hover:text-itec-text active:scale-95"
-        >
-          <TrashIcon className="h-4 w-4" />
-        </button>
+    <div className="flex items-start gap-3 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+      {/* Avatar asistente */}
+      <div className="w-8 h-8 rounded-2xl bg-white/8 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/60">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
       </div>
 
-      {/* ── Área de mensajes ─────────────────────────────────────────────── */}
-      <div className="relative z-10 flex flex-1 flex-col gap-5 overflow-y-auto p-4 md:p-5">
+      <div className="flex-1 min-w-0">
+        {msg.isLoading ? (
+          <div className="bg-white/[0.06] border border-white/8 rounded-2xl rounded-tl-sm px-4 py-3">
+            <TypingDots />
+          </div>
+        ) : (
+          <>
+            <div className={`bg-white/[0.06] border rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed text-white/90 ${
+              msg.isAI ? "border-violet-500/20" : "border-white/8"
+            }`}>
+              {msg.isAI && (
+                <div className="flex items-center gap-1.5 mb-2 pb-2 border-b border-white/8">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                  <span className="text-[10px] font-bold text-violet-400 uppercase tracking-wider">IA Avanzada</span>
+                </div>
+              )}
+              <ReactMarkdown
+                components={{
+                  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                  strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                  ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-0.5">{children}</ul>,
+                  li: ({ children }) => <li className="text-white/80">{children}</li>,
+                  a: ({ href, children }) => (
+                    <a href={href} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">{children}</a>
+                  ),
+                }}
+              >
+                {msg.text}
+              </ReactMarkdown>
+            </div>
 
-        {messages.map((msg, index) => (
-          <div key={index} className="flex w-full flex-col">
-            <ChatMessage
-              role={msg.role}
-              text={msg.text}
-              timestamp={msg.timestamp}
-              isAiGenerated={msg.isAiGenerated}
-            />
-
-            {/* Sugerencias dinámicas del bot */}
+            {/* Sugerencias */}
             {msg.suggestions && msg.suggestions.length > 0 && (
-              <div className="ml-10 mt-2 flex flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                {msg.suggestions.map((sug, i) => (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {msg.suggestions.map((s, i) => (
                   <button
                     key={i}
-                    onClick={() => handleSendMessage(sug)}
-                    className={cn(
-                      "rounded-xl border border-itec-sky/20 bg-itec-sky/10 px-3 py-1.5 text-xs font-medium text-itec-sky",
-                      "transition-all hover:bg-itec-sky/20 hover:border-itec-sky/40 active:scale-95"
-                    )}
+                    className="text-[11px] text-white/50 bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/15 px-3 py-1 rounded-full transition-all active:scale-95"
+                    onClick={() => {
+                      const input = document.getElementById("chat-input") as HTMLInputElement;
+                      if (input) { input.value = s; input.focus(); }
+                    }}
                   >
-                    {sug}
+                    {s}
                   </button>
                 ))}
               </div>
             )}
-          </div>
-        ))}
-
-        {/* Sugerencias iniciales (primer mensaje) */}
-        {messages.length === 1 && (
-          <div className="flex flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {INITIAL_SUGGESTIONS.map((sug, i) => (
-              <button
-                key={i}
-                onClick={() => handleSendMessage(sug)}
-                className={cn(
-                  "rounded-2xl border border-itec-border bg-itec-surface/60 px-4 py-2.5 text-xs font-medium text-itec-muted",
-                  "transition-all hover:border-itec-sky/30 hover:bg-itec-sky/10 hover:text-itec-sky active:scale-95"
-                )}
-              >
-                {sug}
-              </button>
-            ))}
-          </div>
+          </>
         )}
-
-        {/* Typing indicator */}
-        {isTyping && (
-          <div className="flex w-full animate-in fade-in duration-200 justify-start">
-            <div className="flex items-end gap-2">
-              <div className="mb-1 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-itec-border bg-itec-surface p-1.5">
-                <img src="/logo.png" alt="Bot" className="h-full w-full object-contain" />
-              </div>
-              <div className="flex h-10 items-center gap-1.5 rounded-2xl rounded-bl-sm border border-itec-border bg-itec-box px-4 py-3">
-                {[0, 150, 300].map((delay) => (
-                  <span
-                    key={delay}
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-itec-sky/60"
-                    style={{ animationDelay: `${delay}ms` }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} className="h-1" />
       </div>
-
-      {/* ── Input ─────────────────────────────────────────────────────────── */}
-      <ChatInput
-        onSendMessage={handleSendMessage}
-        disabled={isTyping}
-        canUseAI={canUseAI}
-        userPoints={userPoints}
-        isCheckingPoints={isCheckingPoints}
-      />
     </div>
   );
 };
-HEREDOC
-ok "ChatInterface.tsx patched"
-
+MSG_EOF
+log "ChatMessage.tsx escrito"
 
 # =============================================================================
-# 7. src/features/faqs/components/organisms/ImportantDatesWidget.tsx
-#    FIXES:
-#    - Emoji 📅 → Icons type="bell" (o calendar SVG inline)
-#    - bg-orange-500/20 text-orange-500 → itec-amber tone-on-tone
-#    - bg-gray-500 group-hover:bg-orange-400 → itec-muted / itec-amber
-#    - bg-itec-gray → bg-itec-surface/60
-#    - Botón Agregar: tone-on-tone itec-amber
-#    - border-itec-gray → border-itec-border
-#    - text-itec-text typos corregidos (queda sin espacio en original)
+# MOLÉCULA: ChatInput
 # =============================================================================
-info "Patching: ImportantDatesWidget.tsx"
-cat > src/features/faqs/components/organisms/ImportantDatesWidget.tsx << 'HEREDOC'
-// src/features/faqs/components/organisms/ImportantDatesWidget.tsx
-import React, { useState, Suspense, useMemo } from "react";
-import { Icons } from "@/components/ui/icons/Icons";
-import { cn } from "@/lib/utils";
-
-const AddDateModal = React.lazy(() =>
-  import("./AddDateModal").then((m) => ({ default: m.AddDateModal }))
-);
-
-export interface ImportantDate {
-  id: string;
-  title: string;
-  date: string;
-  description: string;
-  expiryDate?: string;
-}
+info "Escribiendo ChatInput.tsx..."
+cat > src/features/faqs/components/molecules/ChatInput.tsx << 'INPUT_EOF'
+import React, { useState, useRef, useEffect } from "react";
 
 interface Props {
-  isAdmin: boolean;
+  onSend: (text: string) => void;
+  loading: boolean;
+  placeholder?: string;
 }
 
-// SVG Calendar inline
-const CalendarIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-    strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
+export const ChatInput: React.FC<Props> = ({ onSend, loading, placeholder }) => {
+  const [value, setValue] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-export const ImportantDatesWidget: React.FC<Props> = ({ isAdmin }) => {
-  const [dates, setDates] = useState<ImportantDate[]>([
-    {
-      id: "1",
-      title: "Inscripción a Cursada",
-      date: "15 al 20 de Marzo",
-      description: "A través del sistema SIGA.",
-      expiryDate: "2026-03-21T00:00:00",
-    },
-    {
-      id: "2",
-      title: "Inicio 1er Cuatrimestre",
-      date: "25 de Marzo",
-      description: "Comienzo oficial de clases.",
-      expiryDate: "2026-03-26T00:00:00",
-    },
-    {
-      id: "3",
-      title: "Exámenes Finales",
-      date: "10 de Julio",
-      description: "Turno de julio. Anotarse 48hs antes.",
-      expiryDate: "2026-07-15T00:00:00",
-    },
-  ]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Auto-resize textarea
+  useEffect(() => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    ta.style.height = "auto";
+    ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`;
+  }, [value]);
 
-  const activeDates = useMemo(() => {
-    const now = new Date().getTime();
-    return dates.filter((item) => {
-      if (!item.expiryDate) return true;
-      return new Date(item.expiryDate).getTime() > now;
-    });
-  }, [dates]);
+  const submit = () => {
+    const trimmed = value.trim();
+    if (!trimmed || loading) return;
+    onSend(trimmed);
+    setValue("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
+  };
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-itec-border bg-itec-box p-6 shadow-glass h-full animate-in fade-in duration-500">
-      {/* Glow sutil */}
-      <div className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-itec-amber/5 blur-3xl" />
-
-      <div className="relative z-10 mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-itec-amber/20 bg-itec-amber/10 text-itec-amber">
-            <CalendarIcon className="h-4 w-4" />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-              Académico
-            </p>
-            <h2 className="text-sm font-bold tracking-tight text-itec-text">
-              Calendario
-            </h2>
-          </div>
-        </div>
-
-        {isAdmin && (
-          <button
-            onClick={() => setIsModalOpen(true)}
-            title="Agregar fecha"
-            className={cn(
-              "flex items-center gap-1.5 rounded-xl border border-itec-amber/20 bg-itec-amber/10 px-3 py-1.5",
-              "text-xs font-bold text-itec-amber transition-all",
-              "hover:bg-itec-amber/20 hover:border-itec-amber/40 active:scale-95"
-            )}
-          >
-            <Icons type="plus" className="h-3.5 w-3.5" />
-            Agregar
-          </button>
+    <div className="relative flex items-end gap-2 bg-white/[0.06] border border-white/10 rounded-3xl px-4 py-3 focus-within:border-white/20 transition-all shadow-lg">
+      <textarea
+        id="chat-input"
+        ref={textareaRef}
+        rows={1}
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+        }}
+        placeholder={placeholder ?? "Preguntá lo que quieras..."}
+        className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 resize-none outline-none leading-relaxed min-h-[22px] max-h-[120px]"
+        disabled={loading}
+      />
+      <button
+        onClick={submit}
+        disabled={!value.trim() || loading}
+        className="w-8 h-8 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-white/18 disabled:opacity-30 transition-all active:scale-90 shrink-0"
+      >
+        {loading ? (
+          <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-white -rotate-90 translate-x-px">
+            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         )}
+      </button>
+    </div>
+  );
+};
+INPUT_EOF
+log "ChatInput.tsx escrito"
+
+# =============================================================================
+# ORGANISMO: FAQSuggestions (pantalla inicial)
+# =============================================================================
+info "Escribiendo FAQSuggestions.tsx..."
+cat > src/features/faqs/components/organisms/FAQSuggestions.tsx << 'SUGG_EOF'
+import React from "react";
+import type { FAQ } from "../../types/faqs";
+
+interface Props {
+  topFaqs: FAQ[];
+  loading: boolean;
+  onSelect: (text: string) => void;
+}
+
+const STATIC_SUGGESTIONS = [
+  { category: "Académico", questions: ["¿Cómo me inscribo a materias?", "¿Cuándo son las fechas de finales?"] },
+  { category: "Trámites", questions: ["¿Cómo pido un certificado?", "¿Cómo accedo al SIU Guaraní?"] },
+  { category: "Campus", questions: ["¿Dónde están las aulas?", "¿Cómo entro a las aulas virtuales?"] },
+];
+
+export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) => {
+  const suggestions = topFaqs.length > 0
+    ? topFaqs.slice(0, 6).map(f => f.question)
+    : STATIC_SUGGESTIONS.flatMap(s => s.questions).slice(0, 6);
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full px-4 pb-4 pt-8 animate-in fade-in duration-300">
+      {/* Logo / Avatar IA */}
+      <div className="relative mb-8">
+        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-600/30 to-indigo-600/20 border border-white/10 flex items-center justify-center shadow-[0_0_40px_rgba(139,92,246,0.15)]">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" className="text-violet-300">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
       </div>
 
-      {activeDates.length > 0 ? (
-        <div className="relative z-10 ml-3 space-y-6 border-l border-itec-border/50 pb-2">
-          {activeDates.map((item, index) => (
-            <div key={item.id} className="group relative pl-5">
-              {/* Dot en la línea de tiempo */}
-              <span
-                className={cn(
-                  "absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-itec-box transition-all",
-                  index === 0
-                    ? "bg-itec-amber shadow-[0_0_10px_rgba(245,158,11,0.5)]"
-                    : "bg-itec-muted/40 group-hover:bg-itec-amber/60"
-                )}
-              />
+      <h2 className="text-xl font-bold text-white tracking-tight mb-1">Asistente ITEC</h2>
+      <p className="text-sm text-white/40 text-center max-w-xs mb-8">
+        Preguntas sobre UTN FRBA, trámites, grupos y más.
+      </p>
 
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-itec-amber">
-                {item.date}
-              </p>
-              <h3 className="mb-1.5 text-sm font-bold leading-snug text-itec-text">
-                {item.title}
-              </h3>
-              {item.description && (
-                <p className="rounded-xl border border-itec-border/40 bg-itec-surface/50 p-2.5 text-xs leading-relaxed text-itec-muted">
-                  {item.description}
-                </p>
-              )}
-            </div>
+      {/* Sugerencias */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-lg">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-12 bg-white/5 rounded-2xl animate-pulse" />
           ))}
         </div>
       ) : (
-        <div className="relative z-10 rounded-2xl border border-dashed border-itec-border bg-itec-surface/30 py-10 text-center">
-          <p className="text-sm text-itec-muted">No hay fechas próximas vigentes.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-lg">
+          {suggestions.map((q, i) => (
+            <button
+              key={i}
+              onClick={() => onSelect(q)}
+              className="group flex items-center gap-3 text-left bg-white/[0.05] hover:bg-white/[0.09] border border-white/8 hover:border-white/15 rounded-2xl px-4 py-3 transition-all active:scale-[0.98] duration-150"
+            >
+              <div className="w-7 h-7 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/40">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <span className="text-sm text-white/70 group-hover:text-white/90 transition-colors leading-snug line-clamp-2">{q}</span>
+            </button>
+          ))}
         </div>
       )}
-
-      {isAdmin && isModalOpen && (
-        <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" />}>
-          <AddDateModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onAdd={(newDate) => setDates((prev) => [...prev, newDate])}
-          />
-        </Suspense>
-      )}
-    </section>
+    </div>
   );
 };
-HEREDOC
-ok "ImportantDatesWidget.tsx patched"
-
+SUGG_EOF
+log "FAQSuggestions.tsx escrito"
 
 # =============================================================================
-# 8. src/features/faqs/components/organisms/AddDateModal.tsx
-#    FIXES:
-#    - bg-black/90 → bg-black/70 backdrop-blur-md (glassmorphism)
-#    - rounded-2xl → rounded-t-4xl sm:rounded-3xl (bottom-sheet en mobile)
-#    - animate-in slide-in-from-bottom (bottom-sheet)
-#    - border-itec-gray → border-itec-border
-#    - text-gray-500 → text-itec-muted
-#    - Glow sutil de fondo
-#    - Typos corregidos
+# ORGANISMO: FAQAdminPanel
 # =============================================================================
-info "Patching: AddDateModal.tsx"
-cat > src/features/faqs/components/organisms/AddDateModal.tsx << 'HEREDOC'
-// src/features/faqs/components/organisms/AddDateModal.tsx
-import React, { useState } from "react";
-import { Icons } from "@/components/ui/icons/Icons";
-import { Input } from "@/components/ui/Input";
-import { Button } from "@components/ui/Button";
-import type { ImportantDate } from "./ImportantDatesWidget";
+info "Escribiendo FAQAdminPanel.tsx..."
+cat > src/features/faqs/components/organisms/FAQAdminPanel.tsx << 'ADMIN_EOF'
+import React, { useState, useEffect } from "react";
+import { useFAQs } from "../../hooks/useFAQs";
+import type { FAQ, AIContext } from "../../types/faqs";
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  onAdd: (newDate: ImportantDate) => void;
-}
+interface Props { isOpen: boolean; onClose: () => void }
 
-export const AddDateModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
-  const [title, setTitle]             = useState("");
-  const [date, setDate]               = useState("");
-  const [description, setDescription] = useState("");
+type Tab = "faqs" | "context";
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title || !date) return;
+const EMPTY_FAQ: Partial<FAQ> = { question: "", answer: "", keywords: [], category: "general", isActive: true };
 
-    // TODO: Reemplazar con llamado a API (ej: datesService.createDate(...))
-    const newDate: ImportantDate = {
-      id: Date.now().toString(),
-      title,
-      date,
-      description,
-    };
-    onAdd(newDate);
-    onClose();
-  };
+export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
+  const { faqs, aiContext, loading, load, loadContext, create, update, remove, updateContext } = useFAQs();
+  const [tab, setTab] = useState<Tab>("faqs");
+  const [editing, setEditing] = useState<Partial<FAQ> | null>(null);
+  const [form, setForm] = useState<Partial<FAQ>>(EMPTY_FAQ);
+  const [ctxForm, setCtxForm] = useState<Partial<AIContext>>({});
+  const [saving, setSaving] = useState(false);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (isOpen) { load(); loadContext(); }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (aiContext) setCtxForm({ personality: aiContext.personality, institutionalContext: aiContext.institutionalContext, rules: aiContext.rules });
+  }, [aiContext]);
 
   if (!isOpen) return null;
 
+  const startEdit = (faq: FAQ) => { setEditing(faq); setForm(faq); };
+  const cancelEdit = () => { setEditing(null); setForm(EMPTY_FAQ); };
+
+  const handleSaveFAQ = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      if (editing?._id) await update(editing._id, form);
+      else await create(form);
+      cancelEdit();
+    } catch (err: any) { alert(err.message); }
+    finally { setSaving(false); }
+  };
+
+  const handleDeleteFAQ = async (id: string) => {
+    if (!confirm("¿Eliminar esta FAQ?")) return;
+    await remove(id).catch(e => alert(e.message));
+  };
+
+  const handleSaveContext = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try { await updateContext(ctxForm); }
+    catch (err: any) { alert(err.message); }
+    finally { setSaving(false); }
+  };
+
+  const filtered = faqs.filter(f =>
+    f.question.toLowerCase().includes(search.toLowerCase()) ||
+    f.category.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const inputCls = "w-full bg-white/5 border border-white/10 text-white text-sm px-3 py-2.5 rounded-xl outline-none focus:border-white/25 transition-colors placeholder:text-white/25";
+  const labelCls = "block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5";
+
   return (
-    /* Backdrop con blur */
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md p-0 sm:p-4">
-
-      {/* Panel — bottom-sheet en mobile, modal en sm+ */}
-      <div className="relative w-full sm:max-w-md overflow-hidden rounded-t-4xl sm:rounded-3xl border border-itec-border bg-itec-box p-6 shadow-glass animate-in slide-in-from-bottom duration-300 sm:zoom-in-95">
-        {/* Glow */}
-        <div className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full bg-itec-amber/5 blur-3xl" />
-
-        {/* Handle (solo mobile) */}
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-itec-border sm:hidden" />
-
+    <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md">
+      <div className="w-full sm:max-w-3xl bg-[#111113] border border-white/10 rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:zoom-in-95 duration-300">
         {/* Header */}
-        <div className="relative z-10 mb-5 flex items-start justify-between">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06] shrink-0">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-              Calendario
-            </p>
-            <h2 className="mt-1 text-lg font-bold tracking-tight text-itec-text">
-              Agregar Fecha
-            </h2>
-            <p className="mt-1 text-xs text-itec-muted">
-              Será visible para todos los estudiantes.
-            </p>
+            <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Admin</p>
+            <h2 className="text-base font-bold text-white mt-0.5">Panel de FAQs</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box2 hover:text-itec-text active:scale-95"
-          >
-            <Icons type="close" className="h-4 w-4" />
+          <button onClick={onClose} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round"/></svg>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="relative z-10 space-y-4">
-          <div>
-            <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-              Título del Evento
-            </label>
-            <Input
-              fullWidth
-              placeholder="Ej: Exámenes Finales"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-              Día / Rango
-            </label>
-            <Input
-              fullWidth
-              placeholder="Ej: 10 al 15 de Diciembre"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-              Descripción breve
-            </label>
-            <Input
-              fullWidth
-              placeholder="Anotarse por SIGA..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+        {/* Tabs */}
+        <div className="flex gap-1 px-6 pt-4 shrink-0">
+          {(["faqs", "context"] as Tab[]).map(t => (
+            <button key={t} onClick={() => setTab(t)}
+              className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition-all ${
+                tab === t ? "bg-white/10 text-white" : "text-white/40 hover:text-white hover:bg-white/5"
+              }`}>
+              {t === "faqs" ? `FAQs (${faqs.length})` : "Contexto IA"}
+            </button>
+          ))}
+        </div>
 
-          <div className="flex justify-end gap-3 border-t border-itec-border pt-4">
-            <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button type="submit" variant="warning" hierarchy="solid">
-              Guardar Fecha
-            </Button>
-          </div>
-        </form>
+        {/* Contenido scrollable */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {tab === "faqs" ? (
+            <>
+              {/* Formulario */}
+              <div className="bg-white/[0.04] border border-white/8 rounded-2xl p-5">
+                <h3 className="text-sm font-bold text-white mb-4">{editing ? "Editar FAQ" : "Nueva FAQ"}</h3>
+                <form onSubmit={handleSaveFAQ} className="space-y-3">
+                  <div>
+                    <label className={labelCls}>Pregunta *</label>
+                    <input required className={inputCls} placeholder="¿Cómo...?" value={form.question ?? ""} onChange={e => setForm(p => ({ ...p, question: e.target.value }))} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Respuesta *</label>
+                    <textarea required rows={3} className={`${inputCls} resize-none`} placeholder="La respuesta..." value={form.answer ?? ""} onChange={e => setForm(p => ({ ...p, answer: e.target.value }))} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className={labelCls}>Categoría</label>
+                      <input className={inputCls} placeholder="general" value={form.category ?? ""} onChange={e => setForm(p => ({ ...p, category: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Keywords (coma)</label>
+                      <input className={inputCls} placeholder="inscripcion, siu..." value={(form.keywords ?? []).join(", ")}
+                        onChange={e => setForm(p => ({ ...p, keywords: e.target.value.split(",").map(k => k.trim()).filter(Boolean) }))} />
+                    </div>
+                  </div>
+                  <div className="flex gap-2 pt-1">
+                    {editing && <button type="button" onClick={cancelEdit} className="px-4 py-2 rounded-xl text-xs font-bold bg-white/5 text-white/50 hover:text-white transition-colors">Cancelar</button>}
+                    <button type="submit" disabled={saving} className="flex-1 py-2 rounded-xl text-xs font-bold bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-50">
+                      {saving ? "Guardando..." : editing ? "Actualizar" : "Agregar FAQ"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Buscador */}
+              <input className={`${inputCls} !py-2`} placeholder="Buscar FAQ..." value={search} onChange={e => setSearch(e.target.value)} />
+
+              {/* Lista */}
+              {loading ? (
+                <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-16 bg-white/5 rounded-xl animate-pulse" />)}</div>
+              ) : (
+                <div className="space-y-2">
+                  {filtered.map(faq => (
+                    <div key={faq._id} className="group bg-white/[0.03] border border-white/8 rounded-xl p-4 flex items-start gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white truncate">{faq.question}</p>
+                        <p className="text-xs text-white/40 truncate mt-0.5">{faq.answer}</p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <span className="text-[10px] text-white/30 bg-white/5 px-2 py-0.5 rounded">{faq.category}</span>
+                          <span className="text-[10px] text-white/30">↑ {faq.popularity ?? 0}</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                        <button onClick={() => startEdit(faq)} className="w-7 h-7 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center hover:bg-blue-500/25 transition-colors">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button onClick={() => handleDeleteFAQ(faq._id)} className="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center hover:bg-red-500/20 transition-colors">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {filtered.length === 0 && <p className="text-center py-8 text-sm text-white/30">No hay FAQs.</p>}
+                </div>
+              )}
+            </>
+          ) : (
+            <form onSubmit={handleSaveContext} className="space-y-4">
+              <div>
+                <label className={labelCls}>Personalidad del asistente</label>
+                <textarea rows={3} className={`${inputCls} resize-none`} placeholder="Soy el asistente de ITEC BA..."
+                  value={ctxForm.personality ?? ""} onChange={e => setCtxForm(p => ({ ...p, personality: e.target.value }))} />
+              </div>
+              <div>
+                <label className={labelCls}>Contexto institucional</label>
+                <textarea rows={5} className={`${inputCls} resize-none`} placeholder="UTN FRBA es..."
+                  value={ctxForm.institutionalContext ?? ""} onChange={e => setCtxForm(p => ({ ...p, institutionalContext: e.target.value }))} />
+              </div>
+              <div>
+                <label className={labelCls}>Reglas (una por línea)</label>
+                <textarea rows={4} className={`${inputCls} resize-none`} placeholder="Responde solo sobre temas de UTN..."
+                  value={(ctxForm.rules ?? []).join("\n")} onChange={e => setCtxForm(p => ({ ...p, rules: e.target.value.split("\n").filter(Boolean) }))} />
+              </div>
+              <button type="submit" disabled={saving} className="w-full py-3 rounded-2xl text-sm font-bold bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-50">
+                {saving ? "Guardando..." : "Guardar contexto"}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );
 };
-HEREDOC
-ok "AddDateModal.tsx patched"
-
+ADMIN_EOF
+log "FAQAdminPanel.tsx escrito"
 
 # =============================================================================
-# 9. BACKEND: src/modules/ais/ai.routes.js
-#    FIXES:
-#    - Agrega endpoint POST /api/ai/deduct-points para descontar puntos
-#      con verifyToken (user propio puede hacerlo)
-#    - El usuario puede descontarse sus propios puntos (no requiere admin)
+# ORGANISMO PRINCIPAL: ChatInterface
 # =============================================================================
-info "Patching backend: ai.routes.js"
-# Comprueba si existe el directorio backend
+info "Escribiendo ChatInterface.tsx..."
+cat > src/features/faqs/components/organisms/ChatInterface.tsx << 'CHAT_EOF'
+import React, { useEffect, useRef, useState } from "react";
+import { useChatbot } from "../../hooks/useChatbot";
+import { useFAQs } from "../../hooks/useFAQs";
+import { ChatMessage } from "../molecules/ChatMessage";
+import { ChatInput } from "../molecules/ChatInput";
+import { FAQSuggestions } from "./FAQSuggestions";
+import { FAQAdminPanel } from "./FAQAdminPanel";
+import { AIBadge } from "../atoms/AIBadge";
+import { useAuth } from "@context/AuthContext";
+
+export const ChatInterface: React.FC = () => {
+  const { messages, loading, mode, error, canUseAI, userPoints, sendMessage, toggleMode, clearChat, AI_COST } = useChatbot();
+  const { topFaqs, loading: faqsLoading } = useFAQs();
+  const { isAdmin } = useAuth();
+  const [adminOpen, setAdminOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const hasConversation = messages.length > 1;
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages]);
+
+  return (
+    <div className="flex flex-col h-dvh bg-[#0c0c0e] overflow-hidden">
+      {/* Header */}
+      <header className="shrink-0 flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-[#0c0c0e]/90 backdrop-blur-xl">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-2xl bg-gradient-to-br from-violet-600/40 to-indigo-600/30 border border-white/10 flex items-center justify-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-violet-300">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-white leading-none">Asistente ITEC</p>
+            <p className="text-[10px] text-emerald-400 mt-0.5">En línea</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {/* Puntos */}
+          {userPoints > 0 && (
+            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-amber-300 bg-amber-300/10 border border-amber-300/20 px-2.5 py-1 rounded-full">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>
+              {userPoints} pts
+            </span>
+          )}
+
+          {/* Limpiar chat */}
+          {hasConversation && (
+            <button onClick={clearChat} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors" title="Nueva conversación">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.87"/></svg>
+            </button>
+          )}
+
+          {/* Admin */}
+          {isAdmin && (
+            <button onClick={() => setAdminOpen(true)} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors" title="Admin FAQs">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+          )}
+        </div>
+      </header>
+
+      {/* Cuerpo de mensajes */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
+        {!hasConversation ? (
+          <FAQSuggestions topFaqs={topFaqs} loading={faqsLoading} onSelect={sendMessage} />
+        ) : (
+          <div className="px-4 py-4 max-w-2xl mx-auto w-full">
+            {messages.map(msg => <ChatMessage key={msg.id} msg={msg} />)}
+          </div>
+        )}
+      </div>
+
+      {/* Barra inferior */}
+      <div className="shrink-0 border-t border-white/[0.06] bg-[#0c0c0e]/90 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] px-4 py-3">
+        <div className="max-w-2xl mx-auto space-y-2">
+          {/* Toggle IA */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={toggleMode}
+              disabled={!canUseAI && mode === "faq"}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 ${
+                mode === "ai"
+                  ? "bg-violet-500/20 border-violet-500/40 text-violet-300"
+                  : canUseAI
+                  ? "bg-white/5 border-white/10 text-white/50 hover:border-white/20 hover:text-white/70"
+                  : "bg-white/3 border-white/5 text-white/20 cursor-not-allowed"
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${mode === "ai" ? "bg-violet-400 animate-pulse" : "bg-white/20"}`} />
+              {mode === "ai" ? "IA Activa" : "Activar IA"}
+              <AIBadge cost={AI_COST} active={mode === "ai"} />
+            </button>
+            {!canUseAI && (
+              <p className="text-[10px] text-white/25">Necesitás {AI_COST} pts para usar la IA</p>
+            )}
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-300 text-xs px-3 py-2 rounded-xl">
+              {error}
+            </div>
+          )}
+
+          {/* Input */}
+          <ChatInput
+            onSend={sendMessage}
+            loading={loading}
+            placeholder={mode === "ai" ? "Preguntale a la IA..." : "Buscá entre las FAQs..."}
+          />
+        </div>
+      </div>
+
+      {/* Modal admin */}
+      {isAdmin && <FAQAdminPanel isOpen={adminOpen} onClose={() => setAdminOpen(false)} />}
+    </div>
+  );
+};
+CHAT_EOF
+log "ChatInterface.tsx escrito"
+
+# =============================================================================
+# PAGE: FaqsPage.tsx
+# =============================================================================
+info "Actualizando FaqsPage.tsx..."
+cat > src/pages/FaqsPage.tsx << 'PAGE_EOF'
+import React from "react";
+import { ChatInterface } from "@features/faqs/components/organisms/ChatInterface";
+import { usePageTitle } from "@hooks/usePageTitle";
+
+export const FaqsPage: React.FC = () => {
+  usePageTitle("Asistente ITEC");
+  return <ChatInterface />;
+};
+PAGE_EOF
+log "FaqsPage.tsx actualizado"
+
+# =============================================================================
+# BACKEND — Schemas y módulos
+# =============================================================================
 BACKEND_DIR=""
-if   [ -d "../itecba-backend/src/modules/ais" ]; then BACKEND_DIR="../itecba-backend"
-elif [ -d "../../itecba-backend/src/modules/ais" ]; then BACKEND_DIR="../../itecba-backend"
-elif [ -d "./src/modules/ais" ]; then BACKEND_DIR="."
+for d in "../itecba-backend" "../backend" "../../itecba-backend"; do
+  if [ -d "$d" ]; then BACKEND_DIR="$d"; break; fi
+done
+
+if [ -z "$BACKEND_DIR" ]; then
+  warn "Backend no encontrado automáticamente. Generando código backend en ./backend-faqs-output/ para copiar manualmente."
+  BACKEND_DIR="./backend-faqs-output"
 fi
 
-if [ -n "$BACKEND_DIR" ]; then
-  cat > "$BACKEND_DIR/src/modules/ais/ai.routes.js" << 'BACKENDEOF'
-import { Router }      from "express";
-import { body }        from "express-validator";
-import { validate }    from "../../middlewares/validate.js";
-import { verifyToken } from "../../middlewares/authMiddleware.js";
-import { generateAIResponse } from "./ai.service.js";
-import { dbFirebase }  from "../../config/firebase-admin.js";
+mkdir -p "${BACKEND_DIR}/modules/faq" "${BACKEND_DIR}/modules/ai"
+info "Escribiendo archivos de backend en: ${BACKEND_DIR}"
 
-const router = Router();
+# ── FAQ Model ──────────────────────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/faq/faq.model.js" << 'MODEL_EOF'
+const mongoose = require("mongoose");
 
-/* ── POST /api/ai/chat ─────────────────────────────────────────────────────
-   Genera respuesta de IA. Requiere token (verifyToken).
-   El frontend ya descontó los puntos antes de llamar este endpoint.
-─────────────────────────────────────────────────────────────────────────── */
-router.post(
-  "/chat",
-  verifyToken,
-  [
-    body("message")
-      .trim()
-      .notEmpty().withMessage("El mensaje no puede estar vacío")
-      .isLength({ max: 2000 }).withMessage("Mensaje demasiado largo (máx. 2000 caracteres)"),
-    body("history")
-      .optional()
-      .isArray({ max: 20 }).withMessage("Historial inválido"),
-  ],
-  validate,
-  async (req, res, next) => {
+const faqSchema = new mongoose.Schema(
+  {
+    question: { type: String, required: true, trim: true },
+    answer:   { type: String, required: true },
+    keywords: [{ type: String, lowercase: true, trim: true }],
+    category: { type: String, default: "general", lowercase: true },
+    popularity: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
+    createdBy: { type: String },
+  },
+  { timestamps: true }
+);
+
+// Índice de texto para búsqueda
+faqSchema.index({ question: "text", answer: "text", keywords: "text" });
+
+module.exports = mongoose.model("FAQ", faqSchema);
+MODEL_EOF
+
+# ── AI Context Model ───────────────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/ai/aiContext.model.js" << 'CTX_MODEL_EOF'
+const mongoose = require("mongoose");
+
+const aiContextSchema = new mongoose.Schema(
+  {
+    personality: { type: String, default: "Soy el asistente de ITEC BA, una plataforma estudiantil de la UTN Buenos Aires." },
+    institutionalContext: { type: String, default: "UTN FRBA es la Facultad Regional Buenos Aires de la Universidad Tecnológica Nacional." },
+    rules: [{ type: String }],
+    singleton: { type: Boolean, default: true, unique: true },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("AIContext", aiContextSchema);
+CTX_MODEL_EOF
+
+# ── FAQ Service ────────────────────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/faq/faq.service.js" << 'FAQ_SVC_JS_EOF'
+const FAQ = require("./faq.model");
+
+const faqService = {
+  getAll: () => FAQ.find({ isActive: true }).sort({ popularity: -1, createdAt: -1 }),
+
+  search: async (query) => {
+    if (!query?.trim()) return [];
+    const q = query.toLowerCase().trim();
+    // Búsqueda por texto completo + fallback por keywords
+    const byText = await FAQ.find(
+      { $text: { $search: q }, isActive: true },
+      { score: { $meta: "textScore" } }
+    ).sort({ score: { $meta: "textScore" } }).limit(5);
+
+    if (byText.length > 0) return byText;
+
+    // Fallback: búsqueda parcial
+    return FAQ.find({
+      isActive: true,
+      $or: [
+        { question: { $regex: q, $options: "i" } },
+        { answer:   { $regex: q, $options: "i" } },
+        { keywords: { $in: [new RegExp(q, "i")] } },
+      ],
+    }).limit(5);
+  },
+
+  getTop: () => FAQ.find({ isActive: true }).sort({ popularity: -1 }).limit(8),
+
+  create: (data, createdBy) =>
+    FAQ.create({ ...data, keywords: data.keywords?.map(k => k.toLowerCase().trim()) ?? [], createdBy }),
+
+  update: (id, data) =>
+    FAQ.findByIdAndUpdate(id, { ...data }, { new: true, runValidators: true }),
+
+  delete: (id) => FAQ.findByIdAndDelete(id),
+
+  incrementPopularity: (id) => FAQ.findByIdAndUpdate(id, { $inc: { popularity: 1 } }),
+
+  getUnanswered: async () => {
+    // Placeholder: en producción se guardarían las búsquedas sin respuesta en una colección separada
+    return [];
+  },
+};
+
+module.exports = faqService;
+FAQ_SVC_JS_EOF
+
+# ── FAQ Controller ─────────────────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/faq/faq.controller.js" << 'FAQ_CTRL_EOF'
+const faqService = require("./faq.service");
+
+const faqController = {
+  getAll: async (req, res) => {
+    try {
+      const faqs = await faqService.getAll();
+      res.json(faqs);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  },
+
+  search: async (req, res) => {
+    try {
+      const results = await faqService.search(req.query.q);
+      res.json(results);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  },
+
+  getTop: async (req, res) => {
+    try { res.json(await faqService.getTop()); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  },
+
+  create: async (req, res) => {
+    try {
+      const faq = await faqService.create(req.body, req.user?.uid);
+      res.status(201).json(faq);
+    } catch (e) { res.status(400).json({ error: e.message }); }
+  },
+
+  update: async (req, res) => {
+    try {
+      const faq = await faqService.update(req.params.id, req.body);
+      if (!faq) return res.status(404).json({ error: "FAQ no encontrada" });
+      res.json(faq);
+    } catch (e) { res.status(400).json({ error: e.message }); }
+  },
+
+  delete: async (req, res) => {
+    try {
+      await faqService.delete(req.params.id);
+      res.json({ message: "FAQ eliminada" });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  },
+
+  trackUse: async (req, res) => {
+    try {
+      await faqService.incrementPopularity(req.params.id);
+      res.json({ ok: true });
+    } catch { res.json({ ok: false }); }
+  },
+};
+
+module.exports = faqController;
+FAQ_CTRL_EOF
+
+# ── FAQ Routes ─────────────────────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/faq/faq.routes.js" << 'FAQ_ROUTES_EOF'
+const router = require("express").Router();
+const ctrl = require("./faq.controller");
+const { verifyFirebaseToken, requireAdmin } = require("../../middleware/auth");
+
+// Públicas
+router.get("/",        ctrl.getAll);
+router.get("/search",  ctrl.search);
+router.get("/top",     ctrl.getTop);
+router.patch("/:id/use", ctrl.trackUse);
+
+// Admin
+router.post("/",       verifyFirebaseToken, requireAdmin, ctrl.create);
+router.patch("/:id",   verifyFirebaseToken, requireAdmin, ctrl.update);
+router.delete("/:id",  verifyFirebaseToken, requireAdmin, ctrl.delete);
+
+module.exports = router;
+FAQ_ROUTES_EOF
+
+# ── AI Service (refactorizado) ─────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/ai/ai.service.js" << 'AI_SVC_EOF'
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const AIContext = require("./aiContext.model");
+const FAQ = require("../faq/faq.model");
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+
+const aiService = {
+  getContext: async () => {
+    let ctx = await AIContext.findOne({ singleton: true });
+    if (!ctx) ctx = await AIContext.create({ singleton: true });
+    return ctx;
+  },
+
+  updateContext: async (data) => {
+    const ctx = await AIContext.findOneAndUpdate(
+      { singleton: true },
+      { $set: data },
+      { new: true, upsert: true }
+    );
+    return ctx;
+  },
+
+  buildSystemPrompt: async () => {
+    const ctx = await aiService.getContext();
+    const topFaqs = await FAQ.find({ isActive: true }).sort({ popularity: -1 }).limit(15);
+
+    const faqSection = topFaqs.length > 0
+      ? `\n\nPREGUNTAS FRECUENTES DE LA PLATAFORMA:\n${topFaqs.map(f => `P: ${f.question}\nR: ${f.answer}`).join("\n\n")}`
+      : "";
+
+    const rulesSection = ctx.rules?.length > 0
+      ? `\n\nREGLAS:\n${ctx.rules.map((r, i) => `${i + 1}. ${r}`).join("\n")}`
+      : "";
+
+    return `${ctx.personality}\n\n${ctx.institutionalContext}${faqSection}${rulesSection}\n\nIMPORTANTE: Respondé ÚNICAMENTE sobre temas relacionados con UTN FRBA, ITEC BA y la plataforma estudiantil. Si la pregunta no está relacionada, explicalo amablemente. No inventes información. Respondé en español.`;
+  },
+
+  chat: async (message, history = []) => {
+    const systemPrompt = await aiService.buildSystemPrompt();
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: systemPrompt,
+    });
+
+    const chat = model.startChat({
+      history: history.slice(-8).map(h => ({
+        role: h.role === "user" ? "user" : "model",
+        parts: h.parts || [{ text: h.text || "" }],
+      })),
+      generationConfig: { maxOutputTokens: 800, temperature: 0.7 },
+    });
+
+    const result = await chat.sendMessage(message);
+    return result.response.text();
+  },
+};
+
+module.exports = aiService;
+AI_SVC_EOF
+
+# ── AI Controller ──────────────────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/ai/ai.controller.js" << 'AI_CTRL_EOF'
+const aiService = require("./ai.service");
+const admin = require("firebase-admin");
+
+const aiController = {
+  chat: async (req, res) => {
     try {
       const { message, history = [] } = req.body;
-      const response = await generateAIResponse(message, history);
+      if (!message?.trim()) return res.status(400).json({ error: "Mensaje requerido" });
+      const response = await aiService.chat(message, history);
       res.json({ response });
-    } catch (err) {
-      next(err);
+    } catch (e) {
+      console.error("[AI] Error:", e.message);
+      res.status(500).json({ error: "Error al procesar la consulta", details: e.message });
     }
-  }
-);
+  },
 
-/* ── PATCH /api/ai/deduct-points ─────────────────────────────────────────
-   El usuario autenticado descuenta AI_POINTS_COST puntos de su propio perfil.
-   Valida que tenga puntos suficientes antes de descontar.
-   Nota: el frontend también hace esto via Firestore directo como fallback,
-   pero tener el endpoint permite centralizar la lógica en el futuro.
-─────────────────────────────────────────────────────────────────────────── */
-const AI_POINTS_COST = 5;
-
-router.patch(
-  "/deduct-points",
-  verifyToken,
-  async (req, res, next) => {
+  deductPoints: async (req, res) => {
     try {
-      const uid = req.user.uid;
-      const ref = dbFirebase.collection("users").doc(uid);
-      const snap = await ref.get();
+      const { points = 2 } = req.body;
+      const uid = req.user?.uid;
+      if (!uid) return res.status(401).json({ error: "No autenticado" });
 
-      if (!snap.exists) {
-        return res.status(404).json({ message: "Usuario no encontrado" });
-      }
+      const db = admin.firestore();
+      const userRef = db.collection("users").doc(uid);
+      const snap = await userRef.get();
+      if (!snap.exists) return res.status(404).json({ error: "Usuario no encontrado" });
 
       const current = snap.data().points ?? 0;
+      if (current < points) return res.status(400).json({ error: "Puntos insuficientes", current });
 
-      if (current < AI_POINTS_COST) {
-        return res.status(402).json({
-          message: `Puntos insuficientes. Necesitás ${AI_POINTS_COST}, tenés ${current}.`,
-          points: current,
-        });
-      }
-
-      const newTotal = current - AI_POINTS_COST;
-      await ref.set({ points: newTotal }, { merge: true });
-
-      res.json({ points: newTotal, deducted: AI_POINTS_COST });
-    } catch (err) {
-      next(err);
+      await userRef.update({ points: admin.firestore.FieldValue.increment(-points) });
+      res.json({ ok: true, newBalance: current - points });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
     }
-  }
-);
+  },
 
-export default router;
-BACKENDEOF
-  ok "ai.routes.js patched (backend: $BACKEND_DIR)"
-else
-  echo -e "${YELLOW}[WARN]${RESET}   Backend no encontrado. Copiar manualmente ai.routes.js o parcharlo desde el .txt."
-fi
+  getContext: async (req, res) => {
+    try { res.json(await aiService.getContext()); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  },
 
+  updateContext: async (req, res) => {
+    try { res.json(await aiService.updateContext(req.body)); }
+    catch (e) { res.status(400).json({ error: e.message }); }
+  },
+};
+
+module.exports = aiController;
+AI_CTRL_EOF
+
+# ── AI Routes ──────────────────────────────────────────────────────────────────
+cat > "${BACKEND_DIR}/modules/ai/ai.routes.js" << 'AI_ROUTES_EOF'
+const router = require("express").Router();
+const ctrl = require("./ai.controller");
+const { verifyFirebaseToken, requireAdmin } = require("../../middleware/auth");
+
+router.post("/chat",          verifyFirebaseToken, ctrl.chat);
+router.patch("/deduct-points", verifyFirebaseToken, ctrl.deductPoints);
+router.get("/context",        ctrl.getContext);
+router.patch("/context",      verifyFirebaseToken, requireAdmin, ctrl.updateContext);
+
+module.exports = router;
+AI_ROUTES_EOF
+
+log "Archivos de backend escritos en: ${BACKEND_DIR}"
 
 # =============================================================================
-# 10. Verificación de emojis residuales en features/faqs y FaqsPage
+# INSTRUCCIONES PARA REGISTRAR RUTAS EN EL BACKEND
 # =============================================================================
-info "Verificando emojis residuales en features/faqs y FaqsPage..."
-EMOJI_FOUND=$(grep -rn \
-  --include="*.tsx" --include="*.ts" \
-  $'[\U0001F4C5\U00002705\U000023F3\U00002728\U0001F4CB\U0001F447\U2139\U26A0\U0001F916]' \
-  src/features/faqs/ src/pages/FaqsPage.tsx 2>/dev/null || true)
+cat > "${BACKEND_DIR}/FAQS_SETUP_README.md" << 'README_EOF'
+# FAQs Setup — Instrucciones de integración
 
-if [[ -z "$EMOJI_FOUND" ]]; then
-  ok "Sin emojis residuales en features/faqs"
-else
-  echo -e "${YELLOW}[WARN]${RESET}  Emojis residuales encontrados (verificar manualmente):"
-  echo "$EMOJI_FOUND"
-fi
+## 1. Registrar rutas en app.js / index.js
 
+Agregá estas líneas donde registrás las rutas de la API:
+
+```js
+const faqRoutes = require("./modules/faq/faq.routes");
+const aiRoutes  = require("./modules/ai/ai.routes");
+
+app.use("/api/faqs", faqRoutes);
+app.use("/api/ai",   aiRoutes);
+```
+
+## 2. Variables de entorno necesarias
+
+```env
+GEMINI_API_KEY=tu_api_key_de_google_ai
+```
+
+## 3. Instalar dependencias si no están
+
+```bash
+npm install @google/generative-ai
+```
+
+## 4. Poblar FAQs iniciales (opcional)
+
+Podés usar el panel Admin de ITEC para crear FAQs desde la UI,
+o insertar documentos directamente en MongoDB Atlas en la colección `faqs`.
+
+## 5. Endpoints disponibles
+
+- GET    /api/faqs              → Todas las FAQs activas
+- GET    /api/faqs/search?q=... → Búsqueda inteligente
+- GET    /api/faqs/top          → Las más consultadas
+- PATCH  /api/faqs/:id/use      → Incrementar popularidad
+- POST   /api/faqs              → Crear FAQ (admin)
+- PATCH  /api/faqs/:id          → Editar FAQ (admin)
+- DELETE /api/faqs/:id          → Eliminar FAQ (admin)
+- POST   /api/ai/chat           → Chat con IA Gemini
+- PATCH  /api/ai/deduct-points  → Descontar puntos IA
+- GET    /api/ai/context        → Obtener contexto IA
+- PATCH  /api/ai/context        → Editar contexto IA (admin)
+README_EOF
+
+log "README de integración backend creado"
+
+# =============================================================================
+# RESUMEN FINAL
+# =============================================================================
 echo ""
-echo -e "${GREEN}============================================================${RESET}"
-echo -e "${GREEN} fix_faqs.sh completado exitosamente${RESET}"
-echo -e "${GREEN}============================================================${RESET}"
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}  Setup completado exitosamente!               ${NC}"
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo "  Archivos modificados:"
-echo "    src/pages/FaqsPage.tsx"
-echo "    src/features/faqs/services/chatbotService.ts"
-echo "    src/features/faqs/hooks/useChatbot.ts"
-echo "    src/features/faqs/components/molecules/ChatInput.tsx"
-echo "    src/features/faqs/components/molecules/ChatMessage.tsx"
-echo "    src/features/faqs/components/organisms/ChatInterface.tsx"
-echo "    src/features/faqs/components/organisms/ImportantDatesWidget.tsx"
-echo "    src/features/faqs/components/organisms/AddDateModal.tsx"
-if [ -n "$BACKEND_DIR" ]; then
-  echo "    $BACKEND_DIR/src/modules/ais/ai.routes.js"
-fi
+echo -e "${CYAN}Archivos frontend creados/modificados:${NC}"
+echo "  src/features/faqs/types/faqs.ts"
+echo "  src/features/faqs/services/faqService.ts"
+echo "  src/features/faqs/services/chatbotService.ts"
+echo "  src/features/faqs/hooks/useChatbot.ts"
+echo "  src/features/faqs/hooks/useFAQs.ts"
+echo "  src/features/faqs/components/atoms/TypingDots.tsx"
+echo "  src/features/faqs/components/atoms/AIBadge.tsx"
+echo "  src/features/faqs/components/molecules/ChatMessage.tsx"
+echo "  src/features/faqs/components/molecules/ChatInput.tsx"
+echo "  src/features/faqs/components/organisms/FAQSuggestions.tsx"
+echo "  src/features/faqs/components/organisms/FAQAdminPanel.tsx"
+echo "  src/features/faqs/components/organisms/ChatInterface.tsx"
+echo "  src/pages/FaqsPage.tsx"
 echo ""
-echo "  Resumen de cambios funcionales:"
-echo "    - IA ahora requiere y envia Firebase ID token (verifyToken OK)"
-echo "    - Cada consulta IA descuenta 5 puntos en Firestore"
-echo "    - Si puntos < 5, la IA queda bloqueada con mensaje claro"
-echo "    - Respuestas IA mas precisas (contexto FAQ enriquecido + limite 250 palabras)"
-echo "    - Mobile: solo ChatInterface visible (calendar hidden en mobile)"
-echo "    - ChatInterface h-full (sin altura fija), se adapta al viewport"
-echo "    - AddDateModal: bottom-sheet en mobile, modal en desktop"
-echo "    - Sin emojis, solo icons SVG"
-echo "    - Colores: itec-* tokens consistentes (sin gray-*, teal-*, purple-*)"
+echo -e "${CYAN}Archivos backend creados en: ${BACKEND_DIR}${NC}"
+echo "  modules/faq/faq.model.js"
+echo "  modules/faq/faq.service.js"
+echo "  modules/faq/faq.controller.js"
+echo "  modules/faq/faq.routes.js"
+echo "  modules/ai/aiContext.model.js"
+echo "  modules/ai/ai.service.js"
+echo "  modules/ai/ai.controller.js"
+echo "  modules/ai/ai.routes.js"
+echo "  FAQS_SETUP_README.md"
 echo ""
-echo "  Ejecuta 'npm run dev' para verificar en el navegador."
+echo -e "${YELLOW}Próximos pasos:${NC}"
+echo "  1. Revisá ${BACKEND_DIR}/FAQS_SETUP_README.md"
+echo "  2. Registrá las rutas en tu app.js del backend"
+echo "  3. Asegurate de tener GEMINI_API_KEY en tu .env del backend"
+echo "  4. npm run dev para probar"
+echo ""

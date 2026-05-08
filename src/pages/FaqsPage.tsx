@@ -1,35 +1,28 @@
-// src/pages/FaqsPage.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MainLayout } from "@/components/templates/MainLayout";
-import { usePageTitle } from "@hooks/usePageTitle";
-import { useAuth } from "@context/AuthContext";
 import { ChatInterface } from "@features/faqs/components/organisms/ChatInterface";
-import { ImportantDatesWidget } from "@features/faqs/components/organisms/ImportantDatesWidget";
+import { usePageTitle } from "@hooks/usePageTitle";
 
 export const FaqsPage: React.FC = () => {
-  usePageTitle("Consultas — ITEC");
-  const { isAdmin } = useAuth();
-
+  usePageTitle("Asistente ITEC");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  const showMainLayout = windowWidth > 370;
   return (
     <MainLayout>
-      {/*
-        Mobile: ChatInterface ocupa toda la pantalla disponible.
-        El calendario está oculto. Se muestra un layout de "un solo panel".
-        Desktop (lg+): Grid 2/3 chat + 1/3 calendario.
-      */}
-      <div className="grid grid-cols-1 gap-0 lg:gap-6 lg:grid-cols-3 max-w-7xl mx-auto">
-
-        {/* Chat — fullscreen en mobile, 2/3 en desktop */}
-        <div className="lg:col-span-2 h-[calc(100dvh-4rem)] lg:h-auto">
-          <ChatInterface />
+      {showMainLayout ? (
+        <ChatInterface />
+      ) : (
+        <div className="fixed inset-0 z-100 flex flex-col bg-itec-background">
+          <div className="flex h-full w-full flex-col overflow-hidden bg-itec-background">
+            <ChatInterface /> 
+          </div>
         </div>
-
-        {/* Calendario — OCULTO en mobile, visible en lg+ */}
-        <div className="hidden lg:block lg:col-span-1">
-          <ImportantDatesWidget isAdmin={isAdmin} />
-        </div>
-
-      </div>
+      )}
     </MainLayout>
   );
 };
