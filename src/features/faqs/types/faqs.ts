@@ -1,48 +1,42 @@
 export interface FAQ {
-  keywords: string[];
+  _id: string;
+  question: string;
   answer: string;
+  keywords: string[];
+  category: string;
+  popularity: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface FAQResponse {
-  text: string;
-  suggestions?: string[];
+export interface FAQSearchResult extends FAQ {
+  score: number;
 }
 
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   text: string;
+  isAI?: boolean;
+  isLoading?: boolean;
   suggestions?: string[];
-  isTyping?: boolean;
+  timestamp: number;
 }
 
-export const FAQ_DATABASE: FAQ[] = [
-  {
-    keywords: ["apuntes", "parciales", "resumen"],
-    answer: "📚 Podés encontrar apuntes y parciales en la sección Recursos.",
-  },
+export interface AIContext {
+  _id?: string;
+  personality: string;
+  institutionalContext: string;
+  rules: string[];
+  updatedAt?: string;
+}
 
-  {
-    keywords: ["grupos", "whatsapp"],
-    answer: "👥 Los grupos de WhatsApp están disponibles en la sección Grupos.",
-  },
+export interface ChatResponse {
+  response: string;
+  isAI: boolean;
+  faqUsed?: FAQ;
+  suggestions?: string[];
+}
 
-  {
-    keywords: ["siga"],
-    answer:
-      "🧾 El sistema SIGA sirve para inscripciones, notas y certificados.\n\nhttps://siga.frba.utn.edu.ar/",
-  },
-
-  {
-    keywords: ["campus", "aula virtual"],
-    answer: "💻 Aula Virtual:\nhttps://aulavirtual.frba.utn.edu.ar/",
-  },
-
-  {
-    keywords: ["medrano", "lugano"],
-    answer: "🏫 UTN FRBA tiene sede Medrano y Campus Lugano.",
-  },
-];
-
-export const FALLBACK_ANSWER =
-  "No encontré una respuesta exacta 😅\n\nPodés usar la IA avanzada.";
+export type ChatMode = "faq" | "ai";

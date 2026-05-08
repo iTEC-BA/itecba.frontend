@@ -1,71 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface Props {
-  onSend: (v: string) => void;
+  onSend: (text: string) => void;
   loading: boolean;
+  placeholder?: string;
 }
 
-export const ChatInput: React.FC<Props> = ({ onSend, loading }) => {
+export const ChatInput: React.FC<Props> = ({ onSend, loading, placeholder }) => {
   const [value, setValue] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    ta.style.height = "auto";
+    ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`;
+  }, [value]);
 
   const submit = () => {
-    if (!value.trim()) return;
-
-    onSend(value);
+    const trimmed = value.trim();
+    if (!trimmed || loading) return;
+    onSend(trimmed);
     setValue("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
   };
 
   return (
-    <div
-      className="
-        border-t
-        border-itec-border
-        bg-itec-box/90
-        backdrop-blur-xl
-        p-3
-        pb-[calc(env(safe-area-inset-bottom)+14px)]
-      "
-    >
-      <div className="flex items-center gap-2">
-        <input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              submit();
-            }
-          }}
-          placeholder="Preguntá lo que quieras..."
-          className="
-            flex-1
-            rounded-full
-            border
-            border-itec-border
-            bg-itec-surface
-            px-4
-            py-3
-            text-sm
-            text-white
-            outline-none
-          "
-        />
-
-        <button
-          onClick={submit}
-          disabled={loading}
-          className="
-            h-12
-            w-12
-            rounded-full
-            bg-indigo-600
-            text-white
-            active:scale-95
-            transition-all
-          "
-        >
-          →
-        </button>
-      </div>
+    <div className="relative flex items-end gap-2 bg-white/[0.06] border border-white/10 rounded-3xl px-4 py-3 focus-within:border-white/20 transition-all shadow-lg">
+      <textarea
+        id="chat-input"
+        ref={textareaRef}
+        rows={1}
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+        }}
+        placeholder={placeholder ?? "Preguntá lo que quieras..."}
+        className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 resize-none outline-none leading-relaxed min-h-[22px] max-h-[120px]"
+        disabled={loading}
+      />
+      <button
+        onClick={submit}
+        disabled={!value.trim() || loading}
+        className="w-8 h-8 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-white/18 disabled:opacity-30 transition-all active:scale-90 shrink-0"
+      >
+        {loading ? (
+          <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-white -rotate-90 translate-x-px">
+            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        )}
+      </button>
     </div>
   );
 };

@@ -1,110 +1,95 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
+import { chatbotService, AI_COST } from "../services/chatbotService";
+import { useAuth } from "@context/AuthContext";
+import type { ChatMessage, ChatMode } from "../types/faqs";
 
-import type { ChatMessage } from "../types/faqs";
-
-import { chatbotService } from "../services/chatbotService";
-
-import { auth } from "@lib/firebase";
+const WELCOME: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  text: "Hola, soy el asistente de ITEC BA. Puedo ayudarte con dudas sobre trámites, inscripciones, grupos, materias y más. También podés activar la IA avanzada para preguntas más complejas.",
+  suggestions: [
+    "¿Cómo me inscribo a materias?",
+    "¿Dónde están los grupos de WhatsApp?",
+    "¿Qué es el SIU Guaraní?",
+    "¿Cuándo son los finales?",
+  ],
+  timestamp: Date.now(),
+};
 
 export const useChatbot = () => {
+  const { user, addPoints } = useAuth();
+  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<ChatMode>("faq");
+  const [error, setError] = useState<string | null>(null);
+  const historyRef = useRef<{ role: string; parts: { text: string }[] }[]>([]);
 
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: crypto.randomUUID(),
-      role: "assistant",
-      text: "👋 Hola, soy Meta ITEC AI.\n\n¿En qué puedo ayudarte?",
-      suggestions: [
-        "¿Cómo entro a SIGA?",
-        "¿Dónde veo grupos?",
-        "¿Hay apuntes?",
-      ],
-    },
-  ]);
+  const canUseAI = (user?.points ?? 0) >= AI_COST;
 
-  const sendMessage = async (text: string) => {
-    if (!text.trim()) return;
+  const addMsg = (msg: Omit<ChatMessage, "id" | "timestamp">) => {
+    const full: ChatMessage = { ...msg, id: crypto.randomUUID(), timestamp: Date.now() };
+    setMessages(p => [...p, full]);
+    return full;
+  };
 
-    const userMessage: ChatMessage = {
-      id: crypto.randomUUID(),
-      role: "user",
-      text,
-    };
+  const sendMessage = useCallback(async (text: string) => {
+    if (!text.trim() || loading) return;
+    setError(null);
 
-    setMessages((prev) => [...prev, userMessage]);
+    // Agregar mensaje del usuario
+    addMsg({ role: "user", text });
+    historyRef.current.push({ role: "user", parts: [{ text }] });
 
+    // Placeholder de carga
+    const loadingId = crypto.randomUUID();
+    setMessages(p => [...p, { id: loadingId, role: "assistant", text: "", isLoading: true, timestamp: Date.now() }]);
     setLoading(true);
 
     try {
-      const faq = chatbotService.searchFaqAnswer(text);
-
-      const shouldUseAI = faq.text.includes("IA avanzada");
-
-      if (!shouldUseAI) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            role: "assistant",
-            text: faq.text,
-            suggestions: faq.suggestions,
-          },
-        ]);
-
-        setLoading(false);
-        return;
+      let response;
+      if (mode === "ai") {
+        if (!canUseAI) {
+          throw new Error(`Necesitás al menos ${AI_COST} puntos para usar la IA avanzada.`);
+        }
+        response = await chatbotService.askAI(text, historyRef.current.slice(-10));
+        // Descontar puntos localmente
+        await addPoints(-AI_COST);
+      } else {
+        response = await chatbotService.searchFAQ(text);
       }
 
-      const uid = auth.currentUser?.uid;
+      historyRef.current.push({ role: "model", parts: [{ text: response.response }] });
 
-      if (!uid) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            role: "assistant",
-            text: "Necesitás iniciar sesión.",
-          },
-        ]);
-
-        setLoading(false);
-        return;
-      }
-
-      const success = await chatbotService.deductAIPoints(uid);
-
-      if (!success) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            role: "assistant",
-            text: "⚠️ No tenés suficientes puntos.",
-          },
-        ]);
-
-        setLoading(false);
-        return;
-      }
-
-      const ai = await chatbotService.askAdvancedAI(text, messages);
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          text: ai,
-        },
-      ]);
+      setMessages(p =>
+        p.map(m =>
+          m.id === loadingId
+            ? { ...m, text: response.response, isLoading: false, isAI: response.isAI, suggestions: response.suggestions }
+            : m
+        )
+      );
+    } catch (err: any) {
+      setError(err.message ?? "Error desconocido");
+      setMessages(p => p.filter(m => m.id !== loadingId));
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading, mode, canUseAI, addPoints]);
+
+  const toggleMode = useCallback(() => {
+    setMode(p => p === "faq" ? "ai" : "faq");
+    setError(null);
+  }, []);
+
+  const clearChat = useCallback(() => {
+    setMessages([WELCOME]);
+    historyRef.current = [];
+    setError(null);
+  }, []);
 
   return {
-    loading,
-    messages,
-    sendMessage,
+    messages, loading, mode, error, canUseAI,
+    userPoints: user?.points ?? 0,
+    sendMessage, toggleMode, clearChat,
+    AI_COST,
   };
 };

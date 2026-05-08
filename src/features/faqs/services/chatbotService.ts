@@ -1,121 +1,71 @@
-import { FAQ_DATABASE, FALLBACK_ANSWER } from "../types/faqs";
+import { auth } from "@lib/firebase";
+import type { ChatResponse } from "../types/faqs";
 
-import type { FAQResponse, ChatMessage } from "../types/faqs";
+const API = `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}`;
 
-import { auth, db } from "@lib/firebase";
+export const AI_COST = 2; // puntos por consulta IA
 
-import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
-
-export const AI_POINTS_COST = 5;
-
-const normalize = (text: string) =>
-  text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+const getToken = async (): Promise<string> => {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) throw new Error("Debes iniciar sesión");
+  return token;
+};
 
 export const chatbotService = {
-  searchFaqAnswer(query: string): FAQResponse {
-    const normalizedQuery = normalize(query);
-
-    let bestMatch = null;
-    let bestScore = 0;
-
-    for (const faq of FAQ_DATABASE) {
-      let score = 0;
-
-      for (const keyword of faq.keywords) {
-        const normalizedKeyword = normalize(keyword);
-
-        if (normalizedQuery.includes(normalizedKeyword)) {
-          score++;
-        }
-      }
-
-      if (score > bestScore) {
-        bestMatch = faq;
-        bestScore = score;
-      }
-    }
-
-    if (!bestMatch) {
+  // Búsqueda FAQ local (sin IA)
+  searchFAQ: async (query: string): Promise<ChatResponse> => {
+    const res = await fetch(
+      `${API}/faqs/search?q=${encodeURIComponent(query)}`
+    );
+    const faqs = res.ok ? await res.json() : [];
+    if (faqs.length === 0) {
       return {
-        text: FALLBACK_ANSWER,
-        suggestions: [
-          "¿Cómo entro a SIGA?",
-          "¿Dónde están los grupos?",
-          "¿Cómo veo apuntes?",
-        ],
+        response: "No encontré una respuesta exacta para tu consulta. Podés activar la IA avanzada para obtener una respuesta más detallada.",
+        isAI: false,
+        suggestions: ["¿Cómo me inscribo?", "¿Dónde están los grupos?", "¿Qué es el SIU?"],
       };
     }
-
-    return {
-      text: bestMatch.answer,
-      suggestions: ["Más información", "Otra consulta"],
-    };
+    const top = faqs[0];
+    // Track de uso en background
+    fetch(`${API}/faqs/${top._id}/use`, { method: "PATCH" }).catch(() => {});
+    return { response: top.answer, isAI: false, faqUsed: top };
   },
 
-  async askAdvancedAI(
-    query: string,
-    rawHistory: ChatMessage[],
-  ): Promise<string> {
-    try {
-      const token = await auth.currentUser?.getIdToken();
-
-      if (!token) {
-        return "Necesitás iniciar sesión.";
-      }
-
-      const history = rawHistory.slice(-10).map((msg) => ({
-        role: msg.role === "assistant" ? "model" : "user",
-        parts: [{ text: msg.text }],
-      }));
-
-      const response = await fetch(`${API_URL}/ai/chat`, {
+  // Consulta IA avanzada (consume puntos)
+  askAI: async (
+    message: string,
+    history: { role: string; parts: { text: string }[] }[]
+  ): Promise<ChatResponse> => {
+    const token = await getToken();
+    const [chatRes, deductRes] = await Promise.allSettled([
+      fetch(`${API}/ai/chat`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          message: query,
-          history,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("API Error");
-      }
-
-      const data = await response.json();
-
-      return data.response || "No pude responder eso.";
-    } catch (err) {
-      console.error(err);
-
-      return "⚠️ Error conectando con la IA.";
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ message, history }),
+      }),
+      fetch(`${API}/ai/deduct-points`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ points: AI_COST }),
+      }),
+    ]);
+    if (chatRes.status === "rejected") throw new Error("Error al conectar con la IA");
+    const chatResponse = chatRes.value;
+    if (!chatResponse.ok) {
+      const err = await chatResponse.json().catch(() => ({}));
+      throw new Error((err as any).error || "Error en la IA");
     }
+    const data = await chatResponse.json();
+    return { response: data.response, isAI: true };
   },
 
-  async getUserPoints(uid: string) {
-    const snap = await getDoc(doc(db, "users", uid));
-
-    return snap.exists() ? (snap.data().points ?? 0) : 0;
-  },
-
-  async deductAIPoints(uid: string) {
-    const current = await chatbotService.getUserPoints(uid);
-
-    if (current < AI_POINTS_COST) {
-      return false;
-    }
-
-    await updateDoc(doc(db, "users", uid), {
-      points: increment(-AI_POINTS_COST),
+  getUserPoints: async (): Promise<number> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/users/me/points`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    return true;
+    if (!res.ok) return 0;
+    const data = await res.json();
+    return data.points ?? 0;
   },
 };

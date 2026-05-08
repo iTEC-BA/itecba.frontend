@@ -18,7 +18,7 @@ export const FaqsPage: React.FC = () => {
         <ChatInterface />
       ) : (
         <div className="fixed inset-0 z-100 flex flex-col bg-itec-background">
-          <div className="flex h-full w-full flex-col overflow-hidden bg-itec-background">
+          <div className="flex h-full w-full flex-col overflow-hidden bg-itec-bg">
             <ChatInterface /> 
           </div>
         </div>
@@ -26,3 +26,5 @@ export const FaqsPage: React.FC = () => {
     </MainLayout>
   );
 };
+
+
