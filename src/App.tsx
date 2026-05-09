@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@context/AuthContext";
 import { ProtectedRoute } from "@components/templates/ProtectedRoute";
 import LoadingState from "@components/ui/LoadingState";
-import { InstallPWABanner } from "./components/molecules/InstallPWABanner";
-import { UpdatePWAToast } from "./components/molecules/UpdatePWAToast";
+import { BannerInstallPWA } from "./components/organisms/BannerInstallPWA";
+import { UpdatePWAToast } from "./components/organisms/UpdatePWAToast";
 
 const RewardsPage      = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
 const CourseEditDetail = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
@@ -82,7 +82,7 @@ export const App: React.FC = () => {
         InstallPWABanner → aparece cuando Chrome detecta que la PWA es instalable
         UpdatePWAToast   → aparece cuando hay una nueva versión del Service Worker
       */}
-      <InstallPWABanner />
+      <BannerInstallPWA />
       <UpdatePWAToast />
     </AuthProvider>
   );

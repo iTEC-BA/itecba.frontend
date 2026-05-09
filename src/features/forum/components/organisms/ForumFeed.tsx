@@ -9,6 +9,7 @@ import { TrendingBanner } from "../atoms/TrendingBanner";
 import { ThreadView } from "./ThreadView";
 import { ComposeModal } from "../molecules/ComposeModal";
 import type { ForumTab } from "../../types/forum";
+import { useAuth } from "@/context/AuthContext";
 
 const TABS: { id: ForumTab; label: string }[] = [
   { id: "para-ti", label: "Para ti" },
@@ -41,6 +42,7 @@ export const ForumFeed: React.FC = () => {
     refresh,
   } = useForum();
 
+  const { isAuthenticated } = useAuth();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Infinite scroll
@@ -97,7 +99,7 @@ export const ForumFeed: React.FC = () => {
               role="tab"
               aria-selected={activeTab === t.id}
               onClick={() => setActiveTab(t.id)}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold whitespace-nowrap flex-shrink-0 transition-all duration-150 ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-150 ${
                 activeTab === t.id
                   ? "bg-itec-red border-itec-red-skye  text-white shadow-sm shadow-purple-900/30"
                   : "border-itec-border text-itec-muted hover:border-itec-red/40 hover:text-itec-red-skye bg-transparent"
@@ -144,9 +146,7 @@ export const ForumFeed: React.FC = () => {
             <div className="flex flex-col items-center justify-center py-20 gap-4 px-4 text-center text-xs">
               <span className="text-4xl opacity-30">💬</span>
               <p className="font-bold text-itec-text">Sin publicaciones</p>
-              <p className="text-itec-muted">
-                Sé el primero en publicar algo.
-              </p>
+              <p className="text-itec-muted">Sé el primero en publicar algo.</p>
             </div>
           ) : (
             <>
@@ -185,20 +185,25 @@ export const ForumFeed: React.FC = () => {
       )}
 
       {/* FAB: botón flotante de composición */}
-      <button
-        onClick={() => setComposing(true)}
-        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-12 h-12 rounded-2xl bg-itec-red hover:bg-itec-red/80 text-white flex items-center justify-center shadow-xl shadow-itec-red-33 transition-all active:scale-95 z-30"
-        title="Nueva publicación"
-      >
-        <Plus size={22} strokeWidth={2.5} />
-      </button>
+      {isAuthenticated && (
+        <>
+          <button
+            onClick={() => setComposing(true)}
+            className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-12 h-12 rounded-2xl bg-itec-red hover:bg-itec-red/80 text-white flex items-center justify-center shadow-xl shadow-itec-red-33 transition-all active:scale-95 z-30"
+            title="Nueva publicación"
+          >
+            <Plus size={22} strokeWidth={2.5} />
+          </button>
 
-      {/* Compose modal */}
-      <ComposeModal
-        isOpen={composing}
-        onClose={() => setComposing(false)}
-        onSubmit={submitPost}
-      />
+          {/* Compose modal */}
+          <ComposeModal
+            isOpen={composing}
+            onClose={() => setComposing(false)}
+            onSubmit={submitPost}
+          />
+        </>
+      )}
+
     </div>
   );
 };

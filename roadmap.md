@@ -137,6 +137,7 @@ Este documento detalla el estado actual, los requerimientos técnicos, la arquit
  * Base de Datos: MongoDB Atlas (Colección events).
  * Notificaciones:
    * Web: Alumno (Recordatorio de inicio de apertura de inscripciones o exámenes).
+
 ## ESTRATEGIA DE BASES DE DATOS Y SERVICIOS (FREE TIER)
 Para mantener la viabilidad financiera del proyecto a escala masiva sin incurrir en costos iniciales, la arquitectura fragmenta las responsabilidades:
  1. **Autenticación (Firebase Auth):** Gestión de identidad segura e ilimitada en usuarios activos mensuales básicos.

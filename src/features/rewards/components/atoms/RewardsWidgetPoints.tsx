@@ -1,15 +1,15 @@
 import React from "react";
-import { Icons } from "@components/ui/icons/Icons";
 import { useAuth } from "@context/AuthContext";
+import { Star } from "lucide-react";
 
 export const RewardsWidgetPoints: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   if (!isAuthenticated) return null;
   return (
-    <div className="inline-flex items-center gap-1.5 font-bold text-itec-rewards text-sm tracking-tight">
-      <Icons type="star" className="size-4 shrink-0" />
-      <span className="tabular-nums">{(user?.points ?? 0).toLocaleString()}</span>
-      <span className="text-[10px] font-bold text-itec-rewards/60">pts</span>
+    <div className="inline-flex items-center gap-1 font-bold text-itec-rewards text-xs tracking-tight">
+      <Star size="12" />
+      <p className="text-xs">{(user?.points ?? 0)}</p>
+      <p className="text-itec-rewards/60">pts</p>
     </div>
   );
 };

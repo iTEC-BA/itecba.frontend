@@ -3,7 +3,7 @@ import { Icons } from "../ui/icons/Icons";
 import Raccoon from "../ui/icons/Raccoon";
 import { useAuth } from "../../context/AuthContext";
 
-export const BottomNavbar = () => {
+export const NavbarBottom = () => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
 

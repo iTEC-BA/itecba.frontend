@@ -41,19 +41,20 @@ agregar_archivo "src/lib/firebase.ts"
 agregar_archivo "src/lib/utils.ts"
 agregar_archivo "src/context/AuthContext.tsx"
 
-echo "🎨 2/5 Agregando Sistema de Diseño (Carpeta UI)..."
-# Esto incluye botones, inputs, badges e íconos core
-agregar_carpeta "src/components/ui"
+echo "🖼️  2/5 Agregando Componentes universales"
+agregar_carpeta "src/components/"
 
-echo "🖼️  3/5 Agregando Layouts y Plantillas (Carpeta Templates)..."
-# Esto incluye MainLayout, SidebarLayout, ProtectedRoute, etc.
-agregar_carpeta "src/components/templates"
+echo "🛠️  3/5 Agregando Hooks Globales..."
+agregar_carpeta "src/hooks"
 
-echo "🛠️  4/5 Agregando Hooks Globales..."
-agregar_carpeta "src/components/hooks"
-
-echo "🧩 5/5 Agregando el Feature específico: $FEATURE_NAME..."
+echo "🧩 4/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
+
+echo "📦 5/5 Agregando a estilo"
+agregar_archivo "./package.json"
+agregar_archivo "./tsconfig.app.json"
+agregar_archivo "./vite.config.ts"
+agregar_archivo "./src/index.css"
 
 # Agregar la página (View) principal del feature
 PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"

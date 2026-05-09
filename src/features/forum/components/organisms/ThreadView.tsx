@@ -5,6 +5,7 @@ import { ForumSkeleton } from "../molecules/ForumSkeleton";
 import type { ForumPost } from "../../types/forum";
 import { MessageCircle } from "lucide-react";
 import { CardThread } from "../molecules/CardThread";
+import { useAuth } from "@/context/AuthContext";
 
 interface Props {
   post: ForumPost;
@@ -28,6 +29,7 @@ export const ThreadView: React.FC<Props> = ({
   onReply,
 }) => {
   const handleReply = (body: string) => onReply(post.id, body);
+  const {isAuthenticated} = useAuth()
 
   return (
     <div className="flex flex-col bg-itec-bg text-xs">
@@ -48,8 +50,9 @@ export const ThreadView: React.FC<Props> = ({
         onRepost={onRepost}
         onDelete={onDelete}
       />
+      
       {/* Composer para responder */}
-      <ComposeBox onSubmit={handleReply} compact />
+      {isAuthenticated && <ComposeBox onSubmit={handleReply} compact />}
 
       {/* Replies */}
       {loading ? (
