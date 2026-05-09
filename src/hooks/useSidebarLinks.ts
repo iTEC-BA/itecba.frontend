@@ -17,6 +17,7 @@ export const useSidebarLinks = () => {
         title: "Principal",
         links: [
           { path: "/", label: "Inicio", iconName: "home" },
+          { path: "/foro", label: "Comunidad", iconName: "message" },
           { path: "/buscatec", label: "BuscaTEC", iconName: "search" },
           { path: "/aulas", label: "Buscar aula", iconName: "map-pin" },
         ],
