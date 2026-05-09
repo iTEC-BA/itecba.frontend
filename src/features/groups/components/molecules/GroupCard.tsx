@@ -165,7 +165,7 @@ export const GroupCard: React.FC<Props> = ({ group }) => {
             className="w-9 flex items-center justify-center bg-white/5 hover:bg-itec-red/10 border border-white/8 hover:border-itec-red/25 rounded-xl text-itec-gray hover:text-itec-red transition-colors"
             title="Reportar link caído"
           >
-            <Icons type="flag" className="w-3.5 h-3.5" />
+            <Icons type="info" className="w-3.5 h-3.5" />
           </button>
         )}
       </div>

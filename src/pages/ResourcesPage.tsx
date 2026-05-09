@@ -57,7 +57,7 @@ export const ResourcesPage: React.FC = () => {
           onClick={() => setIsAddOpen(true)}
           className="text-sm bg-orange-600 hover:bg-orange-500 border-none text-itec-text font-semibold px-4 py-2 rounded-xl transition-all shadow-lg shadow-orange-900/30"
         >
-          + Aportar · +1 Punto
+          Aportar · +1 Punto
         </Button>
 
         {isAdmin && (

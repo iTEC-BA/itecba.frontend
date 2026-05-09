@@ -10,12 +10,18 @@ export const useFAQs = () => {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    setError(null);
     setLoading(true);
     try {
-      const [all, top] = await Promise.all([faqService.getAll(), faqService.getTop()]);
-      setFaqs(all);
-      setTopFaqs(top);
-    } catch {
+      const [allFaqs, topFaqs] = await Promise.all([
+        faqService.getAll(),
+        faqService.getTop(),
+      ]);
+
+      setFaqs(allFaqs);
+      setTopFaqs(topFaqs);
+    } catch (err) {
+      console.error(err);
       setError("Error cargando FAQs");
     } finally {
       setLoading(false);
@@ -26,26 +32,30 @@ export const useFAQs = () => {
     try {
       const ctx = await faqService.getAIContext();
       setAIContext(ctx);
-    } catch {}
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
   useEffect(() => { load(); }, [load]);
 
   const create = async (data: Partial<FAQ>) => {
     const faq = await faqService.create(data);
-    setFaqs(p => [faq, ...p]);
+    setFaqs((currentFaqs) => [faq, ...currentFaqs]);
     return faq;
   };
 
   const update = async (id: string, data: Partial<FAQ>) => {
     const updated = await faqService.update(id, data);
-    setFaqs(p => p.map(f => f._id === id ? updated : f));
+    setFaqs((currentFaqs) =>
+      currentFaqs.map((faq) => (faq._id === id ? updated : faq))
+    );
     return updated;
   };
 
   const remove = async (id: string) => {
     await faqService.remove(id);
-    setFaqs(p => p.filter(f => f._id !== id));
+    setFaqs((currentFaqs) => currentFaqs.filter((faq) => faq._id !== id));
   };
 
   const updateContext = async (data: Partial<AIContext>) => {
@@ -54,5 +64,17 @@ export const useFAQs = () => {
     return ctx;
   };
 
-  return { faqs, topFaqs, aiContext, loading, error, load, loadContext, create, update, remove, updateContext };
+  return {
+    faqs,
+    topFaqs,
+    aiContext,
+    loading,
+    error,
+    load,
+    loadContext,
+    create,
+    update,
+    remove,
+    updateContext,
+  };
 };

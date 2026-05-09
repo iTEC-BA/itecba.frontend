@@ -53,7 +53,7 @@ export const useSidebarLinks = () => {
       // Protegido: Solo Admins
       { path: "/admin", label: "Panel Admin", iconName: "settings", requireAdmin: true },
       // Protegido: Solo Usuarios Logueados
-      { path: "/beneficios", label: "Recompensas", iconName: "gift", tag: { text: "340 pts", color: "gold" as const }, requireAuth: true },
+      { path: "/beneficios", label: "Recompensas", iconName: "gift", tag: { text: user?.points, color: "gold" as const }, requireAuth: true },
       { path: "/progreso", label: "Seguidor de carrera", iconName: "chart-line", requireAuth: true },
       // Dinámico: Cambia si está logueado o no
       { 
@@ -63,7 +63,7 @@ export const useSidebarLinks = () => {
       },
       { path: "/terminos", label: "Términos y cond.", iconName: "file-text" },
     ],
-    [isAuthenticated, getFormattedName]
+    [isAuthenticated, getFormattedName, user?.points]
   );
 
   return {

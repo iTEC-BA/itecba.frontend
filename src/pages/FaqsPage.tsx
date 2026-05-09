@@ -11,20 +11,20 @@ export const FaqsPage: React.FC = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const showMainLayout = windowWidth > 370;
+  const showMainLayout = windowWidth > 448;
   return (
     <MainLayout>
       {showMainLayout ? (
-        <ChatInterface />
+        <section className="md:md">
+          <ChatInterface />
+        </section>
       ) : (
-        <div className="fixed inset-0 z-100 flex flex-col bg-itec-background">
+        <div className="fixed inset-0 z-100 flex flex-col bg-itec-bg">
           <div className="flex h-full w-full flex-col overflow-hidden bg-itec-bg">
-            <ChatInterface /> 
+            <ChatInterface />
           </div>
         </div>
       )}
     </MainLayout>
   );
 };
-
-

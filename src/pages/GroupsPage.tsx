@@ -68,8 +68,8 @@ export const GroupsPage: React.FC = () => {
       </PageHeader>
 
       {/* Stats bar */}
-      {!loadingGroups && allGroups.length > 0 && <GroupsStatsBar groups={allGroups} />}
-
+      {isAdmin && !loadingGroups && allGroups.length > 0 && <GroupsStatsBar groups={allGroups} />}
+      
       {/* Filtros */}
       <GroupFilters filters={filters} isLoading={loadingGroups} />
 
