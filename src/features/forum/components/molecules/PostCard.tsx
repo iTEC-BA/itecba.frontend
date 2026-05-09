@@ -1,127 +1,120 @@
-// src/features/forum/components/molecules/PostCard.tsx
-// Tarjeta de post con estética X/Threads. Clic → abre el hilo.
-import React, { useState } from "react";
-import { MessageSquare, Trash2, MoreHorizontal } from "lucide-react";
-import { AnonAvatar }  from "../atoms/AnonAvatar";
-import { VoteButton }  from "../atoms/VoteButton";
+import React from "react";
+import { AnonAvatar } from "../atoms/AnonAvatar";
+import { PostMoreMenu } from "../atoms/PostMoreMenu";
+import { RepostIndicator } from "../atoms/RepostIndicator";
+import { RichText } from "../atoms/RichText";
 import type { ForumPost } from "../../types/forum";
-import { useAuth }     from "@context/AuthContext";
- 
-interface PostCardProps {
-  post:        ForumPost;
-  onOpen?:     (id: number) => void;
-  onVote:      (id: number, v: 1 | -1) => void;
-  onDelete:    (id: number) => void;
-  isThread?:   boolean;
-  compact?:    boolean;
-}
- 
+import { CardThreadFooterActions } from "../atoms/CardThreadFooterActions";
+
 const timeAgo = (iso: string): string => {
-  const diff = Date.now() - new Date(iso).getTime();
-  const s = Math.floor(diff / 1000);
-  if (s < 60)   return `${s}s`;
+  const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return `${s}s`;
   if (s < 3600) return `${Math.floor(s / 60)}min`;
   if (s < 86400) return `${Math.floor(s / 3600)}h`;
   return `${Math.floor(s / 86400)}d`;
 };
- 
-export const PostCard: React.FC<PostCardProps> = ({
-  post, onOpen, onVote, onDelete, isThread = false, compact = false,
+interface Props {
+  post: ForumPost;
+  onVote: (id: number, v: 1 | -1) => void;
+  onRepost: (id: number) => void;
+  onDelete: (id: number) => void;
+  onClick: (id: number) => void;
+}
+
+export const PostCard: React.FC<Props> = ({
+  post,
+  onVote,
+  onRepost,
+  onDelete,
+  onClick,
 }) => {
-  const { user } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
- 
-  // El ownership real lo valida el backend; el botón "Eliminar"
-  // se muestra a cualquier usuario autenticado (el backend rechaza si no es el autor).
-  const handleClick = () => {
-    if (!isThread && onOpen) onOpen(post.id);
+  const handleShare = (id: number) => {
+    navigator.clipboard.writeText(`${window.location.origin}/foro/${id}`);
   };
- 
+
   return (
-    <article
-      onClick={handleClick}
-      className={`group relative flex gap-3 px-4 py-3 border-b border-itec-border transition-colors
-        ${!isThread ? "cursor-pointer hover:bg-white/[0.02]" : ""}
-        ${compact ? "py-2 px-3" : ""}
-      `}
-    >
-      {/* Avatar column */}
-      <div className="flex flex-col items-center gap-1 flex-shrink-0">
-        <AnonAvatar pseudonym={post.pseudonym} size={compact ? "sm" : "md"} />
-        {/* Thread line */}
-        {isThread && post.reply_count > 0 && (
-          <div className="w-px flex-1 min-h-[16px] bg-itec-border mt-1" />
-        )}
-      </div>
- 
-      {/* Content column */}
-      <div className="flex-1 min-w-0">
-        {/* Header */}
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <span className="text-sm font-semibold text-itec-text truncate">
-            {post.pseudonym}
-          </span>
-          <span className="text-xs text-itec-muted flex-shrink-0">
-            · {timeAgo(post.created_at)}
-          </span>
-        </div>
- 
-        {/* Body */}
-        <p className={`text-itec-text leading-relaxed whitespace-pre-wrap break-words ${
-          compact ? "text-xs" : "text-sm"
-        } ${!isThread ? "line-clamp-5" : ""}`}>
-          {post.body}
-        </p>
- 
-        {/* Actions bar */}
-        <div
-          className="flex items-center gap-4 mt-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <VoteButton
-            upvotes={post.upvotes}
-            userVote={post.user_vote ?? 0}
-            onVote={(v) => onVote(post.id, v)}
-            disabled={!user}
-            compact={compact}
-          />
- 
-          {!isThread && (
-            <button
-              onClick={(e) => { e.stopPropagation(); if (onOpen) onOpen(post.id); }}
-              className="flex items-center gap-1.5 text-xs text-itec-muted hover:text-itec-text transition-colors"
-            >
-              <MessageSquare size={13} />
-              <span>{post.reply_count ?? 0}</span>
-            </button>
+    <article className="text-xs border-b border-itec-border hover:bg-white/[0.015] transition-colors duration-150">
+      {post.is_reposted && post.reposted_by && (
+        <RepostIndicator pseudonym={post.reposted_by} />
+      )}
+
+      <div
+        className="flex gap-3 px-4 pt-3 pb-2 cursor-pointer"
+        onClick={() => onClick(post.id)}
+      >
+        {/* Avatar + hilo */}
+        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+          <AnonAvatar pseudonym={post.pseudonym} size="md" />
+          {post.reply_count > 0 && (
+            <div className="w-px flex-1 bg-itec-border/60 rounded-full my-1" />
           )}
         </div>
-      </div>
- 
-      {/* Context menu */}
-      {user && (
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
-            className="p-1.5 rounded-full text-itec-muted hover:text-itec-text hover:bg-itec-surface transition-colors"
-          >
-            <MoreHorizontal size={14} />
-          </button>
-          {menuOpen && (
+
+        {/* Contenido */}
+        <div className="flex-1 min-w-0">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-0.5">
+            <div className="flex items-center gap-1 flex-wrap min-w-0">
+              <span className="font-bold text-itec-text leading-tight truncate">
+                {post.pseudonym.split("#")[0]}
+              </span>
+              <span className="text-itec-muted text-xs font-mono truncate">
+                @
+                {(post.pseudonym.split("#")[1] || post.pseudonym).toLowerCase()}
+              </span>
+              <span className="text-itec-muted text-xs">
+                · {timeAgo(post.created_at)}
+              </span>
+            </div>
+            <PostMoreMenu
+              postId={post.id}
+              onDelete={onDelete}
+              onShare={handleShare}
+            />
+          </div>
+          {/* Body */}
+          <RichText
+            text={post.body}
+            className="text-itec-text leading-relaxed mb-2.5 block whitespace-pre-wrap break-words"
+          />
+          {/* Quoted post */}
+          {post.quoted_post && (
             <div
-              className="absolute right-0 top-8 z-20 bg-itec-box2 border border-itec-border rounded-xl shadow-glass-lg py-1 min-w-[140px]"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClick(post.quoted_post!.id);
+              }}
+              className="border border-itec-border rounded-xl p-3 mb-2.5 bg-itec-surface hover:border-purple-500/30 transition-colors cursor-pointer"
             >
-              <button
-                onClick={() => { onDelete(post.id); setMenuOpen(false); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-itec-accent hover:bg-itec-surface transition-colors"
-              >
-                <Trash2 size={12} /> Eliminar
-              </button>
+              <div className="flex items-center gap-2 mb-1">
+                <AnonAvatar pseudonym={post.quoted_post.pseudonym} size="sm" />
+                <span className="text-[8px] font-semibold text-itec-text font-mono">
+                  @{post.quoted_post.pseudonym.toLowerCase()}
+                </span>
+                <span className="text-[8px] text-itec-muted font-mono">
+                  · {timeAgo(post.quoted_post.created_at)}
+                </span>
+              </div>
+              <p className="text-xs text-itec-muted leading-relaxed line-clamp-3">
+                {post.quoted_post.body}
+              </p>
             </div>
           )}
+
+          <CardThreadFooterActions
+            post={post}
+            onVote={onVote}
+            onRepost={onRepost}
+            onClick={onClick}
+            handleShare={handleShare}
+          />
         </div>
-      )}
+      </div>
     </article>
   );
 };
+
+
+// const CardThreadHeader = () =>{
+
+// }

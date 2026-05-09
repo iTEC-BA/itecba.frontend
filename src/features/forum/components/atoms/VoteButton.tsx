@@ -1,67 +1,51 @@
-// src/features/forum/components/atoms/VoteButton.tsx
-import React from "react";
-import { ArrowUp, ArrowDown } from "lucide-react";
- 
-interface VoteButtonProps {
+import React from 'react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
+
+interface Props {
   upvotes:   number;
   userVote?: 1 | -1 | 0 | null;
   onVote:    (v: 1 | -1) => void;
   disabled?: boolean;
   compact?:  boolean;
 }
- 
-export const VoteButton: React.FC<VoteButtonProps> = ({
-  upvotes, userVote, onVote, disabled, compact,
-}) => {
+
+export const VoteButton: React.FC<Props> = ({ upvotes, userVote, onVote, disabled, compact }) => {
   const upActive   = userVote === 1;
   const downActive = userVote === -1;
- 
+
   if (compact) {
     return (
       <button
-        onClick={(e) => { e.stopPropagation(); onVote(1); }}
+        onClick={e => { e.stopPropagation(); onVote(1); }}
         disabled={disabled}
-        className={`flex items-center gap-1 text-xs transition-colors ${
-          upActive
-            ? "text-itec-amber"
-            : "text-itec-muted hover:text-itec-text"
-        } disabled:opacity-40 disabled:cursor-not-allowed`}
-        title="Votar"
+        className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs transition-colors ${
+          upActive ? 'text-itec-accent' : 'text-itec-muted hover:text-itec-accent'
+        } disabled:opacity-40`}
       >
-        <ArrowUp size={14} />
+        <ArrowUp size={11} />
         <span>{upvotes}</span>
       </button>
     );
   }
- 
+
   return (
-    <div className="flex items-center gap-0.5 bg-itec-box2 rounded-full px-1 py-0.5">
+    <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
       <button
-        onClick={(e) => { e.stopPropagation(); onVote(1); }}
-        disabled={disabled}
-        title="Upvote"
+        onClick={() => onVote(1)} disabled={disabled}
         className={`p-1 rounded-full transition-colors ${
-          upActive
-            ? "text-itec-amber bg-itec-amber/10"
-            : "text-itec-muted hover:text-itec-amber hover:bg-itec-amber/10"
+          upActive ? 'text-itec-accent bg-itec-accent/10' : 'text-itec-muted hover:text-itec-accent hover:bg-itec-accent/10'
         } disabled:opacity-40`}
+        title="Upvote"
       >
         <ArrowUp size={14} />
       </button>
-      <span className={`text-xs font-semibold min-w-[1.5ch] text-center ${
-        upActive ? "text-itec-amber" : downActive ? "text-itec-blue" : "text-itec-text"
-      }`}>
-        {upvotes}
-      </span>
+      <span className="text-xs text-itec-muted font-mono">{upvotes}</span>
       <button
-        onClick={(e) => { e.stopPropagation(); onVote(-1); }}
-        disabled={disabled}
-        title="Downvote"
+        onClick={() => onVote(-1)} disabled={disabled}
         className={`p-1 rounded-full transition-colors ${
-          downActive
-            ? "text-itec-blue bg-itec-blue/10"
-            : "text-itec-muted hover:text-itec-blue hover:bg-itec-blue/10"
+          downActive ? 'text-itec-blue bg-itec-blue/10' : 'text-itec-muted hover:text-itec-blue hover:bg-itec-blue/10'
         } disabled:opacity-40`}
+        title="Downvote"
       >
         <ArrowDown size={14} />
       </button>

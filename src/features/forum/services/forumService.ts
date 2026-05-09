@@ -1,114 +1,89 @@
-// src/features/forum/services/forumService.ts
-// Único punto de acceso a la API del foro.
-import { auth } from "@lib/firebase";
-import type {
-  ForumFeedResponse,
-  ForumPost,
-  ForumThreadResponse,
-} from "../types/forum";
+import { auth } from '@/lib/firebase';
 
-const BASE = `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/forum`;
+const BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/forum`;
 
-const getToken = async (): Promise<string | null> => {
-  try {
-    return (await auth.currentUser?.getIdToken()) ?? null;
-  } catch {
-    return null;
-  }
-};
-
-const authHeaders = async (
-  required = false,
-): Promise<Record<string, string>> => {
-  const token = await getToken();
-  if (required && !token) throw new Error("Debes iniciar sesión");
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+const getHeaders = async (authRequired = false) => {
+  const token = await auth.currentUser?.getIdToken();
+  if (authRequired && !token) throw new Error('Sesión requerida');
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return headers;
-};
-
-const handleResponse = async <T>(res: Response): Promise<T> => {
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok)
-    throw new Error(
-      (data as { message?: string }).message || `Error ${res.status}`,
-    );
-  return data as T;
 };
 
 export const forumService = {
-  // ── Feed ──────────────────────────────────────────────────────────────────
-  getPosts: async (page = 1): Promise<ForumFeedResponse> => {
-    const headers = await authHeaders();
-    const res = await fetch(`${BASE}/posts?page=${page}`, { headers });
-    return handleResponse<ForumFeedResponse>(res);
+  getPosts: async (page = 1, tab = 'para-ti') => {
+    const res = await fetch(`${BASE}/posts?page=${page}&tab=${tab}`, {
+      headers: await getHeaders(),
+    });
+    if (!res.ok) throw new Error('Error al cargar el foro');
+    return res.json();
   },
 
-  // ── Hilo ──────────────────────────────────────────────────────────────────
-  getThread: async (id: number): Promise<ForumThreadResponse> => {
-    const headers = await authHeaders();
-    const res = await fetch(`${BASE}/posts/${id}`, { headers });
-    return handleResponse<ForumThreadResponse>(res);
+  getThread: async (id: number) => {
+    const res = await fetch(`${BASE}/posts/${id}`, { headers: await getHeaders() });
+    if (!res.ok) throw new Error('Error al cargar el hilo');
+    return res.json();
   },
 
-  // ── Crear post ────────────────────────────────────────────────────────────
-  createPost: async (body: string): Promise<ForumPost> => {
-    const headers = await authHeaders(true);
+  createPost: async (body: string) => {
     const res = await fetch(`${BASE}/posts`, {
-      method: "POST",
-      headers,
+      method: 'POST',
+      headers: await getHeaders(true),
       body: JSON.stringify({ body }),
     });
-    return handleResponse<ForumPost>(res);
+    if (!res.ok) throw new Error('Error al publicar');
+    return res.json();
   },
 
-  // ── Responder ─────────────────────────────────────────────────────────────
-  createReply: async (parentId: number, body: string): Promise<ForumPost> => {
-    const headers = await authHeaders(true);
+  createReply: async (parentId: number, body: string) => {
     const res = await fetch(`${BASE}/posts/${parentId}/replies`, {
-      method: "POST",
-      headers,
+      method: 'POST',
+      headers: await getHeaders(true),
       body: JSON.stringify({ body }),
     });
-    return handleResponse<ForumPost>(res);
+    if (!res.ok) throw new Error('Error al responder');
+    return res.json();
   },
 
-  // ── Votar ─────────────────────────────────────────────────────────────────
-  vote: async (postId: number, value: 1 | -1): Promise<{ upvotes: number }> => {
-    const headers = await authHeaders(true);
-    const res = await fetch(`${BASE}/posts/${postId}/vote`, {
-      method: "POST",
-      headers,
+  vote: async (id: number, value: 1 | -1) => {
+    const res = await fetch(`${BASE}/posts/${id}/vote`, {
+      method: 'POST',
+      headers: await getHeaders(true),
       body: JSON.stringify({ value }),
     });
-    return handleResponse<{ upvotes: number }>(res);
+    if (!res.ok) throw new Error('Error al votar');
+    return res.json();
   },
 
-  // ── Eliminar ──────────────────────────────────────────────────────────────
-  deletePost: async (postId: number): Promise<void> => {
-    const headers = await authHeaders(true);
-    const res = await fetch(`${BASE}/posts/${postId}`, {
-      method: "DELETE",
-      headers,
+  repost: async (id: number) => {
+    const res = await fetch(`${BASE}/posts/${id}/repost`, {
+      method: 'POST',
+      headers: await getHeaders(true),
     });
-    await handleResponse<void>(res);
+    if (!res.ok) throw new Error('Error al repostear');
+    return res.json();
   },
 
-  // ── Web Push ──────────────────────────────────────────────────────────────
+  deletePost: async (id: number) => {
+    const res = await fetch(`${BASE}/posts/${id}`, {
+      method: 'DELETE',
+      headers: await getHeaders(true),
+    });
+    if (!res.ok) throw new Error('Error al eliminar');
+  },
+
   getVapidKey: async (): Promise<string> => {
-    const res = await fetch(`${BASE}/push/vapid-key`);
-    const data = await handleResponse<{ key: string }>(res);
+    const res = await fetch(`${BASE}/vapid-public-key`);
+    const data = await res.json();
     return data.key;
   },
 
-  subscribePush: async (subscription: PushSubscription): Promise<void> => {
-    const headers = await authHeaders(true);
+  subscribePush: async (subscription: PushSubscription) => {
     await fetch(`${BASE}/push/subscribe`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ subscription }),
+      method: 'POST',
+      headers: await getHeaders(true),
+      body: JSON.stringify(subscription),
     });
   },
 };

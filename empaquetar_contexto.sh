@@ -50,8 +50,7 @@ echo "🖼️  3/5 Agregando Layouts y Plantillas (Carpeta Templates)..."
 agregar_carpeta "src/components/templates"
 
 echo "🛠️  4/5 Agregando Hooks Globales..."
-agregar_archivo "src/hooks/useSidebarLinks.ts"
-agregar_archivo "src/hooks/usePageTitle.ts"
+agregar_carpeta "src/components/hooks"
 
 echo "🧩 5/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"

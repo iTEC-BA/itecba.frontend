@@ -1,110 +1,64 @@
-// src/features/forum/components/atoms/ComposeBox.tsx
-// Caja de texto reutilizable para crear posts y respuestas
-import React, { useState, useRef, useEffect } from "react";
-import { Send, X } from "lucide-react";
- 
-interface ComposeBoxProps {
-  placeholder:  string;
-  maxLength?:   number;
-  minLength?:   number;
-  onSubmit:     (body: string) => Promise<void>;
-  onCancel?:    () => void;
-  autoFocus?:   boolean;
-  buttonLabel?: string;
-}
- 
-export const ComposeBox: React.FC<ComposeBoxProps> = ({
-  placeholder,
-  maxLength   = 2000,
-  minLength   = 3,
-  onSubmit,
-  onCancel,
-  autoFocus   = false,
-  buttonLabel = "Publicar",
-}) => {
-  const [body,      setBody]      = useState("");
-  const [loading,   setLoading]   = useState(false);
-  const [error,     setError]     = useState<string | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const remaining   = maxLength - body.length;
-  const tooShort    = body.trim().length < minLength;
- 
-  useEffect(() => {
-    if (autoFocus) textareaRef.current?.focus();
-  }, [autoFocus]);
- 
-  // Auto-grow textarea
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+import React, { useState, useRef } from 'react';
+import { Send } from 'lucide-react';
+import { AnonAvatar } from './AnonAvatar';
+import { useAuth } from '@context/AuthContext';
+
+interface Props { onSubmit: (body: string) => Promise<void>; compact?: boolean; }
+
+export const ComposeBox: React.FC<Props> = ({ onSubmit, compact = false }) => {
+  const { user } = useAuth();
+  const [body,    setBody]    = useState('');
+  const [loading, setLoading] = useState(false);
+  const taRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBody(e.target.value);
-    setError(null);
-    const el = e.target;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
+    e.target.style.height = 'auto';
+    e.target.style.height = `${e.target.scrollHeight}px`;
   };
- 
-  const handleSubmit = async () => {
-    if (tooShort || loading) return;
+
+  const handleSend = async () => {
+    if (!body.trim() || loading) return;
     setLoading(true);
-    setError(null);
     try {
-      await onSubmit(body.trim());
-      setBody("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Error al publicar");
+      await onSubmit(body);
+      setBody('');
+      if (taRef.current) taRef.current.style.height = 'auto';
     } finally {
       setLoading(false);
     }
   };
- 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") handleSubmit();
+
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend();
   };
- 
+
   return (
-    <div className="rounded-xl border border-itec-border bg-itec-box p-3 space-y-2">
-      <textarea
-        ref={textareaRef}
-        value={body}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        maxLength={maxLength}
-        rows={3}
-        className="w-full resize-none bg-transparent text-itec-text text-sm placeholder:text-itec-muted outline-none leading-relaxed min-h-[72px]"
-      />
-      {error && (
-        <p className="text-xs text-itec-accent">{error}</p>
-      )}
-      <div className="flex items-center justify-between">
-        <span className={`text-xs ${remaining < 50 ? "text-itec-amber" : "text-itec-muted"}`}>
-          {remaining} caracteres restantes
-        </span>
-        <div className="flex items-center gap-2">
-          {onCancel && (
-            <button
-              onClick={onCancel}
-              className="flex items-center gap-1.5 text-xs text-itec-muted hover:text-itec-text transition-colors px-3 py-1.5 rounded-lg hover:bg-itec-surface"
-            >
-              <X size={13} /> Cancelar
-            </button>
-          )}
+    <div className={`flex gap-3 bg-itec-bg border-b border-itec-border text-xs ${compact ? 'p-3' : 'p-4'}`}>
+      <AnonAvatar pseudonym={user?.email || 'Anon'} size={compact ? 'sm' : 'md'} />
+      <div className="flex-1 min-w-0">
+        <textarea
+          ref={taRef}
+          value={body}
+          onChange={handleInput}
+          onKeyDown={handleKey}
+          placeholder="¿Qué está pasando en UTN?"
+          rows={4}
+          className="text-xs w-full bg-transparent text-itec-text outline-none resize-none placeholder:text-itec-muted leading-relaxed"
+        />
+        <div className="flex items-center justify-end mt-2 pt-2 border-t border-itec-border/50">
           <button
-            onClick={handleSubmit}
-            disabled={tooShort || loading || remaining < 0}
-            className="flex items-center gap-1.5 text-xs font-semibold bg-itec-accent hover:bg-itec-accent/90 text-white px-3 py-1.5 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={handleSend}
+            disabled={!body.trim() || loading}
+            className="flex items-center gap-1.5 px-4 py-1.5 bg-itec-red hover:bg-itec-red disabled:opacity-40 text-white font-semibold rounded-full text-sm transition-all active:scale-95"
           >
-            {loading ? (
-              <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <Send size={13} />
-            )}
-            {loading ? "Publicando..." : buttonLabel}
+            {loading
+              ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              : <><Send size={13} />Publicar</>
+            }
           </button>
         </div>
       </div>
-      <p className="text-[10px] text-itec-muted">
-        Ctrl+Enter para publicar · Anónimo — nadie puede ver quién sos
-      </p>
     </div>
   );
 };

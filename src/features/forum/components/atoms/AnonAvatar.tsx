@@ -1,49 +1,64 @@
-// src/features/forum/components/atoms/AnonAvatar.tsx
-// Avatar determinista basado en el pseudónimo
 import React from "react";
 
-const AVATAR_COLORS = [
+const COLORS = [
   "bg-itec-accent",
   "bg-itec-blue",
-  "bg-itec-purple",
-  "bg-itec-emerald",
-  "bg-itec-amber",
-  "bg-itec-sky",
+  "bg-itect-red",
+  "bg-emerald-600",
+  "bg-amber-500",
+  "bg-sky-600",
   "bg-itec-groups",
-  "bg-itec-red",
+  "bg-rose-600",
+  "bg-indigo-500",
+  "bg-violet-500",
+  "bg-fuchsia-500",
+  "bg-lime-500",
+  "bg-teal-500",
+  "bg-cyan-500",
+  "bg-yellow-600",
+  "bg-pink-500",
+  "bg-stone-600",
+  "bg-slate-600",
+  "bg-emerald-400",
+  "bg-amber-300",
+  "bg-sky-400",
+  "bg-rose-400",
+  "bg-indigo-400",
+  "bg-violet-400",
+  "bg-fuchsia-400",
+  "bg-lime-400",
+  "bg-teal-400",
+  "bg-cyan-400",
+  "bg-yellow-400",
+  "bg-pink-400",
+  "bg-stone-400",
+  "bg-slate-400",
+  "bg-gray-500",
+  "bg-black",
+  "bg-white/10",
 ];
 
-const colorFromName = (name: string): string => {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++)
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+const colorFrom = (name: string): string => {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+  return COLORS[Math.abs(h) % COLORS.length];
 };
 
-interface AnonAvatarProps {
+interface Props {
   pseudonym: string;
   size?: "sm" | "md" | "lg";
 }
-
-const SIZE_MAP = {
-  sm: "w-7 h-7 text-xs",
-  md: "w-9 h-9 text-sm",
-  lg: "w-11 h-11 text-base",
+const SZ = {
+  sm: "w-7 h-7 text-[10px]",
+  md: "w-9 h-9 text-xs",
+  lg: "w-11 h-11 text-sm",
 };
 
-export const AnonAvatar: React.FC<AnonAvatarProps> = ({
-  pseudonym,
-  size = "md",
-}) => {
-  const initials = pseudonym.slice(0, 2).toUpperCase();
-  const color = colorFromName(pseudonym);
-
-  return (
-    <div
-      className={`${SIZE_MAP[size]} ${color} rounded-full flex items-center justify-center font-bold text-white flex-shrink-0 select-none`}
-      aria-label={`Avatar de ${pseudonym}`}
-    >
-      {initials}
-    </div>
-  );
-};
+export const AnonAvatar: React.FC<Props> = ({ pseudonym, size = "md" }) => (
+  <div
+    className={`${SZ[size]} ${colorFrom(pseudonym)} rounded-full flex items-center justify-center font-bold text-white flex-shrink-0 select-none`}
+    aria-label={`Avatar de ${pseudonym}`}
+  >
+    {pseudonym.slice(0, 2).toUpperCase()}
+  </div>
+);
