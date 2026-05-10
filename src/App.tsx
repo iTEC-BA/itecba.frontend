@@ -29,6 +29,7 @@ const CalendarioPage   = lazy(() => import("@pages/CalendarioPage").then(m => ({
 const PluginsPage      = lazy(() => import("@pages/PluginsPage").then(m => ({ default: m.PluginsPage })));
 const TerminosPage     = lazy(() => import("@pages/TerminosPage").then(m => ({ default: m.TerminosPage })));
 const ForumPage = lazy(() => import('@pages/ForumPage').then(m => ({ default: m.ForumPage })));
+const ForumThreadPage = lazy(() => import('@pages/ForumThreadPage').then(m => ({ default: m.ForumThreadPage })));
 
 // ── Wrapper reutilizable para Suspense por ruta ───────────────────────────────
 const PageSuspense: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -44,6 +45,7 @@ export const App: React.FC = () => {
           {/* RUTAS PÚBLICAS */}
           <Route path="/"           element={<PageSuspense><HomePage /></PageSuspense>} />
           <Route path="/foro"      element={<PageSuspense><ForumPage /></PageSuspense>} />
+          <Route path="/foro/:postId" element={<PageSuspense><ForumThreadPage /></PageSuspense>} />
           <Route path="/login"      element={<PageSuspense><LoginPage /></PageSuspense>} />
           <Route path="/cursos"     element={<PageSuspense><CoursesPage /></PageSuspense>} />
           <Route path="/cursos/:id" element={<PageSuspense><CourseDetail /></PageSuspense>} />

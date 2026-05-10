@@ -1,54 +1,27 @@
 import React from 'react';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 interface Props {
-  upvotes:   number;
-  userVote?: 1 | -1 | 0 | null;
-  onVote:    (v: 1 | -1) => void;
+  upvotes:  number;
+  userVote: number;
+  onVote:   (v: 1 | -1) => void;
   disabled?: boolean;
   compact?:  boolean;
 }
 
-export const VoteButton: React.FC<Props> = ({ upvotes, userVote, onVote, disabled, compact }) => {
-  const upActive   = userVote === 1;
-  const downActive = userVote === -1;
+const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1).replace('.0', '')}K` : String(n);
 
-  if (compact) {
-    return (
-      <button
-        onClick={e => { e.stopPropagation(); onVote(1); }}
-        disabled={disabled}
-        className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs transition-colors ${
-          upActive ? 'text-itec-accent' : 'text-itec-muted hover:text-itec-accent'
-        } disabled:opacity-40`}
-      >
-        <ArrowUp size={11} />
-        <span>{upvotes}</span>
-      </button>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-      <button
-        onClick={() => onVote(1)} disabled={disabled}
-        className={`p-1 rounded-full transition-colors ${
-          upActive ? 'text-itec-accent bg-itec-accent/10' : 'text-itec-muted hover:text-itec-accent hover:bg-itec-accent/10'
-        } disabled:opacity-40`}
-        title="Upvote"
-      >
-        <ArrowUp size={14} />
-      </button>
-      <span className="text-xs text-itec-muted font-mono">{upvotes}</span>
-      <button
-        onClick={() => onVote(-1)} disabled={disabled}
-        className={`p-1 rounded-full transition-colors ${
-          downActive ? 'text-itec-blue bg-itec-blue/10' : 'text-itec-muted hover:text-itec-blue hover:bg-itec-blue/10'
-        } disabled:opacity-40`}
-        title="Downvote"
-      >
-        <ArrowDown size={14} />
-      </button>
-    </div>
-  );
-};
+export const VoteButton: React.FC<Props> = ({ upvotes, userVote, onVote, disabled, compact }) => (
+  <div className={`flex items-center gap-${compact ? '1' : '2'}`}>
+    <button
+      disabled={disabled}
+      onClick={() => onVote(1)}
+      className={`flex items-center gap-1 transition-colors ${
+        userVote === 1 ? 'text-itec-red' : 'text-itec-muted hover:text-itec-red'
+      } disabled:opacity-40 disabled:cursor-not-allowed`}
+    >
+      <Heart size={compact ? 13 : 15} fill={userVote === 1 ? 'currentColor' : 'none'} />
+      <span className={`font-mono ${compact ? 'text-[11px]' : 'text-xs'}`}>{fmt(upvotes)}</span>
+    </button>
+  </div>
+);
