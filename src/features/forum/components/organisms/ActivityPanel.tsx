@@ -9,7 +9,7 @@ const SUGGESTIONS = [
   { id: 5, name: 'LabRedes#2231', sub: 'Sugerencia · 2 semanas' },
 ];
 
-const FollowBtn: React.FC<{ name: string }> = ({ name }) => {
+const FollowBtn: React.FC = () => {
   const [following, setFollowing] = useState(false);
   return (
     <button
@@ -32,8 +32,8 @@ export const ActivityPanel: React.FC = () => (
     </div>
 
     {/* Sistema notif */}
-    <div className="flex gap-3 px-4 py-3 border-b border-itec-border hover:bg-white/[0.015] transition-colors cursor-pointer">
-      <div className="w-11 h-11 rounded-xl bg-itect-red/20 border border-purple-500/20 flex items-center justify-center text-lg flex-shrink-0">
+    <div className="flex gap-3 px-4 py-3 border-b border-itec-border hover:bg-white/1.5 transition-colors cursor-pointer">
+      <div className="w-11 h-11 rounded-xl bg-itect-red/20 border border-purple-500/20 flex items-center justify-center text-lg shrink-0">
         🎓
       </div>
       <div className="flex-1 min-w-0">
@@ -45,13 +45,13 @@ export const ActivityPanel: React.FC = () => (
     </div>
 
     {SUGGESTIONS.map(s => (
-      <div key={s.id} className="flex items-center gap-3 px-4 py-3 border-b border-itec-border hover:bg-white/[0.015] transition-colors">
+      <div key={s.id} className="flex items-center gap-3 px-4 py-3 border-b border-itec-border hover:bg-white/1.5 transition-colors">
         <AnonAvatar pseudonym={s.name} size="md" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-itec-text truncate">{s.name.split('#')[0]}</p>
           <p className="text-xs text-itec-muted">{s.sub}</p>
         </div>
-        <FollowBtn name={s.name} />
+        <FollowBtn />
       </div>
     ))}
   </div>
