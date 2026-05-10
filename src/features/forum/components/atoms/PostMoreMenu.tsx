@@ -1,68 +1,69 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { MoreHorizontal, Trash2, Share2, Flag } from 'lucide-react';
 import { useAuth } from '@context/AuthContext';
-import { Button } from '@/components/ui/Button';
 
 interface Props {
   postId:   number;
+  isAuthor: boolean;
   onDelete: (id: number) => void;
   onShare:  (id: number) => void;
 }
 
-export const PostMoreMenu: React.FC<Props> = ({ postId, onDelete, onShare }) => {
-  const { user, isAdmin } = useAuth();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+export const PostMoreMenu: React.FC<Props> = ({ postId, isAuthor, onDelete, onShare }) => {
+  const { isAdmin }           = useAuth();
+  const [open, setOpen]       = useState(false);
+  const menuRef               = useRef<HTMLDivElement>(null);
+
+  const canDelete = isAuthor || isAdmin;
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    if (!open) return;
+    const handle = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+    document.addEventListener('mousedown', handle);
+    return () => document.removeEventListener('mousedown', handle);
+  }, [open]);
+
+  const stop = (e: React.MouseEvent) => e.stopPropagation();
 
   return (
-    <div ref={ref} className="relative shrink-0">
+    <div ref={menuRef} className="relative" onClick={stop}>
       <button
-        onClick={e => { e.stopPropagation(); setOpen(o => !o); }}
-        className="w-8 h-8 flex items-center justify-center rounded-full text-itec-muted hover:text-itec-text hover:bg-white/6 transition-colors"
+        onClick={() => setOpen(o => !o)}
+        className="w-7 h-7 flex items-center justify-center rounded-full text-itec-muted hover:text-itec-text hover:bg-white/8 transition-colors"
+        aria-label="Más opciones"
       >
-        <MoreHorizontal size={16} />
+        <MoreHorizontal size={15} />
       </button>
+
       {open && (
-        <div className="absolute right-0 top-9 z-50 w-44 bg-itec-bg border border-itec-border rounded-2xl shadow-2xl shadow-black/50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-          <Button
-            onClick={e => { e.stopPropagation(); onShare(postId); setOpen(false); }}
-            variant="secondary"
-            hierarchy="ghost"
-            fullWidth
-            className="justify-start rounded-none px-4 py-3 text-sm"
+        <div className="absolute right-0 top-8 z-50 w-44 bg-itec-card border border-itec-border rounded-2xl shadow-2xl py-1 animate-in fade-in zoom-in-95 duration-150">
+          <button
+            onClick={() => { onShare(postId); setOpen(false); }}
+            className="flex items-center gap-2.5 w-full px-3.5 py-2 text-xs text-itec-text hover:bg-white/5 transition-colors"
           >
-            <Share2 size={14} className="text-itec-muted" />
+            <Share2 size={13} className="text-itec-blue-skye" />
             Copiar enlace
-          </Button>
-          <Button
-            onClick={e => { e.stopPropagation(); setOpen(false); }}
-            variant="secondary"
-            hierarchy="ghost"
-            fullWidth
-            className="justify-start rounded-none px-4 py-3 text-sm"
+          </button>
+          <button
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2.5 w-full px-3.5 py-2 text-xs text-itec-muted hover:bg-white/5 transition-colors"
           >
-            <Flag size={14} className="text-itec-muted" />
+            <Flag size={13} />
             Reportar
-          </Button>
-          {(user || isAdmin) && (
-            <Button
-              onClick={e => { e.stopPropagation(); onDelete(postId); setOpen(false); }}
-              variant="danger"
-              hierarchy="solid"
-              fullWidth
-              className="justify-start rounded-none border-t border-itec-border"
-            >
-              <Trash2 size={14} />
-              Eliminar
-            </Button>
+          </button>
+          {canDelete && (
+            <>
+              <div className="h-px bg-itec-border mx-2 my-1" />
+              <button
+                onClick={() => { onDelete(postId); setOpen(false); }}
+                className="flex items-center gap-2.5 w-full px-3.5 py-2 text-xs text-itec-red hover:bg-itec-red/10 transition-colors"
+              >
+                <Trash2 size={13} />
+                Eliminar
+              </button>
+            </>
           )}
         </div>
       )}

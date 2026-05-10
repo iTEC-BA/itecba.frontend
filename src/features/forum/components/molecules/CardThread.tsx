@@ -105,6 +105,7 @@ export const CardThread = ({
       </div>
       <PostMoreMenu
         postId={post.id}
+        isAuthor={Boolean((post as ForumPost & { is_author?: boolean }).is_author)}
         onDelete={onDelete}
         onShare={(id) =>
           navigator.clipboard.writeText(`${window.location.origin}/foro/${id}`)

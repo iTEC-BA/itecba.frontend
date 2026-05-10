@@ -5,6 +5,8 @@ import { VoteButton }      from '../atoms/VoteButton';
 import { RichText }        from '../atoms/RichText';
 import { ReplyCard }       from '../molecules/ReplyCard';
 import { ComposeBox }      from '../atoms/ComposeBox';
+import { LayoutModal }     from '@components/templates/LayoutModal';
+import { Button }          from '@/components/ui/Button';
 import type { ForumPost }  from '../../types/forum';
 import { useAuth }         from '@context/AuthContext';
 
@@ -31,11 +33,21 @@ export const ThreadView: React.FC<Props> = ({
   post, replies, loading, onClose, onVote, onRepost, onDelete, onReply,
 }) => {
   const { isAuthenticated } = useAuth();
-  const [replying, setReplying] = useState(false);
+  const [replying,     setReplying]     = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [deleting,     setDeleting]     = useState(false);
 
   const handleReply = async (body: string) => {
     await onReply(post.id, body);
     setReplying(false);
+  };
+
+  const requestDelete = (id: number) => setDeleteTarget(id);
+  const confirmDelete = async () => {
+    if (deleteTarget === null) return;
+    setDeleting(true);
+    try { onDelete(deleteTarget); }
+    finally { setDeleting(false); setDeleteTarget(null); }
   };
 
   return (
@@ -52,93 +64,120 @@ export const ThreadView: React.FC<Props> = ({
       </header>
 
       {/* Post principal */}
-      <article className="px-4 pt-4 pb-3 border-b border-itec-border">
-        <div className="flex items-start gap-3">
+      <div className="px-4 pt-4 pb-3 border-b border-itec-border">
+        <div className="flex items-start gap-3 mb-3">
           <AnonAvatar pseudonym={post.pseudonym} size="lg" />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-bold text-itec-text">{post.pseudonym.split('#')[0]}</span>
-              <span className="text-xs text-itec-muted font-mono">@{(post.pseudonym.split('#')[1] || post.pseudonym).toLowerCase()}</span>
-            </div>
-            <p className="text-xs text-itec-muted mt-0.5">{timeAgo(post.created_at)}</p>
+          <div>
+            <p className="font-bold text-sm text-itec-text">
+              {post.pseudonym.split('#')[0]}
+            </p>
+            <p className="text-xs text-itec-muted font-mono">
+              @{(post.pseudonym.split('#')[1] || post.pseudonym).toLowerCase()}
+            </p>
           </div>
         </div>
-
         <RichText
           text={post.body}
-          className="block mt-3 text-base text-itec-text leading-relaxed whitespace-pre-wrap break-words"
+          className="text-sm text-itec-text leading-relaxed block whitespace-pre-wrap wrap-break-word mb-3"
         />
+        <p className="text-xs text-itec-muted mb-3">{timeAgo(post.created_at)}</p>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 mt-3 pt-3 border-t border-itec-border/50 text-xs text-itec-muted">
-          <span><strong className="text-itec-text font-semibold">{post.reposts}</strong> reposts</span>
-          <span><strong className="text-itec-text font-semibold">{post.upvotes}</strong> likes</span>
-          <span><strong className="text-itec-text font-semibold">{post.reply_count}</strong> respuestas</span>
+        <div className="flex items-center gap-4 py-3 border-y border-itec-border text-xs text-itec-text">
+          <span><strong>{post.reposts || 0}</strong> <span className="text-itec-muted">Reposts</span></span>
+          <span><strong>{post.upvotes}</strong> <span className="text-itec-muted">Likes</span></span>
+          <span><strong>{post.views || 0}</strong> <span className="text-itec-muted">Vistas</span></span>
         </div>
 
-        {/* Acciones */}
-        <div className="flex items-center gap-4 mt-3" onClick={e => e.stopPropagation()}>
+        {/* Actions */}
+        <div className="flex items-center justify-around py-1 text-itec-muted" onClick={e => e.stopPropagation()}>
           <VoteButton
             upvotes={post.upvotes}
             userVote={post.user_vote ?? 0}
             onVote={v => onVote(post.id, v)}
             disabled={!isAuthenticated}
           />
-          {isAuthenticated && (
-            <button
-              onClick={() => setReplying(r => !r)}
-              className="text-xs text-itec-muted hover:text-itec-text transition-colors"
-            >
-              {replying ? 'Cancelar' : 'Responder'}
-            </button>
-          )}
           <button
             onClick={() => onRepost(post.id)}
-            className={`text-xs transition-colors ${post.is_reposted ? 'text-itec-red' : 'text-itec-muted hover:text-itec-text'}`}
+            className="p-2 text-itec-muted hover:text-itec-text hover:bg-white/8 rounded-full transition-colors text-xs"
           >
-            {post.is_reposted ? 'Reposteado' : 'Repostear'}
+            Repost
           </button>
-        </div>
-      </article>
-
-      {/* Compose reply */}
-      {replying && isAuthenticated && (
-        <div className="border-b border-itec-border">
-          <ComposeBox onSubmit={handleReply} compact />
-        </div>
-      )}
-
-      {/* Replies */}
-      {loading ? (
-        <div className="flex justify-center py-10">
-          <div className="w-5 h-5 border-2 border-itec-border border-t-white rounded-full animate-spin" />
-        </div>
-      ) : replies.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
-          <span className="text-3xl opacity-20">💬</span>
-          <p className="text-sm text-itec-muted">Sin respuestas todavía</p>
-          {isAuthenticated && (
+          {(post.is_author) && (
             <button
-              onClick={() => setReplying(true)}
-              className="text-xs text-itec-red hover:underline mt-1"
+              onClick={() => requestDelete(post.id)}
+              className="p-2 text-itec-muted hover:text-itec-red hover:bg-itec-red/10 rounded-full transition-colors text-xs"
             >
-              Sé el primero en responder
+              Eliminar post
             </button>
           )}
         </div>
+      </div>
+
+      {/* Respuestas */}
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <div className="w-5 h-5 border-2 border-itec-border border-t-itec-red rounded-full animate-spin" />
+        </div>
       ) : (
-        <div>
-          {replies.map((reply, i) => (
+        <div className="flex-1">
+          {replies.map((r, i) => (
             <ReplyCard
-              key={reply.id}
-              reply={reply}
+              key={r.id}
+              reply={r}
               isLast={i === replies.length - 1}
               onVote={onVote}
-              onDelete={onDelete}
+              onDelete={requestDelete}
             />
           ))}
+          {replies.length === 0 && (
+            <div className="py-12 text-center text-xs text-itec-muted">
+              Sin respuestas aún. Sé el primero.
+            </div>
+          )}
         </div>
       )}
+
+      {/* Compose reply */}
+      {isAuthenticated && (
+        replying ? (
+          <div className="border-t border-itec-border">
+            <ComposeBox onSubmit={handleReply} compact />
+          </div>
+        ) : (
+          <div className="border-t border-itec-border px-4 py-3">
+            <button
+              onClick={() => setReplying(true)}
+              className="w-full text-left text-xs text-itec-muted bg-white/4 rounded-xl px-4 py-2.5 hover:bg-white/8 transition-colors border border-itec-border"
+            >
+              Responder al hilo…
+            </button>
+          </div>
+        )
+      )}
+
+      {/* Modal confirmar borrado */}
+      <LayoutModal
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        title="Eliminar publicación"
+        description="Esta acción es permanente y no se puede deshacer."
+        maxWidth="max-w-sm"
+      >
+        <div className="px-6 pb-6 flex items-center justify-end gap-3">
+          <Button variant="secondary" hierarchy="ghost" onClick={() => setDeleteTarget(null)}>
+            Cancelar
+          </Button>
+          <Button
+            variant="danger"
+            hierarchy="solid"
+            onClick={confirmDelete}
+            isLoading={deleting}
+          >
+            Sí, eliminar
+          </Button>
+        </div>
+      </LayoutModal>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Trash2 } from 'lucide-react';
-import { AnonAvatar } from '../atoms/AnonAvatar';
+import { Trash2 }      from 'lucide-react';
+import { AnonAvatar }  from '../atoms/AnonAvatar';
 import { VoteButton }  from '../atoms/VoteButton';
 import { RichText }    from '../atoms/RichText';
 import type { ForumPost } from '../../types/forum';
-import { useAuth } from '@context/AuthContext';
+import { useAuth }     from '@context/AuthContext';
 
 const timeAgo = (iso: string): string => {
   const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
@@ -22,7 +22,9 @@ interface Props {
 }
 
 export const ReplyCard: React.FC<Props> = ({ reply, isLast, onVote, onDelete }) => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  const canDelete = reply.is_author || isAdmin;
+
   return (
     <div className="flex gap-3 px-4 py-3 group hover:bg-white/[0.015] transition-colors">
       <div className="flex flex-col items-center flex-shrink-0">
@@ -35,7 +37,10 @@ export const ReplyCard: React.FC<Props> = ({ reply, isLast, onVote, onDelete }) 
           <span className="text-xs font-semibold text-itec-text">{reply.pseudonym}</span>
           <span className="text-xs text-itec-muted font-mono">· {timeAgo(reply.created_at)}</span>
         </div>
-        <RichText text={reply.body} className="text-sm text-itec-text leading-relaxed block whitespace-pre-wrap break-words mb-1.5" />
+        <RichText
+          text={reply.body}
+          className="text-sm text-itec-text leading-relaxed block whitespace-pre-wrap break-words mb-1.5"
+        />
         <div className="flex items-center gap-4 mt-1" onClick={e => e.stopPropagation()}>
           <VoteButton
             upvotes={reply.upvotes}
@@ -44,10 +49,11 @@ export const ReplyCard: React.FC<Props> = ({ reply, isLast, onVote, onDelete }) 
             disabled={!user}
             compact
           />
-          {user && (
+          {canDelete && (
             <button
               onClick={() => onDelete(reply.id)}
-              className="opacity-0 group-hover:opacity-100 text-itec-muted hover:text-itec-accent transition-all"
+              className="opacity-0 group-hover:opacity-100 text-itec-muted hover:text-itec-red transition-all"
+              title="Eliminar respuesta"
             >
               <Trash2 size={12} />
             </button>

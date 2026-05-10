@@ -6,3 +6,4 @@ export { TrendingBanner }     from './TrendingBanner';
 export { RepostIndicator }    from './RepostIndicator';
 export { PostMoreMenu }       from './PostMoreMenu';
 export { RichText }           from './RichText';
+export { CardThreadFooterActions } from './CardThreadFooterActions';

@@ -28,8 +28,8 @@ const GuiaTECPage      = lazy(() => import("@pages/GuiaTECPage").then(m => ({ de
 const CalendarioPage   = lazy(() => import("@pages/CalendarioPage").then(m => ({ default: m.CalendarioPage })));
 const PluginsPage      = lazy(() => import("@pages/PluginsPage").then(m => ({ default: m.PluginsPage })));
 const TerminosPage     = lazy(() => import("@pages/TerminosPage").then(m => ({ default: m.TerminosPage })));
-const ForumPage = lazy(() => import('@pages/ForumPage').then(m => ({ default: m.ForumPage })));
-const ForumThreadPage = lazy(() => import('@pages/ForumThreadPage').then(m => ({ default: m.ForumThreadPage })));
+const ForumPage        = lazy(() => import('@pages/ForumPage').then(m => ({ default: m.ForumPage })));
+const ForumThreadPage  = lazy(() => import('@pages/ForumThreadPage').then(m => ({ default: m.ForumThreadPage })));
 
 // ── Wrapper reutilizable para Suspense por ruta ───────────────────────────────
 const PageSuspense: React.FC<{ children: React.ReactNode }> = ({ children }) => (

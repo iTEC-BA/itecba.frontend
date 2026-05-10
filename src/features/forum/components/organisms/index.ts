@@ -1,3 +1,4 @@
-export { ForumFeed }      from './ForumFeed';
-export { ThreadView }     from './ThreadView';
-export { ComposeModal }   from '../molecules/ComposeModal';
+export { ForumFeed }    from './ForumFeed';
+export { ThreadView }   from './ThreadView';
+export { MentionsPanel } from './MentionsPanel';
+export { ActivityPanel } from './ActivityPanel';

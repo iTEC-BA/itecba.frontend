@@ -11,6 +11,7 @@ export interface ForumPost {
   reply_count:  number;
   user_vote?:   1 | -1 | 0 | null;
   is_reposted?: boolean;
+  is_author?:   boolean;
   reposted_by?: string;
   quoted_post?: ForumPost | null;
   tags?:        { label: string; direction: 'up' | 'down' | 'neutral' }[];
@@ -37,3 +38,15 @@ export type ForumView = 'feed' | 'thread';
 
 export interface CreatePostPayload  { body: string; }
 export interface CreateReplyPayload { body: string; parentId: number; }
+
+export interface ForumBanner {
+  id:           number;
+  title:        string;
+  description:  string;
+  redirect_url: string;
+  svg_content:  string;
+  banner_color: string;
+  is_active:    number;   // 0 | 1
+  created_at:   string;
+  updated_at:   string;
+}
