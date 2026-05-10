@@ -84,6 +84,7 @@ export default defineConfig({
       // ── Workbox: estrategia de caché ──────────────────────────────────────
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        importScripts: ["/sw-push-handler.js"],
         // Cache-first para assets estáticos
         runtimeCaching: [
           // Google Fonts
@@ -145,5 +146,6 @@ export default defineConfig({
       '@lib':        fileURLToPath(new URL('./src/lib', import.meta.url)),
       '@data':       fileURLToPath(new URL('./src/data', import.meta.url)),
     },
-  },
+  }
+  
 })

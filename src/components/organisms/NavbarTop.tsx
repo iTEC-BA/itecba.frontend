@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@context/AuthContext";
 import { Icons } from "@components/ui/icons/Icons";
 import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
-import { NotificationBell } from "@features/home/components/organisms/NotificationBell";
+
 import logo from "@assets/logo.png";
 import { RewardsWidgetPoints } from "@features/rewards/components/atoms/RewardsWidgetPoints";
 import { useSidebarMobile } from "@hooks/useSidebarMobile";
 import { User } from "lucide-react";
+import { Suspense } from "react";
+import { NotificationBell } from "@features/notifications/components/NotificationBell";
 
 export const NavbarTop = () => {
   const { user, isAuthenticated } = useAuth();
@@ -125,7 +127,13 @@ export const NavbarTop = () => {
               </a>
               {/* Notificaciones */}
               <div className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer">
-                <NotificationBell />
+                <Suspense
+                  fallback={
+                    <div className="w-7 h-7 rounded-full bg-white/10 animate-pulse" />
+                  }
+                >
+                  <NotificationBell />
+                </Suspense>
               </div>
             </div>
           )}
