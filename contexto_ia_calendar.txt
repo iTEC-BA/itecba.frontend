@@ -6,8 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@context/AuthContext";
 import { ProtectedRoute } from "@components/templates/ProtectedRoute";
 import LoadingState from "@components/ui/LoadingState";
-import { InstallPWABanner } from "./components/molecules/InstallPWABanner";
-import { UpdatePWAToast } from "./components/molecules/UpdatePWAToast";
+import { BannerInstallPWA } from "./components/organisms/BannerInstallPWA";
+import { UpdatePWAToast } from "./components/organisms/UpdatePWAToast";
 
 const RewardsPage      = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
 const CourseEditDetail = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
@@ -85,7 +85,7 @@ export const App: React.FC = () => {
         InstallPWABanner → aparece cuando Chrome detecta que la PWA es instalable
         UpdatePWAToast   → aparece cuando hay una nueva versión del Service Worker
       */}
-      <InstallPWABanner />
+      <BannerInstallPWA />
       <UpdatePWAToast />
     </AuthProvider>
   );
@@ -441,82 +441,6 @@ export const AutocompleteInput: React.FC<Props> = ({
 
 
 ==================================================
-ARCHIVO: src/components/molecules/BottomNavbar.tsx
-==================================================
-import { Link, useLocation } from "react-router-dom";
-import { Icons } from "../ui/icons/Icons";
-import Raccoon from "../ui/icons/Raccoon";
-import { useAuth } from "../../context/AuthContext";
-
-export const BottomNavbar = () => {
-  const location = useLocation();
-  const { isAuthenticated } = useAuth();
-
-  const isActive = (path: string) => location.pathname === path;
-
-  const linkClass = (path: string) =>
-    `flex items-center justify-center flex-col gap-0.5 min-w-0 flex-1 ${
-      isActive(path) ? "text-[#e01540]" : "text-[#9aa3b0]"
-    }`;
-
-  return (
-    <nav className="h-16 w-full bg-itec-sidebar border-t border-white/5 sticky bottom-0 z-[99] flex items-center justify-around px-2 shrink-0 pb-safe">
-      <div className="flex gap-1 justify-around w-full items-center">
-        {/* Inicio */}
-        <Link to="/" className={linkClass("/")}>
-          <div className="w-6 h-6">
-            <Icons type="home" className="w-full h-full" />
-          </div>
-          <span className="text-[9px] font-medium truncate">Inicio</span>
-        </Link>
-
-        {/* BuscaTEC */}
-        <Link to="/buscatec" className={linkClass("/buscatec")}>
-          <div className="w-6 h-6">
-            <Icons type="search" className="w-full h-full" />
-          </div>
-          <span className="text-[9px] font-medium truncate">Buscar</span>
-        </Link>
-
-        {/* FAB central — Chatbot / Raccoon */}
-        <Link to="/faqs" className="flex items-center justify-center flex-col flex-1">
-          <span
-            className={`rounded-2xl p-2 transition-colors ${
-              isActive("/faqs") ? "bg-[#e01540]" : "bg-itec-red"
-            }`}
-          >
-            <Raccoon size={28} fill1="#ffffff" fill2="#ffffff" fill3="#0C1014" />
-          </span>
-          <span className="text-[9px] font-medium text-[#9aa3b0] mt-0.5">Chat IA</span>
-        </Link>
-
-        {/* Grupos */}
-        <Link to="/grupos" className={linkClass("/grupos")}>
-          <div className="w-6 h-6">
-            <Icons type="users" className="w-full h-full" />
-          </div>
-          <span className="text-[9px] font-medium truncate">Grupos</span>
-        </Link>
-
-        {/* Perfil / Login */}
-        <Link
-          to={isAuthenticated ? "/perfil" : "/login"}
-          className={linkClass(isAuthenticated ? "/perfil" : "/login")}
-        >
-          <div className="w-6 h-6">
-            <Icons type="user" className="w-full h-full" />
-          </div>
-          <span className="text-[9px] font-medium truncate">
-            {isAuthenticated ? "Perfil" : "Entrar"}
-          </span>
-        </Link>
-      </div>
-    </nav>
-  );
-};
-
-
-==================================================
 ARCHIVO: src/components/molecules/ChatInput.tsx
 ==================================================
 import React, { useState, FormEvent } from 'react';
@@ -626,73 +550,6 @@ export const CustomSelect: React.FC<Props> = ({
 
 
 ==================================================
-ARCHIVO: src/components/molecules/InstallPWABanner.tsx
-==================================================
-// src/components/molecules/InstallPWABanner.tsx
-// Banner de instalación PWA — estilo iTEC (rojo/negro)
-import React, { useState } from 'react';
-import { useInstallPWA } from '@hooks/useInstallPWA';
-
-export const InstallPWABanner: React.FC = () => {
-  const { canInstall, isInstalling, install } = useInstallPWA();
-  const [dismissed, setDismissed] = useState(false);
-
-  if (!canInstall || dismissed) return null;
-
-  return (
-    <div
-      role="banner"
-      className="fixed bottom-0 left-0 right-0 z-[9999] flex items-center gap-3 px-4 py-3
-                 bg-[#1A1A1A] border-t border-[#D41313]/40 shadow-[0_-4px_24px_rgba(212,19,19,0.15)]
-                 sm:bottom-4 sm:left-4 sm:right-auto sm:rounded-xl sm:max-w-sm sm:border sm:border-[#D41313]/40"
-      style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
-    >
-      {/* Ícono */}
-      <div className="shrink-0 w-10 h-10 rounded-lg bg-[#D41313]/10 flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[#D41313]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 2v13M8 11l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" strokeLinecap="round"/>
-        </svg>
-      </div>
-
-      {/* Texto */}
-      <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-semibold text-white leading-tight">
-          Instalá iTEC BA
-        </p>
-        <p className="text-[11px] text-[#9aa3b0] mt-0.5">
-          Accedé como una app, sin navegador
-        </p>
-      </div>
-
-      {/* Botones */}
-      <div className="flex items-center gap-2 shrink-0">
-        <button
-          onClick={() => setDismissed(true)}
-          aria-label="Cerrar"
-          className="p-1.5 rounded-lg text-[#5a6475] hover:text-white hover:bg-[#333] transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round"/>
-          </svg>
-        </button>
-
-        <button
-          onClick={install}
-          disabled={isInstalling}
-          className="px-3 py-1.5 rounded-lg bg-[#D41313] hover:bg-[#b30f0f] active:scale-95
-                     text-white text-[12px] font-semibold transition-all disabled:opacity-60
-                     disabled:cursor-not-allowed"
-        >
-          {isInstalling ? 'Instalando...' : 'Instalar'}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-
-==================================================
 ARCHIVO: src/components/molecules/SearchResultItem.tsx
 ==================================================
 import React from 'react';
@@ -793,226 +650,6 @@ export const SidebarItem = ({ path, label, iconName, badge, tag, onNavigate }: S
 
 
 ==================================================
-ARCHIVO: src/components/molecules/TopNavbar.tsx
-==================================================
-// src/components/molecules/TopNavbar.tsx
-// Mejora: agrega botón hamburguesa (☰) en mobile para abrir el sidebar drawer.
-
-import { Link } from "react-router-dom";
-import { useAuth } from "@context/AuthContext";
-import { Icons } from "@components/ui/icons/Icons";
-import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
-import { NotificationBell } from "@features/home/components/organisms/NotificationBell";
-import logo from "@assets/logo.png";
-import { RewardsWidgetPoints } from "@features/rewards/components/atoms/RewardsWidgetPoints";
-import { useSidebarMobile } from "@hooks/useSidebarMobile";
-
-export const TopNavbar = () => {
-  const { user } = useAuth();
-  const { toggle } = useSidebarMobile();
-
-  return (
-    <header className="shrink-0 z-[100] h-16 flex items-center px-4 bg-itec-sidebar border-b border-white/5">
-      <div className="w-full mx-auto flex items-center gap-3">
-
-        {/* ── Izquierda: hamburguesa (solo mobile) + logo ── */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Botón hamburguesa — visible solo en mobile (<md) */}
-          <button
-            onClick={toggle}
-            aria-label="Abrir menú"
-            className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
-          >
-            {/* Icono de tres líneas */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
-          <Link
-            to="/"
-            className="w-max h-8 rounded-lg flex items-center justify-center flex-row gap-3"
-          >
-            <img src={logo} alt="ITEC Logo" className="size-7 object-contain" />
-            <span className="hidden sm:block text-xl font-bold tracking-tight text-white">
-              iTEC <span className="text-itec-red">BA</span>
-            </span>
-          </Link>
-        </div>
-
-        {/* ── Centro: buscador (oculto en mobile muy pequeño) ── */}
-        <div className="hidden sm:flex flex-1 max-w-xl mx-auto items-center gap-0">
-          <UniversalSearch />
-        </div>
-
-        {/* ── Derecha: redes, puntos, notificaciones, perfil ── */}
-        <div className="flex items-center gap-1 shrink-0 ml-auto">
-          <div className="hidden lg:flex flex-row items-center gap-0.5">
-            <a
-              href="https://www.youtube.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <Icons type="youtube" className="w-5 h-5" />
-              <span className="text-sm font-medium">43K</span>
-            </a>
-            <a
-              href="https://www.facebook.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M12 2.04c-5.5 0-10 4.49-10 10.02c0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89c1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02" />
-              </svg>
-              <span className="text-sm font-medium">65K</span>
-            </a>
-            <a
-              href="https://www.udemy.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="currentColor" d="m19 2l-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5c.1 0 .15-.07.25-.07c1.35-.65 3.3-1.09 4.75-1.09c1.95 0 4.05.4 5.5 1.5c1.35-.85 3.8-1.5 5.5-1.5c1.65 0 3.35.31 4.75 1.06c.1.05.15.03.25.03c.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5c-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5" />
-              </svg>
-              <span className="text-sm font-medium">309K</span>
-            </a>
-            <a
-              href="https://discord.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 16 16">
-                <path fill="currentColor" d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011a.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0a8 8 0 0 0-.412-.833a.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02a.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595a.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085a8 8 0 0 1-1.249.594a.05.05 0 0 0-.03.03a.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019a13.2 13.2 0 0 0 4.001-2.02a.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613c0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613c0 .888-.631 1.612-1.438 1.612" />
-              </svg>
-            </a>
-            <a
-              href="https://www.instagram.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
-            >
-              <Icons type="instagram" className="w-5 h-5" />
-            </a>
-          </div>
-          <div className="hidden lg:block h-5 w-px mx-1 bg-white/10"></div>
-
-          {/* Puntos de recompensa */}
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full border text-sm bg-white/5 border-itec-border mr-1">
-            <RewardsWidgetPoints />
-          </div>
-
-          {/* Categoría */}
-          <div className="relative">
-            <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
-              <Icons type="category" className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Notificaciones */}
-          <div className="relative">
-            <NotificationBell />
-          </div>
-
-          {/* Foto de perfil / login */}
-          <div className="relative ml-1">
-            {user?.photoURL ? (
-              <Link
-                to="/perfil"
-                className="w-8 h-8 rounded-lg overflow-hidden flex cursor-pointer hover:opacity-80 transition-opacity border border-itec-border"
-              >
-                <img
-                  src={user.photoURL}
-                  alt={user.name || "Perfil"}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            ) : (
-              <Link
-                to="/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-itec-border text-xs font-medium transition-colors bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
-              >
-                <Icons type="google" className="w-4 h-4" />
-                <span className="hidden sm:inline">Iniciar sesión</span>
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-};
-
-
-==================================================
-ARCHIVO: src/components/molecules/UpdatePWAToast.tsx
-==================================================
-// Notificación de nueva versión disponible
-import React from 'react';
-import { useRegisterSW } from 'virtual:pwa-register/react';
-
-export const UpdatePWAToast: React.FC = () => {
-  const {
-    needRefresh: [needRefresh, setNeedRefresh],
-    updateServiceWorker,
-  } = useRegisterSW({
-    onRegistered(r) {
-      console.log('[iTEC PWA] Service Worker registrado:', r);
-    },
-    onRegisterError(error) {
-      console.error('[iTEC PWA] Error al registrar SW:', error);
-    },
-  });
-
-  if (!needRefresh) return null;
-
-  return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 px-4 py-3
-                    bg-[#1A1A1A] border border-[#D41313]/40 rounded-xl shadow-xl
-                    animate-fade-in max-w-[calc(100vw-2rem)]">
-      {/* Ícono */}
-      <div className="shrink-0 w-8 h-8 rounded-lg bg-[#D41313]/10 flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#D41313]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 0 1-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <p className="text-[12px] font-semibold text-white">Nueva versión disponible</p>
-        <p className="text-[10px] text-[#9aa3b0]">Recargá para actualizar iTEC BA</p>
-      </div>
-
-      <div className="flex gap-2 shrink-0">
-        <button
-          onClick={() => setNeedRefresh(false)}
-          className="px-2 py-1 rounded text-[11px] text-[#5a6475] hover:text-white transition-colors"
-        >
-          Más tarde
-        </button>
-        <button
-          onClick={() => updateServiceWorker(true)}
-          className="px-3 py-1.5 rounded-lg bg-[#D41313] hover:bg-[#b30f0f] text-white text-[11px] font-semibold transition-all active:scale-95"
-        >
-          Actualizar
-        </button>
-      </div>
-    </div>
-  );
-};
-
-
-
-==================================================
 ARCHIVO: src/components/molecules/WidgetHeader.tsx
 ==================================================
 import React from 'react';
@@ -1035,6 +672,80 @@ export const WidgetHeader: React.FC<WidgetHeaderProps> = ({ title }) => {
     </div>
   );
 };
+
+
+==================================================
+ARCHIVO: src/components/organisms/BannerInstallPWA.tsx
+==================================================
+// src/components/molecules/InstallPWABanner.tsx
+import React, { useState } from "react";
+import { useInstallPWA } from "@hooks/useInstallPWA";
+import { Download, X } from "lucide-react"; // Asumo que usas lucide-react por el contexto previo, si no, puedes mantener los SVG.
+
+export const BannerInstallPWA: React.FC = () => {
+  const { canInstall, isInstalling, install } = useInstallPWA();
+  const [dismissed, setDismissed] = useState(false);
+
+  if (!canInstall || dismissed) return null;
+
+  return (
+    <div
+      role="banner"
+      className="fixed bottom-0 left-0 right-0 z-[9999] flex flex-row items-center justify-between gap-4 px-5 py-4
+                 bg-itec-bg border-t border-itec-border shadow-glass-lg backdrop-blur-md
+                 sm:bottom-6 sm:left-auto sm:right-6 sm:rounded-2xl sm:max-w-md sm:border sm:border-itec-border sm:shadow-glass-lg
+                 animate-fade-in-up"
+      style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}
+    >
+      <div className="flex items-center gap-4 min-w-0">
+        {/* Ícono usando la paleta itec-accent (asumiendo que es tu rojo) */}
+        <div className="shrink-0 w-12 h-12 rounded-xl bg-itec-accent/10 flex items-center justify-center border border-itec-accent/20">
+          <Download className="w-6 h-6 text-itec-accent" strokeWidth={2.5} />
+        </div>
+
+        {/* Texto mejorado y truncado para móviles */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-white truncate">
+            Instalá iTEC BA
+          </p>
+          <p className="text-xs text-itec-muted mt-0.5 truncate hidden sm:block">
+            Accedé más rápido, usalo offline y recibí notificaciones.
+          </p>
+          <p className="text-xs text-itec-muted mt-0.5 truncate sm:hidden">
+            Experiencia app nativa.
+          </p>
+        </div>
+      </div>
+
+      {/* Botones */}
+      <div className="flex items-center gap-3 shrink-0">
+        <button
+          onClick={() => setDismissed(true)}
+          aria-label="Cerrar banner de instalación"
+          className="p-2 rounded-full text-itec-muted hover:text-white hover:bg-itec-surface transition-colors focus:outline-none focus:ring-2 focus:ring-itec-border"
+        >
+          <X size={18} strokeWidth={2.5} />
+        </button>
+
+        <button
+          onClick={install}
+          disabled={isInstalling}
+          className="px-4 py-2 rounded-xl bg-itec-accent hover:bg-itec-accent/90 active:scale-95
+                     text-white text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-wait
+                     shadow-[0_0_15px_rgba(var(--itec-accent-rgb),0.3)] focus:outline-none focus:ring-2 focus:ring-itec-accent/50
+                     flex items-center justify-center min-w-[80px]"
+        >
+          {isInstalling ? (
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          ) : (
+            "Instalar"
+          )}
+        </button>
+      </div>
+    </div>
+  );
+};
+
 
 
 ==================================================
@@ -1196,6 +907,248 @@ export const ChatbotWidget: React.FC = () => {
 
 
 ==================================================
+ARCHIVO: src/components/organisms/NavbarBottom.tsx
+==================================================
+import { Link, useLocation } from "react-router-dom";
+import { Icons } from "../ui/icons/Icons";
+import Raccoon from "../ui/icons/Raccoon";
+import { useAuth } from "../../context/AuthContext";
+
+export const NavbarBottom = () => {
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+
+  const isActive = (path: string) => location.pathname === path;
+
+  const linkClass = (path: string) =>
+    `flex items-center justify-center flex-col gap-0.5 min-w-0 flex-1 ${
+      isActive(path) ? "text-[#e01540]" : "text-[#9aa3b0]"
+    }`;
+
+  return (
+    <nav className="h-16 w-full bg-itec-sidebar border-t border-white/5 sticky bottom-0 z-[99] flex items-center justify-around px-2 shrink-0 pb-safe">
+      <div className="flex gap-1 justify-around w-full items-center">
+        {/* Inicio */}
+        <Link to="/" className={linkClass("/")}>
+          <div className="w-6 h-6">
+            <Icons type="home" className="w-full h-full" />
+          </div>
+          <span className="text-[9px] font-medium truncate">Inicio</span>
+        </Link>
+
+        {/* BuscaTEC */}
+        <Link to="/buscatec" className={linkClass("/buscatec")}>
+          <div className="w-6 h-6">
+            <Icons type="search" className="w-full h-full" />
+          </div>
+          <span className="text-[9px] font-medium truncate">Buscar</span>
+        </Link>
+
+        {/* FAB central — Chatbot / Raccoon */}
+        <Link to="/faqs" className="flex items-center justify-center flex-col flex-1">
+          <span
+            className={`rounded-2xl p-2 transition-colors ${
+              isActive("/faqs") ? "bg-[#e01540]" : "bg-itec-red"
+            }`}
+          >
+            <Raccoon size={28} fill1="#ffffff" fill2="#ffffff" fill3="#0C1014" />
+          </span>
+          <span className="text-[9px] font-medium text-[#9aa3b0] mt-0.5">Chat IA</span>
+        </Link>
+
+        {/* Grupos */}
+        <Link to="/grupos" className={linkClass("/grupos")}>
+          <div className="w-6 h-6">
+            <Icons type="users" className="w-full h-full" />
+          </div>
+          <span className="text-[9px] font-medium truncate">Grupos</span>
+        </Link>
+
+        {/* Perfil / Login */}
+        <Link
+          to={isAuthenticated ? "/perfil" : "/login"}
+          className={linkClass(isAuthenticated ? "/perfil" : "/login")}
+        >
+          <div className="w-6 h-6">
+            <Icons type="user" className="w-full h-full" />
+          </div>
+          <span className="text-[9px] font-medium truncate">
+            {isAuthenticated ? "Perfil" : "Entrar"}
+          </span>
+        </Link>
+      </div>
+    </nav>
+  );
+};
+
+
+==================================================
+ARCHIVO: src/components/organisms/NavbarTop.tsx
+==================================================
+// src/components/molecules/TopNavbar.tsx
+import { Link } from "react-router-dom";
+import { useAuth } from "@context/AuthContext";
+import { Icons } from "@components/ui/icons/Icons";
+import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
+import { NotificationBell } from "@features/home/components/organisms/NotificationBell";
+import logo from "@assets/logo.png";
+import { RewardsWidgetPoints } from "@features/rewards/components/atoms/RewardsWidgetPoints";
+import { useSidebarMobile } from "@hooks/useSidebarMobile";
+import { User } from "lucide-react";
+
+export const NavbarTop = () => {
+  const { user, isAuthenticated } = useAuth();
+  const { toggle } = useSidebarMobile();
+
+  return (
+    <header className="shrink-0 z-100 h-16 flex items-center px-4 bg-itec-sidebar border-b border-white/5">
+      <div className="w-full mx-auto flex items-center gap-3">
+        {/* ── Izquierda: hamburguesa (solo mobile) + logo ── */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Botón hamburguesa — visible solo en mobile (<md) */}
+          <button
+            onClick={toggle}
+            aria-label="Abrir menú"
+            className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
+          >
+            {/* Icono de tres líneas */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+
+          <Link
+            to="/"
+            className="w-max h-8 rounded-lg flex items-center justify-center flex-row gap-3"
+          >
+            <img src={logo} alt="ITEC Logo" className="size-7 object-contain" />
+            <span className="hidden sm:block text-xl font-bold tracking-tight text-white">
+              iTEC <span className="text-itec-red">BA</span>
+            </span>
+          </Link>
+        </div>
+
+        {/* ── Centro: buscador (oculto en mobile muy pequeño) ── */}
+        <div className="hidden sm:flex flex-1 max-w-xl mx-auto items-center gap-0">
+          <UniversalSearch />
+        </div>
+
+        {/* ── Derecha: redes, puntos, notificaciones, perfil ── */}
+        <div className="flex items-center gap-1 shrink-0 ml-auto">
+          <div className="hidden lg:flex flex-row items-center gap-0.5 text-xs">
+            <a
+              href="https://www.youtube.com/itecba"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
+            >
+              <Icons type="youtube" className="size-3.5" />
+              <span className="font-medium">43K</span>
+            </a>
+            <a
+              href="https://www.instagram.com/itecba"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
+            >
+              <Icons type="instagram" className="size-3.5" />
+              <span className=" font-medium">65K</span>
+            </a>
+            <a
+              href="/foro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
+            >
+              <User size={14} fontSize={80} />
+              <span className="font-medium">309K</span>
+            </a>
+            <a
+              href="https://discord.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="size-3.5"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill="currentColor"
+                  d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011a.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0a8 8 0 0 0-.412-.833a.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02a.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595a.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085a8 8 0 0 1-1.249.594a.05.05 0 0 0-.03.03a.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019a13.2 13.2 0 0 0 4.001-2.02a.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613c0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613c0 .888-.631 1.612-1.438 1.612"
+                />
+              </svg>
+              <span className="font-medium">309K</span>
+            </a>
+          </div>
+          <div className="hidden lg:block h-5 w-px mx-1 bg-white/10"></div>
+
+          {isAuthenticated && (
+            <div className="flex items-center justify-between gap-2">
+              {/* Puntos de recompensa */}
+              <div className="p-2.5">
+                <RewardsWidgetPoints />
+              </div>
+              {/* Categoría */}
+              <a
+                className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer"
+                href="/admin"
+              >
+                <button className="flex items-center justify-center rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
+                  <Icons type="settings" className="size-3.5" />
+                </button>
+              </a>
+              {/* Notificaciones */}
+              <div className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer">
+                <NotificationBell />
+              </div>
+            </div>
+          )}
+          {/* Foto de perfil / login */}
+
+          <div className="relative text-xs">
+            {user?.photoURL ? (
+              <Link
+                to="/perfil"
+                className="size-6.5 rounded-lg overflow-hidden flex cursor-pointer hover:opacity-80 transition-opacity border border-itec-border"
+              >
+                <img
+                  src={user.photoURL}
+                  alt={user.name || "Perfil"}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-itec-border font-medium transition-colors bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
+              >
+                <Icons type="google" className="size-3.5" />
+                <span className="hidden sm:inline">Iniciar sesión</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+
+
+==================================================
 ARCHIVO: src/components/organisms/Sidebar.tsx
 ==================================================
 import { useEffect } from "react";
@@ -1330,6 +1283,71 @@ export const Sidebar = () => {
   );
 };
 
+
+
+==================================================
+ARCHIVO: src/components/organisms/UpdatePWAToast.tsx
+==================================================
+// src/components/molecules/UpdatePWAToast.tsx
+import React from 'react';
+import { useRegisterSW } from 'virtual:pwa-register/react';
+import { RefreshCw } from 'lucide-react';
+
+export const UpdatePWAToast: React.FC = () => {
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegistered(r) {
+      console.log('[iTEC PWA] Service Worker registrado:', r);
+    },
+    onRegisterError(error) {
+      console.error('[iTEC PWA] Error al registrar SW:', error);
+    },
+  });
+
+  if (!needRefresh) return null;
+
+  return (
+    <div 
+      role="alert"
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-4 px-4 py-3
+                 bg-itec-bg/95 border border-itec-border rounded-2xl shadow-glass-lg backdrop-blur-md
+                 animate-fade-in-down w-[calc(100vw-2rem)] sm:w-auto sm:min-w-[340px]"
+    >
+      {/* Ícono */}
+      <div className="shrink-0 w-10 h-10 rounded-xl bg-itec-accent/10 flex items-center justify-center border border-itec-accent/20">
+        <RefreshCw className="w-5 h-5 text-itec-accent" strokeWidth={2.5} />
+      </div>
+
+      {/* Texto */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-bold text-white truncate">
+          Actualización disponible
+        </p>
+        <p className="text-xs text-itec-muted mt-0.5 truncate">
+          Recargá para aplicar los cambios.
+        </p>
+      </div>
+
+      {/* Botones */}
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          onClick={() => setNeedRefresh(false)}
+          className="px-3 py-2 rounded-xl text-xs font-medium text-itec-muted hover:text-white hover:bg-itec-surface transition-colors focus:outline-none focus:ring-2 focus:ring-itec-border"
+        >
+          Después
+        </button>
+        <button
+          onClick={() => updateServiceWorker(true)}
+          className="px-4 py-2 rounded-xl bg-itec-accent hover:bg-itec-accent/90 text-white text-xs font-bold transition-all active:scale-95 shadow-[0_0_15px_rgba(var(--itec-accent-rgb),0.3)] focus:outline-none focus:ring-2 focus:ring-itec-accent/50"
+        >
+          Recargar
+        </button>
+      </div>
+    </div>
+  );
+};
 
 
 ==================================================
@@ -1473,30 +1491,31 @@ ARCHIVO: src/components/templates/SidebarLayout.tsx
 // src/components/templates/SidebarLayout.tsx
 // Sin cambios de lógica — el sidebar ya se posiciona como fixed en mobile,
 // así que el layout no necesita ajustes de z-index adicionales.
- 
-import { BottomNavbar } from "@components/molecules/BottomNavbar";
+
+import { NavbarBottom } from "@/components/organisms/NavbarBottom";
 import { Sidebar } from "@components/organisms/Sidebar";
-import { TopNavbar } from "@components/molecules/TopNavbar";
- 
-export const SidebarLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+import { NavbarTop } from "@/components/organisms/NavbarTop";
+
+export const SidebarLayout: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <div className="flex flex-col w-full h-screen bg-itec-background text-itec-text overflow-hidden">
-      <TopNavbar />
- 
+      <NavbarTop />
+
       <section className="flex flex-1 overflow-hidden relative">
         {/* Sidebar: en desktop ocupa espacio en el flujo; en mobile es fixed (drawer) */}
         <Sidebar />
         {children}
       </section>
- 
+
       {/* BottomNavbar solo visible en mobile */}
       <nav className="flex md:hidden shrink-0">
-        <BottomNavbar />
+        <NavbarBottom />
       </nav>
     </div>
   );
 };
- 
 
 
 
@@ -1972,10 +1991,10 @@ export const Input: React.FC<InputProps> = ({ fullWidth, className = "", ...prop
   return (
     <input
       className={cn(
-        "bg-itec-surface/80 border border-itec-border text-itec-text",
+        "bg-itec-box border border-itec-border text-itec-text",
         "px-4 py-3 rounded-2xl shadow-inner shadow-black/10",
         "placeholder:text-itec-muted/80 outline-none transition-all",
-        "focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10",
+        "focus:border-itec-box/40 focus:ring-2 focus:ring-itec-sky/10",
         fullWidth && "w-full",
         className
       )}
@@ -2337,6 +2356,688 @@ export const useSidebarMobile = () => {
 
   return { isOpen, open, close, toggle };
 };
+
+
+==================================================
+ARCHIVO: src/features/calendar/components/CalendarAdminModal.tsx
+==================================================
+import React, { useState, useEffect } from "react";
+import { LayoutModal } from "@components/templates/LayoutModal";
+import { Button } from "@components/ui/Button";
+import { Input } from "@components/ui/Input";
+import {
+  CalendarEvent,
+  CalendarEventInput,
+  EventType,
+} from "../hooks/useCalendarEvents";
+
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  event: CalendarEvent | null;
+  onCreate: (data: CalendarEventInput) => Promise<void>;
+  onUpdate: (id: string, data: Partial<CalendarEventInput>) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
+}
+
+const TYPE_OPTIONS: { value: EventType; label: string }[] = [
+  { value: "examen", label: "Examen" },
+  { value: "institucional", label: "Institucional" },
+  { value: "feriado", label: "Feriado" },
+  { value: "beca", label: "Beca" },
+  { value: "actividad", label: "Actividad" },
+];
+const EMPTY: CalendarEventInput = {
+  title: "",
+  description: "",
+  subtitle: "",
+  date: "",
+  type: "examen",
+};
+
+export const CalendarAdminModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  event,
+  onCreate,
+  onUpdate,
+  onDelete,
+}) => {
+  const [form, setForm] = useState<CalendarEventInput>(EMPTY);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState("");
+  const isEditing = !!event;
+
+  useEffect(() => {
+    if (isOpen) {
+      setError("");
+      setForm(
+        event
+          ? {
+              title: event.title,
+              description: event.description ?? "",
+              subtitle: event.subtitle ?? "",
+              date: event.date,
+              type: event.type,
+            }
+          : EMPTY,
+      );
+    }
+  }, [event, isOpen]);
+
+  const set = (field: keyof CalendarEventInput, value: string) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
+
+  const handleSave = async () => {
+    if (!form.title.trim()) {
+      setError("El título es obligatorio.");
+      return;
+    }
+    if (!form.date) {
+      setError("La fecha es obligatoria.");
+      return;
+    }
+    setError("");
+    setSaving(true);
+    try {
+      if (isEditing) await onUpdate(event!.id, form);
+      else await onCreate(form);
+      onClose();
+    } catch {
+      setError("Ocurrió un error al guardar. Intentá de nuevo.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!event || !confirm("¿Eliminar esta fecha definitivamente?")) return;
+    setDeleting(true);
+    try {
+      await onDelete(event.id);
+      onClose();
+    } catch {
+      setError("Error al eliminar.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <LayoutModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEditing ? "Editar fecha" : "Nueva fecha importante"}
+      description={
+        isEditing
+          ? "Modificá los datos del evento académico."
+          : "Completá los campos para agregar una nueva fecha."
+      }
+      maxWidth="max-w-lg"
+    >
+      <div className="p-6 flex flex-col gap-5">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest">
+            Título *
+          </label>
+          <Input
+            fullWidth
+            placeholder="Ej: 1.° Turno de finales"
+            value={form.title}
+            onChange={(e) => set("title", e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest">
+            Subtítulo{" "}
+            <span className="opacity-50 normal-case font-normal">
+              (opcional)
+            </span>
+          </label>
+          <Input
+            fullWidth
+            placeholder="Ej: AM2, Física I, Álgebra"
+            value={form.subtitle}
+            onChange={(e) => set("subtitle", e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest">
+            Descripción{" "}
+            <span className="opacity-50 normal-case font-normal">
+              (opcional)
+            </span>
+          </label>
+          <textarea
+            rows={3}
+            placeholder="Descripción adicional del evento..."
+            value={form.description}
+            onChange={(e) => set("description", e.target.value)}
+            className="bg-itec-surface/80 border border-itec-border text-itec-text px-4 py-3 rounded-2xl shadow-inner shadow-black/10 placeholder:text-itec-muted/80 outline-none transition-all resize-none w-full focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest">
+            Fecha *
+          </label>
+          <Input
+            fullWidth
+            type="date"
+            value={form.date}
+            onChange={(e) => set("date", e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest">
+            Tipo *
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {TYPE_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => set("type", opt.value)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${form.type === opt.value ? "bg-itec-red border-itec-red text-white" : "bg-transparent border-itec-border text-[#9aa3b0] hover:border-white/20"}`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        {error && (
+          <p className="text-xs text-[#e01540] bg-itec-red/10 border border-itec-red/20 rounded-xl px-4 py-2">
+            {error}
+          </p>
+        )}
+        <div
+          className={`flex gap-2 pt-1 ${isEditing ? "justify-between" : "justify-end"}`}
+        >
+          {isEditing && (
+            <Button
+              variant="danger"
+              hierarchy="outline"
+              text={deleting ? "Eliminando..." : "Eliminar"}
+              onClick={handleDelete}
+              disabled={deleting || saving}
+            />
+          )}
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              hierarchy="solid"
+              text="Cancelar"
+              onClick={onClose}
+              disabled={saving || deleting}
+            />
+            <Button
+              variant="primary"
+              hierarchy="solid"
+              text={
+                saving
+                  ? "Guardando..."
+                  : isEditing
+                    ? "Guardar cambios"
+                    : "Crear fecha"
+              }
+              onClick={handleSave}
+              disabled={saving || deleting}
+              isLoading={saving}
+            />
+          </div>
+        </div>
+      </div>
+    </LayoutModal>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/components/CalendarCountdown.tsx
+==================================================
+import React, { useState, useEffect } from "react";
+import { CalendarEvent, EventType } from "../hooks/useCalendarEvents";
+
+interface TypeConfig { label: string; color: string; dot: string; }
+interface Props { event: CalendarEvent; typeConfig: Record<EventType, TypeConfig>; }
+
+const pad = (n: number) => String(n).padStart(2, "0");
+const MONTHS_SHORT = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+
+export const CalendarCountdown: React.FC<Props> = ({ event, typeConfig }) => {
+  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
+
+  useEffect(() => {
+    const target = new Date(event.date + "T00:00:00").getTime();
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) { setTime({ d: 0, h: 0, m: 0, s: 0 }); return; }
+      setTime({
+        d: Math.floor(diff / 86_400_000),
+        h: Math.floor((diff % 86_400_000) / 3_600_000),
+        m: Math.floor((diff % 3_600_000) / 60_000),
+        s: Math.floor((diff % 60_000) / 1_000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1_000);
+    return () => clearInterval(id);
+  }, [event.date]);
+
+  const cfg = typeConfig[event.type];
+  const d   = new Date(event.date + "T00:00:00");
+
+  return (
+    <div className={`mb-8 rounded-2xl border p-4 ${cfg.color}`}>
+      <div className="flex items-start gap-3 mb-3">
+        <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${cfg.dot}`} />
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-semibold uppercase tracking-widest opacity-60 mb-0.5">Próxima fecha crítica</p>
+          <p className="text-sm font-bold text-itec-text truncate">{event.title}</p>
+          {event.subtitle && <p className="text-xs opacity-60 mt-0.5 truncate">{event.subtitle}</p>}
+          <p className="text-xs opacity-50 mt-0.5">{d.getDate()} {MONTHS_SHORT[d.getMonth()]} {d.getFullYear()}</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-4 gap-2">
+        {[{ label: "Días", val: time.d }, { label: "Horas", val: time.h }, { label: "Min", val: time.m }, { label: "Seg", val: time.s }]
+          .map(({ label, val }) => (
+          <div key={label} className="flex flex-col items-center bg-black/20 rounded-xl py-2.5">
+            <span className="text-2xl font-bold text-itec-text tabular-nums leading-none">{pad(val)}</span>
+            <span className="text-[10px] opacity-50 mt-1">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/components/CalendarDetailModal.tsx
+==================================================
+import React from "react";
+import { LayoutModal } from "@components/templates/LayoutModal";
+import { CalendarEvent, EventType } from "../hooks/useCalendarEvents";
+
+interface TypeConfig { label: string; color: string; dot: string; }
+interface Props { isOpen: boolean; event: CalendarEvent | null; onClose: () => void; typeConfig: Record<EventType, TypeConfig>; }
+
+const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+export const CalendarDetailModal: React.FC<Props> = ({ isOpen, event, onClose, typeConfig }) => {
+  if (!event) return null;
+  const cfg = typeConfig[event.type];
+  const d   = new Date(event.date + "T00:00:00");
+
+  return (
+    <LayoutModal isOpen={isOpen} onClose={onClose} title={event.title} maxWidth="max-w-lg">
+      <div className="p-6 flex flex-col gap-4">
+        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold w-fit ${cfg.color}`}>
+          <div className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />{cfg.label}
+        </div>
+        <div className="flex items-center gap-2 text-[#9aa3b0] text-sm">
+          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round"/>
+          </svg>
+          <span>{d.getDate()} de {MONTHS[d.getMonth()]} de {d.getFullYear()}</span>
+        </div>
+        {event.subtitle && <p className="text-xs text-[#5a6475] -mt-1">{event.subtitle}</p>}
+        {event.description ? <p className="text-sm text-itec-text leading-relaxed">{event.description}</p> : <p className="text-sm text-[#5a6475] italic">Sin descripción adicional.</p>}
+      </div>
+    </LayoutModal>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/components/CalendarList.tsx
+==================================================
+import { useCalendar } from '../hooks/useCalendar';
+
+export const CalendarList = () => {
+  const { events, loading } = useCalendar();
+
+  if (loading) return <div className="text-itec-muted p-4">Cargando fechas...</div>;
+
+  return (
+    <div className="space-y-4">
+      {/* Temporizador de fecha próxima */}
+      {events[0] && (
+        <div className="bg-itec-accent/10 border border-itec-accent/20 p-6 rounded-2xl text-center shadow-glass">
+          <p className="text-xs text-itec-accent font-bold uppercase tracking-wider">Próximo Evento Crítico</p>
+          <h2 className="text-2xl font-bold text-itec-text mt-1">{events[0].title}</h2>
+          <p className="text-itec-muted text-sm mt-2">Faltan {Math.ceil((new Date(events[0].date).getTime() - Date.now()) / (1000*60*60*24))} días</p>
+        </div>
+      )}
+
+      {/* Lista de Cards */}
+      <div className="grid gap-3">
+        {events.map(event => (
+          <div key={event.id} className="p-4 bg-itec-box border border-itec-border rounded-xl hover:border-itec-accent/40 transition-all cursor-pointer">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] bg-itec-surface px-2 py-0.5 rounded-full text-itec-muted uppercase">{event.type}</span>
+                <h3 className="font-bold text-itec-text mt-1">{event.title}</h3>
+              </div>
+              <p className="text-sm font-mono text-itec-accent">{new Date(event.date).toLocaleDateString()}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/components/CalendarModals.tsx
+==================================================
+import React, { useState } from "react";
+import { CalendarEvent, CalendarEventInput, EventType } from "../types/calendar";
+import { Button } from "@/components/ui/Button";
+import { X, Calendar as CalendarIcon, Trash2 } from "lucide-react";
+
+interface AdminModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: CalendarEventInput) => Promise<void>;
+}
+
+export const CalendarAdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  const [formData, setFormData] = useState<CalendarEventInput>({
+    title: "", subtitle: "", description: "", date: "", type: "actividad"
+  });
+  const [loading, setLoading] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    await onSubmit(formData);
+    setLoading(false);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-itec-box border border-itec-border w-full max-w-md rounded-2xl shadow-glass-lg overflow-hidden animate-scale-in">
+        <div className="flex items-center justify-between p-4 border-b border-itec-border">
+          <h3 className="font-bold text-white">Nueva Fecha Crítica</h3>
+          <button onClick={onClose} className="text-itec-muted hover:text-white transition-colors"><X size={20} /></button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+          <div>
+            <label className="block text-xs text-itec-muted mb-1">Título *</label>
+            <input required type="text" className="w-full bg-itec-bg border border-itec-border rounded-lg p-2 text-sm text-white focus:border-itec-accent outline-none" 
+                   value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-itec-muted mb-1">Fecha *</label>
+              <input required type="date" className="w-full bg-itec-bg border border-itec-border rounded-lg p-2 text-sm text-white focus:border-itec-accent outline-none" 
+                     value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} />
+            </div>
+            <div>
+              <label className="block text-xs text-itec-muted mb-1">Tipo</label>
+              <select className="w-full bg-itec-bg border border-itec-border rounded-lg p-2 text-sm text-white focus:border-itec-accent outline-none"
+                      value={formData.type} onChange={e => setFormData({...formData, type: e.target.value as EventType})}>
+                <option value="examen">Examen</option>
+                <option value="institucional">Institucional</option>
+                <option value="feriado">Feriado</option>
+                <option value="beca">Beca</option>
+                <option value="actividad">Actividad</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs text-itec-muted mb-1">Subtítulo (Opcional)</label>
+            <input type="text" className="w-full bg-itec-bg border border-itec-border rounded-lg p-2 text-sm text-white focus:border-itec-accent outline-none" 
+                   value={formData.subtitle} onChange={e => setFormData({...formData, subtitle: e.target.value})} />
+          </div>
+          <div>
+            <label className="block text-xs text-itec-muted mb-1">Descripción</label>
+            <textarea className="w-full bg-itec-bg border border-itec-border rounded-lg p-2 text-sm text-white focus:border-itec-accent outline-none resize-none h-20"
+                      value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+          </div>
+          <div className="pt-2 flex justify-end gap-2">
+            <Button variant="ghost" type="button" onClick={onClose}>Cancelar</Button>
+            <Button variant="primary" type="submit" disabled={loading}>
+              {loading ? "Guardando..." : "Crear Fecha"}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export const CalendarDetailModal: React.FC<{ event: CalendarEvent | null, onClose: () => void, isAdmin: boolean, onDelete: (id: string|number) => void }> = ({ event, onClose, isAdmin, onDelete }) => {
+  if (!event) return null;
+
+  const handleDelete = () => {
+    if (window.confirm("¿Seguro que querés eliminar esta fecha?")) {
+      onDelete(event.id);
+      onClose();
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+      <div className="bg-itec-box border border-itec-border w-full max-w-sm rounded-2xl shadow-glass-lg p-6 relative animate-scale-in" onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} className="absolute top-4 right-4 text-itec-muted hover:text-white"><X size={20} /></button>
+        <div className="flex items-center gap-2 text-itec-muted mb-3">
+          <CalendarIcon size={16} />
+          <span className="text-sm">{new Date(event.date).toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        </div>
+        <h3 className="text-xl font-bold text-white leading-tight">{event.title}</h3>
+        {event.subtitle && <p className="text-sm text-itec-accent font-medium mt-1">{event.subtitle}</p>}
+        {event.description && <p className="text-sm text-itec-muted mt-4 whitespace-pre-wrap">{event.description}</p>}
+        
+        {isAdmin && (
+          <div className="mt-6 pt-4 border-t border-itec-border">
+            <Button variant="danger" className="w-full flex justify-center items-center gap-2" onClick={handleDelete}>
+              <Trash2 size={16} /> Eliminar Fecha
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/hooks/useCalendar.ts
+==================================================
+import { useState, useEffect, useCallback } from "react";
+import { calendarService } from "../services/calendarService";
+import { CalendarEvent, CalendarEventInput } from "../types/calendar";
+
+export const useCalendar = () => {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchEvents = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await calendarService.getAll();
+      setEvents(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
+  const addEvent = async (data: CalendarEventInput) => {
+    await calendarService.create(data);
+    await fetchEvents();
+  };
+
+  const removeEvent = async (id: string | number) => {
+    await calendarService.delete(id);
+    await fetchEvents();
+  };
+
+  return { events, loading, error, addEvent, removeEvent, refresh: fetchEvents };
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/hooks/useCalendarEvents.ts
+==================================================
+import { useState, useEffect, useCallback } from "react";
+import { calendarService } from "../services/calendarService";
+import { useAuth } from "@context/AuthContext";
+
+export type EventType = "examen" | "institucional" | "feriado" | "beca" | "actividad";
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  description: string;
+  subtitle?: string;
+  date: string;
+  type: EventType;
+}
+
+export interface CalendarEventInput {
+  title: string;
+  description: string;
+  subtitle?: string;
+  date: string;
+  type: EventType;
+}
+
+export const useCalendarEvents = () => {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { userData } = useAuth();
+
+  const fetchEvents = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await calendarService.getAll();
+      const today = new Date().toISOString().slice(0, 10);
+      setEvents(data.filter((e: CalendarEvent) => e.date >= today));
+    } catch (error) {
+      console.error("Error al cargar eventos", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchEvents(); }, [fetchEvents]);
+
+  const createEvent = useCallback(async (data: CalendarEventInput) => {
+    if (userData?.role !== "admin") return;
+    await calendarService.create(data);
+    await fetchEvents();
+  }, [userData, fetchEvents]);
+
+  const updateEvent = useCallback(async (id: string, data: Partial<CalendarEventInput>) => {
+    if (userData?.role !== "admin") return;
+    await calendarService.update(id, data);
+    await fetchEvents();
+  }, [userData, fetchEvents]);
+
+  const deleteEvent = useCallback(async (id: string) => {
+    if (userData?.role !== "admin") return;
+    await calendarService.delete(id);
+    await fetchEvents();
+  }, [userData, fetchEvents]);
+
+  return { events, loading, createEvent, updateEvent, deleteEvent };
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/services/calendarService.ts
+==================================================
+import { auth } from "@/lib/firebase";
+
+const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/calendar`;
+
+const getHeaders = async () => {
+  const token = await auth.currentUser?.getIdToken();
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { "Authorization": `Bearer ${token}` } : {})
+  };
+};
+
+export const calendarService = {
+  getAll: async () => {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("Error obteniendo calendario");
+    return res.json();
+  },
+  create: async (data: any) => {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: await getHeaders(),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("Error creando evento");
+    return res.json();
+  },
+  update: async (id: string, data: any) => {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "PATCH",
+      headers: await getHeaders(),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("Error actualizando evento");
+    return res.json();
+  },
+  delete: async (id: string) => {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+      headers: await getHeaders()
+    });
+    if (!res.ok) throw new Error("Error borrando evento");
+  }
+};
+
+
+
+==================================================
+ARCHIVO: src/features/calendar/types/calendar.ts
+==================================================
+export type EventType = "examen" | "institucional" | "feriado" | "beca" | "actividad";
+
+export interface CalendarEvent {
+  id: string | number;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  date: string;
+  type: EventType;
+}
+
+export interface CalendarEventInput {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  date: string;
+  type: EventType;
+}
+
 
 
 ==================================================
@@ -2756,235 +3457,6 @@ html { scroll-behavior: smooth; }
   outline-offset: 2px;
 }
 
-
-
-
-==================================================
-ARCHIVO: src/pages/CalendarioPage.tsx
-==================================================
-import React, { useState } from "react";
-import { MainLayout } from "@/components/templates/MainLayout";
-import { PageHeader } from "@components/ui/PageHeader";
-import { Icons } from "@/components/ui/icons/Icons";
-import { usePageTitle } from "@hooks/usePageTitle";
-
-type EventType = "examen" | "institucional" | "feriado" | "beca" | "actividad";
-
-interface CalEvent {
-  date: string; // YYYY-MM-DD
-  title: string;
-  subtitle?: string;
-  type: EventType;
-}
-
-const EVENTS: CalEvent[] = [
-  { date: "2025-05-01", title: "Día del Trabajador", type: "feriado" },
-  { date: "2025-05-25", title: "Revolución de Mayo", type: "feriado" },
-  {
-    date: "2025-06-03",
-    title: "Elecciones estudiantiles",
-    subtitle: "Campus y Medrano · No hay clases",
-    type: "institucional",
-  },
-  {
-    date: "2025-06-16",
-    title: "1.° Turno de finales",
-    subtitle: "AM2, Física I, Álgebra · Todas las carreras",
-    type: "examen",
-  },
-  {
-    date: "2025-06-17",
-    title: "1.° Turno de finales",
-    subtitle: "PDEP, AM1 · Todas las carreras",
-    type: "examen",
-  },
-  {
-    date: "2025-06-30",
-    title: "Cierre inscripción Becas Progresar",
-    subtitle: "Plataforma Mi Argentina",
-    type: "beca",
-  },
-  {
-    date: "2025-07-07",
-    title: "2.° Turno de finales",
-    subtitle: "AM2, Física I, Álgebra",
-    type: "examen",
-  },
-  {
-    date: "2025-07-14",
-    title: "Inicio receso invernal",
-    type: "institucional",
-  },
-  { date: "2025-08-04", title: "Reinicio de clases", type: "institucional" },
-  {
-    date: "2025-09-15",
-    title: "Visita técnica ITEC a Tenaris",
-    subtitle: "Industrial, Mecánica, Eléctrica",
-    type: "actividad",
-  },
-];
-
-const TYPE_CONFIG: Record<
-  EventType,
-  { label: string; color: string; dot: string }
-> = {
-  examen: {
-    label: "Examen",
-    color: "bg-itec-red/12 text-[#e01540] border-itec-red/20",
-    dot: "bg-[#e01540]",
-  },
-  institucional: {
-    label: "Institucional",
-    color: "bg-[#004aad]/12 text-[#5b9cf6] border-[#004aad]/20",
-    dot: "bg-[#5b9cf6]",
-  },
-  feriado: {
-    label: "Feriado",
-    color: "bg-white/8 text-[#9aa3b0] border-itec-border",
-    dot: "bg-[#9aa3b0]",
-  },
-  beca: {
-    label: "Beca",
-    color: "bg-[#f0b100]/12 text-[#f0b100] border-[#f0b100]/20",
-    dot: "bg-[#f0b100]",
-  },
-  actividad: {
-    label: "Actividad",
-    color: "bg-[#008854]/12 text-[#2fcc8a] border-[#008854]/20",
-    dot: "bg-[#2fcc8a]",
-  },
-};
-
-const MONTHS = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
-];
-const FILTER_TYPES: (EventType | "Todos")[] = [
-  "Todos",
-  "examen",
-  "institucional",
-  "feriado",
-  "beca",
-  "actividad",
-];
-
-export const CalendarioPage: React.FC = () => {
-  usePageTitle("Calendario Académico");
-  const [filter, setFilter] = useState<EventType | "Todos">("Todos");
-
-  const filtered = EVENTS.filter(
-    (e) => filter === "Todos" || e.type === filter,
-  );
-
-  const grouped = filtered.reduce<Record<string, CalEvent[]>>((acc, e) => {
-    const key = e.date.slice(0, 7); // YYYY-MM
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(e);
-    return acc;
-  }, {});
-
-  return (
-    <MainLayout>
-      <PageHeader
-        title="Calendario Académico"
-        description="Fechas de parciales, finales, feriados, becas y actividades institucionales de la FRBA."
-        iconType="calendar"
-        colorTheme="blue"
-      />
-
-      {/* Filtros */}
-      <div className="flex gap-2 overflow-x-auto pb-1 mb-6 no-scrollbar">
-        {FILTER_TYPES.map((t) => (
-          <button
-            key={t}
-            onClick={() => setFilter(t)}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors capitalize ${
-              filter === t
-                ? "bg-itec-red border-itec-red text-white"
-                : "bg-transparent border-itec-border text-[#9aa3b0] hover:border-white/20"
-            }`}
-          >
-            {t === "Todos" ? "Todos" : TYPE_CONFIG[t].label}
-          </button>
-        ))}
-      </div>
-
-      {/* Eventos agrupados por mes */}
-      {Object.keys(grouped)
-        .sort()
-        .map((monthKey) => {
-          const [year, month] = monthKey.split("-");
-          return (
-            <div key={monthKey} className="mb-7">
-              <h2 className="text-xs font-semibold text-[#5a6475] uppercase tracking-widest mb-3">
-                {MONTHS[parseInt(month) - 1]} {year}
-              </h2>
-              <div className="flex flex-col gap-2">
-                {grouped[monthKey].map((ev, i) => {
-                  const d = new Date(ev.date + "T00:00:00");
-                  const day = d.getDate();
-                  const cfg = TYPE_CONFIG[ev.type];
-                  return (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3 bg-itec-card border border-white/7 rounded-xl p-3 hover:border-white/12 transition-colors"
-                    >
-                      <div
-                        className={`shrink-0 w-11 h-11 rounded-xl flex flex-col items-center justify-center border ${cfg.color}`}
-                      >
-                        <span className="text-lg font-bold leading-none">
-                          {day}
-                        </span>
-                        <span className="text-[8px] uppercase mt-0.5">
-                          {MONTHS[parseInt(month) - 1].slice(0, 3)}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-itec-text truncate">
-                          {ev.title}
-                        </p>
-                        {ev.subtitle && (
-                          <p className="text-xs text-[#5a6475] mt-0.5 truncate">
-                            {ev.subtitle}
-                          </p>
-                        )}
-                      </div>
-                      <div
-                        className={`w-2 h-2 rounded-full shrink-0 ${cfg.dot}`}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-
-      {filtered.length === 0 && (
-        <div className="flex flex-col items-center py-12 gap-3 text-center">
-          <div className="w-10 h-10 rounded-xl bg-[#004aad]/15 flex items-center justify-center">
-            <div className="w-5 h-5 text-[#5b9cf6]">
-              <Icons type="calendar" className="w-full h-full" />
-            </div>
-          </div>
-          <p className="text-[#5a6475] text-sm">
-            No hay eventos en esta categoría.
-          </p>
-        </div>
-      )}
-    </MainLayout>
-  );
-};
 
 
 

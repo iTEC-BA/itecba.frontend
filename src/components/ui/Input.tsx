@@ -9,10 +9,10 @@ export const Input: React.FC<InputProps> = ({ fullWidth, className = "", ...prop
   return (
     <input
       className={cn(
-        "bg-itec-surface/80 border border-itec-border text-itec-text",
+        "bg-itec-box border border-itec-border text-itec-text",
         "px-4 py-3 rounded-2xl shadow-inner shadow-black/10",
         "placeholder:text-itec-muted/80 outline-none transition-all",
-        "focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10",
+        "focus:border-itec-box/40 focus:ring-2 focus:ring-itec-sky/10",
         fullWidth && "w-full",
         className
       )}

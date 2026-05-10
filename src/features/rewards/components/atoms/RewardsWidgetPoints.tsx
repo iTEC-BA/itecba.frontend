@@ -9,7 +9,7 @@ export const RewardsWidgetPoints: React.FC = () => {
     <div className="inline-flex items-center gap-1 font-bold text-itec-rewards text-xs tracking-tight">
       <Star size="12" />
       <p className="text-xs">{(user?.points ?? 0)}</p>
-      <p className="text-itec-rewards/60">pts</p>
+      <p className="text-xs">pts</p>
     </div>
   );
 };

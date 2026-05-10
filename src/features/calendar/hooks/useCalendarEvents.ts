@@ -1,17 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import {
-  collection, onSnapshot, addDoc, updateDoc,
-  deleteDoc, doc, query, orderBy, Timestamp,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { calendarService } from "../services/calendarService";
 import { useAuth } from "@context/AuthContext";
 
-export type EventType =
-  | "examen"
-  | "institucional"
-  | "feriado"
-  | "beca"
-  | "actividad";
+export type EventType = "examen" | "institucional" | "feriado" | "beca" | "actividad";
 
 export interface CalendarEvent {
   id: string;
@@ -20,7 +11,6 @@ export interface CalendarEvent {
   subtitle?: string;
   date: string; // YYYY-MM-DD
   type: EventType;
-  createdAt?: Timestamp;
 }
 
 export interface CalendarEventInput {
@@ -31,56 +21,56 @@ export interface CalendarEventInput {
   type: EventType;
 }
 
-/** Retorna solo eventos cuya fecha >= hoy (cliente filtra expirados) */
 export const useCalendarEvents = () => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  
+  // Usar solo lo necesario desde AuthContext
+  const { isAdmin } = useAuth();
 
-  useEffect(() => {
-    const q = query(
-      collection(db, "calendar_events"),
-      orderBy("date", "asc"),
-    );
-
-    const unsub = onSnapshot(q, (snap) => {
+  const fetchEvents = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await calendarService.getAll();
       const today = new Date().toISOString().slice(0, 10);
-      const data = snap.docs
-        .map((d) => ({ id: d.id, ...d.data() } as CalendarEvent))
-        .filter((e) => e.date >= today);
-      setEvents(data);
-      setLoading(false);
-    });
+      
+      // Normalizar la fecha de Supabase a YYYY-MM-DD para evitar fallos de filtro
+      const normalizedData = (data as CalendarEvent[]).map((e) => ({
+        ...e,
+        date: e.date.split("T")[0],
+      }));
 
-    return () => unsub();
+      setEvents(normalizedData.filter((e: CalendarEvent) => e.date >= today));
+    } catch (err: any) {
+      console.error("Error al cargar eventos", err);
+      setError("No se pudo conectar con el servidor.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const createEvent = useCallback(
-    async (data: CalendarEventInput) => {
-      if (user?.role !== "admin") return;
-      await addDoc(collection(db, "calendar_events"), {
-        ...data,
-        createdAt: Timestamp.now(),
-      });
-    },
-    [user],
-  );
+  useEffect(() => { fetchEvents(); }, [fetchEvents]);
 
-  const updateEvent = useCallback(
-    async (id: string, data: Partial<CalendarEventInput>) => {
-      if (user?.role !== "admin") return;
-      await updateDoc(doc(db, "calendar_events", id), data);
-    },
-    [user],
-  );
+  const createEvent = useCallback(async (data: CalendarEventInput) => {
+    if (!isAdmin) return;
+    type CreateEventPayload = Parameters<typeof calendarService.create>[0];
+    await calendarService.create(data as unknown as CreateEventPayload);
+    await fetchEvents();
+  }, [isAdmin, fetchEvents]);
 
-  const deleteEvent = useCallback(
-    async (id: string) => {
-      if (user?.role !== "admin") return;
-      await deleteDoc(doc(db, "calendar_events", id));
-    },
-    [user],
-  );
+  const updateEvent = useCallback(async (id: string, data: Partial<CalendarEventInput>) => {
+    if (!isAdmin) return;
+    await calendarService.update(id, data);
+    await fetchEvents();
+  }, [isAdmin, fetchEvents]);
 
-  return { events, loading, createEvent, updateEvent, deleteEvent };
+  const deleteEvent = useCallback(async (id: string) => {
+    if (!isAdmin) return;
+    await calendarService.delete(id);
+    await fetchEvents();
+  }, [isAdmin, fetchEvents]);
+
+  return { events, loading, error, createEvent, updateEvent, deleteEvent };
 };
