@@ -1,5 +1,5 @@
 import React from "react";
-import { ProgressBar } from "../atoms/ProgressBar";
+import { CourseProgressBadge } from "@features/courses/components/atoms/CourseProgressBadge";
 
 interface Props {
   title: string;
@@ -53,16 +53,13 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
         <p className="text-xs text-itec-gray line-clamp-2 flex-1 leading-relaxed">
           {description}
         </p>
-        {/* Progreso */}
-        <div className="mt-auto pt-2 border-t border-white/5">
-          <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[10px] text-itec-gray font-medium uppercase tracking-wide">Progreso</span>
-            <span className={`text-[11px] font-bold ${isComplete ? "text-emerald-400" : "text-itec-blue-skye"}`}>
-              {Math.round(progress)}%
-            </span>
+        
+        {/* Progreso Componetizado */}
+        {progress > 0 && (
+          <div className="mt-auto pt-2 border-t border-white/5">
+            <CourseProgressBadge percent={Math.round(progress)} />
           </div>
-          <ProgressBar progress={progress} variant={isComplete ? "green" : "blue"} />
-        </div>
+        )}
       </div>
     </article>
   );

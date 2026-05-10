@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
@@ -9,9 +8,11 @@ import { CoursePlaylist } from "@features/courses/components/organisms/CoursePla
 import { useCourseById, useDeleteCourse } from "@features/courses/hooks/useCourses";
 import { useResources } from "@features/resources/hooks/useResources";
 
-const CourseResourcesModal = React.lazy(() =>
-  import("@features/courses/components/organisms/CourseResourcesModal").then((m) => ({ default: m.CourseResourcesModal }))
-);
+// Nuevos componentes integrados
+import { CourseBreadcrumb } from "@features/courses/components/molecules/CourseBreadcrumb";
+import { CourseProgressBadge } from "@features/courses/components/atoms/CourseProgressBadge";
+import { ReportVideoModal } from "@features/courses/components/organisms/ReportVideoModal";
+
 const CourseAddResourceModal = React.lazy(() =>
   import("@features/courses/components/organisms/CourseAddResourceModal").then((m) => ({ default: m.CourseAddResourceModal }))
 );
@@ -32,17 +33,20 @@ export const CourseDetail: React.FC = () => {
   const [watched, setWatched] = useState<Set<string>>(new Set());
   const [isMaterialOpen, setMaterialOpen] = useState(false);
   const [isAddResOpen, setAddResOpen] = useState(false);
-  const [isResOpen, setResOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const [copyOk, setCopyOk] = useState(false);
 
-  const courseId = course?.id || (course as any)?._id || "";
+  const courseId = course?.id || (course as unknown as { _id?: string })?._id || "";
 
   useEffect(() => {
     if (courseId && user?.id) {
       try {
         const raw = localStorage.getItem(`itec_course_progress_${user.id}_${courseId}`);
         if (raw) setWatched(new Set(JSON.parse(raw)));
-      } catch {}
+      } catch (e) {
+        // ignore JSON / storage errors
+        void e;
+      }
     }
   }, [courseId, user?.id]);
 
@@ -51,8 +55,17 @@ export const CourseDetail: React.FC = () => {
     if (!courseId || !user?.id) return;
     setWatched((prev) => {
       const next = new Set(prev);
-      next.has(videoId) ? next.delete(videoId) : next.add(videoId);
-      try { localStorage.setItem(`itec_course_progress_${user.id}_${courseId}`, JSON.stringify([...next])); } catch {}
+      if (next.has(videoId)) {
+        next.delete(videoId);
+      } else {
+        next.add(videoId);
+      }
+      try {
+        localStorage.setItem(`itec_course_progress_${user.id}_${courseId}`, JSON.stringify([...next]));
+      } catch (e) {
+        // ignore storage errors
+        void e;
+      }
       return next;
     });
   };
@@ -70,11 +83,19 @@ export const CourseDetail: React.FC = () => {
 
   const relatedResources = useMemo(() => {
     if (!course || !allResources.length) return [];
-    const clean = course.title.toLowerCase().replace("curso de ", "").trim();
-    return allResources.filter((r: any) => r.materia === course.materia || r.title.toLowerCase().includes(clean));
+    const clean = (course.title || "").toLowerCase().replace("curso de ", "").trim();
+    return allResources.filter((r: unknown) => {
+      const item = r as { materia?: string; title?: string };
+      return item.materia === course.materia || (item.title || "").toLowerCase().includes(clean);
+    });
   }, [course, allResources]);
 
   const activeVideo = course?.videos?.[videoIndex];
+  
+  // Cálculo de progreso para el CourseProgressBadge
+  const progressPercent = course?.videos?.length 
+    ? Math.round((watched.size / course.videos.length) * 100) 
+    : 0;
 
   if (isLoading) return (
     <MainLayout>
@@ -100,10 +121,8 @@ export const CourseDetail: React.FC = () => {
 
         {/* Breadcrumb + admin actions */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-          <Link to="/cursos" className="flex items-center gap-1.5 text-xs text-itec-gray hover:text-itec-text transition-colors">
-            <Icons type="arrowLeft" className="w-3.5 h-3.5" />
-            Cursos
-          </Link>
+          <CourseBreadcrumb crumbs={[{ label: 'Cursos', href: '/cursos' }, { label: course.title }]} />
+          
           {isAdmin && (
             <div className="flex items-center gap-2">
               <Link to={`/cursos/editar/${courseId}`}
@@ -118,9 +137,17 @@ export const CourseDetail: React.FC = () => {
           )}
         </div>
 
-        {/* Título + badge */}
+        {/* Título + badges */}
         <div className="flex flex-wrap items-start gap-2 mb-6">
           <h1 className="text-xl md:text-2xl font-bold text-itec-text leading-snug flex-1">{course.title}</h1>
+          
+          {/* Badge de Progreso Visual */}
+          {progressPercent > 0 && (
+            <div className="mt-0.5">
+              <CourseProgressBadge percent={progressPercent} />
+            </div>
+          )}
+
           {course.categoria === "Oficial" && (
             <span className="shrink-0 mt-0.5 bg-itec-blue/20 text-itec-blue-skye border border-itec-blue-skye/30 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest">
               Oficial
@@ -143,6 +170,17 @@ export const CourseDetail: React.FC = () => {
               onOpenMaterialModal={() => setMaterialOpen(true)}
               onShare={handleShare}
             />
+            
+            {/* Botón de reporte integrado debajo del reproductor */}
+            <div className="flex justify-end mt-2">
+              <button 
+                onClick={() => setReportOpen(true)}
+                className="flex items-center gap-1.5 text-xs text-itec-gray hover:text-itec-red transition-colors"
+              >
+                🚩 Reportar video
+              </button>
+            </div>
+
             {/* Botón "Ver recursos de la clase" en mobile */}
             {isAdmin && (
               <button onClick={() => setAddResOpen(true)}
@@ -175,6 +213,17 @@ export const CourseDetail: React.FC = () => {
         <CourseMaterialModal isOpen={isMaterialOpen} onClose={() => setMaterialOpen(false)} relatedResources={relatedResources} />
         {isAdmin && <CourseAddResourceModal isOpen={isAddResOpen} onClose={() => setAddResOpen(false)} courseTitle={course.title} materia={course.materia ?? ""} />}
       </Suspense>
+
+      {/* Modal de Reporte */}
+          {activeVideo && (
+            <ReportVideoModal
+              isOpen={reportOpen}
+              onClose={() => setReportOpen(false)}
+              courseId={courseId}
+              videoId={(activeVideo as unknown as { _id?: string; id?: string })._id || (activeVideo as any).id}
+              videoTitle={(activeVideo as any).title}
+            />
+          )}
     </MainLayout>
   );
 };

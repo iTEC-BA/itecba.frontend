@@ -9,7 +9,8 @@ export type AdminSection =
   | "rewards"
   | "redemptions"
   | "materias"
-  | "tutorias";
+  | "tutorias"
+  | "broken-videos";
 
 export interface SidebarLink {
   id: AdminSection;
@@ -26,6 +27,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   { id: "redemptions", label: "Canjes", icon: "ticket" },
   { id: "materias", label: "Académico", icon: "book" },
   { id: "tutorias", label: "Tutorías", icon: "video" },
+  { id: "broken-videos", label: "Videos Rotos", icon: "video" },
 ];
 
 export const useAdminSidebar = () => {

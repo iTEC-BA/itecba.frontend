@@ -17,6 +17,9 @@ const AdminMaterias    = lazy(() => import("@features/admin/components/organisms
 const BenefitsManagement = lazy(() => import("@features/admin/components/organisms/BenefitsManagement").then((m) => ({ default: m.BenefitsManagement })));
 const TutoriasSection  = lazy(() => import("@features/admin/components/organisms/TutoriasSection").then((m) => ({ default: m.TutoriasSection })));
 
+// Integración del panel de reportes de videos rotos
+const BrokenVideosPanel = lazy(() => import("@features/courses/components/organisms/BrokenVideosPanel").then((m) => ({ default: m.BrokenVideosPanel })));
+
 const SectionSkeleton: React.FC = () => (
   <div className="space-y-4 animate-pulse pt-4">
     <div className="h-8 w-64 rounded-3xl bg-white/5 border border-itec-border" />
@@ -95,6 +98,7 @@ export const AdminPanel: React.FC = () => {
             {active === "redemptions" && <AdminRedemptions />}
             {active === "materias"    && <AdminMaterias />}
             {active === "tutorias"    && <TutoriasSection />}
+            {active === "broken-videos" && <BrokenVideosPanel />}
           </Suspense>
         </main>
       </div>
