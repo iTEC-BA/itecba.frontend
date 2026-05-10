@@ -36,7 +36,7 @@ export const faqService = {
     await fetch(`${API}/faqs/${faqId}/use`, { method: "PATCH" }).catch(() => {});
   },
 
-  // ── Admin ─────────────────────────────────────────────────────────────────
+  // ── Admin — FAQs ──────────────────────────────────────────────────────────
   create: async (data: Partial<FAQ>): Promise<FAQ> => {
     const token = await getToken();
     const res = await fetch(`${API}/faqs`, {
@@ -68,13 +68,10 @@ export const faqService = {
     if (!res.ok) throw new Error("Error al eliminar FAQ");
   },
 
-  // ── Contexto IA ────────────────────────────────────────────────────────────
+  // ── Admin — Contexto IA ───────────────────────────────────────────────────
   getAIContext: async (): Promise<AIContext> => {
-    const token = await getToken();
-    const res = await fetch(`${API}/ai/context`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-    if (!res.ok) return { personality: "", institutionalContext: "", rules: [] };
+    const res = await fetch(`${API}/ai/context`);
+    if (!res.ok) return { personality: "", institutionalContext: "", rules: [], aiCost: 2 };
     return res.json();
   },
 
@@ -86,6 +83,37 @@ export const faqService = {
       body: JSON.stringify(data),
     });
     if (!res.ok) throw new Error("Error al actualizar contexto");
+    return res.json();
+  },
+
+  /** Limpia el cache del system prompt (aplica cambios inmediatamente) */
+  clearPromptCache: async (): Promise<void> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/ai/clear-cache`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error("Error al limpiar el cache");
+  },
+
+  // ── Admin — Créditos (puntos) de usuarios ─────────────────────────────────
+  searchUserByEmail: async (email: string): Promise<{ uid: string; email: string; points: number } | null> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/users/search?email=${encodeURIComponent(email)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  },
+
+  updateUserPoints: async (uid: string, points: number): Promise<{ points: number }> => {
+    const token = await getToken();
+    const res = await fetch(`${API}/users/${uid}/points`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ points }),
+    });
+    if (!res.ok) throw new Error("Error al actualizar puntos");
     return res.json();
   },
 };

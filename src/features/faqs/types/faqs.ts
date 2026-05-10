@@ -29,6 +29,8 @@ export interface AIContext {
   personality: string;
   institutionalContext: string;
   rules: string[];
+  /** Costo en puntos por consulta IA avanzada (configurable desde el admin) */
+  aiCost?: number;
   updatedAt?: string;
 }
 

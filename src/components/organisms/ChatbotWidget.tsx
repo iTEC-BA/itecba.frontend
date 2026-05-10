@@ -75,7 +75,7 @@ export const ChatbotWidget: React.FC = () => {
       {isOpen && (
         <div className="bg-itec-box border border-itec-gray rounded-2xl w-80 sm:w-87.5 h-112.5 shadow-2xl flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-5">
           
-          <div className="bg-itec-blue text-itec-textp-4 flex justify-between items-center">
+          <div className="bg-itec-blue text-itec-text p-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
               <img src={logoItec} alt="Bot Logo" className="w-8 h-8 object-contain bg-white rounded-full p-0.5 shadow-md" />
               <div>
@@ -83,7 +83,7 @@ export const ChatbotWidget: React.FC = () => {
                 <p className="text-[10px] text-blue-200 uppercase tracking-widest">Servidor Activo</p>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-itec-texthover:bg-blue-800 p-1 rounded transition-colors">
+            <button onClick={() => setIsOpen(false)} className="text-itec-text hover:bg-blue-800 p-1 rounded transition-colors">
               <div className="w-5 h-5">
                  <Icons type="close" />
               </div>
@@ -142,7 +142,7 @@ export const ChatbotWidget: React.FC = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-12 h-12 rounded-full shadow-lg transition-transform hover:scale-105 flex items-center justify-center cursor-pointer border border-itec-border ${isOpen ? 'bg-itec-sidebar text-itec-text hover:bg-itec-gray' : 'bg-itec-blue text-itec-texthover:bg-blue-700'}`}
+        className={`w-12 h-12 rounded-full shadow-lg transition-transform hover:scale-105 flex items-center justify-center cursor-pointer border border-itec-border ${isOpen ? 'bg-itec-sidebar text-itec-text hover:bg-itec-gray' : 'bg-itec-blue text-itec-text hover:bg-blue-700'}`}
       >
         <div className={isOpen ? "w-6 h-6" : "w-7 h-7"}>
            <Icons type={isOpen ? "close" : "message"} />

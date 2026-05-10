@@ -27,7 +27,10 @@ dist-ssr
 *.env
 .env
 .vercel
+empaquetar_contexto.sh
+empaquetar.sh
 
 codigo_frontend_ia.txt
 mejorar_frontend.sh
 .env*.local
+.bak_optimizer_20260510_014011

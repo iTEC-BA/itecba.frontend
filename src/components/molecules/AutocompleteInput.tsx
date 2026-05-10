@@ -46,7 +46,7 @@ export const AutocompleteInput: React.FC<Props> = ({
           {filteredSuggestions.map((s, idx) => (
             <li 
               key={idx} onClick={() => { onChange(s); setIsOpen(false); }} 
-              className="cursor-pointer px-5 py-3 text-sm text-slate-300 hover:bg-emerald-600 hover:text-itec-textborder-b border-white/5 last:border-0 transition-colors"
+              className="cursor-pointer px-5 py-3 text-sm text-slate-300 hover:bg-emerald-600 hover:text-itec-text border-b border-white/5 last:border-0 transition-colors"
             >
               {s}
             </li>

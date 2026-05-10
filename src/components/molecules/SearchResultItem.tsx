@@ -29,7 +29,7 @@ export const SearchResultItem: React.FC<Props> = ({ type, title, subtitle, link,
         <div className="w-5 h-5"><Icons type={style.icon as any} /></div>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-itec-texttruncate">{title}</p>
+        <p className="text-sm font-bold text-itec-text truncate">{title}</p>
         <p className="text-[11px] text-itec-text truncate">{subtitle}</p>
       </div>
     </>

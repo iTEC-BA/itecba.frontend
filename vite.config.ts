@@ -133,6 +133,24 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    target: 'esnext',
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('firebase'))      return 'vendor-firebase';
+          if (id.includes('react-dom'))     return 'vendor-react-dom';
+          if (id.includes('react-router'))  return 'vendor-router';
+          if (id.includes('react'))         return 'vendor-react';
+          if (id.includes('lucide'))        return 'vendor-lucide';
+          return 'vendor';
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

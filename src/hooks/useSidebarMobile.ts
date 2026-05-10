@@ -20,10 +20,16 @@ function setGlobal(val: boolean) {
 export const useSidebarMobile = () => {
   const [isOpen, setIsOpen] = useState(_isOpen);
 
-  // Suscribirse a cambios globales
+  // Suscribirse a cambios globales con cleanup correcto al desmontar
   if (!_listeners.has(setIsOpen)) {
     _listeners.add(setIsOpen);
   }
+
+  // Cleanup: evitar memory leak cuando el componente se desmonta
+  // (importante en hot-reload y tests)
+  useState(() => {
+    return () => { _listeners.delete(setIsOpen); };
+  });
 
   const open = useCallback(() => setGlobal(true), []);
   const close = useCallback(() => setGlobal(false), []);

@@ -117,14 +117,13 @@ export const NavbarTop = () => {
                 <RewardsWidgetPoints />
               </div>
               {/* Categoría */}
-              <a
-                className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer"
-                href="/admin"
+              <Link
+                className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer flex items-center justify-center text-gray-400 hover:text-white"
+                to="/admin"
+                aria-label="Panel de administraci�n"
               >
-                <button className="flex items-center justify-center rounded-lg bg-transparent hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
-                  <Icons type="settings" className="size-3.5" />
-                </button>
-              </a>
+                <Icons type="settings" className="size-3.5" />
+              </Link>
               {/* Notificaciones */}
               <div className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer">
                 <Suspense

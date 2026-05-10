@@ -3,23 +3,22 @@ import { faqService } from "../services/faqService";
 import type { FAQ, AIContext } from "../types/faqs";
 
 export const useFAQs = () => {
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
-  const [topFaqs, setTopFaqs] = useState<FAQ[]>([]);
-  const [aiContext, setAIContext] = useState<AIContext | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [faqs, setFaqs]           = useState<FAQ[]>([]);
+  const [topFaqs, setTopFaqs]     = useState<FAQ[]>([]);
+  const [aiContext, setAIContext]  = useState<AIContext | null>(null);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
     setLoading(true);
     try {
-      const [allFaqs, topFaqs] = await Promise.all([
+      const [allFaqs, top] = await Promise.all([
         faqService.getAll(),
         faqService.getTop(),
       ]);
-
       setFaqs(allFaqs);
-      setTopFaqs(topFaqs);
+      setTopFaqs(top);
     } catch (err) {
       console.error(err);
       setError("Error cargando FAQs");
@@ -41,21 +40,19 @@ export const useFAQs = () => {
 
   const create = async (data: Partial<FAQ>) => {
     const faq = await faqService.create(data);
-    setFaqs((currentFaqs) => [faq, ...currentFaqs]);
+    setFaqs(prev => [faq, ...prev]);
     return faq;
   };
 
   const update = async (id: string, data: Partial<FAQ>) => {
     const updated = await faqService.update(id, data);
-    setFaqs((currentFaqs) =>
-      currentFaqs.map((faq) => (faq._id === id ? updated : faq))
-    );
+    setFaqs(prev => prev.map(f => f._id === id ? updated : f));
     return updated;
   };
 
   const remove = async (id: string) => {
     await faqService.remove(id);
-    setFaqs((currentFaqs) => currentFaqs.filter((faq) => faq._id !== id));
+    setFaqs(prev => prev.filter(f => f._id !== id));
   };
 
   const updateContext = async (data: Partial<AIContext>) => {
@@ -64,17 +61,14 @@ export const useFAQs = () => {
     return ctx;
   };
 
+  const clearCache = async () => {
+    await faqService.clearPromptCache();
+  };
+
   return {
-    faqs,
-    topFaqs,
-    aiContext,
-    loading,
-    error,
-    load,
-    loadContext,
-    create,
-    update,
-    remove,
-    updateContext,
+    faqs, topFaqs, aiContext, loading, error,
+    load, loadContext,
+    create, update, remove,
+    updateContext, clearCache,
   };
 };
