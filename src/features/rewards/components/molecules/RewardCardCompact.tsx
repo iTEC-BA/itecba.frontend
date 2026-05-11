@@ -36,10 +36,6 @@ export const RewardCardCompact: React.FC<Props> = ({ reward, userPoints, onSelec
       >
         {reward.pointsCost.toLocaleString()}
       </span>
-      <Icons
-        type={canAfford ? "chevron-right" : "lock"}
-        className={`size-3 shrink-0 ${canAfford ? "text-itec-text/30" : "text-itec-text/15"}`}
-      />
     </button>
   );
 };

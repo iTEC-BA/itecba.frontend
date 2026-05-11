@@ -5,6 +5,7 @@
 import { NavbarBottom } from "@/components/organisms/NavbarBottom";
 import { Sidebar } from "@components/organisms/Sidebar";
 import { NavbarTop } from "@/components/organisms/NavbarTop";
+import { NavbarQquickAccess } from "../organisms/NavbarQquickAccess";
 
 export const SidebarLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -17,6 +18,7 @@ export const SidebarLayout: React.FC<{ children: React.ReactNode }> = ({
         {/* Sidebar: en desktop ocupa espacio en el flujo; en mobile es fixed (drawer) */}
         <Sidebar />
         {children}
+        <NavbarQquickAccess/>
       </section>
 
       {/* BottomNavbar solo visible en mobile */}
