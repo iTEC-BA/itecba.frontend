@@ -1,5 +1,6 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { Button } from '../ui/Button';
+import { Input } from '../ui/Input';
 
 interface Props {
   onSendMessage: (text?: string) => void;
@@ -9,7 +10,7 @@ interface Props {
 export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled }) => {
   const [input, setInput] = useState('');
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim() || disabled) return;
     onSendMessage(input);
@@ -20,16 +21,24 @@ export const ChatInput: React.FC<Props> = ({ onSendMessage, disabled }) => {
     <div className="p-4 bg-itec-box/90 border-t border-itec-gray shrink-0 relative z-10">
       <form onSubmit={handleSubmit} className="flex items-center gap-3">
         <div className="flex-1 relative">
-          <input
-            type="text" 
-            value={input} 
+          <Input
+            type="text"
+            value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={disabled}
             placeholder="Escribe tu consulta sobre trámites, materias, fechas..."
-            className="w-full bg-itec-bg border border-itec-gray text-itec-textpl-4 pr-10 py-3.5 rounded-xl focus:outline-none focus:border-itec-blue text-sm transition-all shadow-inner disabled:opacity-50"
+            fullWidth
+            className="pr-10 text-sm disabled:opacity-50"
           />
         </div>
-        <Button type="submit" variant="primary" hierarchy="solid" disabled={!input.trim() || disabled} icon="send" />
+        <Button 
+            type="submit" 
+            variant="primary" 
+            hierarchy="solid" 
+            disabled={!input.trim() || disabled} 
+            icon="send" 
+            className='cursor-pointer'
+          />
       </form>
     </div>
   );

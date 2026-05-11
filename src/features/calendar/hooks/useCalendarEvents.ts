@@ -43,7 +43,7 @@ export const useCalendarEvents = () => {
       }));
 
       setEvents(normalizedData.filter((e: CalendarEvent) => e.date >= today));
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error al cargar eventos", err);
       setError("No se pudo conectar con el servidor.");
     } finally {
@@ -72,5 +72,7 @@ export const useCalendarEvents = () => {
     await fetchEvents();
   }, [isAdmin, fetchEvents]);
 
+  // Retorna: events (eventos del calendario), loading (estado de carga), error (mensaje de error),
+  // createEvent (crear evento), updateEvent (actualizar evento), deleteEvent (eliminar evento)
   return { events, loading, error, createEvent, updateEvent, deleteEvent };
 };

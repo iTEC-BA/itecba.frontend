@@ -1,5 +1,6 @@
 import React from "react";
 import type { FAQ } from "../../types/faqs";
+import Raccoon from "@/components/ui/icons/Raccoon";
 
 interface Props {
   topFaqs: FAQ[];
@@ -23,9 +24,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
       {/* Logo / Avatar IA */}
       <div className="relative mb-8">
         <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-600/30 to-indigo-600/20 border border-white/10 flex items-center justify-center shadow-[0_0_40px_rgba(139,92,246,0.15)]">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" className="text-violet-300">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-          </svg>
+          <Raccoon size={96} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
         </div>
         <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
       </div>

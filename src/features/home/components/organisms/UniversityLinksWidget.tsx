@@ -1,6 +1,7 @@
 import React, { useState, Suspense, useCallback } from 'react';
 import { useAuth } from '@context/AuthContext';
 import { Icons } from '@components/ui/icons/Icons';
+import { Button } from '@components/ui/Button';
 import { BentoCard } from '@features/home/components/atoms/BentoCard';
 import { SectionLabel } from '@features/home/components/atoms/SectionLabel';
 import { LinkChip } from '@features/home/components/atoms/LinkChip';
@@ -35,12 +36,14 @@ const EmptyLinks: React.FC<{ isAdmin: boolean; onAdd: () => void }> = ({ isAdmin
       </p>
     </div>
     {isAdmin && (
-      <button
+      <Button
         onClick={onAdd}
-        className="text-xs font-semibold bg-itec-blue-skye/15 text-itec-blue-skye border border-itec-blue-skye/30 px-4 py-1.5 rounded-full hover:bg-itec-blue-skye/20 transition-colors"
+        variant="primary"
+        hierarchy="outline"
+        className="text-xs px-4 py-1.5 rounded-full"
       >
         + Agregar link
-      </button>
+      </Button>
     )}
   </div>
 );
@@ -77,13 +80,15 @@ export const UniversityLinksWidget: React.FC = () => {
       <div className="flex items-center justify-between gap-2 mb-3">
         <SectionLabel className="mb-0">Links universitarios</SectionLabel>
         {isAdmin && (
-          <button
+          <Button
             onClick={handleOpenAdd}
-            className="flex items-center gap-1.5 text-[11px] font-semibold text-itec-blue-skye hover:text-blue-300 transition-colors"
+            variant="slate"
+            hierarchy="dashed"
+            className="gap-1.5 text-xs border-dashed"
           >
             <Icons type="plus" className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Agregar</span>
-          </button>
+          </Button>
         )}
       </div>
 

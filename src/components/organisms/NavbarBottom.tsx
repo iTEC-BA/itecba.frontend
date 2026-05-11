@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Icons } from "../ui/icons/Icons";
 import Raccoon from "../ui/icons/Raccoon";
 import { useAuth } from "../../context/AuthContext";
+import { BellDot, Grid, Home, Search, Users } from "lucide-react";
 
 export const NavbarBottom = () => {
   const location = useLocation();
@@ -19,50 +20,36 @@ export const NavbarBottom = () => {
       <div className="flex gap-1 justify-around w-full items-center">
         {/* Inicio */}
         <Link to="/" className={linkClass("/")}>
-          <div className="w-6 h-6">
-            <Icons type="home" className="w-full h-full" />
-          </div>
+          <Home />
           <span className="text-[9px] font-medium truncate">Inicio</span>
         </Link>
 
         {/* BuscaTEC */}
         <Link to="/buscatec" className={linkClass("/buscatec")}>
-          <div className="w-6 h-6">
-            <Icons type="search" className="w-full h-full" />
-          </div>
+          <Search  className="size-6" strokeWidth={2}/>
           <span className="text-[9px] font-medium truncate">Buscar</span>
         </Link>
 
         {/* FAB central — Chatbot / Raccoon */}
         <Link to="/faqs" className="flex items-center justify-center flex-col flex-1">
-          <span
-            className={`rounded-2xl p-2 transition-colors ${
-              isActive("/faqs") ? "bg-[#e01540]" : "bg-itec-red"
-            }`}
-          >
-            <Raccoon size={28} fill1="#ffffff" fill2="#ffffff" fill3="#0C1014" />
-          </span>
-          <span className="text-[9px] font-medium text-[#9aa3b0] mt-0.5">Chat IA</span>
+          <Raccoon size={32} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
+          <span className="text-[9px] font-medium text-[#9aa3b0]">ChatItec</span>
         </Link>
 
         {/* Grupos */}
         <Link to="/grupos" className={linkClass("/grupos")}>
-          <div className="w-6 h-6">
-            <Icons type="users" className="w-full h-full" />
-          </div>
+          <Users  className="size-6" strokeWidth={2}/>
           <span className="text-[9px] font-medium truncate">Grupos</span>
         </Link>
 
         {/* Perfil / Login */}
         <Link
-          to={isAuthenticated ? "/perfil" : "/login"}
-          className={linkClass(isAuthenticated ? "/perfil" : "/login")}
+          to={isAuthenticated ? "/notificaciones" : "/plugins"}
+          className={linkClass(isAuthenticated ? "/notificaciones" : "/plugins")}
         >
-          <div className="w-6 h-6">
-            <Icons type="user" className="w-full h-full" />
-          </div>
+          {isAuthenticated ?<BellDot className="size-6" strokeWidth={1}/> : <Grid className="size-6" strokeWidth={1}/> }
           <span className="text-[9px] font-medium truncate">
-            {isAuthenticated ? "Perfil" : "Entrar"}
+            {isAuthenticated ? "Notificaciones" : "Plugins"}
           </span>
         </Link>
       </div>

@@ -1,24 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MainLayout } from '@components/templates/MainLayout';
-import { WelcomeWidget } from '@features/home/components/organisms/WelcomeWidget';
 import { UniversityLinksWidget } from '@features/home/components/organisms/UniversityLinksWidget';
 import { HubNavigation } from '@features/home/components/organisms/HubNavigation';
-import { AnnouncementsSection } from '@features/home/components/organisms/AnnouncementsSection';
 import { QuickStatsRow } from '@features/home/components/organisms/QuickStatsRow';
 import { usePageTitle } from '@hooks/usePageTitle';
+import { Button } from '@/components/ui/Button';
+import useSizeWindow from '@/hooks/useSizeWindow';
+import { useAuth } from '@/context/AuthContext';
+
+const WelcomeWidget = React.lazy(() => import('@features/home/components/organisms/WelcomeWidget').then(module => ({ default: module.WelcomeWidget })));
+const AnnouncementsSection = React.lazy(() => import('@features/home/components/organisms/AnnouncementsSection').then(module => ({ default: module.AnnouncementsSection })));
+const ForumFeed = React.lazy(() => import('@/features/forum/components/organisms').then(module => ({ default: module.ForumFeed })));
 
 export const HomePage: React.FC = () => {
-  usePageTitle('Inicio');
-
+  usePageTitle('iTEC.BA');
+  const {md} = useSizeWindow()
   return (
     <MainLayout>
-      <div className="max-w-4xl mx-auto w-full">
-        <AnnouncementsSection />
-        <WelcomeWidget />
-        <UniversityLinksWidget />
-        <QuickStatsRow />
-        <HubNavigation />
-      </div>
+      <React.Suspense fallback={<div />}>{md ? <HomeMain /> : <HomeFile />}</React.Suspense>
     </MainLayout>
+  );
+};
+
+const HomeFile = () =>{
+  const [active, setActive] = useState(true)
+  return (
+    <>
+        <div className='flex w-min m-auto bg-itec-box rounded-3xl gap-6 py-2'>
+          <Button
+            onClick={() => setActive(true)}
+            text='Principal'
+            className={active ? 'bg-itec-red' : 'bg-transparent'}
+            variant='slate'
+          />
+          <Button
+            onClick={() => setActive(false)}
+            text='ForoTec'
+            className={!active ? 'bg-itec-red' : 'bg-transparent'}
+            variant='slate'
+          />
+        </div>
+        {active ? <HomeMain/> : <React.Suspense fallback={<div/>}><ForumFeed/></React.Suspense>}
+    </>
+  )
+}
+
+
+const HomeMain = () => {
+    const {md} = useSizeWindow()
+  return (
+    <>
+      {md ? <React.Suspense fallback={<div/>}><AnnouncementsSection /></React.Suspense> : <></> }
+      <React.Suspense fallback={<div/>}><WelcomeWidget /></React.Suspense>
+      <UniversityLinksWidget />
+      <QuickStatsRow />
+      <HubNavigation />
+    </>
   );
 };

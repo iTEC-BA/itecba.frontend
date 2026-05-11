@@ -82,6 +82,10 @@ export default {
 
       // ── Keyframes ─────────────────────────────────────────────────────────
       keyframes: {
+        rotate: {
+          "0%": { transform: "rotate(0deg) scale(10)" },
+          "100%": { transform: "rotate(-360deg) scale(10)" },
+        },
         "fade-in": {
           "0%": { opacity: "0", transform: "translateY(6px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
@@ -138,6 +142,7 @@ export default {
         shimmer: "shimmer 2.5s linear infinite",
         "spin-slow": "spin-slow 3s linear infinite",
         "bounce-x": "bounce-x 1s ease-in-out infinite",
+        rotate: "rotate 10s linear infinite",
       },
 
       // ── Spacing extras ────────────────────────────────────────────────────

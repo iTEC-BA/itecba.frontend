@@ -13,7 +13,7 @@ export type ButtonVariant =
   | "teal"
   | "slate";
 
-export type ButtonHierarchy = "solid" | "outline" | "ghost";
+export type ButtonHierarchy = "solid" | "outline" | "ghost" | "dashed";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -30,46 +30,55 @@ const THEMES: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
     solid: "bg-itec-blue-skye text-white shadow-lg shadow-itec-blue-skye/20 hover:bg-itec-blue active:translate-y-px",
     outline: "border border-itec-sky/40 text-itec-sky hover:bg-itec-sky/10",
     ghost: "text-itec-sky hover:bg-itec-sky/10",
+    dashed: "border border-dashed border-itec-sky/50 text-itec-sky hover:bg-itec-sky/10",
   },
   secondary: {
     solid: "bg-itec-surface text-itec-text border border-itec-border hover:bg-itec-box2",
     outline: "border border-itec-border text-itec-text hover:bg-itec-surface/70",
     ghost: "text-itec-text hover:bg-itec-surface/70",
+    dashed: "border border-dashed border-itec-border text-itec-text hover:bg-itec-surface/70",
   },
   danger: {
     solid: "bg-itec-accent text-white shadow-lg shadow-itec-accent/20 hover:bg-rose-600",
     outline: "border border-rose-500/40 text-rose-300 hover:bg-rose-500/10",
     ghost: "text-rose-300 hover:bg-rose-500/10",
+    dashed: "border border-dashed border-rose-500/50 text-rose-300 hover:bg-rose-500/10",
   },
   success: {
     solid: "bg-itec-emerald text-white shadow-lg shadow-emerald-900/20 hover:brightness-110",
     outline: "border border-itec-emerald/40 text-itec-emerald hover:bg-itec-emerald/10",
     ghost: "text-itec-emerald hover:bg-itec-emerald/10",
+    dashed: "border border-dashed border-itec-emerald/50 text-itec-emerald hover:bg-itec-emerald/10",
   },
   warning: {
     solid: "bg-itec-amber text-black shadow-lg shadow-amber-900/20 hover:brightness-110",
     outline: "border border-itec-amber/40 text-itec-amber hover:bg-itec-amber/10",
     ghost: "text-itec-amber hover:bg-itec-amber/10",
+    dashed: "border border-dashed border-itec-amber/50 text-itec-amber hover:bg-itec-amber/10",
   },
   purple: {
     solid: "bg-itec-purple text-white shadow-lg shadow-purple-900/20 hover:brightness-110",
     outline: "border border-itec-purple/40 text-itec-purple hover:bg-itec-purple/10",
     ghost: "text-itec-purple hover:bg-itec-purple/10",
+    dashed: "border border-dashed border-itec-purple/50 text-itec-purple hover:bg-itec-purple/10",
   },
   orange: {
     solid: "bg-orange-500 text-white shadow-lg shadow-orange-900/20 hover:bg-orange-400",
     outline: "border border-orange-400/40 text-orange-300 hover:bg-orange-500/10",
     ghost: "text-orange-300 hover:bg-orange-500/10",
+    dashed: "border border-dashed border-orange-400/50 text-orange-300 hover:bg-orange-500/10",
   },
   teal: {
     solid: "bg-teal-500 text-white shadow-lg shadow-teal-900/20 hover:bg-teal-400",
     outline: "border border-teal-400/40 text-teal-300 hover:bg-teal-500/10",
     ghost: "text-teal-300 hover:bg-teal-500/10",
+    dashed: "border border-dashed border-teal-400/50 text-teal-300 hover:bg-teal-500/10",
   },
   slate: {
     solid: "bg-itec-box2 text-itec-text border border-itec-border hover:bg-itec-surface",
     outline: "border border-itec-border text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
     ghost: "text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
+    dashed: "border border-dashed border-itec-border text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
   },
 };
 
@@ -87,8 +96,8 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles = [
-    "inline-flex items-center justify-center gap-2",
-    "px-4 py-2.5 text-sm font-semibold rounded-2xl",
+    "inline-flex items-center justify-center gap-2 cursor-pointer",
+    "px-4 py-2 text-sm font-semibold rounded-2xl",
     "transition-all duration-200 outline-none",
     "focus-visible:ring-2 focus-visible:ring-itec-sky/30 focus-visible:ring-offset-0",
     "active:scale-[0.98]",
