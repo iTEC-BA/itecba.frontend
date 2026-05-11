@@ -1,21 +1,19 @@
 // src/components/molecules/SidebarItem.tsx
-// Mejora: agrega prop `onNavigate` para cerrar el drawer mobile al hacer clic en un ítem.
-
+import React from "react";
 import { NavLink } from "react-router-dom";
-import { Icons } from "@components/ui/icons/Icons";
 import { SidebarBadge, SidebarTag } from "@components/atoms/SidebarState";
 
 interface SidebarItemProps {
   path: string;
   label: string;
-  iconName: string;
+  icon: React.ElementType; // <-- Ahora recibe un componente
   badge?: string;
-  tag?: { text: string; color: "green" | "gold" };
+  tag?: { text: string | number; color: "green" | "gold" };
   /** Callback ejecutado al hacer clic — sirve para cerrar el drawer en mobile */
   onNavigate?: () => void;
 }
 
-export const SidebarItem = ({ path, label, iconName, badge, tag, onNavigate }: SidebarItemProps) => {
+export const SidebarItem = ({ path, label, icon: Icon, badge, tag, onNavigate }: SidebarItemProps) => {
   return (
     <NavLink
       to={path}
@@ -28,10 +26,11 @@ export const SidebarItem = ({ path, label, iconName, badge, tag, onNavigate }: S
         }`
       }
     >
-      <Icons type={iconName} className="w-4 h-4 shrink-0" />
+      {/* Se renderiza el icono de lucide directamente */}
+      <Icon className="size-4 shrink-0" />
       <span className="truncate">{label}</span>
       {badge && <SidebarBadge>{badge}</SidebarBadge>}
-      {tag && <SidebarTag color={tag.color}>{tag.text}</SidebarTag>}
+      {tag && <SidebarTag color={tag.color}>{tag.text as string}</SidebarTag>}
     </NavLink>
   );
 };

@@ -55,7 +55,8 @@ agregar_archivo "./package.json"
 agregar_archivo "./tsconfig.app.json"
 agregar_archivo "./vite.config.ts"
 agregar_archivo "./src/index.css"
-agregar_archivo "./src/pages/ForumThreadPage.tsx"
+agregar_archivo "./src/pages/TruekeTECPage.tsx"
+# agregar_archivo "./src/pages/ForumThreadPage.tsx"
 # agregar_archivo "./src/pages/CourseDetail.tsx"
 
 # Agregar la página (View) principal del feature

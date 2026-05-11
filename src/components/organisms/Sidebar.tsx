@@ -23,18 +23,13 @@ export const Sidebar = () => {
     };
   }, [isOpen]);
  
-  const getSidebarMeta = (link: {
-    requireAuth?: unknown;
-    requireAdmin?: unknown;
-    badge?: unknown;
-    tag?: unknown;
-  }) => ({
+  const getSidebarMeta = (link: any) => ({
     requireAuth: typeof link.requireAuth === "boolean" ? link.requireAuth : undefined,
     requireAdmin: typeof link.requireAdmin === "boolean" ? link.requireAdmin : undefined,
     badge: typeof link.badge === "string" ? link.badge : undefined,
     tag:
       link.tag && typeof link.tag === "object" && "text" in link.tag
-        ? (link.tag as { text: string; color: "green" | "gold" })
+        ? (link.tag as { text: string | number; color: "green" | "gold" })
         : undefined,
   });
  
@@ -51,7 +46,7 @@ export const Sidebar = () => {
         {sections.map((section, idx) => (
           <div key={idx} className="flex flex-col mb-1">
             <SidebarLabel>{section.title}</SidebarLabel>
-            {section.links.map((link) => {
+            {section.links.map((link: any) => {
               const { requireAuth, requireAdmin, badge, tag } = getSidebarMeta(link);
               return (
                 <SidebarProtect
@@ -62,7 +57,7 @@ export const Sidebar = () => {
                   <SidebarItem
                     path={link.path}
                     label={link.label}
-                    iconName={link.iconName}
+                    icon={link.icon} // <-- Actualizado
                     badge={badge}
                     tag={tag}
                   />
@@ -75,7 +70,7 @@ export const Sidebar = () => {
         <SidebarDivider />
  
         <div className="flex flex-col">
-          {footerLinks.map((link) => {
+          {footerLinks.map((link: any) => {
             const { requireAuth, requireAdmin, badge, tag } = getSidebarMeta(link);
             return (
               <SidebarProtect
@@ -86,7 +81,7 @@ export const Sidebar = () => {
                 <SidebarItem
                   path={link.path}
                   label={link.label}
-                  iconName={link.iconName}
+                  icon={link.icon} // <-- Actualizado
                   badge={badge}
                   tag={tag}
                 />

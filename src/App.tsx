@@ -30,6 +30,7 @@ const PluginsPage      = lazy(() => import("@pages/PluginsPage").then(m => ({ de
 const TerminosPage     = lazy(() => import("@pages/TerminosPage").then(m => ({ default: m.TerminosPage })));
 const ForumPage        = lazy(() => import('@pages/ForumPage').then(m => ({ default: m.ForumPage })));
 const ForumThreadPage  = lazy(() => import('@pages/ForumThreadPage').then(m => ({ default: m.ForumThreadPage })));
+const TruekeTECPage    = lazy(() => import("@pages/TruekeTECPage").then(m => ({ default: m.TruekeTECPage })));
 
 // ── Wrapper reutilizable para Suspense por ruta ───────────────────────────────
 const PageSuspense: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -63,6 +64,7 @@ export const App: React.FC = () => {
 
           {/* RUTAS PRIVADAS */}
           <Route element={<ProtectedRoute />}>
+            <Route path="/trueketec"          element={<PageSuspense><TruekeTECPage /></PageSuspense>} />
             <Route path="/cursos/editar/:id" element={<PageSuspense><CourseEditDetail /></PageSuspense>} />
             <Route path="/beneficios"        element={<PageSuspense><RewardsPage /></PageSuspense>} />
             <Route path="/recursos"          element={<PageSuspense><ResourcesPage /></PageSuspense>} />
