@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import { Icons } from "../ui/icons/Icons";
 import Raccoon from "../ui/icons/Raccoon";
 import { useAuth } from "../../context/AuthContext";
 import { BellDot, Grid, Home, Search, Users } from "lucide-react";

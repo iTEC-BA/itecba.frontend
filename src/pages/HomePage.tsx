@@ -6,7 +6,6 @@ import { QuickStatsRow } from '@features/home/components/organisms/QuickStatsRow
 import { usePageTitle } from '@hooks/usePageTitle';
 import { Button } from '@/components/ui/Button';
 import useSizeWindow from '@/hooks/useSizeWindow';
-import { useAuth } from '@/context/AuthContext';
 
 const WelcomeWidget = React.lazy(() => import('@features/home/components/organisms/WelcomeWidget').then(module => ({ default: module.WelcomeWidget })));
 const AnnouncementsSection = React.lazy(() => import('@features/home/components/organisms/AnnouncementsSection').then(module => ({ default: module.AnnouncementsSection })));
