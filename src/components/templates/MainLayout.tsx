@@ -1,10 +1,9 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { LoadingState } from "../ui/LoadingState";
 import { SidebarLayout } from "./SidebarLayout";
 
 // RewardsWidget es pesado (lógica de puntos + animaciones).
 // Solo se muestra en desktop lg:, así que no vale cargarlo siempre.
-
 
 export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
