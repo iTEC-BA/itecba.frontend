@@ -6,20 +6,17 @@ import type { TrueketecPost } from "../../types/trueketec.types";
 
 interface Props {
   posts:       TrueketecPost[];
-  myUid:       string;
-  myPosts:     TrueketecPost[];
   total:       number;
   totalPages:  number;
   currentPage: number;
   loading:     boolean;
-  onDelete:    (id: string) => void;
-  onAccept:    (myPostId: string, targetPostId: string) => Promise<{ theirEmail: string }>;
+  onContact?:  (post: TrueketecPost) => void;
   onPage:      (page: number) => void;
 }
 
 export const TrueketecFeed: React.FC<Props> = ({
-  posts, myUid, myPosts, total, totalPages, currentPage,
-  loading, onDelete, onAccept, onPage,
+  posts, total, totalPages, currentPage,
+  loading, onContact, onPage,
 }) => {
   if (loading) {
     return (
@@ -47,25 +44,13 @@ export const TrueketecFeed: React.FC<Props> = ({
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {posts.map((post) => {
-          const isOwn = post.userId === myUid;
-          const myMatchPost = myPosts.find(
-            (mp) =>
-              mp.materia === post.materia &&
-              (mp.comision_actual === post.comision_deseada || post.comision_deseada === "Cualquiera") &&
-              (mp.comision_deseada === post.comision_actual || mp.comision_deseada === "Cualquiera")
-          );
-          return (
-            <TrueketecCard
-              key={post._id}
-              post={post}
-              isOwn={isOwn}
-              myPostId={myMatchPost?._id}
-              onDelete={isOwn ? onDelete : undefined}
-              onAccept={post.isMatch && myMatchPost ? onAccept : undefined}
-            />
-          );
-        })}
+        {posts.map((post) => (
+          <TrueketecCard
+            key={post._id}
+            post={post}
+            onContact={onContact}
+          />
+        ))}
       </div>
 
       {/* Paginación */}

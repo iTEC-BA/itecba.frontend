@@ -1,7 +1,7 @@
 // src/pages/TruekeTECPage.tsx
 import React, { useState } from "react";
 import { Navigate }        from "react-router-dom";
-import { ArrowLeftRight, Plus, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowLeftRight, ChevronLeft, ChevronRight, Inbox, Plus, ShieldAlert, Sparkles } from "lucide-react";
 import { MainLayout }                 from "@components/templates/MainLayout";
 import { Button }                     from "@components/ui/Button";
 import { useAuth }                    from "@context/AuthContext";
@@ -11,7 +11,6 @@ import { TrueketecCard }              from "@features/trueketec/components/molec
 import { TrueketecPublishModal }      from "@features/trueketec/components/organisms/TrueketecPublishModal";
 import { ContactModal }               from "@features/trueketec/components/organisms/ContactModal";
 import { PostulanteModal }            from "@features/trueketec/components/organisms/PostulanteModal";
-import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import type { TrueketecPost, EstadoPost, Postulante } from "@features/trueketec/types/trueketec.types";
 
 // ── Guard de acceso ──────────────────────────────────────────────────────
@@ -72,7 +71,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalO
   const {
     posts, myPosts, matches, total, totalPages, currentPage,
     filters, loading, error, hasSearched,
-    applyFilters, goToPage, publish, remove, accept, updateEstadoLocal,
+    applyFilters, goToPage, publish, updateEstadoLocal,
   } = useTrueketec();
 
   // ── Estado para modales ───────────────────────────────────────────────

@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { materiasService, type MateriaRow } from '../services/materiasService';
-import { groupsService, type GroupData, type SearchGroupsResult } from '../services/groupsService';
+import { groupsService, type SearchGroupsResult } from '../services/groupsService';
 
 const EMPTY_RESULT: SearchGroupsResult = {
   groups: [], total: 0, page: 1, totalPages: 0, hasMore: false,

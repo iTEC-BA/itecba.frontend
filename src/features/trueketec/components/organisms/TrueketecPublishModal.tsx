@@ -11,10 +11,25 @@ interface Props {
   onPublish: (data: TrueketecFormData) => Promise<void>;
 }
 
+const DEPARTAMENTOS = [
+  "Ciencias Básicas",
+  "Civil",
+  "Eléctrica",
+  "Electrónica",
+  "Industrial",
+  "Mecánica",
+  "Naval",
+  "Sistemas de Información",
+  "Química",
+  "Textil",
+  "Curso de Ingreso",
+];
+
 const TURNOS:          Turno[]        = ["Mañana", "Tarde", "Noche"];
 const TURNOS_DESEADOS: TurnoDeseado[] = ["Mañana", "Tarde", "Noche", "Cualquiera"];
 
 const EMPTY: TrueketecFormData = {
+  departamento: "",
   materia: "", comision_actual: "", turno_actual: "",
   comision_deseada: "", turno_deseado: "",
 };
@@ -57,6 +72,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
   };
 
   const validate = (): string | null => {
+    if (!form.departamento)            return "Seleccioná el departamento.";
     if (!form.materia.trim())          return "Indicá la materia.";
     if (!form.comision_actual.trim())  return "Indicá tu comisión actual.";
     if (!form.turno_actual)            return "Seleccioná tu turno actual.";
@@ -91,6 +107,19 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
       maxWidth="max-w-lg"
     >
       <div className="flex flex-col gap-4 px-6 py-5 overflow-y-auto">
+
+        {/* Departamento */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-itec-muted uppercase tracking-widest">Departamento</label>
+          <select
+            value={form.departamento}
+            onChange={(e) => set("departamento", e.target.value)}
+            className={fieldCls}
+          >
+            <option value="">Seleccioná...</option>
+            {DEPARTAMENTOS.map((d) => <option key={d} value={d}>{d}</option>)}
+          </select>
+        </div>
 
         {/* Materia con sugerencias */}
         <div className="relative flex flex-col gap-1.5">

@@ -33,7 +33,7 @@ export const UniversalSearch: React.FC = () => {
       }
       const [courses, groups, resources] = await Promise.all([
         coursesService.getCourses(),
-        groupsService.getApprovedGroups(),
+        groupsService.getPendingGroups(),
         resourcesService.getApprovedResources(),
       ]);
       setDbCourses(courses);
