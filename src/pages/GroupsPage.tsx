@@ -3,7 +3,7 @@ import { MainLayout } from '@components/templates/MainLayout';
 import { PageHeader } from '@components/ui/PageHeader';
 import { Icons } from '@components/ui/icons/Icons';
 import { useAuth } from '@context/AuthContext';
-import { useApprovedGroups, usePendingGroups } from '@features/groups/hooks/useGroups';
+import { usePendingGroups, useGroupStats } from '@features/groups/hooks/useGroups';
 import { useGroupSearch } from '@features/groups/hooks/useGroupFilters';
 import { GroupFilters } from '@features/groups/components/organisms/GroupFilters';
 import { GroupResults } from '@features/groups/components/organisms/GroupResults';
@@ -18,18 +18,33 @@ const AddGroupModal = React.lazy(() =>
 const AdminPendingGroupsModal = React.lazy(() =>
   import('@features/groups/components/organisms/AdminPendingGroupsModal').then(m => ({ default: m.AdminPendingGroupsModal }))
 );
+const AdminMateriasModal = React.lazy(() =>
+  import('@features/groups/components/organisms/AdminMateriasModal').then(m => ({ default: m.AdminMateriasModal }))
+);
 
 export const GroupsPage: React.FC = () => {
   usePageTitle('Grupos de WhatsApp');
   const { isAdmin, user } = useAuth();
 
-  const { data: allGroups = [], isLoading: loadingGroups } = useApprovedGroups();
+  // Stats globales solo para admin (endpoint liviano)
+  const { data: groupStats } = useGroupStats(!!isAdmin);
+  // Pendientes para badge del botón de moderación
   const { data: pendingGroups = [] } = usePendingGroups(!!isAdmin);
 
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isAddOpen,      setIsAddOpen]      = useState(false);
+  const [isAdminOpen,    setIsAdminOpen]    = useState(false);
+  const [isMateriasOpen, setIsMateriasOpen] = useState(false);
 
-  const { filters, filteredResults, hasSearched, handleSpecialtyClick } = useGroupSearch(allGroups);
+  const {
+    filters,
+    filteredResults,
+    pagination,
+    hasSearched,
+    isSearching,
+    searchError,
+    handlePageChange,
+    handleSpecialtyClick,
+  } = useGroupSearch();
 
   return (
     <MainLayout>
@@ -48,30 +63,39 @@ export const GroupsPage: React.FC = () => {
           Aportar grupo
         </Button>
 
-        {/* Botón moderación admin */}
         {isAdmin && (
-          <div className="relative">
+          <>
             <Button
-              onClick={() => setIsAdminOpen(true)}
+              onClick={() => setIsMateriasOpen(true)}
               className="flex items-center gap-2 text-xs font-bold bg-itec-box border border-itec-border hover:border-itec-groups/40 text-itec-gray hover:text-itec-text px-4 py-2.5 rounded-xl transition-all"
             >
-              <Icons type="settings" className="w-3.5 h-3.5" />
-              Moderación
+              <Icons type="book" className="w-3.5 h-3.5" />
+              Materias
             </Button>
-            {pendingGroups.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-itec-red text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-itec-bg animate-pulse">
-                {pendingGroups.length}
-              </span>
-            )}
-          </div>
+
+            <div className="relative">
+              <Button
+                onClick={() => setIsAdminOpen(true)}
+                className="flex items-center gap-2 text-xs font-bold bg-itec-box border border-itec-border hover:border-itec-groups/40 text-itec-gray hover:text-itec-text px-4 py-2.5 rounded-xl transition-all"
+              >
+                <Icons type="settings" className="w-3.5 h-3.5" />
+                Moderación
+              </Button>
+              {pendingGroups.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-itec-red text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-itec-bg animate-pulse">
+                  {pendingGroups.length}
+                </span>
+              )}
+            </div>
+          </>
         )}
       </PageHeader>
 
-      {/* Stats bar */}
-      {isAdmin && !loadingGroups && allGroups.length > 0 && <GroupsStatsBar groups={allGroups} />}
-      
-      {/* Filtros */}
-      <GroupFilters filters={filters} isLoading={loadingGroups} />
+      {/* Stats bar (admin, cargadas desde endpoint liviano) */}
+      {isAdmin && groupStats && <GroupsStatsBar stats={groupStats} />}
+
+      {/* Filtros de búsqueda */}
+      <GroupFilters filters={filters} isLoading={isSearching} />
 
       {/* Resultados o grid de especialidades */}
       {hasSearched ? (
@@ -79,7 +103,10 @@ export const GroupsPage: React.FC = () => {
           results={filteredResults}
           onClear={filters.handleClear}
           onAddClick={() => setIsAddOpen(true)}
-          isLoading={loadingGroups}
+          isLoading={isSearching}
+          searchError={searchError}
+          pagination={pagination}
+          onPageChange={handlePageChange}
         />
       ) : (
         <SpecialtyGrid onSpecialtyClick={handleSpecialtyClick} />
@@ -93,11 +120,14 @@ export const GroupsPage: React.FC = () => {
             onClose={() => setIsAddOpen(false)}
             isAdmin={!!isAdmin}
             userEmail={user?.email || ''}
-            existingGroups={allGroups}
+            existingGroups={[]}
           />
         )}
         {isAdminOpen && isAdmin && (
           <AdminPendingGroupsModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
+        )}
+        {isMateriasOpen && isAdmin && (
+          <AdminMateriasModal isOpen={isMateriasOpen} onClose={() => setIsMateriasOpen(false)} />
         )}
       </Suspense>
     </MainLayout>

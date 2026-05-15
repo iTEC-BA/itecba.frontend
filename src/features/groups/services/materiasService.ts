@@ -7,6 +7,7 @@ export interface MateriaRow {
   carrera: string;
   nivel: string;
   materia: string;
+  codigo?: string;
 }
 
 const getToken = async (): Promise<string> => {
@@ -22,6 +23,14 @@ export const materiasService = {
     if (nivel)   params.set('nivel', nivel);
     const res = await fetch(`${API}?${params}`);
     if (!res.ok) throw new Error('Error al traer materias');
+    return res.json();
+  },
+
+  // Búsqueda dual: por nombre O por código
+  searchMaterias: async (q: string): Promise<MateriaRow[]> => {
+    if (!q || q.trim().length < 2) return [];
+    const res = await fetch(`${API}/search?q=${encodeURIComponent(q.trim())}`);
+    if (!res.ok) return [];
     return res.json();
   },
 

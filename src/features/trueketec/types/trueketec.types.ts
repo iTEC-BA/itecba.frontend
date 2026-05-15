@@ -2,12 +2,14 @@
 
 export type Turno         = "Mañana" | "Tarde" | "Noche";
 export type TurnoDeseado  = Turno | "Cualquiera";
-export type EstadoPost    = "activo" | "completado";
+export type EstadoPost    = "Activo" | "En Negociación" | "Trueque Realizado";
 
 export interface TrueketecPost {
   _id:              string;
   userId:           string;
-  userEmail:        string | null;  // revelado sólo si hay match aceptado
+  userEmail:        string | null;
+  userName:         string;
+  departamento:     string;
   materia:          string;
   comision_actual:  string;
   turno_actual:     Turno;
@@ -19,17 +21,27 @@ export interface TrueketecPost {
   createdAt:        string;
   expiresAt?:       string | null;
 
-  // Enriquecido por el backend al listar
-  isMatch?:         boolean;
-  authorEmail?:     string | null;
-  myPostId?:        string;
+  // Enriquecido por el backend
+  isOwn?:               boolean;
+  isPerfectMatch?:      boolean;
+  authorEmail?:         string | null;
+  myPostId?:            string;
+  postulacionesCount?:  number;
+}
+
+export interface Postulante {
+  userId:    string;
+  userEmail: string;
+  userName:  string;
+  ofertas:   TrueketecPost[];
 }
 
 export interface TrueketecFeedResponse {
-  posts:       TrueketecPost[];
-  total:       number;
-  page:        number;
-  totalPages:  number;
+  posts:      TrueketecPost[];
+  total:      number;
+  page:       number;
+  totalPages: number;
+  hasMore:    boolean;
 }
 
 export interface TrueketecMatchesResponse {
@@ -37,12 +49,14 @@ export interface TrueketecMatchesResponse {
 }
 
 export interface TrueketecFilters {
-  materia?:         string;
-  turno_deseado?:   TurnoDeseado | "";
-  comision_actual?: string;
+  materia?:       string;
+  departamento?:  string;
+  turno_deseado?: TurnoDeseado | "";
+  comision?:      string;
 }
 
 export interface TrueketecFormData {
+  departamento:     string;
   materia:          string;
   comision_actual:  string;
   turno_actual:     Turno | "";

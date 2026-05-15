@@ -12,7 +12,7 @@ import { Suspense } from "react";
 import { NotificationBell } from "@features/notifications/components/NotificationBell";
 
 export const NavbarTop = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuth();
   const { toggle } = useSidebarMobile();
 
   return (
@@ -117,13 +117,15 @@ export const NavbarTop = () => {
                 <RewardsWidgetPoints />
               </div>
               {/* Categoría */}
-              <Link
+              {isAdmin && (
+                <Link
                 className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer flex items-center justify-center text-gray-400 hover:text-white"
                 to="/admin"
                 aria-label="Panel de administraci�n"
               >
                 <Icons type="settings" className="size-3.5" />
               </Link>
+              )}
               {/* Notificaciones */}
               <div className="relative p-2.5 bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer">
                 <Suspense

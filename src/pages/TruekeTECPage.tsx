@@ -1,22 +1,24 @@
 // src/pages/TruekeTECPage.tsx
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate }        from "react-router-dom";
 import { ArrowLeftRight, Plus, ShieldAlert, Sparkles } from "lucide-react";
-import { MainLayout } from "@components/templates/MainLayout";
-import { Button } from "@components/ui/Button";
-import { useAuth } from "@context/AuthContext";
-import { useTrueketec } from "@features/trueketec/hooks/useTrueketec";
-import { TrueketecFiltersBar } from "@features/trueketec/components/molecules/TrueketecFilters";
-import { TrueketecFeed } from "@features/trueketec/components/organisms/TrueketecFeed";
-import { TrueketecPublishModal } from "@features/trueketec/components/organisms/TrueketecPublishModal";
-import { TrueketecCard } from "@features/trueketec/components/molecules/TrueketecCard";
+import { MainLayout }                 from "@components/templates/MainLayout";
+import { Button }                     from "@components/ui/Button";
+import { useAuth }                    from "@context/AuthContext";
+import { useTrueketec }               from "@features/trueketec/hooks/useTrueketec";
+import { TrueketecFiltersBar }        from "@features/trueketec/components/molecules/TrueketecFilters";
+import { TrueketecCard }              from "@features/trueketec/components/molecules/TrueketecCard";
+import { TrueketecPublishModal }      from "@features/trueketec/components/organisms/TrueketecPublishModal";
+import { ContactModal }               from "@features/trueketec/components/organisms/ContactModal";
+import { PostulanteModal }            from "@features/trueketec/components/organisms/PostulanteModal";
+import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import type { TrueketecPost, EstadoPost, Postulante } from "@features/trueketec/types/trueketec.types";
 
-// ── Page (con guards de auth) ────────────────────────────────
-const TruekeTECPage: React.FC = () => {
+// ── Guard de acceso ──────────────────────────────────────────────────────
+export const TruekeTECPage: React.FC = () => {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Spinner mientras Firebase resuelve la sesión
   if (authLoading) {
     return (
       <MainLayout>
@@ -31,11 +33,10 @@ const TruekeTECPage: React.FC = () => {
 
   const isUTN = user?.email?.endsWith("@frba.utn.edu.ar");
 
-  // Cuenta no institucional
   if (!isUTN) {
     return (
       <MainLayout>
-        <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
+        <div className="flex flex-col items-center justify-center gap-4 py-24 text-center px-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-itec-accent/30 bg-itec-accent/10">
             <ShieldAlert size={28} className="text-itec-accent" />
           </div>
@@ -43,10 +44,6 @@ const TruekeTECPage: React.FC = () => {
           <p className="max-w-sm text-sm text-itec-muted">
             TruekeTEC es exclusivo para estudiantes con cuenta institucional{" "}
             <span className="font-semibold text-itec-sky">@frba.utn.edu.ar</span>.
-            Tu cuenta actual no cumple este requisito.
-          </p>
-          <p className="text-xs text-itec-muted">
-            Sesión activa: <span className="font-mono text-itec-text">{user?.email}</span>
           </p>
         </div>
       </MainLayout>
@@ -57,7 +54,6 @@ const TruekeTECPage: React.FC = () => {
     <MainLayout>
       <TruekeTECContent
         userId={user!.id ?? ""}
-        userEmail={user!.email}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
       />
@@ -65,44 +61,43 @@ const TruekeTECPage: React.FC = () => {
   );
 };
 
-// ── Contenido principal (separado para mantener guards limpios) ──
+// ── Contenido principal ──────────────────────────────────────────────────
 interface ContentProps {
   userId:       string;
-  userEmail:    string;
   modalOpen:    boolean;
   setModalOpen: (v: boolean) => void;
 }
 
-const TruekeTECContent: React.FC<ContentProps> = ({
-  userId, modalOpen, setModalOpen,
-}) => {
+const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalOpen }) => {
   const {
-    posts, matches, total, totalPages, currentPage,
-    filters, loading, error,
-    applyFilters, goToPage, publish, remove, accept,
+    posts, myPosts, matches, total, totalPages, currentPage,
+    filters, loading, error, hasSearched,
+    applyFilters, goToPage, publish, remove, accept, updateEstadoLocal,
   } = useTrueketec();
 
-  const myPosts = posts.filter((p) => p.userId === userId);
+  // ── Estado para modales ───────────────────────────────────────────────
+  const [contactPost,    setContactPost]    = useState<TrueketecPost | null>(null);
+  const [postulante,     setPostulante]     = useState<Postulante | null>(null);
+
+  const handleContact = (p: TrueketecPost) => setContactPost(p);
+  const isOwnContact  = contactPost?.userId === userId;
 
   return (
-    <div className="mx-auto max-w-4xl w-full flex flex-col gap-5 pb-20">
+    <div className="mx-auto max-w-4xl w-full flex flex-col gap-6 pb-24 px-2">
 
-      {/* ── Header ─────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+      {/* ── Header ───────────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pt-2">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-itec-sky/30 bg-itec-sky/10">
               <ArrowLeftRight size={16} className="text-itec-sky" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-itec-text">
-              TruekeTEC
-            </h1>
+            <h1 className="text-2xl font-bold tracking-tight text-itec-text">TruekeTEC</h1>
           </div>
           <p className="text-sm text-itec-muted">
             Intercambio de comisiones entre estudiantes de UTN FRBA.
           </p>
         </div>
-
         <Button
           variant="success"
           hierarchy="solid"
@@ -112,74 +107,143 @@ const TruekeTECContent: React.FC<ContentProps> = ({
         />
       </div>
 
-      {/* ── Error global ────────────────────────────────────── */}
+      {/* ── Error ────────────────────────────────────────────────────── */}
       {error && (
         <div className="rounded-2xl border border-itec-accent/30 bg-itec-accent/10 px-4 py-3 text-sm text-itec-accent">
           {error}
         </div>
       )}
 
-      {/* ── Mis matches directos ────────────────────────────── */}
+      {/* ── Matches perfectos ─────────────────────────────────────────── */}
       {matches.length > 0 && (
-        <section className="flex flex-col gap-2">
+        <section className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <Sparkles size={14} className="text-itec-emerald" />
-            <h2 className="text-sm font-bold text-itec-emerald uppercase tracking-widest">
-              Tus matches directos ({matches.length})
+            <Sparkles size={14} className="text-emerald-400" />
+            <h2 className="text-sm font-bold text-emerald-400 uppercase tracking-widest">
+              Tus matches perfectos ({matches.length})
             </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {matches.map((m) => (
-              <TrueketecCard
-                key={m._id}
-                post={{ ...m, isMatch: true }}
-                myPostId={m.myPostId}
-                onAccept={accept}
-              />
-            ))}
+          {/* Banner destacado de match perfecto */}
+          <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 p-4">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {matches.map((m) => (
+                <TrueketecCard
+                  key={m._id}
+                  post={{ ...m, isPerfectMatch: true }}
+                  onContact={handleContact}
+                />
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* ── Mis publicaciones activas ───────────────────────── */}
-      {myPosts.length > 0 && (
+      {/* ── Mis publicaciones activas ──────────────────────────────── */}
+      {myPosts.filter(p => p.estado === "Activo").length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="text-xs font-bold text-itec-muted uppercase tracking-widest">
             Mis publicaciones activas
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {myPosts.map((p) => (
-              <TrueketecCard key={p._id} post={p} isOwn onDelete={remove} />
+            {myPosts.filter(p => p.estado === "Activo").map((p) => (
+              <TrueketecCard key={p._id} post={p} onContact={handleContact} />
             ))}
           </div>
         </section>
       )}
 
-      {/* ── Filtros ────────────────────────────────────────── */}
+      {/* ── Filtros (obligatorio buscar) ───────────────────────────── */}
       <TrueketecFiltersBar initialFilters={filters} onApply={applyFilters} />
 
-      {/* ── Feed ───────────────────────────────────────────── */}
-      <TrueketecFeed
-        posts={posts.filter((p) => p.userId !== userId)}
-        myUid={userId}
-        myPosts={myPosts}
-        total={total}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        loading={loading}
-        onDelete={remove}
-        onAccept={accept}
-        onPage={goToPage}
+      {/* ── Feed ──────────────────────────────────────────────────────── */}
+      {!hasSearched ? (
+        <div className="flex flex-col items-center gap-3 py-12 text-itec-muted/60">
+          <ArrowLeftRight size={36} className="opacity-30" />
+          <p className="text-sm text-center">
+            Usá los filtros de arriba para buscar intercambios disponibles.
+          </p>
+        </div>
+      ) : loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-52 rounded-3xl border border-itec-border bg-itec-box animate-pulse" />
+          ))}
+        </div>
+      ) : posts.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 py-16 text-itec-muted">
+          <Inbox size={36} className="opacity-30" />
+          <p className="text-sm font-medium">No hay solicitudes activas con esos filtros.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <p className="text-xs text-itec-muted">
+            {total} solicitud{total !== 1 ? "es" : ""} activa{total !== 1 ? "s" : ""} encontrada{total !== 1 ? "s" : ""}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {posts.map((p) => (
+              <TrueketecCard
+                key={p._id}
+                post={p}
+                onContact={handleContact}
+              />
+            ))}
+          </div>
+
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className="flex items-center gap-1 rounded-2xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
+              >
+                <ChevronLeft size={14} /> Anterior
+              </button>
+              <span className="text-xs text-itec-muted px-2">
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+                className="flex items-center gap-1 rounded-2xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
+              >
+                Siguiente <ChevronRight size={14} />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Modal 1: Contacto / gestión del dueño ────────────────────── */}
+      <ContactModal
+        post={contactPost}
+        isOwn={!!isOwnContact}
+        onClose={() => setContactPost(null)}
+        onEstadoChanged={(id, estado) => {
+          updateEstadoLocal(id, estado as EstadoPost);
+          setContactPost((prev) => prev ? { ...prev, estado: estado as EstadoPost } : null);
+        }}
+        onOpenPostulante={(p) => {
+          setContactPost(null);
+          setPostulante(p);
+        }}
       />
 
-      {/* ── Modal de publicación ───────────────────────────── */}
+      {/* ── Modal 2: Ofertas del interesado ──────────────────────────── */}
+      <PostulanteModal
+        postulante={postulante}
+        onClose={() => setPostulante(null)}
+      />
+
+      {/* ── Modal de publicación ──────────────────────────────────────── */}
       <TrueketecPublishModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onPublish={publish}
       />
 
-      {/* ── FAB mobile ─────────────────────────────────────── */}
+      {/* ── FAB mobile ────────────────────────────────────────────────── */}
       <button
         onClick={() => setModalOpen(true)}
         className="fixed bottom-6 right-6 z-50 sm:hidden flex items-center justify-center w-14 h-14 rounded-full bg-itec-emerald shadow-lg shadow-itec-emerald/30 text-white transition-transform active:scale-95 hover:brightness-110"
@@ -191,5 +255,4 @@ const TruekeTECContent: React.FC<ContentProps> = ({
   );
 };
 
-export { TruekeTECPage };
 export default TruekeTECPage;

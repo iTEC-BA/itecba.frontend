@@ -2,7 +2,7 @@
 
 @theme {
   /* Paleta de colores ITEC */
-  --color-itec-bg: #0C1014;
+  --color-itec-bg: #0C1116;
   /* --color-itec-bg: #ffffff; */
   --color-itec-text: #e5e6eA;
   /* --color-itec-text: #e5e6eA; */
@@ -24,10 +24,10 @@
   --color-itec-rewards: #f0b100;
 
   /* Variantes sutiles para fondos de tarjetas */
-  --color-itec-box: #0C1014;
+  --color-itec-box: #0c1117;
   --color-itec-card: #111820;
   --color-itec-border: #171717;
-  --color-itec-sidebar: #0C1014;
+  --color-itec-sidebar: #0c1117;
 }
 
 body {
