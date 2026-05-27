@@ -1,5 +1,6 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { getActivities } from "@features/points/services/points.service";
 import { AuthProvider } from "@context/AuthContext";
 import { ProtectedRoute } from "@components/templates/ProtectedRoute";
 import LoadingState from "@components/ui/LoadingState";
@@ -39,6 +40,12 @@ const PageSuspense: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 // ── App ───────────────────────────────────────────────────────────────────────
 export const App: React.FC = () => {
+  // Warm-up: precarga el catálogo de actividades en localStorage
+  // para que usePointsGrant pueda leer los valores sin hacer una petición de red.
+  useEffect(() => {
+    getActivities().catch(() => {}); // silencioso — no bloquea la UI
+  }, []);
+
   return (
     <AuthProvider>
       <BrowserRouter>

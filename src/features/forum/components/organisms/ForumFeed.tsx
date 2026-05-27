@@ -27,6 +27,7 @@ export const ForumFeed: React.FC = () => {
     submitPost, submitReply, handleVote, handleRepost,
     requestDelete, confirmDelete, cancelDelete,
     setComposing, refresh, silentRefresh,
+    toastNode,
   } = useForum();
 
   const { isAuthenticated } = useAuth();
