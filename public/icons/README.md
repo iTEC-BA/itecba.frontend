@@ -13,7 +13,6 @@ O manualmente, necesitás:
 | pwa-512-maskable.png     | 512×512   | Android adaptive icon           |
 | apple-touch-icon.png     | 180×180   | iOS home screen                 |
 | shortcut-tarjetec.png    | 96×96     | Shortcut TarjeTEC               |
-| shortcut-buscatec.png    | 96×96     | Shortcut BuscaTEC               |
 | shortcut-cursos.png      | 96×96     | Shortcut Cursos                 |
 
 Screenshots:

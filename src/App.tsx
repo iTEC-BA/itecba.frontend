@@ -22,8 +22,8 @@ const AdminPanel       = lazy(() => import("@pages/AdminPanel").then(m => ({ def
 const ProgressPage     = lazy(() => import("@pages/ProgressPage").then(m => ({ default: m.ProgressPage })));
 const ErrorPage        = lazy(() => import("@pages/ErrorPage").then(m => ({ default: m.ErrorPage })));
 const LoginPage        = lazy(() => import("@pages/LoginPage").then(m => ({ default: m.LoginPage })));
-const BuscaTECPage     = lazy(() => import("@pages/BuscaTECPage").then(m => ({ default: m.BuscaTECPage })));
 const AulasPage        = lazy(() => import("@pages/AulasPage").then(m => ({ default: m.AulasPage })));
+const AulaDetallePage  = lazy(() => import("@pages/AulaDetallePage").then(m => ({ default: m.AulaDetallePage })));
 const GuiaTECPage      = lazy(() => import("@pages/GuiaTECPage").then(m => ({ default: m.GuiaTECPage })));
 const CalendarioPage   = lazy(() => import("@pages/CalendarioPage").then(m => ({ default: m.CalendarioPage })));
 const PluginsPage      = lazy(() => import("@pages/PluginsPage").then(m => ({ default: m.PluginsPage })));
@@ -55,8 +55,8 @@ export const App: React.FC = () => {
           <Route path="/grado"      element={<PageSuspense><GradePage /></PageSuspense>} />
           <Route path="/nosotros"   element={<PageSuspense><AboutPage /></PageSuspense>} />
           <Route path="/grupos"     element={<PageSuspense><GroupsPage /></PageSuspense>} />
-          <Route path="/buscatec"   element={<PageSuspense><BuscaTECPage /></PageSuspense>} />
           <Route path="/aulas"      element={<PageSuspense><AulasPage /></PageSuspense>} />
+          <Route path="/aulas/:slug"  element={<PageSuspense><AulaDetallePage /></PageSuspense>} />
           <Route path="/guiatec"    element={<PageSuspense><GuiaTECPage /></PageSuspense>} />
           <Route path="/calendario" element={<PageSuspense><CalendarioPage /></PageSuspense>} />
           <Route path="/plugins"    element={<PageSuspense><PluginsPage /></PageSuspense>} />

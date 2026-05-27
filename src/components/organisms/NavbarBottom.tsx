@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import Raccoon from "../ui/icons/Raccoon";
 import { useAuth } from "../../context/AuthContext";
-import { BellDot, Grid, Home, Search, Users } from "lucide-react";
+import { BellDot, Grid, Home, BookKey, Users } from "lucide-react";
 
 export const NavbarBottom = () => {
   const location = useLocation();
@@ -23,15 +23,19 @@ export const NavbarBottom = () => {
           <span className="text-[9px] font-medium truncate">Inicio</span>
         </Link>
 
-        {/* BuscaTEC */}
-        <Link to="/buscatec" className={linkClass("/buscatec")}>
-          <Search  className="size-6" strokeWidth={2}/>
-          <span className="text-[9px] font-medium truncate">Buscar</span>
+        {/* Aulas */}
+        <Link to="/aulas" className={linkClass("/aulas")}>
+          <BookKey  className="size-6" strokeWidth={2}/>
+          <span className="text-[9px] font-medium truncate">Aulas</span>
         </Link>
 
         {/* FAB central — Chatbot / Raccoon */}
-        <Link to="/faqs" className="flex items-center justify-center flex-col flex-1">
-          <Raccoon size={32} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
+        <Link to="/faqs" className="relative flex items-center justify-center flex-col flex-1">
+          <span className="relative flex items-center justify-center h-6">
+            <span className="absolute bottom-0 size-14 flex flex-col items-center justify-center">
+              <Raccoon size={55} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
+            </span>
+          </span>
           <span className="text-[9px] font-medium text-[#9aa3b0]">ChatItec</span>
         </Link>
 

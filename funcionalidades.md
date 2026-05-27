@@ -185,17 +185,6 @@ Seguimiento del progreso académico del usuario autenticado. Muestra los cursos 
 
 ---
 
-## 15. BuscaTECPage — `/buscatec`
-
-Buscador de materias. Consume `GET /api/materias` (Supabase) con filtros por carrera y nivel. Permite al estudiante explorar el plan de estudios completo, buscar correlatividades y encontrar qué materia cursar a continuación. También puede consumir `GET /api/materias/carreras` para poblar el select de carreras.
-
-**Mejoras sugeridas:**
-- Búsqueda con debounce sobre el nombre de la materia.
-- Agrupar resultados por nivel.
-- 100% responsive.
-
----
-
 ## 16. AulasPage — `/aulas`
 
 Mapa o directorio de aulas y espacios físicos del campus. Probablemente contenido estático o semi-estático. No tiene módulo de backend dedicado.

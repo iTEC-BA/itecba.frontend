@@ -26,15 +26,14 @@ export const useSidebarLinks = () => {
           { path: "/", label: "Inicio", icon: Home },
           { path: "/foro", label: "Comunidad", icon: MessageCircle },
           { path: "/trueketec", label: "TruekeTEC", icon: Handshake, requireAuth: true },
-          { path: "/buscatec", label: "BuscaTEC", icon: Search },
           { path: "/aulas", label: "Buscar aula", icon: MapPin },
         ],
       },
       {
         title: "Aprender",
         links: [
-          { path: "/cursos", label: "Cursos", icon: BookOpen, badge: "Nuevo" },
-          { path: "/guiatec", label: "GuíaTEC", icon: Video, tag: { text: "Free", color: "green" as const } },
+          { path: "/cursos", label: "Cursos", icon: BookOpen},
+          { path: "/guiatec", label: "GuíaTEC", icon: Video},
           { path: "/recursos", label: "BiblioTEC", icon: Folder },
         ],
       },
@@ -42,7 +41,7 @@ export const useSidebarLinks = () => {
         title: "Comunidad",
         links: [
           { path: "/grupos", label: "Grupos", icon: Users },
-          { path: "/faqs", label: "Novedades", icon: Newspaper },
+          { path: "/faqs", label: "Preguntas Frecuentes", icon: Newspaper },
         ],
       },
       {

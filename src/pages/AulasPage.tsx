@@ -1,144 +1,163 @@
+// src/pages/AulasPage.tsx
 import React, { useState } from "react";
-import { MainLayout } from "@/components/templates/MainLayout";
-import { PageHeader } from "@components/ui/PageHeader";
-import { Icons } from "@/components/ui/icons/Icons";
-import { usePageTitle } from "@hooks/usePageTitle";
+import { MainLayout }       from "@components/templates/MainLayout";
+import { PageHeader }       from "@components/ui/PageHeader";
+import { CardSkeletonGrid } from "@components/ui/skeletons/CardSkeleton";
+import { useAuth }          from "@context/AuthContext";
+import { useAulas, invalidateAulasCache } from "@features/aulas/hooks/useAulas";
+import { AulaCard }         from "@features/aulas/components/molecules/AulaCard";
+import { AulaFormModal }    from "@features/aulas/components/organisms/AulaFormModal";
+import { DeleteAulaModal }  from "@features/aulas/components/organisms/DeleteAulaModal";
+import { Plus, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import type { AulaResumen, SedeAula, FuncionAula } from "@features/aulas/types/aulas.types";
 
-interface Aula {
-  numero: string;
-  piso: string;
-  ala: string;
-  sede: string;
-  capacidad: number;
-  referencias: string;
-}
-
-const AULAS: Aula[] = [
-  { numero: "101", piso: "1.° piso", ala: "Ala central", sede: "Medrano", capacidad: 40, referencias: "Al subir la escalera, primer aula a la derecha." },
-  { numero: "204", piso: "2.° piso", ala: "Ala norte", sede: "Medrano", capacidad: 60, referencias: "Subís por el ascensor, giras a la izquierda." },
-  { numero: "304", piso: "3.° piso", ala: "Ala norte", sede: "Medrano", capacidad: 35, referencias: "Escalera central, a la derecha." },
-  { numero: "Lab-A", piso: "1.° piso", ala: "Ala sur", sede: "Medrano", capacidad: 25, referencias: "Laboratorio de informática, requiere credencial." },
-  { numero: "C101", piso: "1.° piso", ala: "Ala central", sede: "Campus", capacidad: 80, referencias: "Edificio central, al fondo del pasillo." },
-  { numero: "C203", piso: "2.° piso", ala: "Ala este", sede: "Campus", capacidad: 50, referencias: "Sube por escalera este, tercera puerta." },
+const SEDES_OPTS = [
+  { value: "",        label: "Todas las sedes" },
+  { value: "medrano", label: "Medrano"         },
+  { value: "campus",  label: "Campus"          },
 ];
 
-export const AulasPage: React.FC = () => {
-  usePageTitle("Buscar Aula");
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<Aula | null>(null);
-  const [sede, setSede] = useState("Todas");
+const FUNCIONES_OPTS = [
+  { value: "",                         label: "Todas las funciones"      },
+  { value: "aula_comun",               label: "Aula común"               },
+  { value: "laboratorio_informatica",  label: "Lab. Informática"         },
+  { value: "laboratorio_especialidad", label: "Laboratorio especialidad" },
+  { value: "departamento",             label: "Departamentos"            },
+  { value: "bedelia",                  label: "Bedelías"                 },
+  { value: "ceit",                     label: "CEIT"                     },
+  { value: "sala_reunion",             label: "Salas de reunión"         },
+  { value: "secretaria",               label: "Secretarías"              },
+  { value: "otro",                     label: "Otros"                    },
+];
 
-  const filtered = AULAS.filter((a) => {
-    const matchQuery =
-      a.numero.toLowerCase().includes(query.toLowerCase()) ||
-      a.piso.toLowerCase().includes(query.toLowerCase());
-    const matchSede = sede === "Todas" || a.sede === sede;
-    return matchQuery && matchSede;
-  });
+const selectCls =
+  "bg-itec-surface border border-itec-border text-itec-text text-sm rounded-2xl px-3 py-2 focus:outline-none focus:border-itec-sky transition-colors appearance-none cursor-pointer";
+
+export const AulasPage: React.FC = () => {
+  const { isAdmin }    = useAuth();
+  const { filtered, loading, error, filters, setFilters, reload } = useAulas();
+
+  const [showForm,   setShowForm]   = useState(false);
+  const [editAula,   setEditAula]   = useState<AulaResumen | null>(null);
+  const [deleteAula, setDeleteAula] = useState<AulaResumen | null>(null);
+
+  const handleEdit    = (aula: AulaResumen) => { setEditAula(aula); setShowForm(true); };
+  const handleDelete  = (aula: AulaResumen) => setDeleteAula(aula);
+  const handleSaved   = () => { setEditAula(null); reload(); };
+  const handleDeleted = () => { setDeleteAula(null); reload(); };
 
   return (
     <MainLayout>
       <PageHeader
-        title="Buscar Aula"
-        description="Encontrá cualquier aula de Medrano o Campus en segundos, con referencias visuales para llegar."
+        title="Buscador de Aulas"
+        description="Encontrá cualquier aula, laboratorio, departamento o espacio de la facultad con toda la información para llegar."
         iconType="map-pin"
-        colorTheme="red"
-      />
+        colorTheme="teal"
+      >
+        {isAdmin && (
+          <button
+            onClick={() => { setEditAula(null); setShowForm(true); }}
+            className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-itec-blue text-white text-sm font-semibold hover:bg-blue-600 transition-colors"
+          >
+            <Plus size={16} /> Nueva aula
+          </button>
+        )}
+      </PageHeader>
 
-      {/* Buscador + filtro sede */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-4">
-        <div className="flex-1 flex items-center gap-2 bg-itec-card border border-white/7 rounded-xl px-4 py-3 focus-within:border-itec-blue-skye transition-colors">
-          <div className="w-4 h-4 text-[#5a6475] shrink-0">
-            <Icons type="map-pin" className="w-full h-full" />
-          </div>
+      {/* ── Filtros ─────────────────────────────────────────────────────────── */}
+      <section className="flex flex-col sm:flex-row gap-3 mb-6">
+        {/* Buscador texto libre */}
+        <div className="relative flex-1">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-itec-muted pointer-events-none" />
           <input
             type="text"
-            value={query}
-            onChange={(e) => { setQuery(e.target.value); setSelected(null); }}
-            placeholder="Ej: 304, Lab-A, C203..."
-            className="flex-1 bg-transparent text-itec-text text-sm placeholder-[#5a6475] outline-none"
+            placeholder="Buscá por número, nombre, carrera..."
+            value={filters.texto ?? ""}
+            onChange={(e) => setFilters({ ...filters, texto: e.target.value })}
+            className="w-full pl-9 pr-4 py-2 text-sm rounded-2xl bg-itec-surface border border-itec-border text-itec-text focus:outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60"
           />
         </div>
-        <select
-          value={sede}
-          onChange={(e) => setSede(e.target.value)}
-          className="bg-itec-card border border-white/7 text-[#9aa3b0] text-sm px-4 py-3 rounded-xl outline-none focus:border-itec-blue-skye transition-colors"
-        >
-          <option value="Todas">Todas las sedes</option>
-          <option value="Medrano">Medrano</option>
-          <option value="Campus">Campus</option>
-        </select>
-      </div>
 
-      {/* Aula seleccionada — detalle */}
-      {selected && (
-        <div className="mb-5 bg-itec-card border border-itec-red/30 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex items-start justify-between gap-3 mb-3">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-medium bg-itec-red/15 text-[#e01540] px-2 py-0.5 rounded-md">{selected.sede}</span>
-                <span className="text-xs text-[#5a6475]">{selected.piso} · {selected.ala}</span>
-              </div>
-              <h2 className="text-2xl font-bold text-itec-text">Aula {selected.numero}</h2>
-            </div>
-            <button onClick={() => setSelected(null)} className="text-[#5a6475] hover:text-itec-text text-xl leading-none shrink-0">×</button>
-          </div>
-          {/* Mini mapa visual */}
-          <div className="relative h-28 bg-[#0C1014] rounded-xl border border-white/5 overflow-hidden mb-3 flex items-center justify-center">
-            <div className="grid grid-cols-8 grid-rows-4 gap-1 absolute inset-2 opacity-20">
-              {Array.from({ length: 32 }).map((_, i) => (
-                <div key={i} className="bg-[#1a2230] rounded-sm" />
-              ))}
-            </div>
-            <div className="relative z-10 flex flex-col items-center gap-1">
-              <div className="w-6 h-6 text-[#e01540]"><Icons type="map-pin" className="w-full h-full" /></div>
-              <span className="text-xs font-bold text-itec-text">Aula {selected.numero}</span>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <div className="w-4 h-4 text-[#5a6475] shrink-0 mt-0.5"><Icons type="info" className="w-full h-full" /></div>
-            <p className="text-sm text-[#9aa3b0]">{selected.referencias}</p>
-          </div>
-          <div className="flex items-center gap-2 mt-2 text-xs text-[#5a6475]">
-            <div className="w-3 h-3"><Icons type="users" className="w-full h-full" /></div>
-            <span>Capacidad: {selected.capacidad} personas</span>
-          </div>
+        {/* Filtro sede */}
+        <div className="flex items-center gap-1.5">
+          <SlidersHorizontal size={14} className="text-itec-muted shrink-0" />
+          <select
+            value={filters.sede ?? ""}
+            onChange={(e) => setFilters({ ...filters, sede: e.target.value as SedeAula | "" })}
+            className={selectCls}
+          >
+            {SEDES_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+        </div>
+
+        {/* Filtro función */}
+        <select
+          value={filters.funcion ?? ""}
+          onChange={(e) => setFilters({ ...filters, funcion: e.target.value as FuncionAula | "" })}
+          className={selectCls}
+        >
+          {FUNCIONES_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+
+        {/* Reload / invalidar caché */}
+        <button
+          onClick={() => { invalidateAulasCache(); reload(); }}
+          className="flex items-center justify-center w-10 h-10 rounded-2xl bg-itec-surface border border-itec-border text-itec-muted hover:text-white hover:border-white/20 transition-colors shrink-0"
+          title="Actualizar lista"
+        >
+          <RotateCcw size={14} />
+        </button>
+      </section>
+
+      {/* ── Error ───────────────────────────────────────────────────────────── */}
+      {error && (
+        <div className="rounded-2xl bg-red-500/10 border border-red-500/25 px-4 py-3 text-sm text-red-400 mb-4">
+          {error}
         </div>
       )}
 
-      {/* Lista de resultados */}
-      <div className="flex flex-col gap-2">
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center py-12 gap-3 text-center">
-            <div className="w-10 h-10 rounded-xl bg-itec-red/10 flex items-center justify-center text-[#e01540]">
-              <div className="w-5 h-5"><Icons type="map-pin" className="w-full h-full" /></div>
-            </div>
-            <p className="text-[#5a6475] text-sm">No encontramos el aula "{query}".<br/>Probá con otro número o sede.</p>
-          </div>
-        ) : (
-          filtered.map((a) => (
-            <button
-              key={a.numero}
-              onClick={() => setSelected(a)}
-              className={`text-left w-full bg-itec-card border rounded-xl p-3.5 flex items-center gap-3 transition-colors ${
-                selected?.numero === a.numero ? "border-itec-red/40" : "border-white/7 hover:border-white/12"
-              }`}
-            >
-              <div className="w-10 h-10 rounded-xl bg-itec-red/12 text-[#e01540] flex items-center justify-center shrink-0">
-                <div className="w-5 h-5"><Icons type="map-pin" className="w-full h-full" /></div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-itec-text">Aula {a.numero}</p>
-                  <span className="text-[10px] text-[#5a6475] bg-white/5 px-1.5 py-0.5 rounded">{a.sede}</span>
-                </div>
-                <p className="text-xs text-[#5a6475] mt-0.5">{a.piso} · {a.ala} · {a.capacidad} personas</p>
-              </div>
-              <div className="w-4 h-4 text-[#5a6475]"><Icons type="arrowLeft" className="w-full h-full rotate-180" /></div>
-            </button>
-          ))
-        )}
-      </div>
+      {/* ── Grid de aulas ───────────────────────────────────────────────────── */}
+      {loading ? (
+        <CardSkeletonGrid count={8} cols="grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" />
+      ) : filtered.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-3 py-20 text-itec-muted">
+          <span className="text-4xl">🏫</span>
+          <p className="text-sm">No se encontraron aulas con los filtros actuales.</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((aula) => (
+            <AulaCard
+              key={aula._id}
+              aula={aula}
+              isAdmin={isAdmin}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Contador de resultados */}
+      {!loading && filtered.length > 0 && (
+        <p className="text-xs text-itec-muted mt-4 text-right">
+          {filtered.length} espacio{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
+        </p>
+      )}
+
+      {/* ── Modales admin ───────────────────────────────────────────────────── */}
+      <AulaFormModal
+        isOpen={showForm}
+        onClose={() => { setShowForm(false); setEditAula(null); }}
+        onSaved={handleSaved}
+        aula={editAula as unknown as import("@features/aulas/types/aulas.types").Aula | null}
+      />
+      <DeleteAulaModal
+        isOpen={!!deleteAula}
+        onClose={() => setDeleteAula(null)}
+        onDeleted={handleDeleted}
+        aula={deleteAula}
+      />
     </MainLayout>
   );
 };

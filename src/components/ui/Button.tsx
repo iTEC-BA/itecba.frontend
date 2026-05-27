@@ -27,7 +27,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const THEMES: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
   primary: {
-    solid: "bg-itec-blue-skye text-white shadow-lg shadow-itec-blue-skye/20 hover:bg-itec-blue active:translate-y-px",
+    solid: "bg-itec-blue-skye text-white hover:bg-itec-blue active:translate-y-px",
     outline: "border border-itec-sky/40 text-itec-sky hover:bg-itec-sky/10",
     ghost: "text-itec-sky hover:bg-itec-sky/10",
     dashed: "border border-dashed border-itec-sky/50 text-itec-sky hover:bg-itec-sky/10",

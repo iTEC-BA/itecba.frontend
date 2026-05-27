@@ -18,15 +18,6 @@ interface Plugin {
 
 const PLUGINS: Plugin[] = [
   {
-    title: "BuscaTEC",
-    description: "Buscá materias, comisiones y historia académica sin entrar al SIU.",
-    iconName: "search",
-    iconColor: "bg-[#004aad]/15 text-[#5b9cf6]",
-    href: "/buscatec",
-    tag: "Propio",
-    tagColor: "bg-[#004aad]/15 text-[#5b9cf6]",
-  },
-  {
     title: "Buscar Aula",
     description: "Encontrá cualquier aula de Medrano o Campus con referencias para llegar.",
     iconName: "map-pin",

@@ -63,7 +63,7 @@ export const NavbarTop = () => {
         <div className="flex items-center gap-1 shrink-0 ml-auto">
           <div className="hidden lg:flex flex-row items-center gap-0.5 text-xs">
             <a
-              href="https://www.youtube.com/itecba"
+              href="https://www.youtube.com/@itecBA"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"

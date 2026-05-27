@@ -42,7 +42,7 @@ export const CustomSelect: React.FC<Props> = ({
           fullWidth readOnly disabled={disabled}
           placeholder={placeholder} 
           value={selectedLabel} 
-          className="cursor-pointer text-sm py-3.5 bg-slate-950/50 border-itec-border hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl disabled:cursor-not-allowed select-none" 
+          className="cursor-pointer text-sm p-3 bg-slate-950/50 border-itec-border hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl disabled:cursor-not-allowed select-none" 
         />
       </div>
       {isOpen && !disabled && (

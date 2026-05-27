@@ -63,12 +63,6 @@ export default defineConfig({
             icons: [{ src: "/icons/shortcut-tarjetec.png", sizes: "96x96" }],
           },
           {
-            name: "BuscaTEC",
-            url: "/buscatec",
-            description: "Buscar materias",
-            icons: [{ src: "/icons/shortcut-buscatec.png", sizes: "96x96" }],
-          },
-          {
             name: "Cursos",
             url: "/cursos",
             description: "Cursos estudiantiles",
