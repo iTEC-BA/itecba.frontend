@@ -69,6 +69,7 @@ export const RewardsManagement: React.FC = () => {
   );
 
   return (
+    <>
     <div className="bg-itec-box border border-itec-border rounded-3xl overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-itec-border">
         <div className="flex items-center gap-2.5">
@@ -193,5 +194,6 @@ export const RewardsManagement: React.FC = () => {
         <PointsActivityManager />
       </div>
     </div>
+    </>
   );
 };

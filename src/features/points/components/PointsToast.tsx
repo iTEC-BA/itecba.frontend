@@ -58,38 +58,3 @@ export const PointsToast: React.FC<Props> = ({
   );
 };
 
-// ── Hook de conveniencia para manejar el toast desde cualquier componente ────
-// Ejemplo:
-//   const { showToast, toastNode } = usePointsToast();
-//   const { grant } = usePointsGrant();
-//
-//   const handlePost = async () => {
-//     const r = await grant("forum_post");
-//     if (r.granted && r.points) showToast(r.points, "Publicaste en el foro");
-//   };
-//
-//   return <>{toastNode}<button onClick={handlePost}>Publicar</button></>;
-
-import { useState, useCallback } from "react";
-
-interface ToastState { points: number; label: string }
-
-export const usePointsToast = (position?: Props["position"]) => {
-  const [toast, setToast] = useState<ToastState | null>(null);
-
-  const showToast = useCallback((points: number, label: string) => {
-    setToast({ points, label });
-  }, []);
-
-  const toastNode = toast ? (
-    <PointsToast
-      key={`${toast.points}-${toast.label}-${Date.now()}`}
-      points={toast.points}
-      label={toast.label}
-      position={position}
-      onDone={() => setToast(null)}
-    />
-  ) : null;
-
-  return { showToast, toastNode };
-};

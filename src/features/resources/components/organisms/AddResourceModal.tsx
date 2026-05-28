@@ -7,7 +7,6 @@ import { FilterField } from '../molecules/FilterField';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '@features/groups/types/groups';
 import { useAuth } from '@context/AuthContext';
 import { usePointsGrant } from '@features/points/hooks/usePointsGrant';
-import { usePointsToast } from '@features/points/components/PointsToast';
 import { useSubmitResource } from '../../hooks/useResources';
 import { useResourceMaterias } from '../../hooks/useResourceMaterias';
 import { TIPOS_ARCHIVO, FORMATOS_ARCHIVO } from '../../types/resource.types';
@@ -20,8 +19,7 @@ const INPUT_CLS = 'text-sm py-2.5 bg-itec-bg border-itec-gray/60 focus:border-or
 
 export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { user, isAuthenticated, loginWithGoogle } = useAuth();
-  const { grant }                = usePointsGrant();
-  const { showToast, toastNode } = usePointsToast("bottom-center");
+  const { grant } = usePointsGrant();
   const mutation = useSubmitResource();
 
   const [form, setForm] = useState<ResourceFormState>(EMPTY);
@@ -52,7 +50,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
       {
         onSuccess: async () => {
           if (isAuthenticated) {
-            await addPoints(1);
+            await grant('1');
             setSuccessInfo({ title: '¡Aporte publicado!', desc: '¡Ganaste +1 Punto ITEC! Gracias por colaborar.' });
           } else {
             setSuccessInfo({ title: '¡Solicitud enviada!', desc: 'Tu aporte fue enviado a revisión. Un admin lo validará pronto.' });
@@ -65,12 +63,10 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
-  // (toastNode se renderiza dentro del modal)
 
   return (
     <>
-    {toastNode}
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4">
+    <div className="fixed inset-0 z-100 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4">
       <div className="w-full sm:max-w-lg bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-3xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[90vh]">
 
         {/* Header fijo */}

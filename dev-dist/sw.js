@@ -21,20 +21,22 @@ if (!self.define) {
 
   const singleRequire = (uri, parentUri) => {
     uri = new URL(uri + ".js", parentUri).href;
-    return (
-      registry[uri] ||
-      new Promise((resolve) => {
-        if ("document" in self) {
-          const script = document.createElement("script");
-          script.src = uri;
-          script.onload = resolve;
-          document.head.appendChild(script);
-        } else {
-          nextDefineUri = uri;
-          importScripts(uri);
-          resolve();
-        }
-      }).then(() => {
+    return registry[uri] || (
+      
+        new Promise(resolve => {
+          if ("document" in self) {
+            const script = document.createElement("script");
+            script.src = uri;
+            script.onload = resolve;
+            document.head.appendChild(script);
+          } else {
+            nextDefineUri = uri;
+            importScripts(uri);
+            resolve();
+          }
+        })
+      
+      .then(() => {
         let promise = registry[uri];
         if (!promise) {
           throw new Error(`Module ${uri} didn’t register its module`);
@@ -45,31 +47,27 @@ if (!self.define) {
   };
 
   self.define = (depsNames, factory) => {
-    const uri =
-      nextDefineUri ||
-      ("document" in self ? document.currentScript.src : "") ||
-      location.href;
+    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
     if (registry[uri]) {
       // Module is already loading or loaded.
       return;
     }
     let exports = {};
-    const require = (depUri) => singleRequire(depUri, uri);
+    const require = depUri => singleRequire(depUri, uri);
     const specialDeps = {
       module: { uri },
       exports,
-      require,
+      require
     };
-    registry[uri] = Promise.all(
-      depsNames.map((depName) => specialDeps[depName] || require(depName)),
-    ).then((deps) => {
+    registry[uri] = Promise.all(depsNames.map(
+      depName => specialDeps[depName] || require(depName)
+    )).then(deps => {
       factory(...deps);
       return exports;
     });
   };
 }
-define(["./workbox-b9d3b234"], function (workbox) {
-  "use strict";
+define(['./workbox-b9d3b234'], (function (workbox) { 'use strict';
 
   importScripts("/sw-push-handler.js");
   self.skipWaiting();
@@ -79,76 +77,45 @@ define(["./workbox-b9d3b234"], function (workbox) {
    * requests for URLs in the manifest.
    * See https://goo.gl/S9QRab
    */
-  workbox.precacheAndRoute(
-    [
-      {
-        url: "registerSW.js",
-        revision: "22271febdc61e0ae248cd93e3ec01f59",
-      },
-      {
-        url: "index.html",
-        revision: "0.nkmp2qbfh48",
-      },
-    ],
-    {},
-  );
+  workbox.precacheAndRoute([{
+    "url": "registerSW.js",
+    "revision": "22271febdc61e0ae248cd93e3ec01f59"
+  }, {
+    "url": "index.html",
+    "revision": "0.a0m0jcsfvm8"
+  }], {});
   workbox.cleanupOutdatedCaches();
-  workbox.registerRoute(
-    new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-      allowlist: [/^\/$/],
-    }),
-  );
-  workbox.registerRoute(
-    /^https:\/\/fonts\.(googleapis|gstatic)\.com/,
-    new workbox.CacheFirst({
-      cacheName: "google-fonts",
-      plugins: [
-        new workbox.ExpirationPlugin({
-          maxEntries: 20,
-          maxAgeSeconds: 31536000,
-        }),
-      ],
-    }),
-    "GET",
-  );
-  workbox.registerRoute(
-    /^https:\/\/.*\.itec\.ba\/api\//,
-    new workbox.NetworkFirst({
-      cacheName: "api-cache",
-      networkTimeoutSeconds: 10,
-      plugins: [
-        new workbox.ExpirationPlugin({
-          maxEntries: 100,
-          maxAgeSeconds: 300,
-        }),
-      ],
-    }),
-    "GET",
-  );
-  workbox.registerRoute(
-    /^https:\/\/(.*\.supabase\.co|.*\.firebaseio\.com)/,
-    new workbox.StaleWhileRevalidate({
-      cacheName: "backend-cache",
-      plugins: [
-        new workbox.ExpirationPlugin({
-          maxEntries: 50,
-          maxAgeSeconds: 3600,
-        }),
-      ],
-    }),
-    "GET",
-  );
-  workbox.registerRoute(
-    /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-    new workbox.CacheFirst({
-      cacheName: "images-cache",
-      plugins: [
-        new workbox.ExpirationPlugin({
-          maxEntries: 60,
-          maxAgeSeconds: 2592000,
-        }),
-      ],
-    }),
-    "GET",
-  );
-});
+  workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+    allowlist: [/^\/$/]
+  }));
+  workbox.registerRoute(/^https:\/\/fonts\.(googleapis|gstatic)\.com/, new workbox.CacheFirst({
+    "cacheName": "google-fonts",
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 20,
+      maxAgeSeconds: 31536000
+    })]
+  }), 'GET');
+  workbox.registerRoute(/^https:\/\/.*\.itec\.ba\/api\//, new workbox.NetworkFirst({
+    "cacheName": "api-cache",
+    "networkTimeoutSeconds": 10,
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 100,
+      maxAgeSeconds: 300
+    })]
+  }), 'GET');
+  workbox.registerRoute(/^https:\/\/(.*\.supabase\.co|.*\.firebaseio\.com)/, new workbox.StaleWhileRevalidate({
+    "cacheName": "backend-cache",
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 50,
+      maxAgeSeconds: 3600
+    })]
+  }), 'GET');
+  workbox.registerRoute(/\.(?:png|jpg|jpeg|svg|gif|webp)$/, new workbox.CacheFirst({
+    "cacheName": "images-cache",
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 60,
+      maxAgeSeconds: 2592000
+    })]
+  }), 'GET');
+
+}));

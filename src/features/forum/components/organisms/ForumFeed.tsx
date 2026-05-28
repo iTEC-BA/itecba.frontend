@@ -26,8 +26,7 @@ export const ForumFeed: React.FC = () => {
     loadMore, openThread, closeThread, setActiveTab,
     submitPost, submitReply, handleVote, handleRepost,
     requestDelete, confirmDelete, cancelDelete,
-    setComposing, refresh, silentRefresh,
-    toastNode,
+    setComposing, refresh, silentRefresh
   } = useForum();
 
   const { isAuthenticated } = useAuth();

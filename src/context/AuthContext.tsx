@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { auth, db, googleProvider } from '../lib/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
-import { grantPointsAPI } from '@features/points/services/points.service'; // <-- Añadido increment y updateDoc
 
 export type Role = 'admin' | 'student';
 
@@ -23,7 +22,7 @@ interface AuthContextType {
   user: User | null;
   loginWithGoogle: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
-  addPoints: (pointsToAdd: number) => Promise<void>; // <-- NUEVA FUNCIÓN
+  addPoints: (pointsToAdd: number, updateDatabase?: boolean) => Promise<void>; // <-- NUEVA FUNCIÓN
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -87,9 +86,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await signOut(auth);
         throw new Error('Solo se permiten correos institucionales de la UTN BA.');
       }
-    } catch (error: any) {
-      if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-        alert(error.message || 'Error al iniciar sesión.');
+    } catch (error) {
+      const err = error as { code?: string; message?: string };
+      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+        alert(err.message || 'Error al iniciar sesión.');
       }
     }
   };

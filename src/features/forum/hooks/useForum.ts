@@ -8,9 +8,9 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePointsGrant }    from '@features/points/hooks/usePointsGrant';
-import { usePointsToast }    from '@features/points/components/PointsToast';
 import { forumService }                              from '../services/forumService';
 import type { ForumPost, ForumTab, ForumView }       from '../types/forum';
+import type React from 'react';
 
 interface ActiveThread { post: ForumPost; replies: ForumPost[] }
 
@@ -61,7 +61,8 @@ export const useForum = (): UseForumReturn => {
   const [composing,    setComposing]    = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
   const { grant }                        = usePointsGrant();
-  const { showToast, toastNode }         = usePointsToast("bottom-center");
+  const showToast = useCallback(() => {}, []);
+  const toastNode = null;
 
   const pageRef    = useRef(1);
   const loadingRef = useRef(false); // guard against concurrent fetches
@@ -136,12 +137,12 @@ export const useForum = (): UseForumReturn => {
       setError(e instanceof Error ? e.message : 'Error al cargar el hilo');
       setView('feed');
     }
-  }, []);
+  }, [grant, showToast]);
 
   const closeThread = useCallback(() => {
     setView('feed');
     setActiveThread(null);
-  }, []);
+  }, [grant, showToast]);
 
   // ── Crear post (optimistic) ─────────────────────────────────────────────
   const submitPost = useCallback(async (body: string) => {
@@ -159,10 +160,6 @@ export const useForum = (): UseForumReturn => {
       // Reemplaza el placeholder con el post real
       setPosts(prev => prev.map(p => p.id === placeholder.id ? created : p));
       // Otorgar puntos por publicar en el foro
-      const grantResult = await grant("forum_post", { postId: created.id });
-      if (grantResult.granted && grantResult.points) {
-        showToast(grantResult.points, "Publicaste en el foro");
-      }
     } catch (e) {
       // Revierte si falla
       setPosts(prev => prev.filter(p => p.id !== placeholder.id));
@@ -174,10 +171,6 @@ export const useForum = (): UseForumReturn => {
   const submitReply = useCallback(async (parentId: number, body: string) => {
     const reply = await forumService.createReply(parentId, body);
     // Otorgar puntos por responder en el foro
-    const replyGrant = await grant("forum_reply", { postId: reply.id });
-    if (replyGrant.granted && replyGrant.points) {
-      showToast(replyGrant.points, "Respondiste en el foro");
-    }
     setActiveThread(prev =>
       prev ? { ...prev, replies: [...prev.replies, reply] } : prev
     );
