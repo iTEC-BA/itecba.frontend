@@ -162,7 +162,7 @@ export const MediaSlider: React.FC<Props> = ({ imagenes, videos }) => {
             </button>
             {/* Dots */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {allMedia.map((m, i) => (
+              {allMedia.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setIdx(i)}

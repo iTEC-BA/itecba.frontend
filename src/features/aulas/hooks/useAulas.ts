@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { aulasService } from "../services/aulas.service";
-import type { AulaResumen, AulasFilters, SedeAula, FuncionAula } from "../types/aulas.types";
+import type { AulaResumen, AulasFilters } from "../types/aulas.types";
 
 const CACHE_KEY = "itecba:aulas:v2";
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 horas

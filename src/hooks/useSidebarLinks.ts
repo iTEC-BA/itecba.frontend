@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import { 
-  Home, MessageCircle, Search, MapPin, 
+  Home, MessageCircle, MapPin, 
   BookOpen, Video, Folder, Users, Newspaper, 
   Calculator, Calendar, Wrench, Settings, Gift, 
   LineChart, User, FileText, 
