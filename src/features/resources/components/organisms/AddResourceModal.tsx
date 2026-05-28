@@ -6,6 +6,8 @@ import { Icons } from '@/components/ui/icons/Icons';
 import { FilterField } from '../molecules/FilterField';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '@features/groups/types/groups';
 import { useAuth } from '@context/AuthContext';
+import { usePointsGrant } from '@features/points/hooks/usePointsGrant';
+import { usePointsToast } from '@features/points/components/PointsToast';
 import { useSubmitResource } from '../../hooks/useResources';
 import { useResourceMaterias } from '../../hooks/useResourceMaterias';
 import { TIPOS_ARCHIVO, FORMATOS_ARCHIVO } from '../../types/resource.types';
@@ -17,7 +19,9 @@ const EMPTY: ResourceFormState = { title: '', carrera: '', nivel: '', materia: '
 const INPUT_CLS = 'text-sm py-2.5 bg-itec-bg border-itec-gray/60 focus:border-orange-500/70 transition-colors placeholder:text-itec-gray/40';
 
 export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { user, isAuthenticated, loginWithGoogle, addPoints } = useAuth();
+  const { user, isAuthenticated, loginWithGoogle } = useAuth();
+  const { grant }                = usePointsGrant();
+  const { showToast, toastNode } = usePointsToast("bottom-center");
   const mutation = useSubmitResource();
 
   const [form, setForm] = useState<ResourceFormState>(EMPTY);
@@ -61,8 +65,11 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
+  // (toastNode se renderiza dentro del modal)
 
   return (
+    <>
+    {toastNode}
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4">
       <div className="w-full sm:max-w-lg bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-3xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[90vh]">
 
@@ -189,6 +196,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
           </div>
         )}
       </div>
-    </div>
+        </div>
+    </>
   );
 };

@@ -10,6 +10,7 @@ import { rewardsService } from "@features/rewards/services/rewardsService";
 import { useRewardAdmin } from "@features/rewards/hooks/useRewardAdmin";
 import type { Reward, RewardFormData } from "@features/rewards/types/rewards";
 import { getAuth } from "firebase/auth";
+import { PointsActivityManager } from "@features/points/components/PointsActivityManager";
 
 const getToken = async () => {
   const u = getAuth().currentUser;
@@ -175,6 +176,22 @@ export const RewardsManagement: React.FC = () => {
           onConfirm={handleDelete}
         />
       )}
+    </div>
+
+    {/* ── Gestión de actividades de puntos ─────────────────────────────── */}
+    <div className="bg-itec-box border border-itec-border rounded-3xl overflow-hidden mt-6">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-itec-border">
+        <div className="w-9 h-9 rounded-xl bg-yellow-500/12 border border-yellow-500/20 flex items-center justify-center">
+          <span className="text-yellow-400 text-base leading-none">⭐</span>
+        </div>
+        <div>
+          <p className="text-sm font-bold text-itec-text leading-none">Sistema de Puntos</p>
+          <p className="text-[10px] text-itec-text/40 mt-0.5">Configurar actividades y valores</p>
+        </div>
+      </div>
+      <div className="px-5 py-5">
+        <PointsActivityManager />
+      </div>
     </div>
   );
 };

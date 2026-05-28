@@ -1,7 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { auth, db, googleProvider } from '../lib/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore'; // <-- Añadido increment y updateDoc
+import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { grantPointsAPI } from '@features/points/services/points.service'; // <-- Añadido increment y updateDoc
 
 export type Role = 'admin' | 'student';
 

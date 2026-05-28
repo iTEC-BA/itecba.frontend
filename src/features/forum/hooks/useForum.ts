@@ -7,6 +7,8 @@
  * • Modal de confirmación para eliminar (no window.confirm)
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePointsGrant }    from '@features/points/hooks/usePointsGrant';
+import { usePointsToast }    from '@features/points/components/PointsToast';
 import { forumService }                              from '../services/forumService';
 import type { ForumPost, ForumTab, ForumView }       from '../types/forum';
 
@@ -43,6 +45,8 @@ interface UseForumReturn {
   refresh:       () => void;
   /** Refresco silencioso (sin spinner) */
   silentRefresh: () => void;
+  /** Nodo React del toast de puntos — renderizar en el componente padre */
+  toastNode:     React.ReactNode;
 }
 
 export const useForum = (): UseForumReturn => {
@@ -56,6 +60,8 @@ export const useForum = (): UseForumReturn => {
   const [activeTab,    setActiveTabSt]  = useState<ForumTab>('para-ti');
   const [composing,    setComposing]    = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const { grant }                        = usePointsGrant();
+  const { showToast, toastNode }         = usePointsToast("bottom-center");
 
   const pageRef    = useRef(1);
   const loadingRef = useRef(false); // guard against concurrent fetches
@@ -152,6 +158,11 @@ export const useForum = (): UseForumReturn => {
       const created = await forumService.createPost(body);
       // Reemplaza el placeholder con el post real
       setPosts(prev => prev.map(p => p.id === placeholder.id ? created : p));
+      // Otorgar puntos por publicar en el foro
+      const grantResult = await grant("forum_post", { postId: created.id });
+      if (grantResult.granted && grantResult.points) {
+        showToast(grantResult.points, "Publicaste en el foro");
+      }
     } catch (e) {
       // Revierte si falla
       setPosts(prev => prev.filter(p => p.id !== placeholder.id));
@@ -162,6 +173,11 @@ export const useForum = (): UseForumReturn => {
   // ── Crear respuesta ────────────────────────────────────────────────────
   const submitReply = useCallback(async (parentId: number, body: string) => {
     const reply = await forumService.createReply(parentId, body);
+    // Otorgar puntos por responder en el foro
+    const replyGrant = await grant("forum_reply", { postId: reply.id });
+    if (replyGrant.granted && replyGrant.points) {
+      showToast(replyGrant.points, "Respondiste en el foro");
+    }
     setActiveThread(prev =>
       prev ? { ...prev, replies: [...prev.replies, reply] } : prev
     );
@@ -236,5 +252,6 @@ export const useForum = (): UseForumReturn => {
     submitPost, submitReply, handleVote, handleRepost,
     requestDelete, confirmDelete, cancelDelete,
     setComposing, refresh, silentRefresh,
+    toastNode,
   };
 };
