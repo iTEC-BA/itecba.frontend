@@ -1,35 +1,40 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { chatbotService, AI_COST_DEFAULT } from "../services/chatbotService";
+import { faqService } from "../services/faqService";
 import { useAuth } from "@context/AuthContext";
 import type { ChatMessage, ChatMode } from "../types/faqs";
 
-const WELCOME: ChatMessage = {
+const makeWelcome = (suggestions: string[] = []): ChatMessage => ({
   id: "welcome",
   role: "assistant",
   text: "Hola, soy el asistente de **ITEC BA**. Puedo ayudarte con dudas sobre trámites, inscripciones, grupos, materias y más.\n\nTambién podés activar la **IA avanzada** para preguntas más complejas.",
-  suggestions: [
-    "¿Cómo me inscribo a materias?",
-    "¿Dónde están los grupos de WhatsApp?",
-    "¿Qué es el SIU Guaraní?",
-    "¿Cuándo son los finales?",
-  ],
+  suggestions,
   timestamp: Date.now(),
-};
+});
 
 export const useChatbot = () => {
   const { user, addPoints } = useAuth();
-  const [messages, setMessages]   = useState<ChatMessage[]>([WELCOME]);
+  const [messages, setMessages]   = useState<ChatMessage[]>([makeWelcome()]);
   const [loading, setLoading]     = useState(false);
   const [mode, setMode]           = useState<ChatMode>("faq");
   const [error, setError]         = useState<string | null>(null);
   const [AI_COST, setAICost]      = useState<number>(AI_COST_DEFAULT);
   const historyRef = useRef<{ role: string; parts: { text: string }[] }[]>([]);
 
-  // Cargar costo de IA configurable desde el backend
+  // Cargar costo de IA y top 4 FAQs para el mensaje de bienvenida
   useEffect(() => {
     chatbotService.getAICost()
       .then(cost => setAICost(cost))
       .catch(() => setAICost(AI_COST_DEFAULT));
+
+    faqService.getTop()
+      .then(faqs => {
+        const top4 = faqs.slice(0, 4).map(f => f.question);
+        if (top4.length > 0) {
+          setMessages([makeWelcome(top4)]);
+        }
+      })
+      .catch(() => {/* Silencioso — welcome sin sugerencias */});
   }, []);
 
   const canUseAI = (user?.points ?? 0) >= AI_COST;
@@ -58,7 +63,7 @@ export const useChatbot = () => {
           throw new Error(`Necesitás al menos ${AI_COST} puntos para usar la IA avanzada.`);
         }
         response = await chatbotService.askAI(text, historyRef.current.slice(-10));
-        await addPoints(-AI_COST);
+        addPoints(-AI_COST);
       } else {
         response = await chatbotService.searchFAQ(text);
       }
@@ -87,7 +92,13 @@ export const useChatbot = () => {
   }, []);
 
   const clearChat = useCallback(() => {
-    setMessages([WELCOME]);
+    // Al limpiar, re-fetch las top 4 para el nuevo welcome
+    faqService.getTop()
+      .then(faqs => {
+        const top4 = faqs.slice(0, 4).map(f => f.question);
+        setMessages([makeWelcome(top4)]);
+      })
+      .catch(() => setMessages([makeWelcome()]));
     historyRef.current = [];
     setError(null);
   }, []);

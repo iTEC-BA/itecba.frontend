@@ -8,22 +8,15 @@ interface Props {
   onSelect: (text: string) => void;
 }
 
-const STATIC_SUGGESTIONS = [
-  { category: "Académico", questions: ["¿Cómo me inscribo a materias?", "¿Cuándo son las fechas de finales?"] },
-  { category: "Trámites", questions: ["¿Cómo pido un certificado?", "¿Cómo accedo al SIU Guaraní?"] },
-  { category: "Campus", questions: ["¿Dónde están las aulas?", "¿Cómo entro a las aulas virtuales?"] },
-];
-
 export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) => {
-  const suggestions = topFaqs.length > 0
-    ? topFaqs.slice(0, 6).map(f => f.question)
-    : STATIC_SUGGESTIONS.flatMap(s => s.questions).slice(0, 6);
+  // Top 4 por popularidad (ranking de la DB) — sin preguntas hardcodeadas
+  const suggestions = topFaqs.slice(0, 4).map(f => f.question);
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 pb-4 pt-8 animate-in fade-in duration-300">
       {/* Logo / Avatar IA */}
       <div className="relative mb-8">
-        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-600/30 to-indigo-600/20 border border-white/10 flex items-center justify-center shadow-[0_0_40px_rgba(139,92,246,0.15)]">
+        <div className="w-20 h-20 rounded-3xl flex items-center justify-center">
           <Raccoon size={96} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
         </div>
         <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
@@ -41,7 +34,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
             <div key={i} className="h-12 bg-white/5 rounded-2xl animate-pulse" />
           ))}
         </div>
-      ) : (
+      ) : suggestions.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-lg">
           {suggestions.map((q, i) => (
             <button
@@ -58,7 +51,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
             </button>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

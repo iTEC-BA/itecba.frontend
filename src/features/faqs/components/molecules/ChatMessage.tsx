@@ -1,17 +1,23 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import { TypingDots } from "../atoms/TypingDots";
 import type { ChatMessage as Msg } from "../../types/faqs";
 
-interface Props { msg: Msg }
+interface Props {
+  msg: Msg;
+  onSuggestionClick?: (text: string) => void;
+}
 
-export const ChatMessage: React.FC<Props> = ({ msg }) => {
+export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
   const isUser = msg.role === "user";
 
   if (isUser) {
     return (
       <div className="flex justify-end mb-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
-        <div className="max-w-[78%] bg-[#1d4ed8] text-white px-4 py-3 rounded-2xl rounded-br-sm text-sm leading-relaxed shadow-lg">
+        <div className="max-w-[78%] bg-itec-blue text-white px-4 py-3 rounded-2xl rounded-br-sm text-sm leading-relaxed shadow-lg">
           {msg.text}
         </div>
       </div>
@@ -44,11 +50,20 @@ export const ChatMessage: React.FC<Props> = ({ msg }) => {
                 </div>
               )}
               <ReactMarkdown
+                remarkPlugins={[remarkMath]}
+                rehypePlugins={[rehypeKatex]}
                 components={{
                   p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
                   strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
                   ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-0.5">{children}</ul>,
+                  ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-0.5">{children}</ol>,
                   li: ({ children }) => <li className="text-white/80">{children}</li>,
+                  code: ({ children }) => (
+                    <code className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-xs text-violet-300">{children}</code>
+                  ),
+                  pre: ({ children }) => (
+                    <pre className="bg-white/5 rounded-xl p-3 overflow-x-auto mb-2 text-xs font-mono">{children}</pre>
+                  ),
                   a: ({ href, children }) => (
                     <a href={href} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">{children}</a>
                   ),
@@ -66,8 +81,12 @@ export const ChatMessage: React.FC<Props> = ({ msg }) => {
                     key={i}
                     className="text-[11px] text-white/50 bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/15 px-3 py-1 rounded-full transition-all active:scale-95"
                     onClick={() => {
-                      const input = document.getElementById("chat-input") as HTMLInputElement;
-                      if (input) { input.value = s; input.focus(); }
+                      if (onSuggestionClick) {
+                        onSuggestionClick(s);
+                      } else {
+                        const input = document.getElementById("chat-input") as HTMLInputElement;
+                        if (input) { input.value = s; input.focus(); }
+                      }
                     }}
                   >
                     {s}

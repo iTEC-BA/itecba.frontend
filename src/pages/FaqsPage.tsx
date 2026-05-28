@@ -30,7 +30,7 @@ export const FaqsPage: React.FC = () => {
   return (
     <MainLayout>
       {showMainLayout ? (
-        <section className="md:md">
+        <section className="w-full max-w-3xl mx-auto h-[calc(100dvh-80px)] flex flex-col">
           <Suspense fallback={<ChatSkeleton />}>
             <ChatInterface />
           </Suspense>

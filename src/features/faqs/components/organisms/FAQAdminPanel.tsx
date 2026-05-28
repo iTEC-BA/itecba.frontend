@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useFAQs } from "../../hooks/useFAQs";
-import { faqService } from "../../services/faqService";
 import type { FAQ, AIContext } from "../../types/faqs";
 import { LayoutModal } from "@/components/templates/LayoutModal";
 
@@ -9,7 +8,7 @@ interface Props {
   onClose: () => void;
 }
 
-type Tab = "faqs" | "context" | "credits";
+type Tab = "faqs" | "context";
 
 const EMPTY_FAQ: Partial<FAQ> = {
   question: "",
@@ -28,143 +27,6 @@ const btnPrimary =
   "py-2.5 px-4 rounded-xl text-xs font-bold bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-40";
 const btnSecondary =
   "py-2.5 px-4 rounded-xl text-xs font-bold bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-colors";
-
-// ── Subcomponente: Tab Créditos ────────────────────────────────────────────
-const CreditsTab: React.FC = () => {
-  const [email, setEmail]         = useState("");
-  const [points, setPoints]       = useState<number>(10);
-  const [foundUser, setFoundUser] = useState<{ uid: string; email: string; points: number } | null>(null);
-  const [searching, setSearching] = useState(false);
-  const [saving, setSaving]       = useState(false);
-  const [msg, setMsg]             = useState<{ type: "ok" | "err"; text: string } | null>(null);
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMsg(null);
-    setFoundUser(null);
-    if (!email.trim()) return;
-    setSearching(true);
-    try {
-      const user = await faqService.searchUserByEmail(email.trim());
-      if (!user) setMsg({ type: "err", text: "Usuario no encontrado" });
-      else setFoundUser(user);
-    } catch (err) {
-      setMsg({ type: "err", text: err instanceof Error ? err.message : "Error buscando usuario" });
-    } finally {
-      setSearching(false);
-    }
-  };
-
-  const handleAddPoints = async () => {
-    if (!foundUser || points === 0) return;
-    setSaving(true);
-    setMsg(null);
-    try {
-      const res = await faqService.updateUserPoints(foundUser.uid, points);
-      setFoundUser(prev => prev ? { ...prev, points: res.points } : prev);
-      const sign = points > 0 ? "+" : "";
-      setMsg({ type: "ok", text: `${sign}${points} pts aplicados. Nuevo saldo: ${res.points} pts` });
-    } catch (err) {
-      setMsg({ type: "err", text: err instanceof Error ? err.message : "Error actualizando puntos" });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <div className="space-y-5">
-      <p className="text-xs text-white/40 leading-relaxed">
-        Buscá un estudiante por email para agregarle o quitarle puntos manualmente.
-        Los puntos se usan para consultas de IA avanzada.
-      </p>
-
-      {/* Buscar usuario */}
-      <form onSubmit={handleSearch} className="space-y-3">
-        <div>
-          <label className={labelCls}>Email del estudiante</label>
-          <div className="flex gap-2">
-            <input
-              type="email"
-              className={`${inputCls} flex-1`}
-              placeholder="nombre@frba.utn.edu.ar"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-            />
-            <button type="submit" disabled={searching} className={btnPrimary}>
-              {searching ? "..." : "Buscar"}
-            </button>
-          </div>
-        </div>
-      </form>
-
-      {/* Usuario encontrado */}
-      {foundUser && (
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold text-white">{foundUser.email}</p>
-              <p className="text-xs text-white/40 mt-0.5">
-                Saldo actual:{" "}
-                <span className="font-bold text-amber-300">{foundUser.points ?? 0} pts</span>
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className={labelCls}>Puntos a agregar (negativo para quitar)</label>
-            <div className="flex gap-2 items-center">
-              {[-10, -5, +5, +10, +25, +50].map(n => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setPoints(n)}
-                  className={`text-[11px] font-bold px-2.5 py-1 rounded-lg transition-colors ${
-                    points === n
-                      ? n < 0
-                        ? "bg-red-500/30 text-red-300 border border-red-500/40"
-                        : "bg-green-500/30 text-green-300 border border-green-500/40"
-                      : "bg-white/5 text-white/50 hover:bg-white/10"
-                  }`}
-                >
-                  {n > 0 ? `+${n}` : n}
-                </button>
-              ))}
-            </div>
-            <input
-              type="number"
-              className={inputCls}
-              value={points}
-              onChange={e => setPoints(Number(e.target.value))}
-            />
-          </div>
-
-          <button
-            onClick={handleAddPoints}
-            disabled={saving || points === 0}
-            className={`w-full ${btnPrimary} ${points < 0 ? "!bg-red-500 !text-white hover:!bg-red-400" : ""}`}
-          >
-            {saving
-              ? "Aplicando..."
-              : points > 0
-              ? `Agregar +${points} puntos`
-              : `Quitar ${Math.abs(points)} puntos`}
-          </button>
-        </div>
-      )}
-
-      {/* Feedback */}
-      {msg && (
-        <div className={`text-xs px-3 py-2.5 rounded-xl border ${
-          msg.type === "ok"
-            ? "bg-green-500/10 border-green-500/20 text-green-300"
-            : "bg-red-500/10 border-red-500/20 text-red-300"
-        }`}>
-          {msg.text}
-        </div>
-      )}
-    </div>
-  );
-};
 
 // ── Panel principal ────────────────────────────────────────────────────────
 export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
@@ -258,13 +120,12 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
   const TABS: { id: Tab; label: string }[] = [
     { id: "faqs",    label: `FAQs (${faqs.length})` },
     { id: "context", label: "Contexto IA" },
-    { id: "credits", label: "Créditos" },
   ];
 
   return (
-    <LayoutModal isOpen={isOpen} onClose={onClose} title="Panel de FAQs" description="admin">
-      <div className="inset-0 z-200 flex items-end sm:items-center justify-center">
-        <div className="w-full sm:max-w-3xl rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:zoom-in-95 duration-300">
+    <LayoutModal isOpen={isOpen} onClose={onClose} title="Panel de FAQs" description="Gestión de preguntas frecuentes y contexto del asistente" maxWidth="max-w-3xl">
+      {/* double_wrapper_fixed */}
+      <div className="flex flex-col">
 
           {/* Tabs */}
           <div className="flex gap-1 px-6 pt-4 shrink-0 border-b border-white/5 pb-3">
@@ -307,13 +168,13 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                     </div>
                     <div>
                       <label className={labelCls}>
-                        Respuesta * <span className="normal-case text-white/25 font-normal">(soporta Markdown)</span>
+                        Respuesta * <span className="normal-case text-white/25 font-normal">(soporta Markdown y LaTeX: $formula$)</span>
                       </label>
                       <textarea
                         required
                         rows={4}
                         className={`${inputCls} resize-y`}
-                        placeholder="La respuesta... Podés usar **negrita**, *cursiva*, listas con - o 1. etc."
+                        placeholder="La respuesta... Podés usar **negrita**, $x^2$ para fórmulas, listas con - o 1. etc."
                         value={form.answer ?? ""}
                         onChange={e => setForm(p => ({ ...p, answer: e.target.value }))}
                       />
@@ -441,7 +302,7 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                   </div>
                   <div>
                     <label className={labelCls}>
-                      Contexto institucional <span className="normal-case font-normal text-white/25">(soporta Markdown)</span>
+                      Contexto institucional <span className="normal-case font-normal text-white/25">(soporta Markdown y LaTeX)</span>
                     </label>
                     <textarea
                       rows={5}
@@ -527,11 +388,7 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                 </div>
               </div>
             )}
-
-            {/* ── Tab: Créditos ─────────────────────────────────────────── */}
-            {tab === "credits" && <CreditsTab />}
           </div>
-        </div>
       </div>
     </LayoutModal>
   );

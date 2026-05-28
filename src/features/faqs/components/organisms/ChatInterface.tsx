@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useChatbot } from "../../hooks/useChatbot";
 import { useFAQs } from "../../hooks/useFAQs";
 import { ChatMessage } from "../molecules/ChatMessage";
@@ -7,10 +8,11 @@ import { FAQSuggestions } from "./FAQSuggestions";
 import { FAQAdminPanel } from "./FAQAdminPanel";
 import { AIBadge } from "../atoms/AIBadge";
 import { useAuth } from "@context/AuthContext";
-import Logo from "@assets/logo.png"
-import { Icons } from "@/components/ui/icons/Icons";
+import Logo from "@assets/logo.png";
+import { ArrowLeft, RotateCcw, Settings } from "lucide-react";
 
 export const ChatInterface: React.FC = () => {
+  const navigate = useNavigate();
   const {
     messages,
     loading,
@@ -41,7 +43,16 @@ export const ChatInterface: React.FC = () => {
       {/* Header */}
       <header className="shrink-0 flex items-center justify-between px-4 py-3 border-b border-itec-border bg-itec-box backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-2xl bg-gradient-to-br from-violet-600/40 to-indigo-600/30 border border-white/10 flex items-center justify-center">
+          {/* Botón volver atrás */}
+          <button
+            onClick={() => navigate(-1)}
+            className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors"
+            title="Volver"
+          >
+            <ArrowLeft className="size-4" />
+          </button>
+
+          <div className="w-8 h-8 rounded-2xl flex items-center justify-center">
             <img src={Logo} alt="" />
           </div>
           <div>
@@ -56,12 +67,7 @@ export const ChatInterface: React.FC = () => {
           {/* Puntos */}
           {userPoints > 0 && (
             <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-amber-300 bg-amber-300/10 border border-amber-300/20 px-2.5 py-1 rounded-full">
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
               </svg>
               {userPoints} pts
@@ -75,7 +81,7 @@ export const ChatInterface: React.FC = () => {
               className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors"
               title="Nueva conversación"
             >
-              <img src={Logo} alt="" />
+              <RotateCcw className="size-4" />
             </button>
           )}
 
@@ -86,7 +92,7 @@ export const ChatInterface: React.FC = () => {
               className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors"
               title="Admin FAQs"
             >
-              <Icons type="settings" className="size-4"/>
+              <Settings className="size-4" />
             </button>
           )}
         </div>
@@ -103,7 +109,7 @@ export const ChatInterface: React.FC = () => {
         ) : (
           <div className="px-4 py-4 max-w-2xl mx-auto w-full">
             {messages.map((msg) => (
-              <ChatMessage key={msg.id} msg={msg} />
+              <ChatMessage key={msg.id} msg={msg} onSuggestionClick={sendMessage} />
             ))}
           </div>
         )}
