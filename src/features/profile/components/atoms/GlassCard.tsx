@@ -29,7 +29,7 @@ const VARIANT_MAP: Record<GlassVariant, string> = {
   elevated: "bg-itec-box/92 backdrop-blur-xl border border-itec-border shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
   sunken: "bg-itec-surface/70 backdrop-blur-xl border border-white/6 shadow-inner shadow-black/20",
   outlined: "bg-transparent backdrop-blur-xl border border-itec-border/90 shadow-[0_12px_30px_rgba(0,0,0,0.22)]",
-  solid: "bg-itec-box2 border border-itec-border shadow-[0_16px_42px_rgba(0,0,0,0.36)]",
+  solid: "bg-itec-box border border-itec-border shadow-[0_16px_42px_rgba(0,0,0,0.36)]",
 };
 
 export const GlassCard: React.FC<GlassCardProps> = ({

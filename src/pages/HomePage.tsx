@@ -25,7 +25,7 @@ const HomeFile = () =>{
   const [active, setActive] = useState(true)
   return (
     <>
-        <div className='flex w-min m-auto bg-itec-box rounded-3xl gap-6 py-2'>
+        <div className='flex w-min mb-3 bg-itec-box rounded-3xl gap-2'>
           <Button
             onClick={() => setActive(true)}
             text='Principal'

@@ -17,7 +17,7 @@ export const DeleteRewardModal: React.FC<Props> = ({
   onConfirm,
 }) => {
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/75 backdrop-blur-md animate-in fade-in duration-200 px-4">
+    <div className="fixed inset-0 z-300 flex items-center justify-center bg-black/75 backdrop-blur-md animate-in fade-in duration-200 px-4">
       <div className="w-full max-w-sm bg-itec-card border border-red-500/15 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="p-7 text-center">
           <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-5">
@@ -36,17 +36,21 @@ export const DeleteRewardModal: React.FC<Props> = ({
           <div className="flex gap-3">
             <Button
               type="button"
-              variant="slate" hierarchy="ghost"
+              variant="slate"
+              hierarchy="ghost"
               onClick={onClose}
               fullWidth
               className="h-11 rounded-2xl text-sm font-bold"
             >
               Cancelar
             </Button>
-            <button
+            <Button
+              type="button"
+              variant="danger"
+              hierarchy="outline"
               onClick={onConfirm}
               disabled={isLoading}
-              className="flex-1 h-11 rounded-2xl bg-red-500/15 border border-red-500/25 text-red-400 font-bold text-sm hover:bg-red-500/25 transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="h-11 rounded-2xl text-sm font-bold"
             >
               {isLoading ? (
                 <span className="w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
@@ -54,7 +58,7 @@ export const DeleteRewardModal: React.FC<Props> = ({
                 <Icons type="trash" className="size-4" />
               )}
               {isLoading ? "Eliminando..." : "Eliminar"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

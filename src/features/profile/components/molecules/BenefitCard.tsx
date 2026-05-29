@@ -29,7 +29,7 @@ export const BenefitCard: React.FC<{ benefit: Benefit }> = ({ benefit }) => {
     <article
       className={cn(
         "group relative overflow-hidden rounded-[1.5rem] border",
-        "bg-gradient-to-br from-itec-box/90 via-itec-box to-itec-box2/80 p-4",
+        "bg-gradient-to-br from-itec-box/90 via-itec-box to-itec-box/80 p-4",
         "transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(0,0,0,0.3)]",
         cat.border
       )}

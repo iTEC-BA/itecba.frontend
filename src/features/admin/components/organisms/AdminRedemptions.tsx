@@ -54,7 +54,7 @@ const MessageModal: React.FC<{ email: string; uid: string; onClose: () => void }
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box2 hover:text-itec-text active:scale-95"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box hover:text-itec-text active:scale-95"
           >
             <Icons type="close" className="h-4 w-4" />
           </button>

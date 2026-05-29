@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Icons } from "@/components/ui/icons/Icons";
+import { Button } from "@/components/ui/Button";
 
 interface LayoutModalProps {
   /** Determina si el modal está visible */
@@ -54,13 +55,15 @@ export const LayoutModal: React.FC<LayoutModalProps> = ({
               <p className="text-xs text-itec-muted mt-1">{description}</p>
             )}
           </div>
-          <button
+          <Button
             onClick={onClose}
             aria-label="Cerrar"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/5 text-itec-muted transition-colors hover:text-white hover:bg-white/10"
+            variant="slate"
+            hierarchy="ghost"
+            className="h-9 w-9 shrink-0 p-0"
+            icon={<Icons type="close" className="w-4 h-4" />}
           >
-            <Icons type="close" className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         {/* Cuerpo del modal (Scrollable) */}

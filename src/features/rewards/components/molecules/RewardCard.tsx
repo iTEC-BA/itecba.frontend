@@ -1,10 +1,11 @@
 import React from "react";
-import { Icons } from "@components/ui/icons/Icons";
+import { Button } from "@components/ui/Button";
 import { PointsBadge } from "../atoms/PointsBadge";
 import { RewardTypeBadge } from "../atoms/RewardTypeBadge";
 import { AffordabilityBar } from "../atoms/AffordabilityBar";
 import { IconBadge } from "../atoms/IconBadge";
 import type { Reward } from "../../types/rewards";
+import { Edit, Lock, Star, Trash } from "lucide-react";
 
 interface Props {
   reward: Reward;
@@ -29,7 +30,7 @@ export const RewardCard: React.FC<Props> = ({
     <div
       className={`group relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${
         canAfford
-          ? "bg-itec-card border-itec-rewards/15 hover:border-itec-rewards/35 hover:shadow-[0_0_30px_rgba(240,177,0,0.07)]"
+          ? "bg-itec-card border-itec-rewards/15 hover:border-itec-rewards/35"
           : "bg-itec-card border-white/5 hover:border-itec-border"
       }`}
     >
@@ -38,28 +39,32 @@ export const RewardCard: React.FC<Props> = ({
       )}
 
       {canAfford && (
-        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-itec-rewards/50 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-0.5" />
       )}
 
       {isAdmin && (
-        <div className="absolute top-3 right-3 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="absolute top-3 right-3 z-20 flex gap-1">
           {onEdit && (
-            <button
+            <Button
               onClick={(e) => { e.stopPropagation(); onEdit(reward); }}
-              className="w-7 h-7 flex items-center justify-center rounded-lg bg-itec-blue/20 border border-itec-blue-skye/30 text-itec-blue-skye hover:bg-itec-blue-skye/20 transition-colors"
+              className="w-7 h-7 flex items-center justify-center rounded-lg px-0"
+              variant="slate"
+              hierarchy="solid"
               title="Editar"
             >
-              <Icons type="edit" className="size-3.5" />
-            </button>
+              <Edit className="size-4" />
+            </Button>
           )}
           {onDelete && (
-            <button
+            <Button
               onClick={(e) => { e.stopPropagation(); onDelete(reward); }}
-              className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors"
+              className="w-7 h-7 flex items-center justify-center rounded-lg px-0"
+              variant="danger"
+              hierarchy="solid"
               title="Eliminar"
             >
-              <Icons type="trash" className="size-3.5" />
-            </button>
+              <Trash className="size-3.5" />
+            </Button>
           )}
         </div>
       )}
@@ -79,7 +84,7 @@ export const RewardCard: React.FC<Props> = ({
               <RewardTypeBadge type={reward.type} />
               {!canAfford && (
                 <span className="inline-flex items-center gap-1 text-[10px] text-itec-text/30">
-                  <Icons type="lock" className="size-2.5" />
+                  <Lock className="size-2.5" />
                   Bloqueado
                 </span>
               )}
@@ -98,27 +103,16 @@ export const RewardCard: React.FC<Props> = ({
 
         <AffordabilityBar cost={reward.pointsCost} balance={userPoints} />
 
-        <button
+        <Button
           onClick={() => canAfford && onSelect(reward)}
           disabled={!canAfford}
-          className={`mt-4 w-full h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.97] ${
-            canAfford
-              ? "bg-itec-rewards/15 border border-itec-rewards/30 text-itec-rewards hover:bg-itec-rewards/25 hover:border-itec-rewards/50 hover:shadow-[0_0_16px_rgba(240,177,0,0.2)]"
-              : "bg-white/3 border border-white/5 text-itec-text/25 cursor-not-allowed"
-          }`}
-        >
-          {canAfford ? (
-            <>
-              <Icons type="star" className="size-3.5" />
-              Canjear ahora
-            </>
-          ) : (
-            <>
-              <Icons type="lock" className="size-3.5" />
-              Puntos insuficientes
-            </>
-          )}
-        </button>
+          fullWidth
+          className="mt-4 h-10 rounded-xl text-sm font-bold"
+          variant={canAfford ? "primary" : "slate"}
+          hierarchy={canAfford ? "solid" : "ghost"}
+          icon={canAfford ? <Star className="size-4" /> : <Lock className="size-4" />}
+          text={canAfford ? "Canjear ahora" : "Puntos insuficientes"}
+        />
       </div>
     </div>
   );

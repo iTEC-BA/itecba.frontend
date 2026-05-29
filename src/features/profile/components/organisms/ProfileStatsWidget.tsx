@@ -87,7 +87,7 @@ const StatMini: React.FC<StatMiniProps> = ({
     tabIndex={onClick ? 0 : undefined}
     className={
       `group relative overflow-hidden rounded-3xl border border-itec-border ` +
-      `bg-linear-to-br from-itec-box/90 to-itec-box2/80 backdrop-blur-xl ` +
+      `bg-linear-to-br from-itec-box/90 to-itec-box/80 backdrop-blur-xl ` +
       `p-4 flex flex-col gap-2 transition-all duration-300 ` +
       `hover:-translate-y-0.5 hover:border-itec-border/70 hover:shadow-[0_16px_36px_rgba(0,0,0,0.28)]` +
       (onClick ? " cursor-pointer" : "")

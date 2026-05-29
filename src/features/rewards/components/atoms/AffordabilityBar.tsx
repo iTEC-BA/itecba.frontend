@@ -24,7 +24,7 @@ export const AffordabilityBar: React.FC<Props> = ({ cost, balance, showLabel = t
         <div
           className={`h-full rounded-full transition-all duration-700 ease-out ${
             canAfford
-              ? "bg-gradient-to-r from-itec-rewards to-amber-300"
+              ? "bg-itec-rewards"
               : "bg-white/15"
           }`}
           style={{ width: `${pct}%` }}

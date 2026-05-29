@@ -14,7 +14,7 @@ const COLORS: Record<string, string> = {
 export const SpecialtyBadge: React.FC<{ specialty: string; sm?: boolean }> = ({
   specialty, sm = false,
 }) => {
-  const cls = COLORS[specialty] ?? "bg-itec-box2 border-itec-border text-itec-muted";
+  const cls = COLORS[specialty] ?? "bg-itec-box border-itec-border text-itec-muted";
   return (
     <span className={cn(
       "inline-flex items-center border rounded-xl font-bold tracking-wide",

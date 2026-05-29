@@ -19,8 +19,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   hierarchy?: ButtonHierarchy;
   fullWidth?: boolean;
-  icon?: string;
-  iconRight?: string;
+  icon?: React.ReactNode;
+  iconRight?: React.ReactNode;
   isLoading?: boolean;
   text?: string;
 }
@@ -33,13 +33,13 @@ const THEMES: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
     dashed: "border border-dashed border-itec-sky/50 text-itec-sky hover:bg-itec-sky/10",
   },
   secondary: {
-    solid: "bg-itec-surface text-itec-text border border-itec-border hover:bg-itec-box2",
+    solid: "bg-itec-surface text-itec-text border border-itec-border hover:bg-itec-box",
     outline: "border border-itec-border text-itec-text hover:bg-itec-surface/70",
     ghost: "text-itec-text hover:bg-itec-surface/70",
     dashed: "border border-dashed border-itec-border text-itec-text hover:bg-itec-surface/70",
   },
   danger: {
-    solid: "bg-itec-accent text-white shadow-lg shadow-itec-accent/20 hover:bg-rose-600",
+    solid: "bg-itec-red text-white shadow-lg shadow-itec-accent/20 hover:bg-rose-600",
     outline: "border border-rose-500/40 text-rose-300 hover:bg-rose-500/10",
     ghost: "text-rose-300 hover:bg-rose-500/10",
     dashed: "border border-dashed border-rose-500/50 text-rose-300 hover:bg-rose-500/10",
@@ -75,7 +75,7 @@ const THEMES: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
     dashed: "border border-dashed border-teal-400/50 text-teal-300 hover:bg-teal-500/10",
   },
   slate: {
-    solid: "bg-itec-box2 text-itec-text border border-itec-border hover:bg-itec-surface",
+    solid: "bg-itec-box text-itec-text border border-itec-box hover:bg-itec-surface",
     outline: "border border-itec-border text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
     ghost: "text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
     dashed: "border border-dashed border-itec-border text-itec-muted hover:text-itec-text hover:bg-itec-surface/70",
@@ -119,9 +119,9 @@ export const Button: React.FC<ButtonProps> = ({
         </>
       ) : (
         <>
-          {icon ? <span className="text-base leading-none">{icon}</span> : null}
+          {icon ? <span className="inline-flex items-center leading-none">{icon}</span> : null}
           {text ?? children}
-          {iconRight ? <span className="text-base leading-none">{iconRight}</span> : null}
+          {iconRight ? <span className="inline-flex items-center leading-none">{iconRight}</span> : null}
         </>
       )}
     </button>

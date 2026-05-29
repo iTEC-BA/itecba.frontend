@@ -57,7 +57,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
             key={c.code}
             className={cn(
               "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border border-itec-border",
-              c.colorClass ?? "bg-itec-box2  text-itec-text"
+              c.colorClass ?? "bg-itec-box  text-itec-text"
             )}
           >
             {c.name}

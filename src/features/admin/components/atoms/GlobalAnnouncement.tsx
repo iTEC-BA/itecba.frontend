@@ -98,7 +98,7 @@ export const GlobalAnnouncement: React.FC = () => {
           </div>
           <button
             onClick={closeWidget}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box2 hover:text-itec-text"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box hover:text-itec-text"
           >
             ×
           </button>

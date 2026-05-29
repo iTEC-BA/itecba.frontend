@@ -9,6 +9,8 @@ import { useAuth } from "@context/AuthContext";
 import { useRewards } from "@features/rewards/hooks/useRewards";
 import { useRewardStore } from "@features/rewards/store/useRewardStore";
 import { Button } from "@/components/ui/Button";
+// import { InboxWidget } from "@/features/rewards/components/organisms/InboxWidget";
+import { Settings } from "lucide-react";
 
 const RewardsContent: React.FC = () => {
   const { rewards, pointsBalance, affordableRewards } = useRewards();
@@ -37,9 +39,9 @@ const RewardsContent: React.FC = () => {
                   onClick={openAddModal}
                   variant="primary"
                   hierarchy="ghost"
-                  icon="➕"
                   text="Agregar"
                   className="text-xs"
+                  icon={<Settings className="size-4" />}
                 />
               </div>
             )}

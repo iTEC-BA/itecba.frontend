@@ -13,7 +13,7 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
   const isComplete = progress >= 100;
 
   return (
-    <article className="group relative bg-itec-card rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300 hover:border-itec-blue-skye/40 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,74,173,0.18)] cursor-pointer">
+    <article className="group relative bg-itec-card rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300 hover:border-itec-blue-skye/40 hover:-translate-y-0.5 cursor-pointer">
 
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden bg-itec-bg shrink-0">

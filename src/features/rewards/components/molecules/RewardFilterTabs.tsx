@@ -1,7 +1,5 @@
-// @ts-nocheck
 import React from "react";
 import { Icons } from "@components/ui/icons/Icons";
-import type { RewardType } from "../../types/rewards";
 import { REWARD_TYPE_CONFIG } from "../../types/rewards";
 
 interface Tab {
@@ -28,7 +26,7 @@ const TABS: Tab[] = [
 
 export const RewardFilterTabs: React.FC<Props> = ({ activeFilter, onFilter, counts }) => {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1 md:flex-wrap">
       {TABS.map((tab) => {
         const isActive = activeFilter === tab.key;
         const count = counts?.[tab.key];

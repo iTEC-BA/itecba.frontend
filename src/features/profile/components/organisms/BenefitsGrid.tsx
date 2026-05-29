@@ -43,7 +43,7 @@ export const BenefitsGrid: React.FC = () => {
               "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition-all",
               activeTab === tab.id
                 ? tab.active
-                : "border-itec-border bg-itec-surface/70 text-itec-muted hover:bg-itec-box2 hover:text-itec-text"
+                : "border-itec-border bg-itec-surface/70 text-itec-muted hover:bg-itec-box hover:text-itec-text"
             )}
           >
             <span>{tab.emoji}</span>

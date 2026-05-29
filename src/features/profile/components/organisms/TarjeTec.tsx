@@ -15,7 +15,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
   return (
     <div
       className="relative overflow-hidden rounded-[1.8rem] border border-itec-border
-        bg-linear-to-br from-itec-box via-itec-box2 to-itec-bg shadow-[0_20px_48px_rgba(0,0,0,0.42)]"
+        bg-linear-to-br from-itec-box via-itec-box to-itec-bg shadow-[0_20px_48px_rgba(0,0,0,0.42)]"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.08),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.08),transparent_32%)]" />
       <div className="relative overflow-hidden max-h-75 w-full">

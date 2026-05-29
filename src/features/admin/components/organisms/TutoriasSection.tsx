@@ -108,7 +108,7 @@ export const TutoriasSection: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-itec-border bg-itec-box2/40">
+              <tr className="border-b border-itec-border bg-itec-box/40">
                 {["Alumno", "Tutor", "Materia", "Fecha", "Tipo", "Estado", "Acciones"].map((h) => (
                   <th
                     key={h}

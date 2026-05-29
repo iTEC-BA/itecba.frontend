@@ -26,7 +26,7 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
 
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-left">
-          <thead className="bg-itec-box2/70">
+          <thead className="bg-itec-box/70">
             <tr>
               <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted sm:px-6">Perfil</th>
               <th className="px-5 py-4 text-right text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted sm:px-6">Gestión</th>

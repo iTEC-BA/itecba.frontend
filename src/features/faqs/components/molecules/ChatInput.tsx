@@ -45,7 +45,7 @@ export const ChatInput: React.FC<Props> = ({ onSend, loading, placeholder }) => 
       <button
         onClick={submit}
         disabled={!value.trim() || loading}
-        className="w-8 h-8 flex items-center justify-center rounded-2xl bg-itec-box2 hover:bg-itec-gray/30 border border-itec-border disabled:opacity-30 transition-all active:scale-90 shrink-0"
+        className="w-8 h-8 flex items-center justify-center rounded-2xl bg-itec-box hover:bg-itec-gray/30 border border-itec-border disabled:opacity-30 transition-all active:scale-90 shrink-0"
       >
         {loading ? (
           <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -99,7 +99,7 @@ export const TrueketecCard: React.FC<Props> = ({ post, onContact }) => {
               transition-all duration-150 active:scale-95
               ${isPerfect
                 ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/30 hover:bg-emerald-400"
-                : "bg-itec-surface border border-itec-border text-itec-text hover:bg-itec-box2"
+                : "bg-itec-surface border border-itec-border text-itec-text hover:bg-itec-box"
               }
             `}
           >

@@ -15,7 +15,7 @@ export default {
         // ── Superficies (dark-glass hierarchy) ────────────────────────────
         "itec-sidebar": "#161618", // sidebar/nav bg
         "itec-box": "#1C1C1E", // cards / contenedores primarios
-        "itec-box2": "#242426", // contenedores secundarios
+        "itec-box": "#242426", // contenedores secundarios
         "itec-surface": "#2A2A2D", // inputs, hover states
         "itec-border": "#171717", // bordes sutiles
 

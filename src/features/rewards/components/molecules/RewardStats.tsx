@@ -1,10 +1,10 @@
 import React from "react";
-import { Icons } from "@components/ui/icons/Icons";
+import { Gift, CheckCircle, Star, History } from "lucide-react";
 
 interface Stat {
   label: string;
   value: string | number;
-  icon: string;
+  icon: React.ElementType;
   colorCls: string;
 }
 
@@ -22,30 +22,10 @@ export const RewardStats: React.FC<Props> = ({
   redeemedCount = 0,
 }) => {
   const stats: Stat[] = [
-    {
-      label: "Disponibles",
-      value: totalRewards,
-      icon: "gift",
-      colorCls: "text-itec-text/70",
-    },
-    {
-      label: "Canjeables",
-      value: affordableCount,
-      icon: "check-circle",
-      colorCls: "text-green-400",
-    },
-    {
-      label: "Mis puntos",
-      value: `${pointsBalance.toLocaleString()}`,
-      icon: "star",
-      colorCls: "text-itec-rewards",
-    },
-    {
-      label: "Canjeados",
-      value: redeemedCount,
-      icon: "history",
-      colorCls: "text-itec-blue-skye",
-    },
+    { label: "Disponibles", value: totalRewards, icon: Gift, colorCls: "text-itec-text/70" },
+    { label: "Canjeables", value: affordableCount, icon: CheckCircle, colorCls: "text-green-400" },
+    { label: "Mis puntos", value: `${pointsBalance.toLocaleString()}`, icon: Star, colorCls: "text-itec-rewards" },
+    { label: "Canjeados", value: redeemedCount, icon: History, colorCls: "text-itec-blue-skye" },
   ];
 
   return (
@@ -56,7 +36,10 @@ export const RewardStats: React.FC<Props> = ({
           className="bg-itec-card border border-white/5 rounded-2xl p-3.5 flex flex-col gap-1.5"
         >
           <div className="flex items-center gap-1.5">
-            <Icons type={s.icon} className={`size-3.5 ${s.colorCls}`} />
+            {(() => {
+              const Icon = s.icon;
+              return <Icon className={`size-4 ${s.colorCls}`} />;
+            })()}
             <span className="text-[10px] font-bold uppercase tracking-wider text-itec-text/40">
               {s.label}
             </span>

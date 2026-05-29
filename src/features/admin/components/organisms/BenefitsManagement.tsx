@@ -120,7 +120,7 @@ export const BenefitsManagement: React.FC = () => {
           {editId && (
             <button
               onClick={cancelEdit}
-              className="flex h-8 w-8 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box2 hover:text-itec-text active:scale-95"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box hover:text-itec-text active:scale-95"
             >
               <Icons type="close" className="h-4 w-4" />
             </button>
@@ -206,7 +206,7 @@ export const BenefitsManagement: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead className="border-b border-itec-border bg-itec-box2/50">
+              <thead className="border-b border-itec-border bg-itec-box/50">
                 <tr>
                   {["Nombre", "Descuento", "Categoría", "Estado", ""].map((h) => (
                     <th

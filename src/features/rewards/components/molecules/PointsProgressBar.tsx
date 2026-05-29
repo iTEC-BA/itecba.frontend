@@ -22,7 +22,7 @@ export const PointsProgressBar: React.FC<Props> = ({ current, target, label }) =
       </div>
       <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-itec-rewards to-amber-300 transition-all duration-1000 ease-out"
+          className="h-full rounded-full bg-itec-rewards transition-all duration-1000 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>

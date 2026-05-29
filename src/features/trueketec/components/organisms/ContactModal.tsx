@@ -188,7 +188,7 @@ export const ContactModal: React.FC<Props> = ({
                   <button
                     key={p.userId}
                     onClick={() => onOpenPostulante(p)}
-                    className="flex items-center justify-between gap-3 rounded-2xl border border-itec-border bg-itec-surface px-4 py-3 hover:border-itec-sky/30 hover:bg-itec-box2 transition-colors text-left"
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-itec-border bg-itec-surface px-4 py-3 hover:border-itec-sky/30 hover:bg-itec-box transition-colors text-left"
                   >
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-itec-text">{p.userName}</span>

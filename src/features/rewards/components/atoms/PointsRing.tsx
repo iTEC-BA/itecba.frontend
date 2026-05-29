@@ -9,13 +9,14 @@ interface Props {
 
 export const PointsRing: React.FC<Props> = ({
   points,
-  maxPoints = 1000,
+  maxPoints = 5000,
   size = 96,
   label,
 }) => {
   const radius = (size - 12) / 2;
   const circumference = 2 * Math.PI * radius;
-  const pct = Math.min(1, points / maxPoints);
+  const effectiveMax = Math.max(maxPoints, points);
+  const pct = Math.min(1, points / effectiveMax);
   const dashOffset = circumference * (1 - pct);
   const center = size / 2;
 

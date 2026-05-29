@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo } from "react";
 import { Icons } from "@components/ui/icons/Icons";
 import { RewardCard } from "../molecules/RewardCard";
@@ -39,7 +38,6 @@ export const RewardsGrid: React.FC<Props> = ({ isAdmin = false }) => {
     deletingReward,
     setFilterType,
     setSearchQuery,
-    openAddModal,
     closeAddModal,
     openEditModal,
     closeEditModal,
