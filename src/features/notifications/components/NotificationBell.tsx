@@ -3,29 +3,29 @@ import { useQuery } from "@tanstack/react-query";
 import { adminService } from "@features/admin/services/adminService";
 import { useNotificationCenter } from "../hooks/useNotificationCenter";
 import { usePushNotifications } from "../hooks/usePushNotifications";
+import { useUnreadCount } from "@features/rewards/hooks/useUnreadCount";
 import { Bell } from "lucide-react";
 
-// ── El panel de detalles se carga en diferido (heavy) ─────────
 const NotificationPanel = lazy(() =>
-  import("./NotificationPanel").then((m) => ({ default: m.NotificationPanel })),
+  import("./NotificationPanel").then((m) => ({ default: m.NotificationPanel }))
 );
 
 export const NotificationBell: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // ── Fetch de news (fuente in-app) ─────────────────────────
   const { data: rawNews = [] } = useQuery({
     queryKey: ["announcements", "active"],
     queryFn: () => adminService.getActiveAnnouncements(),
-    staleTime: 1000 * 60 * 5, // 5 min
+    staleTime: 1000 * 60 * 5,
   });
 
-  const { items, unreadCount, markRead, markAllRead } =
-    useNotificationCenter(rawNews);
+  const { items, unreadCount, markRead, markAllRead } = useNotificationCenter(rawNews);
+  const inboxUnread = useUnreadCount();
+  const totalUnread = unreadCount + inboxUnread;
+
   const push = usePushNotifications();
 
-  // ── Handlers memorizados ──────────────────────────────────
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => {
       if (!prev && unreadCount > 0) markAllRead();
@@ -33,12 +33,8 @@ export const NotificationBell: React.FC = () => {
     });
   }, [unreadCount, markAllRead]);
 
-  // Cierre al click fuera
   const handleOutsideClick = useCallback((e: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(e.target as Node)
-    ) {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
       setIsOpen(false);
     }
   }, []);
@@ -50,22 +46,20 @@ export const NotificationBell: React.FC = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* ── Bell button ───────────────────────────── */}
       <button
         onClick={toggleOpen}
         className="relative outline-none flex items-center justify-center cursor-pointer"
-        aria-label={`Notificaciones${unreadCount > 0 ? ` (${unreadCount} sin leer)` : ""}`}
+        aria-label={`Notificaciones${totalUnread > 0 ? ` (${totalUnread} sin leer)` : ""}`}
       >
-        {unreadCount > 0 ? (
+        {totalUnread > 0 ? (
           <span className="bg-itec-red text-itec-text text-xs size-5 flex items-center justify-center rounded-full">
-            {unreadCount > 9 ? "9+" : unreadCount}
+            {totalUnread > 9 ? "9+" : totalUnread}
           </span>
         ) : (
-          <Bell className="size-4"/>
+          <Bell className="size-4" />
         )}
       </button>
 
-      {/* ── Panel lazy ───────────────────────────────── */}
       {isOpen && (
         <Suspense
           fallback={
