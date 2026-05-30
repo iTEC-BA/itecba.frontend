@@ -1,10 +1,8 @@
 import React, { useCallback } from 'react';
 import type { InAppNotification } from '../types/notification';
-import type { usePushNotifications } from '../hooks/usePushNotifications';
-
+import { NotificationPush } from './atoms/NotificationPush';
 interface Props {
   items:      InAppNotification[];
-  push:       ReturnType<typeof usePushNotifications>;
   onMarkRead: (id: string) => void;
   onClose:    () => void;
 }
@@ -22,7 +20,7 @@ const sourceLabel: Record<string, string> = {
   system:    'Sistema',
 };
 
-export const NotificationPanel: React.FC<Props> = ({ items, push, onMarkRead, onClose }) => {
+export const NotificationPanel: React.FC<Props> = ({ items, onMarkRead, onClose }) => {
   const handleItemClick = useCallback((item: InAppNotification) => {
     onMarkRead(item.id);
     if (item.url) window.location.href = item.url;
@@ -35,26 +33,7 @@ export const NotificationPanel: React.FC<Props> = ({ items, push, onMarkRead, on
       <div className="p-4 border-b border-white/5 flex items-center justify-between bg-itec-box/20">
         <h3 className="text-itec-text font-bold tracking-wide text-sm">Notificaciones</h3>
 
-        {/* Botón activar push si no está suscrito */}
-        {push.isSupported && !push.isSubscribed && push.permission !== 'denied' && (
-          <button
-            onClick={push.enable}
-            disabled={push.isLoading}
-            className="text-[10px] font-bold uppercase tracking-widest text-itec-accent hover:opacity-80 transition-opacity disabled:opacity-40"
-          >
-            {push.isLoading ? 'Activando…' : '🔔 Activar push'}
-          </button>
-        )}
-        {push.isSubscribed && (
-          <span className="text-[10px] font-bold uppercase tracking-widest text-green-400">
-            ✓ Push activo
-          </span>
-        )}
-        {push.permission === 'denied' && (
-          <span className="text-[10px] text-gray-500 uppercase tracking-widest">
-            Push bloqueado
-          </span>
-        )}
+        <NotificationPush />
       </div>
 
       {/* Lista */}

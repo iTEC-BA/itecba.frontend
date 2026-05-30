@@ -1,18 +1,20 @@
 import React, { useState, useCallback, useRef, lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { adminService } from "@features/admin/services/adminService";
-import { useNotificationCenter } from "../hooks/useNotificationCenter";
-import { usePushNotifications } from "../hooks/usePushNotifications";
+import { useNotificationCenter } from "../../hooks/useNotificationCenter";
 import { useUnreadCount } from "@features/rewards/hooks/useUnreadCount";
 import { Bell } from "lucide-react";
+import useSizeWindow from "@/hooks/useSizeWindow";
+import { Link } from "react-router-dom";
 
 const NotificationPanel = lazy(() =>
-  import("./NotificationPanel").then((m) => ({ default: m.NotificationPanel }))
+  import("../NotificationPanel").then((m) => ({ default: m.NotificationPanel }))
 );
 
 export const NotificationBell: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const {md} = useSizeWindow()
 
   const { data: rawNews = [] } = useQuery({
     queryKey: ["announcements", "active"],
@@ -23,8 +25,6 @@ export const NotificationBell: React.FC = () => {
   const { items, unreadCount, markRead, markAllRead } = useNotificationCenter(rawNews);
   const inboxUnread = useUnreadCount();
   const totalUnread = unreadCount + inboxUnread;
-
-  const push = usePushNotifications();
 
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => {
@@ -46,7 +46,8 @@ export const NotificationBell: React.FC = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
+      {md
+      ?(<button
         onClick={toggleOpen}
         className="relative outline-none flex items-center justify-center cursor-pointer"
         aria-label={`Notificaciones${totalUnread > 0 ? ` (${totalUnread} sin leer)` : ""}`}
@@ -56,10 +57,20 @@ export const NotificationBell: React.FC = () => {
             {totalUnread > 9 ? "9+" : totalUnread}
           </span>
         ) : (
-          <Bell className="size-4" />
+          <Bell className="size-4 text-itec-gray hover:text-itec-text" />
         )}
-      </button>
-
+      </button>)
+      :(<Link to="/notificaciones">
+        {totalUnread > 0 ? (
+          <span className="bg-itec-red text-itec-text text-xs size-5 flex items-center justify-center rounded-full">
+            {totalUnread > 9 ? "9+" : totalUnread}
+          </span>
+        ) : (
+          <Bell className="size-4 text-itec-gray hover:text-itec-text" />
+        )}
+      </Link>)
+      }
+      
       {isOpen && (
         <Suspense
           fallback={
@@ -74,7 +85,6 @@ export const NotificationBell: React.FC = () => {
         >
           <NotificationPanel
             items={items}
-            push={push}
             onMarkRead={markRead}
             onClose={() => setIsOpen(false)}
           />

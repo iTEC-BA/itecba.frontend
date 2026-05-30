@@ -8,6 +8,7 @@ import { adminService } from "@features/admin/services/adminService";
 import { useInbox } from "@features/rewards/hooks/useInbox";
 import { SectionTab, type TabId } from "@features/notifications/components/SectionTab";
 import { UnreadBadge } from "@features/rewards/components/atoms/UnreadBadge";
+import { NotificationPush } from "@/features/notifications/components/atoms/NotificationPush";
 
 const NotificationsPanel = lazy(() =>
   import("@features/notifications/components/NotificationsPanel").then((m) => ({
@@ -61,14 +62,17 @@ export const NotificationsPage: React.FC = () => {
     <MainLayout>
       <div className="flex flex-col gap-4 max-w-lg mx-auto">
         {/* Encabezado */}
-        <div className="flex items-center gap-2.5 px-1 pt-1">
-          <div className="relative">
-            <Bell className="size-5 text-itec-text/60" />
-            {totalUnread > 0 && (
-              <UnreadBadge count={totalUnread} className="absolute -top-2 -right-2" />
-            )}
+        <div className="flex items-center justify-between px-1 pt-1">
+          <div className="flex gap-1 items-center justify-center">
+            <div className="relative">
+              <Bell className="size-5 text-itec-text/60" />
+              {totalUnread > 0 && (
+                <UnreadBadge count={totalUnread} className="absolute -top-2 -right-2" />
+              )}
+            </div>
+            <h1 className="text-lg font-bold text-itec-text">Notificaciones</h1>
           </div>
-          <h1 className="text-lg font-bold text-itec-text">Notificaciones</h1>
+          <NotificationPush />
         </div>
 
         {/* Tabs */}

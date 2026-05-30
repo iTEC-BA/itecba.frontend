@@ -8,7 +8,7 @@ import logo from "@assets/logo.png";
 import { RewardsWidgetPoints } from "@features/rewards/components/atoms/RewardsWidgetPoints";
 import { useSidebarMobile } from "@hooks/useSidebarMobile";
 import { Suspense } from "react";
-import { NotificationBell } from "@features/notifications/components/NotificationBell";
+import { NotificationBell } from "@/features/notifications/components/atoms/NotificationBell";
 import { Settings } from "lucide-react";
 
 export const NavbarTop = () => {
@@ -61,12 +61,12 @@ export const NavbarTop = () => {
 
         {/* ── Derecha: redes, puntos, notificaciones, perfil ── */}
         <div className="flex items-center gap-1 shrink-0 ml-auto">
-          <div className="flex flex-row items-center gap-0.5 text-xs">
+          <div className="flex flex-row items-center gap-4 text-xs">
             <a
               href="https://www.youtube.com/@itecBA"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
+              className="flex items-center gap-1.5 text-itec-gray hover:text-itec-text"
             >
               <Icons type="youtube" className="size-4" />
               <span className="hidden md:inline font-medium">43K</span>
@@ -75,7 +75,7 @@ export const NavbarTop = () => {
               href="https://www.instagram.com/itecba"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
+              className="flex items-center gap-1.5 text-itec-gray hover:text-itec-text"
             >
               <Icons type="instagram" className="size-4" />
               <span className="hidden md:inline font-medium">65K</span>
@@ -84,7 +84,7 @@ export const NavbarTop = () => {
               href="https://discord.gg/kGAHwb2qKV"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
+              className="flex items-center gap-1.5 text-itec-gray hover:text-itec-text"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +100,7 @@ export const NavbarTop = () => {
             </a>
           </div>
 
-          <div className="hidden lg:block h-5 w-px mx-1 bg-white/10"></div>
+          <div className="h-4 w-px mx-1 bg-white/10"></div>
           {isAuthenticated && (
             <div className="flex items-center justify-between gap-2">
               {/* Categoría */}
@@ -124,7 +124,7 @@ export const NavbarTop = () => {
                 </Suspense>
               </div>
               {/* Puntos de recompensa */}
-              <div className="p-2.5">
+              <div className="px-2.5 py-1">
                 <RewardsWidgetPoints />
               </div>
             </div>

@@ -1,4 +1,4 @@
-export { NotificationBell } from './components/NotificationBell';
+export { NotificationBell } from './components/atoms/NotificationBell';
 export { NotificationBellSkeleton } from './components/NotificationBellSkeleton';
 export { usePushNotifications } from './hooks/usePushNotifications';
 export { useNotificationCenter } from './hooks/useNotificationCenter';
