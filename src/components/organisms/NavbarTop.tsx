@@ -8,7 +8,7 @@ import logo from "@assets/logo.png";
 import { RewardsWidgetPoints } from "@features/rewards/components/atoms/RewardsWidgetPoints";
 import { useSidebarMobile } from "@hooks/useSidebarMobile";
 import { Suspense } from "react";
-import { NotificationBell } from "@/features/notifications/components/atoms/NotificationBell";
+import { NotificationBell } from "@/features/notifications/components/organisms/NotificationBell";
 import { Settings } from "lucide-react";
 
 export const NavbarTop = () => {

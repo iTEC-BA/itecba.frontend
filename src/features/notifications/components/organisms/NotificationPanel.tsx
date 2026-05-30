@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import type { InAppNotification } from '../types/notification';
-import { NotificationPush } from './atoms/NotificationPush';
+import type { InAppNotification } from '../../types/notification';
+import { NotificationPush } from '../atoms/NotificationPush';
 interface Props {
   items:      InAppNotification[];
   onMarkRead: (id: string) => void;

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Bell } from "lucide-react";
-import { NotificationItem } from "./NotificationItem";
-import { NotificationDetailModal } from "./NotificationDetailModal";
+import { NotificationItem } from "../molecules/NotificationItem";
+import { NotificationDetailModal } from "../molecules/NotificationDetailModal";
 import { PaginationBar } from "@components/ui/PaginationBar";
 import { usePagination } from "@hooks/usePagination";
-import type { InAppNotification } from "../types/notification";
+import type { InAppNotification } from "../../types/notification";
 
 interface Props {
   items:      InAppNotification[];

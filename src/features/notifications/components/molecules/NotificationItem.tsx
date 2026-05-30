@@ -1,6 +1,6 @@
 import React from "react";
 import { Circle } from "lucide-react";
-import type { InAppNotification } from "../types/notification";
+import type { InAppNotification } from "../../types/notification";
 
 const SOURCE_LABELS: Record<string, string> = {
   news: "Aviso", rewards: "Recompensa", points: "Puntos",

@@ -8,7 +8,7 @@ import useSizeWindow from "@/hooks/useSizeWindow";
 import { Link } from "react-router-dom";
 
 const NotificationPanel = lazy(() =>
-  import("../NotificationPanel").then((m) => ({ default: m.NotificationPanel }))
+  import("./NotificationPanel").then((m) => ({ default: m.NotificationPanel }))
 );
 
 export const NotificationBell: React.FC = () => {
