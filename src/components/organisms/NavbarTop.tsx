@@ -81,7 +81,7 @@ export const NavbarTop = () => {
               <span className="hidden md:inline font-medium">65K</span>
             </a>
             <a
-              href="https://discord.com/"
+              href="https://discord.gg/kGAHwb2qKV"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 transition-colors hover:text-white hover:bg-white/10"
