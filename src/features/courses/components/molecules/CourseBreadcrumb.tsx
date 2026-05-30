@@ -2,7 +2,6 @@
 // Migas de pan responsivas para la navegación de cursos
 import React from "react";
 import { Link } from "react-router-dom";
-import { Icons } from "@/components/ui/icons/Icons";
 
 interface Crumb {
   label: string;
@@ -24,7 +23,7 @@ export const CourseBreadcrumb: React.FC<Props> = ({ crumbs, className = "" }) =>
       return (
         <React.Fragment key={i}>
           {i > 0 && (
-            <Icons type="arrowRight" className="w-3 h-3 text-itec-border shrink-0" />
+            "/"
           )}
           {crumb.href && !isLast ? (
             <Link

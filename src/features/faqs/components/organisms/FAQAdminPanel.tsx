@@ -254,7 +254,7 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                             </span>
                           </div>
                         </div>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                        <div className="flex gap-1 shrink-0 flex-col">
                           <button
                             onClick={() => startEdit(faq)}
                             className="w-7 h-7 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center hover:bg-blue-500/25 transition-colors"

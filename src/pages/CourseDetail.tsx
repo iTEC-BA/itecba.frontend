@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { Icons } from "@/components/ui/icons/Icons";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@context/AuthContext";
 import { CourseVideoPlayer } from "@features/courses/components/organisms/CourseVideoPlayer";
 import { CoursePlaylist } from "@features/courses/components/organisms/CoursePlaylist";
@@ -129,10 +130,15 @@ export const CourseDetail: React.FC = () => {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-itec-border text-itec-gray hover:text-itec-text text-xs font-bold transition-all">
                 <Icons type="edit" className="w-3 h-3" /> Editar
               </Link>
-              <button onClick={handleDelete}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-itec-red/10 border border-itec-red/25 text-itec-red hover:bg-itec-red/20 text-xs font-bold transition-all">
-                <Icons type="trash" className="w-3 h-3" /> Eliminar
-              </button>
+              <Button
+                onClick={handleDelete}
+                variant="danger"
+                hierarchy="outline"
+                className="px-3 py-1.5 rounded-lg text-xs font-bold"
+                icon={<Icons type="trash" className="w-3 h-3" />}
+              >
+                Eliminar
+              </Button>
             </div>
           )}
         </div>
