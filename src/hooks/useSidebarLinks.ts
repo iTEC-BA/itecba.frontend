@@ -2,10 +2,11 @@ import { useCallback, useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import { 
   Home, MessageCircle, MapPin, 
-  BookOpen, Video, Folder, Users, Newspaper, 
-  Calculator, Calendar, Wrench, Settings, Gift, 
+  BookOpen, Video, Folder, Users, Calendar, Wrench, Settings, Gift, 
   LineChart, User, FileText, 
-  Handshake
+  Handshake,
+  LandPlot,
+  MessageCircleQuestionMark
 } from "lucide-react";
 
 export const useSidebarLinks = () => {
@@ -41,13 +42,13 @@ export const useSidebarLinks = () => {
         title: "Comunidad",
         links: [
           { path: "/grupos", label: "Grupos", icon: Users },
-          { path: "/faqs", label: "Preguntas Frecuentes", icon: Newspaper },
+          { path: "/faqs", label: "Preguntas Frecuentes", icon: MessageCircleQuestionMark },
         ],
       },
       {
         title: "Herramientas",
         links: [
-          { path: "/grado", label: "Calc. promedio", icon: Calculator },
+          { path: "/grado", label: "Plan de Estudios", icon: LandPlot },
           { path: "/calendario", label: "Calendario académico", icon: Calendar },
           { path: "/plugins", label: "Plugins y apps", icon: Wrench },
         ],

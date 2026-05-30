@@ -26,7 +26,7 @@ export const ChatInterface: React.FC = () => {
     AI_COST,
   } = useChatbot();
   const { topFaqs, loading: faqsLoading } = useFAQs();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isAuthenticated } = useAuth();
   const [adminOpen, setAdminOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasConversation = messages.length > 1;
@@ -119,7 +119,8 @@ export const ChatInterface: React.FC = () => {
       <div className="shrink-0 border-t border-itec-border bg-itec-box backdrop-blur-xl pb-[env(safe-area-inset-bottom)] px-4 py-3">
         <div className="max-w-2xl mx-auto space-y-2">
           {/* Toggle IA */}
-          <div className="flex items-center justify-between">
+          {isAuthenticated && (
+            <div className="flex items-center justify-between">
             <button
               onClick={toggleMode}
               disabled={!canUseAI && mode === "faq"}
@@ -143,6 +144,7 @@ export const ChatInterface: React.FC = () => {
               </p>
             )}
           </div>
+          )}
 
           {/* Error */}
           {error && (
