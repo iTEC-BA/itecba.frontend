@@ -14,6 +14,7 @@ const NotificationsPanel = lazy(() =>
     default: m.NotificationsPanel,
   }))
 );
+
 const InboxPanel = lazy(() =>
   import("@features/rewards/components/organisms/InboxPanel").then((m) => ({
     default: m.InboxPanel,
@@ -23,7 +24,7 @@ const InboxPanel = lazy(() =>
 const PanelSkeleton = () => (
   <div className="space-y-2 pt-2 animate-pulse">
     {[1, 2, 3, 4].map((i) => (
-      <div key={i} className="h-16 rounded-2xl bg-white/4" />
+      <div key={i} className="h-16 rounded-xl bg-white/4" />
     ))}
   </div>
 );
@@ -32,7 +33,7 @@ export const NotificationsPage: React.FC = () => {
   usePageTitle("Notificaciones");
   const [activeTab, setActiveTab] = useState<TabId>("notifications");
 
-  /* ── Notificaciones in-app (avisos del admin) ── */
+  /* Notificaciones in-app */
   const { data: rawNews = [] } = useQuery({
     queryKey: ["announcements", "active"],
     queryFn: () => adminService.getActiveAnnouncements(),
@@ -40,43 +41,40 @@ export const NotificationsPage: React.FC = () => {
   });
   const { items, unreadCount, markRead, markAllRead } = useNotificationCenter(rawNews);
 
-  /* ── Buzón de mensajes ── */
+  /* Buzón */
   const {
     messages,
     unreadCount: inboxUnread,
-    isLoading: inboxLoading,
+    isLoading:   inboxLoading,
     markAsRead,
     markAllAsRead,
   } = useInbox();
 
-  const tabs = [
-    { id: "notifications" as TabId, label: "Avisos",   icon: <Bell className="size-3.5" />,  count: unreadCount  },
-    { id: "inbox"         as TabId, label: "Buzón",    icon: <Mail className="size-3.5" />,  count: inboxUnread  },
-  ];
-
   const totalUnread = unreadCount + inboxUnread;
+
+  const tabs = [
+    { id: "notifications" as TabId, label: "Avisos", icon: <Bell className="size-3.5" />,  count: unreadCount },
+    { id: "inbox"         as TabId, label: "Buzón",  icon: <Mail className="size-3.5" />,  count: inboxUnread },
+  ];
 
   return (
     <MainLayout>
       <div className="flex flex-col gap-4 max-w-lg mx-auto">
-        {/* Título */}
+        {/* Encabezado */}
         <div className="flex items-center gap-2.5 px-1 pt-1">
           <div className="relative">
-            <Bell className="size-5 text-itec-text/70" />
+            <Bell className="size-5 text-itec-text/60" />
             {totalUnread > 0 && (
-              <UnreadBadge
-                count={totalUnread}
-                className="absolute -top-2 -right-2"
-              />
+              <UnreadBadge count={totalUnread} className="absolute -top-2 -right-2" />
             )}
           </div>
           <h1 className="text-lg font-bold text-itec-text">Notificaciones</h1>
         </div>
 
-        {/* Tabs tipo fichero */}
+        {/* Tabs */}
         <SectionTab active={activeTab} tabs={tabs} onChange={setActiveTab} />
 
-        {/* Contenido del panel activo */}
+        {/* Panel activo */}
         <Suspense fallback={<PanelSkeleton />}>
           {activeTab === "notifications" ? (
             <NotificationsPanel

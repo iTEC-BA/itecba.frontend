@@ -1,22 +1,19 @@
-import { useState, useCallback, useMemo } from 'react';
-import type { InAppNotification } from '../types/notification';
+import { useState, useCallback, useMemo } from "react";
+import type { InAppNotification } from "../types/notification";
 
-const STORAGE_KEY = 'itec_notifications_v2';
+const STORAGE_KEY = "itec_notifications_v2";
 
-// ── Carga/guarda en localStorage de forma segura ────────────
 const loadSeen = (): Set<string> => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return new Set(raw ? JSON.parse(raw) : []);
   } catch { return new Set(); }
 };
+
 const saveSeen = (ids: Set<string>) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]));
-  } catch (e) {
-    // ignore storage errors
-    void e;
-  }
+  } catch { /* ignore */ }
 };
 
 interface CenterState {
@@ -26,25 +23,24 @@ interface CenterState {
   markAllRead: () => void;
 }
 
-// ── El hook recibe los items de news ya cargados desde useQuery ─
-// Esto permite que NotificationBell no haga su propio fetch.
 export const useNotificationCenter = (
   rawNews: Array<{
-    id?: string;
-    title?: string;
-    body?: string;
+    id?:        string;
+    title?:     string;
+    /** AnnouncementData usa "message", InAppNotification usa "body" */
+    body?:      string;
+    message?:   string;
     createdAt?: Date | { toDate?: () => Date } | string;
   }> = []
 ): CenterState => {
   const [seenIds, setSeenIds] = useState<Set<string>>(loadSeen);
 
-  // ── Convierte news del backend a InAppNotification ─────────
   const items = useMemo<InAppNotification[]>(() => {
     return rawNews
       .filter((n) => n?.id)
       .map((n) => {
         let createdAtString: string;
-        if (typeof n.createdAt === 'string') {
+        if (typeof n.createdAt === "string") {
           createdAtString = n.createdAt;
         } else if (n.createdAt instanceof Date) {
           createdAtString = n.createdAt.toISOString();
@@ -53,15 +49,17 @@ export const useNotificationCenter = (
         } else {
           createdAtString = new Date().toISOString();
         }
+
         return {
           id:        n.id!,
-          source:    'news' as const,
-          title:     n.title ?? 'Aviso iTEC',
-          body:      n.body ?? '',
-          url:       '/',
+          source:    "news" as const,
+          title:     n.title ?? "Aviso iTEC",
+          /* Soporta tanto "body" (InAppNotification) como "message" (AnnouncementData) */
+          body:      n.body ?? n.message ?? "",
+          url:       "/",
           createdAt: createdAtString,
           read:      seenIds.has(n.id!),
-          priority:  'normal' as const,
+          priority:  "normal" as const,
         };
       });
   }, [rawNews, seenIds]);
