@@ -65,16 +65,6 @@ body {
   -ms-overflow-style: none;
 }
 
-/* Para Chrome, Safari y navegadores basados en WebKit */
-*::-webkit-scrollbar {
-  display: none;
-}
-
-/* Si tenías una clase .custom-scrollbar de antes, la reseteamos también */
-.custom-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
 /* src/index.css */
 
 /* Efecto de ruido estático (Grain) para superponer a los blurs */
@@ -155,12 +145,6 @@ html { scroll-behavior: smooth; }
 .bento-animate-delay-3 { animation-delay: 180ms; }
 .bento-animate-delay-4 { animation-delay: 240ms; }
 .bento-animate-delay-5 { animation-delay: 300ms; }
-
-/* Focus ring accesible */
-*:focus-visible {
-  outline: 2px solid rgba(56, 189, 248, 0.5);
-  outline-offset: 2px;
-}
 
 .rotating-element {
   animation: rotate 10s linear infinite;

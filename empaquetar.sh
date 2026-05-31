@@ -23,6 +23,7 @@ find . -type f \
     -not -name "yarn.lock" \
     -not -name "pnpm-lock.yaml" \
     -not -name "*.sh" \
+    -not -name "*.txt" \
     -not -name "$OUTPUT" \
     | while read file; do
         # Escribir el nombre del archivo como cabecera

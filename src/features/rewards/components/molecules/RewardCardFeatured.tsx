@@ -33,9 +33,8 @@ export const RewardCardFeatured: React.FC<Props> = ({
       }`}
     >
       <div className="absolute -top-8 -right-8 w-32 h-32 bg-itec-rewards/8 blur-[40px] rounded-full pointer-events-none" />
-
       {isAdmin && (
-        <div className="absolute top-4 right-4 z-20 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="absolute top-4 right-4 z-20 flex gap-1.5 duration-200">
           {onEdit && (
             <button
               onClick={(e) => { e.stopPropagation(); onEdit(reward); }}

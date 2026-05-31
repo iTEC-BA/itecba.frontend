@@ -9,6 +9,7 @@ import { AulaCard }         from "@features/aulas/components/molecules/AulaCard"
 import { AulaFormModal }    from "@features/aulas/components/organisms/AulaFormModal";
 import { DeleteAulaModal }  from "@features/aulas/components/organisms/DeleteAulaModal";
 import { Plus, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import { CustomSelect } from "@components/ui/CustomSelect";
 import type { AulaResumen, SedeAula, FuncionAula } from "@features/aulas/types/aulas.types";
 
 const SEDES_OPTS = [
@@ -29,9 +30,6 @@ const FUNCIONES_OPTS = [
   { value: "secretaria",               label: "Secretarías"              },
   { value: "otro",                     label: "Otros"                    },
 ];
-
-const selectCls =
-  "bg-itec-surface border border-itec-border text-itec-text text-sm rounded-2xl px-3 py-2 focus:outline-none focus:border-itec-sky transition-colors appearance-none cursor-pointer";
 
 export const AulasPage: React.FC = () => {
   const { isAdmin }    = useAuth();
@@ -81,23 +79,23 @@ export const AulasPage: React.FC = () => {
         {/* Filtro sede */}
         <div className="flex items-center gap-1.5">
           <SlidersHorizontal size={14} className="text-itec-muted shrink-0" />
-          <select
-            value={filters.sede ?? ""}
-            onChange={(e) => setFilters({ ...filters, sede: e.target.value as SedeAula | "" })}
-            className={selectCls}
-          >
-            {SEDES_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
+          <div className="w-48">
+            <CustomSelect
+              value={filters.sede ?? ""}
+              options={SEDES_OPTS}
+              onChange={(val) => setFilters({ ...filters, sede: val as SedeAula | "" })}
+            />
+          </div>
         </div>
 
         {/* Filtro función */}
-        <select
-          value={filters.funcion ?? ""}
-          onChange={(e) => setFilters({ ...filters, funcion: e.target.value as FuncionAula | "" })}
-          className={selectCls}
-        >
-          {FUNCIONES_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
+        <div className="w-72">
+          <CustomSelect
+            value={filters.funcion ?? ""}
+            options={FUNCIONES_OPTS}
+            onChange={(val) => setFilters({ ...filters, funcion: val as FuncionAula | "" })}
+          />
+        </div>
 
         {/* Reload / invalidar caché */}
         <button

@@ -7,7 +7,7 @@ export interface SelectOption {
 }
 
 interface Props {
-  label: string;
+  label?: string;
   value: string;
   options: SelectOption[];
   onChange: (val: string) => void;
@@ -36,7 +36,7 @@ export const CustomSelect: React.FC<Props> = ({
 
   return (
     <div ref={containerRef} className={`relative flex flex-col transition-all duration-300 ${disabled ? 'grayscale' : ''}`}>
-      <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-2 pl-1">{label}</label>
+      {label && <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-2 pl-1">{label}</label>}
       <div onClick={() => !disabled && setIsOpen(!isOpen)}>
         <Input 
           fullWidth readOnly disabled={disabled}
@@ -46,11 +46,11 @@ export const CustomSelect: React.FC<Props> = ({
         />
       </div>
       {isOpen && !disabled && (
-        <ul className="absolute z-100 w-full top-full mt-2 bg-slate-800 border border-itec-border rounded-2xl shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
+        <ul className="absolute z-100 w-full top-full mt-2 bg-slate-800 border border-itec-border rounded-2xl max-h-60 overflow-y-scroll">
           {options.map((opt) => (
             <li 
               key={opt.value} onClick={() => { onChange(opt.value); setIsOpen(false); }} 
-              className="cursor-pointer px-5 py-3 text-sm text-slate-300 hover:bg-emerald-600 hover:text-itec-text border-b border-white/5 last:border-0 transition-colors"
+              className="cursor-pointer px-3 py-2 text-sm text-slate-300 hover:bg-emerald-600 hover:text-itec-text border-b border-white/5 last:border-0 transition-colors"
             >
               {opt.label}
             </li>
