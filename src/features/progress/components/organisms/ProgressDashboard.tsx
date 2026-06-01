@@ -1,147 +1,253 @@
-import React, { useState, useEffect } from 'react';
-import { ProgressTable } from '../molecules/ProgressTable';
-import { GradeModal } from '../molecules/GradeModal';
-import { MetricCard, StressMonitor } from '../atoms/Widgets';
-import { CAREER_NAMES } from '../../hooks/useProgress';
-import type { CareerProgress, Subject } from '../../types/progress';
+// src/features/progress/components/organisms/ProgressDashboard.tsx
+// FIX: muestra un estado vacío explícito cuando subjects = [] (carrera sin plan)
+//   en lugar de una tabla en blanco que confunde al usuario.
+// REGLA: usa exclusivamente Button, CustomSelect de @components/ui.
+import React, { useState }  from 'react';
+import { ProgressTable }    from '../molecules/ProgressTable';
+import { GradeModal }       from '../molecules/GradeModal';
+import { MetricCard, StressMonitor, PromocionadasCard } from '../atoms/Widgets';
+import { Button }           from '@components/ui/Button';
+import { CustomSelect }     from '@components/ui/CustomSelect';
+import { CAREER_NAMES }     from '../../data/careers.data';
+import type {
+  CareerProgress,
+  Subject,
+  UpdateSubjectArgs,
+} from '../../types/progress';
 
 interface Props {
-  data: CareerProgress;
-  onUpdateStatus: (args: { id: string, status: string, grade?: number, year?: number }) => void;
+  data:           CareerProgress;
+  onUpdateStatus: (args: UpdateSubjectArgs) => void;
   onSwitchCareer: (careerId: string) => void;
   onRemoveCareer: (careerId: string) => void;
 }
 
-export const ProgressDashboard: React.FC<Props> = ({ data, onUpdateStatus, onSwitchCareer, onRemoveCareer }) => {
-  const [modalState, setModalState] = useState<{ isOpen: boolean, subject: Subject | null, targetStatus: string | null }>({
-    isOpen: false, subject: null, targetStatus: null
-  });
+type ModalState =
+  | { isOpen: false }
+  | {
+      isOpen:       true;
+      subject:      Subject;
+      targetStatus: 'aprobada' | 'regular' | 'promocionada';
+    };
 
+// ── Inner component con clave de carrera para remount limpio ──────────────────
+const DashboardContent: React.FC<Props> = ({
+  data,
+  onUpdateStatus,
+  onSwitchCareer,
+  onRemoveCareer,
+}) => {
+  const [modal, setModal] = useState<ModalState>({ isOpen: false });
   const { metrics, subjects } = data;
-  const levels = Array.from(new Set(subjects.map(s => s.level))).sort((a, b) => a - b);
-  const availableCareersToAdd = Object.keys(CAREER_NAMES).filter(c => !data.enrolledCareers.includes(c));
 
-  // Estado para controlar la pestaña activa (Fichero de Año)
-  const [activeLevel, setActiveLevel] = useState<number>(levels[0] || 1);
+  const levels = Array.from(new Set(subjects.map((s) => s.level))).sort(
+    (a, b) => a - b
+  );
+  const [activeLevel, setActiveLevel] = useState<number>(levels[0] ?? 1);
 
-  // Si cambia de carrera, reseteamos a la pestaña 1
-  useEffect(() => {
-    if (levels.length > 0 && !levels.includes(activeLevel)) {
-      setActiveLevel(levels[0]);
-    }
-  }, [data.activeCareerId, levels]);
+  const availableCareersToAdd = Object.keys(CAREER_NAMES).filter(
+    (c) => !data.enrolledCareers.includes(c)
+  );
 
   const handleActionClick = (subject: Subject, action: string) => {
-    if (action === 'aprobada' || action.includes('regular')) {
-      setModalState({ isOpen: true, subject, targetStatus: action });
-    } else {
-      onUpdateStatus({ id: subject.id, status: action });
+    if (action === 'aprobada' || action === 'regular' || action === 'promocionada') {
+      setModal({ isOpen: true, subject, targetStatus: action });
+      return;
     }
+    onUpdateStatus({ id: subject.id, status: action });
   };
 
-  const handleModalConfirm = (id: string, status: string, grade?: number, year?: number) => {
+  const handleModalConfirm = (
+    id:     string,
+    status: string,
+    grade?: number,
+    year?:  number
+  ) => {
     onUpdateStatus({ id, status, grade, year });
-    setModalState({ isOpen: false, subject: null, targetStatus: null });
+    setModal({ isOpen: false });
   };
+
+  const levelSubjects    = subjects.filter((s) => s.level === activeLevel);
+  const addCareerOptions = availableCareersToAdd.map((c) => ({
+    value: c,
+    label: CAREER_NAMES[c] ?? c,
+  }));
 
   return (
-    <div className="flex flex-col gap-8 animate-fade-in">
-      {/* Navegación y Gestión de Carreras */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-itec-gray pb-4">
-        {data.enrolledCareers.map(careerId => {
-          const isActive = data.activeCareerId === careerId;
-          return (
-            <div key={careerId} className={`flex items-center rounded-lg border transition-all ${isActive ? 'bg-itec-primary border-itec-primary text-itec-textshadow-lg shadow-itec-primary/20' : 'bg-transparent border-itec-gray text-itec-text hover:border-gray-500 hover:text-white'}`}>
-              <button onClick={() => onSwitchCareer(careerId)} className="px-4 py-2 text-sm font-semibold outline-none">
-                {CAREER_NAMES[careerId]}
-              </button>
-              {data.enrolledCareers.length > 1 && (
-                <button onClick={() => onRemoveCareer(careerId)} className="px-3 py-2 text-xs opacity-50 hover:opacity-100 hover:text-itec-accent border-l border-black/20 outline-none" title="Eliminar Carrera">
-                  ✕
-                </button>
-              )}
-            </div>
-          );
-        })}
-        {availableCareersToAdd.length > 0 && (
-          <select 
-            onChange={(e) => { if(e.target.value) onSwitchCareer(e.target.value) }}
-            className="px-4 py-2 rounded-lg text-sm font-medium bg-transparent text-itec-text border border-itec-gray border-dashed hover:border-itecBlue hover:text-itecBlue transition-all outline-none cursor-pointer"
-            value=""
-          >
-            <option value="" disabled>+ Cursar otra Carrera</option>
-            {availableCareersToAdd.map(c => <option key={c} value={c} className="bg-itec-bg">{CAREER_NAMES[c]}</option>)}
-          </select>
-        )}
-      </div>
-
-      {/* Header y Alertas */}
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      {/* ── Header ──────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-itec-text tracking-tight mb-2">Tu Seguimiento</h1>
-          <p className="text-itecBlue font-medium flex items-center gap-2">🎓 {data.careerName}</p>
+          <h1 className="text-2xl font-bold text-itec-text tracking-tight">
+            Progreso Académico
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">{data.careerName}</p>
         </div>
 
-        {metrics.vencimientosProximos.length > 0 && (
-          <div className="bg-itec-accent/10 border border-itec-accent/30 rounded-xl p-4 flex items-start gap-4 shadow-sm">
-            <span className="text-2xl mt-1">⚠️</span>
-            <div>
-              <h4 className="text-itec-accent font-bold">Atención a tus regularidades</h4>
-              <p className="text-sm text-gray-300 mt-1">
-                Tenés materias próximas a vencer (3+ años): <span className="font-semibold text-white">{metrics.vencimientosProximos.map(m => m.name).join(', ')}</span>.
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Dashboard Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard title="Avance Plan" value={`${metrics.porcentajeAvance}%`} subtitle={`${metrics.aprobadas} de ${metrics.total} finales dados`} icon="📈" />
-        <MetricCard title="Promedio Gral" value={metrics.promedio} subtitle="Sin aplazos" icon="🎓" highlight="text-itecBlue" />
-        <MetricCard title="Cursando Ahora" value={metrics.cursando.toString()} subtitle="Materias anotadas" icon="📚" highlight="text-fuchsia-400" />
-        <StressMonitor horas={metrics.horasSemanales} nivel={metrics.nivelEstres} />
-      </div>
-
-      {/* CONTENEDOR DE FICHAS / TABS PARA LOS AÑOS */}
-      <div className="flex flex-col gap-0 mt-4">
-        {/* Pestañas de Navegación */}
-        <div className="flex overflow-x-auto no-scrollbar gap-1 border-b-2 border-itec-gray/50">
-          {levels.map((lvl) => (
-            <button
-              key={lvl}
-              onClick={() => setActiveLevel(lvl)}
-              className={`px-6 py-3 text-sm font-bold uppercase tracking-widest rounded-t-xl transition-all outline-none whitespace-nowrap
-                ${activeLevel === lvl 
-                  ? 'bg-itec-gray/20 text-itec-textborder-b-2 border-itecBlue' 
-                  : 'bg-transparent text-gray-500 hover:bg-itec-gray/10 hover:text-gray-300 border-b-2 border-transparent'
-                }
-              `}
-            >
-              Año {lvl}
-            </button>
+        <div className="flex flex-wrap gap-2 items-center">
+          {data.enrolledCareers.map((careerId) => (
+            <Button
+              key={careerId}
+              onClick={() => onSwitchCareer(careerId)}
+              variant={careerId === data.activeCareerId ? 'primary' : 'secondary'}
+              hierarchy={careerId === data.activeCareerId ? 'outline' : 'ghost'}
+              text={CAREER_NAMES[careerId]?.split(' ').slice(-2).join(' ') ?? careerId}
+            />
           ))}
-        </div>
 
-        {/* Contenido de la Tabla (Solo se renderiza el Año Activo) */}
-        <div className="pt-4">
-          <ProgressTable 
-            level={activeLevel} 
-            subjects={subjects.filter(s => s.level === activeLevel)} 
-            allSubjects={subjects} 
-            onActionClick={handleActionClick} 
-          />
+          {data.enrolledCareers.length < 2 && addCareerOptions.length > 0 && (
+            <CustomSelect
+              value=""
+              options={addCareerOptions}
+              onChange={(val) => { if (val) onSwitchCareer(val); }}
+              placeholder="+ Agregar carrera"
+            />
+          )}
+
+          {data.enrolledCareers.length > 1 && (
+            <Button
+              onClick={() => onRemoveCareer(data.activeCareerId)}
+              variant="danger"
+              hierarchy="ghost"
+              text="− Quitar carrera"
+            />
+          )}
         </div>
       </div>
 
-      {modalState.isOpen && modalState.subject && modalState.targetStatus && (
-        <GradeModal 
-          subject={modalState.subject as any} 
-          targetStatus={modalState.targetStatus as any} 
-          onClose={() => setModalState({ isOpen: false, subject: null, targetStatus: null })}
+      {/* ── Estado vacío: carrera sin plan de estudios cargado ──── */}
+      {subjects.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 gap-4 text-center border border-dashed border-itec-gray/40 rounded-2xl">
+          <span className="text-5xl">📋</span>
+          <div>
+            <p className="text-itec-text font-semibold text-lg">
+              Plan de estudios no disponible
+            </p>
+            <p className="text-gray-500 text-sm mt-1 max-w-sm">
+              El plan para <strong>{data.careerName}</strong> no está cargado en
+              este momento. Seleccioná otra carrera o contactá al equipo de iTEC.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Métricas (solo si hay materias) ──────────────────────── */}
+      {subjects.length > 0 && (
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <MetricCard
+              title="Avance Plan"
+              value={`${metrics.porcentajeAvance}%`}
+              subtitle={`${metrics.aprobadas + metrics.promocionadas} / ${metrics.total} materias`}
+              icon="🎓"
+              highlight="text-itecBlue"
+            />
+            <MetricCard
+              title="Aprobadas"
+              value={metrics.aprobadas}
+              subtitle="Final rendido"
+              icon="✅"
+              highlight="text-green-400"
+            />
+            <PromocionadasCard count={metrics.promocionadas} />
+            <MetricCard
+              title="Regularizadas"
+              value={metrics.regulares}
+              subtitle="Pendiente final"
+              icon="📋"
+            />
+            <MetricCard
+              title="Promedio"
+              value={metrics.promedio}
+              subtitle="Sobre materias aprobadas"
+              icon="📊"
+              highlight="text-yellow-400"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <MetricCard
+              title="Cursando"
+              value={metrics.cursando}
+              subtitle="Materias este cuatrimestre"
+              icon="📚"
+              highlight="text-fuchsia-400"
+            />
+            <StressMonitor horas={metrics.horasSemanales} nivel={metrics.nivelEstres} />
+            {metrics.vencimientosProximos.length > 0 && (
+              <div className="bg-itec-accent/5 border border-itec-accent/20 rounded-xl p-5 flex flex-col justify-between">
+                <span className="text-xs font-bold uppercase tracking-widest text-itec-accent mb-2">
+                  ⚠️ Vencimientos
+                </span>
+                <div className="space-y-1">
+                  {metrics.vencimientosProximos.slice(0, 3).map((s) => (
+                    <div key={s.id} className="text-xs text-itec-text truncate">
+                      {s.name}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[10px] text-gray-500 mt-2">Regularidad &gt; 3 años</p>
+              </div>
+            )}
+          </div>
+
+          {/* ── Tabs de año — usa Button global ───────────────────── */}
+          <div className="flex flex-wrap gap-2">
+            {levels.map((lvl) => {
+              const lvlSubs   = subjects.filter((s) => s.level === lvl);
+              const aprobadas = lvlSubs.filter(
+                (s) => s.status === 'aprobada' || s.status === 'promocionada'
+              ).length;
+              const pct =
+                lvlSubs.length > 0
+                  ? Math.round((aprobadas / lvlSubs.length) * 100)
+                  : 0;
+              const isActive = activeLevel === lvl;
+              return (
+                <Button
+                  key={lvl}
+                  onClick={() => setActiveLevel(lvl)}
+                  variant="primary"
+                  hierarchy={isActive ? 'outline' : 'ghost'}
+                  className={`rounded-t-xl rounded-b-none border-b-2 ${
+                    isActive
+                      ? 'border-itecBlue'
+                      : 'border-transparent text-gray-500 hover:text-itec-text'
+                  }`}
+                >
+                  <span>{lvl === 0 ? 'Ingreso' : `Año ${lvl}`}</span>
+                  <span className={`text-[10px] font-mono ml-1 ${pct === 100 ? 'text-green-400' : 'text-gray-500'}`}>
+                    {pct}%
+                  </span>
+                </Button>
+              );
+            })}
+          </div>
+
+          {/* ── Tabla del año activo ───────────────────────────────── */}
+          <ProgressTable
+            level={activeLevel}
+            subjects={levelSubjects}
+            allSubjects={subjects}
+            onActionClick={handleActionClick}
+          />
+        </>
+      )}
+
+      {/* ── Modal de confirmación ─────────────────────────────────── */}
+      {modal.isOpen && (
+        <GradeModal
+          subject={modal.subject}
+          targetStatus={modal.targetStatus}
+          onClose={() => setModal({ isOpen: false })}
           onConfirm={handleModalConfirm}
         />
       )}
     </div>
   );
 };
+
+// Wrapper con `key` para forzar remount limpio al cambiar carrera.
+export const ProgressDashboard: React.FC<Props> = (props) => (
+  <DashboardContent key={props.data.activeCareerId} {...props} />
+);
