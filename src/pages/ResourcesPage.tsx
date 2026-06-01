@@ -98,7 +98,7 @@ export const ResourcesPage: React.FC = () => {
       />
 
       {/* ── Modales (lazy) ──────────────────────────────────────────────────── */}
-      <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />}>
+      <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/50 " />}>
         {isAddOpen && (
           <AddResourceModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} isAdmin={isAdmin} />
         )}

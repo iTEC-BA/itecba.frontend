@@ -1,37 +1,48 @@
 // src/pages/CoursesPage.tsx
-// Catálogo de cursos — usa useCourseFilters (Zustand) para persistir filtros entre navegaciones
+// Catálogo de cursos — usa useCourseFilters (Zustand) para persistir filtros entre navegaciones.
+// Los admins ven dos botones en el header:
+//   • "Nuevo curso"     → abre AddCourseModal (crear/editar cursos)
+//   • "Videos rotos"   → abre BrokenVideosModal (revisar y corregir reportes)
 import React, { useState, Suspense } from "react";
-import { MainLayout }   from "@/components/templates/MainLayout";
-import { PageHeader }   from "@components/ui/PageHeader";
-import { Icons }        from "@/components/ui/icons/Icons";
-import { useAuth }      from "@context/AuthContext";
-import { usePageTitle } from "@hooks/usePageTitle";
+import { MainLayout }       from "@/components/templates/MainLayout";
+import { PageHeader }       from "@components/ui/PageHeader";
+import { useAuth }          from "@context/AuthContext";
+import { usePageTitle }     from "@hooks/usePageTitle";
 import { useCourses, useDeleteCourse } from "@features/courses/hooks/useCourses";
 import { useCourseFilters }            from "@features/courses/hooks/useCourseFilters";
 import { CourseGrid }                  from "@features/courses/components/organisms/CourseGrid";
 import { CourseFilters }               from "@features/courses/components/molecules/CourseFilters";
+import { AlertOctagon, PlusIcon } from "lucide-react";
+import { Button }                from "@components/ui/Button";
 
+// Lazy-load de modales admin (solo se descargan si el usuario es admin)
 const AddCourseModal = React.lazy(() =>
   import("@features/courses/components/organisms/AddCourseModal").then((m) => ({
     default: m.AddCourseModal,
   }))
 );
+const BrokenVideosModal = React.lazy(() =>
+  import("@features/courses/components/organisms/BrokenVideosModal").then((m) => ({
+    default: m.BrokenVideosModal,
+  }))
+);
 
 export const CoursesPage: React.FC = () => {
   usePageTitle("Cursos");
-  const { isAdmin }     = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isAdmin } = useAuth();
+
+  const [isAddOpen,    setIsAddOpen]    = useState(false);
+  const [isBrokenOpen, setIsBrokenOpen] = useState(false);
 
   const { data: dbCourses = [], isLoading } = useCourses();
   const deleteMutation = useDeleteCourse();
 
-  // Usar useCourseFilters (Zustand) para que los filtros sobrevivan navegaciones
   const { filters: rawFilters, filteredCourses } = useCourseFilters(dbCourses);
 
-  // Adaptar setSelectedCategoria para cumplir la interfaz FiltersState (espera string)
   const filters = {
     ...rawFilters,
-    setSelectedCategoria: (c: string) => rawFilters.setSelectedCategoria(c as any),
+    setSelectedCategoria: (c: string) =>
+      rawFilters.setSelectedCategoria(c as Parameters<typeof rawFilters.setSelectedCategoria>[0]),
   };
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
@@ -51,14 +62,32 @@ export const CoursesPage: React.FC = () => {
           iconType="playFill"
           colorTheme="blue"
         >
+          {/* ── Acciones admin (solo visible para admins) ─────────────────── */}
           {isAdmin && (
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-itec-blue-skye text-white text-sm font-bold hover:opacity-90 transition-all active:scale-95 shrink-0"
-            >
-              <Icons type="plus" className="w-4 h-4" />
-              Nuevo curso
-            </button>
+            <>
+              {/* Botón: Videos rotos */}
+              <Button
+                onClick={() => setIsBrokenOpen(true)}
+                variant="danger"
+                hierarchy="solid"
+                icon={<AlertOctagon className="size-4" />}
+                className="shrink-0"
+                title="Revisar videos reportados"
+              >
+                Videos rotos
+              </Button>
+
+              {/* Botón: Nuevo curso */}
+              <Button
+                onClick={() => setIsAddOpen(true)}
+                variant="primary"
+                hierarchy="solid"
+                icon={<PlusIcon className="size-4" />}
+                className="shrink-0"
+              >
+                Nuevo curso
+              </Button>
+            </>
           )}
         </PageHeader>
 
@@ -71,9 +100,17 @@ export const CoursesPage: React.FC = () => {
         />
       </div>
 
-      {isAdmin && isModalOpen && (
+      {/* ── Modales admin (lazy, solo se montan si isAdmin) ─────────────────── */}
+      {isAdmin && (
         <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60" />}>
-          <AddCourseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          <AddCourseModal
+            isOpen={isAddOpen}
+            onClose={() => setIsAddOpen(false)}
+          />
+          <BrokenVideosModal
+            isOpen={isBrokenOpen}
+            onClose={() => setIsBrokenOpen(false)}
+          />
         </Suspense>
       )}
     </MainLayout>

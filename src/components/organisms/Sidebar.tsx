@@ -103,7 +103,7 @@ export const Sidebar = () => {
       {/* ── Mobile: overlay + drawer deslizable ── */}
       {/* Overlay oscuro */}
       <div
-        className={`md:hidden fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`md:hidden fixed inset-0 z-[200] bg-black/60  transition-opacity duration-300 ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={close}

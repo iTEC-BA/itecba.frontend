@@ -95,7 +95,7 @@ export const ComposeModal: React.FC<Props> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4"
+      className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center bg-black/60  p-0 sm:p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className="w-full sm:max-w-lg bg-itec-bg border border-itec-border rounded-t-4xl sm:rounded-3xl shadow-2xl animate-in slide-in-from-bottom-full sm:fade-in sm:zoom-in-95 duration-300">

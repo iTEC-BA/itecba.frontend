@@ -8,9 +8,7 @@ export type AdminSection =
   | "benefits"
   | "rewards"
   | "redemptions"
-  | "materias"
-  | "tutorias"
-  | "broken-videos";
+  | "tutorias";
 
 export interface SidebarLink {
   id: AdminSection;
@@ -18,16 +16,16 @@ export interface SidebarLink {
   icon: string;
 }
 
+// "Académico" y "Videos Rotos" se eliminaron del panel de admin:
+// ahora viven como modales dentro de CoursesPage y GroupsPage.
 export const SIDEBAR_LINKS: SidebarLink[] = [
-  { id: "dashboard", label: "Dashboard", icon: "chart" },
-  { id: "users", label: "Usuarios", icon: "users" },
-  { id: "news", label: "Avisos", icon: "bell" },
-  { id: "benefits", label: "Beneficios", icon: "star" },
-  { id: "rewards", label: "Recompensas", icon: "gift" },
-  { id: "redemptions", label: "Canjes", icon: "ticket" },
-  { id: "materias", label: "Académico", icon: "book" },
-  { id: "tutorias", label: "Tutorías", icon: "video" },
-  { id: "broken-videos", label: "Videos Rotos", icon: "video" },
+  { id: "dashboard",   label: "Dashboard",    icon: "chart"  },
+  { id: "users",       label: "Usuarios",     icon: "users"  },
+  { id: "news",        label: "Avisos",       icon: "bell"   },
+  { id: "benefits",    label: "Beneficios",   icon: "star"   },
+  { id: "rewards",     label: "Recompensas",  icon: "gift"   },
+  { id: "redemptions", label: "Canjes",       icon: "ticket" },
+  { id: "tutorias",    label: "Tutorías",     icon: "video"  },
 ];
 
 export const useAdminSidebar = () => {
@@ -40,7 +38,7 @@ export const useAdminSidebar = () => {
   }, []);
 
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
-  const close = useCallback(() => setIsOpen(false), []);
+  const close  = useCallback(() => setIsOpen(false), []);
 
   return { active, navigate, isOpen, toggle, close };
 };

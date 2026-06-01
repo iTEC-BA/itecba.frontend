@@ -1,5 +1,5 @@
 export const CARRERAS_OPTIONS = [
-  { value: 'sistemas', label: 'Ingeniería en SistemasA' },
+  { value: 'sistemas', label: 'Ingeniería en Sistemas' },
   { value: 'industrial', label: 'Ingeniería Industrial' },
   { value: 'civil', label: 'Ingeniería Civil' },
   { value: 'electronica', label: 'Ingeniería Electrónica' },

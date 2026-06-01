@@ -28,7 +28,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ active, onNavigate, 
       {/* Backdrop - Fondo oscuro con blur */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 z-150 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+        className="fixed inset-0 z-150 bg-black/60  animate-in fade-in duration-300"
       />
 
       {/* Panel lateral - Siempre sale de derecha a izquierda */}

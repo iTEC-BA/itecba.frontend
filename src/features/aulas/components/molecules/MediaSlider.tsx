@@ -211,7 +211,7 @@ export const MediaSlider: React.FC<Props> = ({ imagenes, videos }) => {
       {/* Lightbox de imágenes */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90  p-4"
           onClick={() => setLightbox(null)}
         >
           <button

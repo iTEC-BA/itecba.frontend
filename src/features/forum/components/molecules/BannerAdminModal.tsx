@@ -51,7 +51,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[400] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[400] flex items-center justify-center bg-black/70  p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className="w-full max-w-2xl bg-itec-bg border border-itec-border rounded-3xl shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">

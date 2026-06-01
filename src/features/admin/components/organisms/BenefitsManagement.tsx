@@ -134,7 +134,7 @@ export const BenefitsManagement: React.FC = () => {
                 {FIELD_LABELS[field]}
               </span>
               <input
-                className="rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none backdrop-blur-sm transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+                className="rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
                 value={(form as Record<string, string>)[field]}
                 placeholder={`Ej: ${field === "title" ? "Burger King" : field === "discount" ? "20% OFF" : field === "location" ? "Av. Corrientes 1234" : "https://..."}`}
                 onChange={(e) => setForm((p) => ({ ...p, [field]: e.target.value }))}
@@ -147,7 +147,7 @@ export const BenefitsManagement: React.FC = () => {
               {FIELD_LABELS.category}
             </span>
             <select
-              className="appearance-none rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none backdrop-blur-sm transition-all focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+              className="appearance-none rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
               value={form.category}
               onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
             >

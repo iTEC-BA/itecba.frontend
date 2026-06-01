@@ -39,37 +39,37 @@ const THEMES: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
     dashed: "border border-dashed border-itec-border text-itec-text hover:bg-itec-surface/70",
   },
   danger: {
-    solid: "bg-itec-red text-white shadow-lg shadow-itec-accent/20 hover:bg-rose-600",
+    solid: "bg-itec-red text-white hover:bg-rose-600",
     outline: "border border-rose-500/40 text-rose-300 hover:bg-rose-500/10",
     ghost: "text-rose-300 hover:bg-rose-500/10",
     dashed: "border border-dashed border-rose-500/50 text-rose-300 hover:bg-rose-500/10",
   },
   success: {
-    solid: "bg-itec-emerald text-white shadow-lg shadow-emerald-900/20 hover:brightness-110",
+    solid: "bg-itec-emerald text-white hover:brightness-110",
     outline: "border border-itec-emerald/40 text-itec-emerald hover:bg-itec-emerald/10",
     ghost: "text-itec-emerald hover:bg-itec-emerald/10",
     dashed: "border border-dashed border-itec-emerald/50 text-itec-emerald hover:bg-itec-emerald/10",
   },
   warning: {
-    solid: "bg-itec-amber text-black shadow-lg shadow-amber-900/20 hover:brightness-110",
+    solid: "bg-itec-amber text-black hover:brightness-110",
     outline: "border border-itec-amber/40 text-itec-amber hover:bg-itec-amber/10",
     ghost: "text-itec-amber hover:bg-itec-amber/10",
     dashed: "border border-dashed border-itec-amber/50 text-itec-amber hover:bg-itec-amber/10",
   },
   purple: {
-    solid: "bg-itec-purple text-white shadow-lg shadow-purple-900/20 hover:brightness-110",
+    solid: "bg-itec-purple text-white hover:brightness-110",
     outline: "border border-itec-purple/40 text-itec-purple hover:bg-itec-purple/10",
     ghost: "text-itec-purple hover:bg-itec-purple/10",
     dashed: "border border-dashed border-itec-purple/50 text-itec-purple hover:bg-itec-purple/10",
   },
   orange: {
-    solid: "bg-orange-500 text-white shadow-lg shadow-orange-900/20 hover:bg-orange-400",
+    solid: "bg-orange-500 text-white hover:bg-orange-400",
     outline: "border border-orange-400/40 text-orange-300 hover:bg-orange-500/10",
     ghost: "text-orange-300 hover:bg-orange-500/10",
     dashed: "border border-dashed border-orange-400/50 text-orange-300 hover:bg-orange-500/10",
   },
   teal: {
-    solid: "bg-teal-500 text-white shadow-lg shadow-teal-900/20 hover:bg-teal-400",
+    solid: "bg-teal-500 text-white hover:bg-teal-400",
     outline: "border border-teal-400/40 text-teal-300 hover:bg-teal-500/10",
     ghost: "text-teal-300 hover:bg-teal-500/10",
     dashed: "border border-dashed border-teal-400/50 text-teal-300 hover:bg-teal-500/10",
@@ -97,10 +97,8 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const baseStyles = [
     "inline-flex items-center justify-center gap-2 cursor-pointer",
-    "px-4 py-2 text-sm font-semibold rounded-2xl",
-    "transition-all duration-200 outline-none",
-    "focus-visible:ring-2 focus-visible:ring-itec-sky/30 focus-visible:ring-offset-0",
-    "active:scale-[0.98]",
+    "px-3 py-2 text-xs font-semibold rounded-[10px]",
+    "transition-all duration-200 outline-none"
   ].join(" ");
 
   const widthStyles = fullWidth ? "w-full" : "w-fit";
