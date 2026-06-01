@@ -7,7 +7,6 @@ import { useAuth }          from "@context/AuthContext";
 import { useAulas, invalidateAulasCache } from "@features/aulas/hooks/useAulas";
 import { AulaCard }         from "@features/aulas/components/molecules/AulaCard";
 import { AulaFormModal }    from "@features/aulas/components/organisms/AulaFormModal";
-import { DeleteAulaModal }  from "@features/aulas/components/organisms/DeleteAulaModal";
 import { Plus, RotateCcw } from "lucide-react";
 import { Button } from "@components/ui/Button";
 import { CustomSelect } from "@components/ui/CustomSelect";
@@ -38,12 +37,7 @@ export const AulasPage: React.FC = () => {
 
   const [showForm,   setShowForm]   = useState(false);
   const [editAula,   setEditAula]   = useState<AulaResumen | null>(null);
-  const [deleteAula, setDeleteAula] = useState<AulaResumen | null>(null);
-
-  const handleEdit    = (aula: AulaResumen) => { setEditAula(aula); setShowForm(true); };
-  const handleDelete  = (aula: AulaResumen) => setDeleteAula(aula);
   const handleSaved   = () => { setEditAula(null); reload(); };
-  const handleDeleted = () => { setDeleteAula(null); reload(); };
 
   return (
     <MainLayout>
@@ -94,14 +88,12 @@ export const AulasPage: React.FC = () => {
             value={filters.sede ?? ""}
             options={SEDES_OPTS}
             onChange={(val) => setFilters({ ...filters, sede: val as SedeAula | "" })}
-            className="w-full px-4 py-1"
           />
           {/* Filtro función */}
           <CustomSelect
             value={filters.funcion ?? ""}
             options={FUNCIONES_OPTS}
             onChange={(val) => setFilters({ ...filters, funcion: val as FuncionAula | "" })}
-            className="w-full px-4 py-1"
           />
         </div>
       </section>
@@ -127,9 +119,6 @@ export const AulasPage: React.FC = () => {
             <AulaCard
               key={aula._id}
               aula={aula}
-              isAdmin={isAdmin}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
             />
           ))}
         </div>
@@ -148,12 +137,6 @@ export const AulasPage: React.FC = () => {
         onClose={() => { setShowForm(false); setEditAula(null); }}
         onSaved={handleSaved}
         aula={editAula as unknown as import("@features/aulas/types/aulas.types").Aula | null}
-      />
-      <DeleteAulaModal
-        isOpen={!!deleteAula}
-        onClose={() => setDeleteAula(null)}
-        onDeleted={handleDeleted}
-        aula={deleteAula}
       />
     </MainLayout>
   );
