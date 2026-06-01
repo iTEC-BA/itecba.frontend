@@ -5,7 +5,7 @@ interface Props { onAddClick: () => void }
 
 export const EmptyResources: React.FC<Props> = ({ onAddClick }) => (
   <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-    <div className="w-20 h-20 rounded-3xl bg-itec-box border border-itec-gray/40 flex items-center justify-center mb-6 text-4xl shadow-inner">
+    <div className="w-20 h-20 rounded-xl bg-itec-box border border-itec-gray/40 flex items-center justify-center mb-6 text-4xl shadow-inner">
       📂
     </div>
     <h3 className="text-lg font-bold text-itec-text mb-2">Sin resultados</h3>

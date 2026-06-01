@@ -36,7 +36,7 @@ export const ResourceFilters: React.FC<Props> = ({
   } = useResourceMaterias(carrera, nivel, materia, setMateria);
 
   return (
-    <section className="relative mb-6 overflow-hidden rounded-2xl p-0.2 shadow-xl shadow-black/20">
+    <section className="relative mb-6 overflow-hidden rounded-xl p-0.2 shadow-xl shadow-black/20">
       <div className="animate-[spin_25s_ease-in-out_infinite] absolute inset-0 h-full w-full rounded-full bg-orange-500/15 shadow-xl shadow-orange-500/20" />
 
       <div className="relative z-10 rounded-[0.95rem] bg-itec-box border border-orange-500/10 p-4 sm:p-5">

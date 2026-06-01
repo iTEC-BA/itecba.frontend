@@ -97,7 +97,7 @@ export const MediaSlider: React.FC<Props> = ({ imagenes, videos }) => {
 
   if (allMedia.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 h-56 rounded-2xl bg-itec-surface border border-itec-border text-itec-muted">
+      <div className="flex flex-col items-center justify-center gap-3 h-56 rounded-xl bg-itec-surface border border-itec-border text-itec-muted">
         <ImageIcon size={32} className="opacity-30" />
         <span className="text-sm">Sin imágenes disponibles aún</span>
       </div>
@@ -114,7 +114,7 @@ export const MediaSlider: React.FC<Props> = ({ imagenes, videos }) => {
 
   return (
     <>
-      <div className="relative w-full rounded-2xl overflow-hidden bg-black border border-itec-border select-none">
+      <div className="relative w-full rounded-xl overflow-hidden bg-black border border-itec-border select-none">
         {/* Media actual */}
         <div className="w-full aspect-video flex items-center justify-center bg-black">
           {current.type === "image" ? (

@@ -43,7 +43,7 @@ export const PointsToast: React.FC<Props> = ({
       className={`
         ${POSITION_CLASSES[position]}
         flex items-center gap-2 px-4 py-2.5
-        bg-itec-box border border-white/10 rounded-2xl
+        bg-itec-box border border-white/10 rounded-xl
         shadow-lg 
         transition-all duration-300
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}

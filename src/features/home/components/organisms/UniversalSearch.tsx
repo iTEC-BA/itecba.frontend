@@ -78,7 +78,7 @@ export const UniversalSearch: React.FC = () => {
 
   return (
     <div className="relative w-full max-w-2xl" ref={wrapRef}>
-      <div className={`flex items-center gap-2 bg-itec-box border rounded-2xl px-4 py-2.5 transition-all duration-150 ${
+      <div className={`flex items-center gap-2 bg-itec-box border rounded-xl px-4 py-2.5 transition-all duration-150 ${
         isOpen ? 'border-itec-blue-skye/40' : 'border-white/[0.08] hover:border-white/15'
       }`}>
         <div className="w-4 h-4 shrink-0 text-itec-gray">

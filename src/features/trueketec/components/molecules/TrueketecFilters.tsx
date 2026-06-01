@@ -64,16 +64,16 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply }
     onApply({});
   };
 
-  const selectCls = "w-full rounded-2xl bg-itec-surface border border-itec-border px-3 py-2.5 text-sm text-itec-text outline-none focus:border-itec-sky transition-colors";
-  const inputCls  = "w-full px-3 py-2.5 text-sm rounded-2xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
+  const selectCls = "w-full rounded-xl bg-itec-surface border border-itec-border px-3 py-2.5 text-sm text-itec-text outline-none focus:border-itec-sky transition-colors";
+  const inputCls  = "w-full px-3 py-2.5 text-sm rounded-xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
 
   return (
-    <div className="flex flex-col gap-4 rounded-3xl border border-itec-border bg-itec-box p-5">
+    <div className="flex flex-col gap-4 rounded-xl border border-itec-border bg-itec-box p-5">
       {/* ── Selector de modo ──────────────────────────────────────────── */}
       <div className="flex items-center gap-2">
         <SlidersHorizontal size={14} className="text-itec-muted shrink-0" />
         <p className="text-xs font-bold uppercase tracking-widest text-itec-muted">Buscar por</p>
-        <div className="ml-auto flex rounded-2xl border border-itec-border overflow-hidden">
+        <div className="ml-auto flex rounded-xl border border-itec-border overflow-hidden">
           {(["filtros", "comision"] as const).map((m) => (
             <button
               key={m}
@@ -157,7 +157,7 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply }
 
       {/* ── Error ──────────────────────────────────────────────────────── */}
       {error && (
-        <p className="rounded-2xl border border-itec-accent/30 bg-itec-accent/10 px-3 py-2 text-xs text-itec-accent">
+        <p className="rounded-xl border border-itec-accent/30 bg-itec-accent/10 px-3 py-2 text-xs text-itec-accent">
           {error}
         </p>
       )}
@@ -170,14 +170,14 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply }
           text="Buscar"
           onClick={apply}
           disabled={!canSearch}
-          className="rounded-2xl py-2 px-5 text-sm"
+          className="rounded-xl py-2 px-5 text-sm"
         />
         <Button
           variant="secondary"
           hierarchy="ghost"
           text="Limpiar"
           onClick={clear}
-          className="rounded-2xl py-2 text-sm"
+          className="rounded-xl py-2 text-sm"
         />
       </div>
     </div>

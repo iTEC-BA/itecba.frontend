@@ -20,7 +20,7 @@ export const GroupGlowCard: React.FC<Props> = ({ children, className = '', onCli
   return (
     <Tag
       onClick={onClick}
-      className={`bg-itec-box border border-white/[0.07] rounded-2xl transition-all duration-200 ${GLOW[glowColor]} ${onClick ? 'cursor-pointer text-left w-full' : ''} ${className}`}
+      className={`bg-itec-box border border-white/[0.07] rounded-xl transition-all duration-200 ${GLOW[glowColor]} ${onClick ? 'cursor-pointer text-left w-full' : ''} ${className}`}
     >
       {children}
     </Tag>

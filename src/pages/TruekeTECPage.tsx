@@ -36,7 +36,7 @@ export const TruekeTECPage: React.FC = () => {
     return (
       <MainLayout>
         <div className="flex flex-col items-center justify-center gap-4 py-24 text-center px-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-itec-accent/30 bg-itec-accent/10">
+          <div className="flex h-16 w-16 items-center justify-center rounded-xl border border-itec-accent/30 bg-itec-accent/10">
             <ShieldAlert size={28} className="text-itec-accent" />
           </div>
           <h2 className="text-2xl font-bold text-itec-text">Acceso restringido</h2>
@@ -88,7 +88,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalO
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pt-2">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-itec-sky/30 bg-itec-sky/10">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-itec-sky/30 bg-itec-sky/10">
               <ArrowLeftRight size={16} className="text-itec-sky" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-itec-text">TruekeTEC</h1>
@@ -102,13 +102,13 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalO
           hierarchy="solid"
           text="Publicar intercambio"
           onClick={() => setModalOpen(true)}
-          className="hidden sm:inline-flex rounded-2xl py-2.5 px-5 text-sm"
+          className="hidden sm:inline-flex rounded-xl py-2.5 px-5 text-sm"
         />
       </div>
 
       {/* ── Error ────────────────────────────────────────────────────── */}
       {error && (
-        <div className="rounded-2xl border border-itec-accent/30 bg-itec-accent/10 px-4 py-3 text-sm text-itec-accent">
+        <div className="rounded-xl border border-itec-accent/30 bg-itec-accent/10 px-4 py-3 text-sm text-itec-accent">
           {error}
         </div>
       )}
@@ -123,7 +123,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalO
             </h2>
           </div>
           {/* Banner destacado de match perfecto */}
-          <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 p-4">
+          <div className="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 p-4">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {matches.map((m) => (
@@ -166,7 +166,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalO
       ) : loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-52 rounded-3xl border border-itec-border bg-itec-box animate-pulse" />
+            <div key={i} className="h-52 rounded-xl border border-itec-border bg-itec-box animate-pulse" />
           ))}
         </div>
       ) : posts.length === 0 ? (
@@ -195,7 +195,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalO
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage <= 1}
-                className="flex items-center gap-1 rounded-2xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
+                className="flex items-center gap-1 rounded-xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
               >
                 <ChevronLeft size={14} /> Anterior
               </button>
@@ -205,7 +205,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, modalOpen, setModalO
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage >= totalPages}
-                className="flex items-center gap-1 rounded-2xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
+                className="flex items-center gap-1 rounded-xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
               >
                 Siguiente <ChevronRight size={14} />
               </button>

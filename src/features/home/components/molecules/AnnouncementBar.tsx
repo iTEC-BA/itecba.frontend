@@ -12,7 +12,7 @@ export const AnnouncementBar: React.FC<Props> = ({ title, message, isCritical })
   if (dismissed) return null;
 
   return (
-    <div className={`relative flex items-start gap-3 rounded-2xl px-4 py-3 mb-3 border overflow-hidden ${
+    <div className={`relative flex items-start gap-3 rounded-xl px-4 py-3 mb-3 border overflow-hidden ${
       isCritical ? 'bg-itec-red/10 border-itec-red/30' : 'bg-itec-blue-skye/10 border-itec-blue-skye/25'
     }`}>
       <div className={`absolute inset-0 pointer-events-none bg-gradient-to-r opacity-25 ${

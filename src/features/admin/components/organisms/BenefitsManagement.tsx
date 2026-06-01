@@ -134,7 +134,7 @@ export const BenefitsManagement: React.FC = () => {
                 {FIELD_LABELS[field]}
               </span>
               <input
-                className="rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+                className="rounded-xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
                 value={(form as Record<string, string>)[field]}
                 placeholder={`Ej: ${field === "title" ? "Burger King" : field === "discount" ? "20% OFF" : field === "location" ? "Av. Corrientes 1234" : "https://..."}`}
                 onChange={(e) => setForm((p) => ({ ...p, [field]: e.target.value }))}
@@ -147,7 +147,7 @@ export const BenefitsManagement: React.FC = () => {
               {FIELD_LABELS.category}
             </span>
             <select
-              className="appearance-none rounded-2xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+              className="appearance-none rounded-xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
               value={form.category}
               onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
             >
@@ -161,7 +161,7 @@ export const BenefitsManagement: React.FC = () => {
         </div>
 
         {error && (
-          <p className="mt-3 rounded-2xl border border-itec-accent/20 bg-itec-accent/10 px-3 py-2 text-xs text-itec-accent">
+          <p className="mt-3 rounded-xl border border-itec-accent/20 bg-itec-accent/10 px-3 py-2 text-xs text-itec-accent">
             {error}
           </p>
         )}
@@ -170,14 +170,14 @@ export const BenefitsManagement: React.FC = () => {
           <button
             onClick={save}
             disabled={saving}
-            className="rounded-2xl border border-itec-sky/30 bg-itec-sky/20 px-5 py-2.5 text-xs font-bold text-itec-sky transition-all hover:bg-itec-sky/30 active:scale-95 disabled:opacity-50"
+            className="rounded-xl border border-itec-sky/30 bg-itec-sky/20 px-5 py-2.5 text-xs font-bold text-itec-sky transition-all hover:bg-itec-sky/30 active:scale-95 disabled:opacity-50"
           >
             {saving ? "Guardando..." : editId ? "Actualizar" : "Crear"}
           </button>
           {editId && (
             <button
               onClick={cancelEdit}
-              className="rounded-2xl border border-itec-border bg-itec-surface/60 px-5 py-2.5 text-xs font-bold text-itec-muted transition-all hover:text-itec-text active:scale-95"
+              className="rounded-xl border border-itec-border bg-itec-surface/60 px-5 py-2.5 text-xs font-bold text-itec-muted transition-all hover:text-itec-text active:scale-95"
             >
               Cancelar
             </button>
@@ -200,7 +200,7 @@ export const BenefitsManagement: React.FC = () => {
         {loading ? (
           <div className="space-y-3 p-5">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-10 animate-pulse rounded-2xl bg-itec-surface/40" />
+              <div key={i} className="h-10 animate-pulse rounded-xl bg-itec-surface/40" />
             ))}
           </div>
         ) : (

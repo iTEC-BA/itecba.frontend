@@ -22,7 +22,7 @@ export const UpdatePWAToast: React.FC = () => {
     <div 
       role="alert"
       className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-4 px-4 py-3
-                 bg-itec-bg/95 border border-itec-border rounded-2xl shadow-glass-lg backdrop-blur-md
+                 bg-itec-bg/95 border border-itec-border rounded-xl shadow-glass-lg backdrop-blur-md
                  animate-fade-in-down w-[calc(100vw-2rem)] sm:w-auto sm:min-w-[340px]"
     >
       {/* Ícono */}

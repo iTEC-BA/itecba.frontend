@@ -75,7 +75,7 @@ export const RewardFormModal: React.FC<Props> = ({
   return (
     <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="w-full sm:max-w-lg bg-itec-card border border-white/8 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300 max-h-[95vh] flex flex-col"
+        className="w-full sm:max-w-lg bg-itec-card border border-white/8 rounded-t-3xl sm:rounded-xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300 max-h-[95vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/5 shrink-0">
@@ -127,7 +127,7 @@ export const RewardFormModal: React.FC<Props> = ({
               placeholder="Descripción detallada del beneficio..."
               value={form.description}
               onChange={(e) => update({ description: e.target.value })}
-              className="w-full bg-itec-bg border border-white/8 text-itec-text text-sm px-4 py-3 rounded-2xl focus:outline-none focus:border-itec-blue-skye transition-colors resize-none placeholder:text-itec-text/25"
+              className="w-full bg-itec-bg border border-white/8 text-itec-text text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-itec-blue-skye transition-colors resize-none placeholder:text-itec-text/25"
             />
           </div>
 
@@ -229,7 +229,7 @@ export const RewardFormModal: React.FC<Props> = ({
             variant="slate" hierarchy="ghost"
             onClick={onClose}
             fullWidth
-            className="h-11 rounded-2xl text-sm font-bold"
+            className="h-11 rounded-xl text-sm font-bold"
           >
             Cancelar
           </Button>
@@ -242,7 +242,7 @@ export const RewardFormModal: React.FC<Props> = ({
             }}
             fullWidth
             disabled={isLoading}
-            className="h-11 rounded-2xl text-sm font-bold"
+            className="h-11 rounded-xl text-sm font-bold"
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">

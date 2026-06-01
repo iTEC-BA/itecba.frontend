@@ -16,7 +16,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
     <div className="flex flex-col items-center justify-center h-full px-4 pb-4 pt-8 animate-in fade-in duration-300">
       {/* Logo / Avatar IA */}
       <div className="relative mb-8">
-        <div className="w-20 h-20 rounded-3xl flex items-center justify-center">
+        <div className="w-20 h-20 rounded-xl flex items-center justify-center">
           <Raccoon size={96} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
         </div>
         <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
@@ -31,7 +31,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-lg">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-12 bg-white/5 rounded-2xl animate-pulse" />
+            <div key={i} className="h-12 bg-white/5 rounded-xl animate-pulse" />
           ))}
         </div>
       ) : suggestions.length > 0 ? (
@@ -40,7 +40,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
             <button
               key={i}
               onClick={() => onSelect(q)}
-              className="group flex items-center gap-3 text-left bg-white/[0.05] hover:bg-white/[0.09] border border-white/8 hover:border-white/15 rounded-2xl px-4 py-3 transition-all active:scale-[0.98] duration-150"
+              className="group flex items-center gap-3 text-left bg-white/[0.05] hover:bg-white/[0.09] border border-white/8 hover:border-white/15 rounded-xl px-4 py-3 transition-all active:scale-[0.98] duration-150"
             >
               <div className="w-7 h-7 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/40">

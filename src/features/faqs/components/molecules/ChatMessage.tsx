@@ -17,7 +17,7 @@ export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
   if (isUser) {
     return (
       <div className="flex justify-end mb-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
-        <div className="max-w-[78%] bg-itec-blue text-white px-4 py-3 rounded-2xl rounded-br-sm text-sm leading-relaxed shadow-lg">
+        <div className="max-w-[78%] bg-itec-blue text-white px-4 py-3 rounded-xl rounded-br-sm text-sm leading-relaxed shadow-lg">
           {msg.text}
         </div>
       </div>
@@ -27,7 +27,7 @@ export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
   return (
     <div className="flex items-start gap-3 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
       {/* Avatar asistente */}
-      <div className="w-8 h-8 rounded-2xl bg-white/8 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+      <div className="w-8 h-8 rounded-xl bg-white/8 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/60">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
         </svg>
@@ -35,12 +35,12 @@ export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
 
       <div className="flex-1 min-w-0">
         {msg.isLoading ? (
-          <div className="bg-white/[0.06] border border-white/8 rounded-2xl rounded-tl-sm px-4 py-3">
+          <div className="bg-white/[0.06] border border-white/8 rounded-xl rounded-tl-sm px-4 py-3">
             <TypingDots />
           </div>
         ) : (
           <>
-            <div className={`bg-white/[0.06] border rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed text-white/90 ${
+            <div className={`bg-white/[0.06] border rounded-xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed text-white/90 ${
               msg.isAI ? "border-violet-500/20" : "border-white/8"
             }`}>
               {msg.isAI && (

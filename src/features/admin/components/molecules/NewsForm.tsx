@@ -47,7 +47,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
             placeholder="Detallá la información aquí..."
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
-            className="min-h-[160px] w-full rounded-2xl border border-itec-border bg-itec-surface/80 p-4 text-sm text-itec-text outline-none transition-all placeholder:text-itec-muted/80 focus:border-itec-amber/40 focus:ring-2 focus:ring-itec-amber/10"
+            className="min-h-[160px] w-full rounded-xl border border-itec-border bg-itec-surface/80 p-4 text-sm text-itec-text outline-none transition-all placeholder:text-itec-muted/80 focus:border-itec-amber/40 focus:ring-2 focus:ring-itec-amber/10"
           />
         </div>
 

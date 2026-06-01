@@ -124,7 +124,7 @@ const DashboardContent: React.FC<Props> = ({
 
       {/* ── Estado vacío: carrera sin plan de estudios cargado ──── */}
       {subjects.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20 gap-4 text-center border border-dashed border-itec-gray/40 rounded-2xl">
+        <div className="flex flex-col items-center justify-center py-20 gap-4 text-center border border-dashed border-itec-gray/40 rounded-xl">
           <span className="text-5xl">📋</span>
           <div>
             <p className="text-itec-text font-semibold text-lg">

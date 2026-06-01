@@ -136,7 +136,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {/* Grid Bento Principal */}
       <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
         {/* PANEL: Acceso Rápido */}
-        <div className="rounded-4xl border border-itec-border bg-itec-box p-6 shadow-glass sm:p-8 relative overflow-hidden group">
+        <div className="rounded-xl border border-itec-border bg-itec-box p-6 shadow-glass sm:p-8 relative overflow-hidden group">
           <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-itec-sky/5 blur-3xl transition-all duration-700 group-hover:bg-itec-sky/10" />
 
           <div className="mb-5 flex flex-col gap-1">
@@ -155,7 +155,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 key={a.section}
                 onClick={() => onNavigate(a.section)}
                 className={cn(
-                  "flex items-center gap-2.5 rounded-2xl border border-itec-border bg-itec-surface px-3.5 py-3",
+                  "flex items-center gap-2.5 rounded-xl border border-itec-border bg-itec-surface px-3.5 py-3",
                   "text-xs font-semibold transition-all duration-200 active:scale-95",
                   a.tone,
                 )}
@@ -171,7 +171,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 key={a.route}
                 onClick={() => navigate(a.route)}
                 className={cn(
-                  "flex items-center gap-2.5 rounded-2xl border border-itec-border bg-itec-surface px-3.5 py-3",
+                  "flex items-center gap-2.5 rounded-xl border border-itec-border bg-itec-surface px-3.5 py-3",
                   "text-xs font-semibold transition-all duration-200 active:scale-95",
                   a.tone,
                 )}
@@ -184,7 +184,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
 
         {/* PANEL: Estadísticas rápidas */}
-        <div className="rounded-4xl border border-itec-border bg-itec-box p-6 shadow-glass sm:p-8">
+        <div className="rounded-xl border border-itec-border bg-itec-box p-6 shadow-glass sm:p-8">
           <div className="mb-5 flex flex-col gap-1">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-itec-muted">
               Estado
@@ -199,7 +199,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-10 rounded-2xl bg-white/5 animate-pulse"
+                  className="h-10 rounded-xl bg-white/5 animate-pulse"
                   style={{ animationDelay: `${i * 100}ms` }}
                 />
               ))}
@@ -209,7 +209,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {kpis.map((k) => (
                 <div
                   key={k.label}
-                  className="flex items-center justify-between rounded-2xl bg-itec-surface px-4 py-2.5 border border-itec-border/50"
+                  className="flex items-center justify-between rounded-xl bg-itec-surface px-4 py-2.5 border border-itec-border/50"
                 >
                   <span className="text-xs text-itec-muted">{k.label}</span>
                   <span className={cn("text-sm font-bold", k.accent)}>

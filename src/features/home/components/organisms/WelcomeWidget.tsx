@@ -14,7 +14,7 @@ export const WelcomeWidget: React.FC = () => {
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-3">
-      <section className="flex-1 relative overflow-hidden rounded-2xl p-0.25 shadow-xl shadow-black/20">
+      <section className="flex-1 relative overflow-hidden rounded-xl p-0.25 shadow-xl shadow-black/20">
         <div className="animate-[spin_25s_ease-in-out_infinite] absolute inset-0 h-full w-full rounded-full bg-itec-red/55 shadow-xl shadow-itec-red/20 -z-1" />
         <BentoCard className="flex-1 p-6">
           <div className="flex items-start justify-between gap-3">
@@ -90,7 +90,7 @@ export const WelcomeWidget: React.FC = () => {
         <div className="flex flex-row sm:flex-col gap-2.5 sm:w-36">
           <Link
             to="/beneficios"
-            className="flex-1 group flex flex-col items-center justify-center gap-1.5 p-3 bg-itec-box border border-white/[0.07] rounded-2xl hover:border-itec-rewards/40 hover:bg-itec-rewards/5 transition-all duration-200 text-center"
+            className="flex-1 group flex flex-col items-center justify-center gap-1.5 p-3 bg-itec-box border border-white/[0.07] rounded-xl hover:border-itec-rewards/40 hover:bg-itec-rewards/5 transition-all duration-200 text-center"
           >
             <div className="w-8 h-8 bg-itec-rewards/10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
               <Icons type="gift" className="w-4 h-4 text-itec-rewards" />
@@ -101,7 +101,7 @@ export const WelcomeWidget: React.FC = () => {
           </Link>
           <Link
             to="/progreso"
-            className="flex-1 group flex flex-col items-center justify-center gap-1.5 p-3 bg-itec-box border border-white/[0.07] rounded-2xl hover:border-itec-groups/40 hover:bg-itec-groups/5 transition-all duration-200 text-center"
+            className="flex-1 group flex flex-col items-center justify-center gap-1.5 p-3 bg-itec-box border border-white/[0.07] rounded-xl hover:border-itec-groups/40 hover:bg-itec-groups/5 transition-all duration-200 text-center"
           >
             <div className="w-8 h-8 bg-itec-groups/10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
               <Icons type="chart-line" className="w-4 h-4 text-itec-groups" />

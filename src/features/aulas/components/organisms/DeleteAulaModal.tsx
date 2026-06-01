@@ -41,7 +41,7 @@ export const DeleteAulaModal: React.FC<Props> = ({ isOpen, onClose, onDeleted, a
           El aula quedará oculta para los estudiantes pero no se borrará de la base de datos.
         </p>
         {error && (
-          <p className="text-sm text-red-400 bg-red-500/10 rounded-2xl px-4 py-3">{error}</p>
+          <p className="text-sm text-red-400 bg-red-500/10 rounded-xl px-4 py-3">{error}</p>
         )}
         <div className="flex justify-end gap-3">
           <Button variant="secondary" hierarchy="ghost" onClick={onClose} disabled={loading}>

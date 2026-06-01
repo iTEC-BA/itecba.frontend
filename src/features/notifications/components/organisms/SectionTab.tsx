@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const SectionTab: React.FC<Props> = ({ active, tabs, onChange }) => (
-  <div className="flex bg-white/3 border border-white/6 rounded-2xl p-1 gap-1">
+  <div className="flex bg-white/3 border border-white/6 rounded-xl p-1 gap-1">
     {tabs.map((tab) => (
       <button
         key={tab.id}

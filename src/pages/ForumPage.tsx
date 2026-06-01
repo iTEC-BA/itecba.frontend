@@ -8,7 +8,7 @@ export const ForumPage: React.FC = () => {
   return (
     <MainLayout>
       <div className="max-w-2xl mx-auto w-full">
-        <div className="rounded-2xl border border-itec-border overflow-hidden bg-itec-bg">
+        <div className="rounded-xl border border-itec-border overflow-hidden bg-itec-bg">
           <ForumFeed />
         </div>
       </div>

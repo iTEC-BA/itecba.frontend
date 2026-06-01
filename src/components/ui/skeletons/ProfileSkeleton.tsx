@@ -22,6 +22,6 @@ export const ProfileSkeleton: React.FC = () => (
       ))}
     </div>
     {/* Tarjeta */}
-    <div className="h-48 bg-white/3 border border-white/5 rounded-3xl" />
+    <div className="h-48 bg-white/3 border border-white/5 rounded-xl" />
   </div>
 );

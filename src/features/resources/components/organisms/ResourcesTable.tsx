@@ -37,7 +37,7 @@ export const ResourcesTable: React.FC<Props> = ({ resources, isLoading, onAddCli
       </div>
 
       {/* ── Vista TABLA (desktop) ───────────────────────────────────────────── */}
-      <div className="hidden lg:block rounded-2xl border border-itec-gray/30 overflow-hidden shadow-xl shadow-black/20">
+      <div className="hidden lg:block rounded-xl border border-itec-gray/30 overflow-hidden shadow-xl shadow-black/20">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-itec-bg border-b border-itec-gray/30">

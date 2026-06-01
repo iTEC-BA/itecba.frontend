@@ -15,7 +15,7 @@ export const ImportantDatesWidget: React.FC<Props> = ({ isAdmin }) => {
   const activeDates = useMemo(() => dates.filter(item => !item.expiryDate || new Date(item.expiryDate).getTime() > Date.now()), [dates]);
 
   return (
-    <section className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0f1115] p-6 shadow-2xl">
+    <section className="relative flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0f1115] p-6 shadow-2xl">
       <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-indigo-500/10 blur-[60px]" />
 
       <div className="mb-6 flex items-center justify-between">

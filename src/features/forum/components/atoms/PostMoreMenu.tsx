@@ -38,7 +38,7 @@ export const PostMoreMenu: React.FC<Props> = ({ postId, isAuthor, onDelete, onSh
       </button>
 
       {open && (
-        <div className="absolute right-0 top-8 z-50 w-44 bg-itec-card border border-itec-border rounded-2xl shadow-2xl py-1 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 top-8 z-50 w-44 bg-itec-card border border-itec-border rounded-xl shadow-2xl py-1 animate-in fade-in zoom-in-95 duration-150">
           <button
             onClick={() => { onShare(postId); setOpen(false); }}
             className="flex items-center gap-2.5 w-full px-3.5 py-2 text-xs text-itec-text hover:bg-white/5 transition-colors"

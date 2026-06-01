@@ -90,7 +90,7 @@ export const ProfileForm: React.FC = () => {
               Completá tus datos para generar tu credencial y activar beneficios, acceso y seguimiento académico.
             </p>
           </div>
-          <div className="rounded-2xl border border-itec-border bg-itec-surface px-4 py-3 text-sm font-bold text-itec-text">
+          <div className="rounded-xl border border-itec-border bg-itec-surface px-4 py-3 text-sm font-bold text-itec-text">
             Credencial digital
           </div>
         </div>
@@ -149,7 +149,7 @@ export const ProfileForm: React.FC = () => {
           </div>
 
           {error && (
-            <div className="md:col-span-2 rounded-2xl border border-itec-accent/20 bg-itec-accent/10 px-4 py-3 text-sm text-rose-200">
+            <div className="md:col-span-2 rounded-xl border border-itec-accent/20 bg-itec-accent/10 px-4 py-3 text-sm text-rose-200">
               {error}
             </div>
           )}

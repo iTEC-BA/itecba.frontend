@@ -64,7 +64,7 @@ const RewardsContent: React.FC = () => {
 
 const LoginPrompt: React.FC = () => (
   <div className="flex flex-col items-center justify-center py-24 text-center gap-5 px-4">
-    <div className="w-20 h-20 rounded-3xl bg-itec-rewards/8 border border-itec-rewards/15 flex items-center justify-center">
+    <div className="w-20 h-20 rounded-xl bg-itec-rewards/8 border border-itec-rewards/15 flex items-center justify-center">
       <span className="text-4xl">🔒</span>
     </div>
     <div>

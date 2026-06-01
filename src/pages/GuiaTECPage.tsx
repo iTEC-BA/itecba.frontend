@@ -120,7 +120,7 @@ export const GuiaTECPage: React.FC = () => {
 
       {/* Player activo */}
       {playing && (
-        <div className="mb-6 bg-itec-card border border-white/7 rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="mb-6 bg-itec-card border border-white/7 rounded-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="aspect-video bg-black flex items-center justify-center relative">
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-itec-red/20 flex items-center justify-center mx-auto mb-3">

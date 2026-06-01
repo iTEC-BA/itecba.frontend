@@ -28,7 +28,7 @@ export const NotificationPanel: React.FC<Props> = ({ items, onMarkRead, onClose 
   }, [onMarkRead, onClose]);
 
   return (
-    <div className="absolute right-0 w-80 sm:w-96 bg-itec-box border border-itec-box/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-100 animate-in slide-in-from-top-2 fade-in">
+    <div className="absolute right-0 w-80 sm:w-96 bg-itec-box border border-itec-box/10 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-100 animate-in slide-in-from-top-2 fade-in">
       {/* Header */}
       <div className="p-4 border-b border-white/5 flex items-center justify-between bg-itec-box/20">
         <h3 className="text-itec-text font-bold tracking-wide text-sm">Notificaciones</h3>

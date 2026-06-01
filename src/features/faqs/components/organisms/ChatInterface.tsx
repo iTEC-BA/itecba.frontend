@@ -52,7 +52,7 @@ export const ChatInterface: React.FC = () => {
             <ArrowLeft className="size-4" />
           </button>
 
-          <div className="w-8 h-8 rounded-2xl flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center">
             <img src={Logo} alt="" />
           </div>
           <div>

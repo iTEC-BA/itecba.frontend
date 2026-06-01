@@ -4,12 +4,12 @@ export const CalendarSkeleton: React.FC = () => {
   return (
     <div className="w-full animate-pulse">
       {/* Temporizador Skeleton */}
-      <div className="h-[120px] bg-white/5 border border-white/10 rounded-2xl mb-6"></div>
+      <div className="h-[120px] bg-white/5 border border-white/10 rounded-xl mb-6"></div>
       
       {/* Grid de Eventos Skeleton */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="flex items-center gap-3 bg-itec-card border border-white/5 rounded-2xl p-4">
+          <div key={i} className="flex items-center gap-3 bg-itec-card border border-white/5 rounded-xl p-4">
             {/* Fecha Icono */}
             <div className="w-14 h-14 rounded-xl bg-white/10 shrink-0"></div>
             

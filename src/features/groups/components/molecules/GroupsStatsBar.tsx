@@ -15,7 +15,7 @@ export const GroupsStatsBar: React.FC<Props> = ({ stats }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
       {items.map(s => (
-        <div key={s.label} className="bg-itec-box border border-white/[0.07] rounded-2xl p-3.5 flex items-center gap-3">
+        <div key={s.label} className="bg-itec-box border border-white/[0.07] rounded-xl p-3.5 flex items-center gap-3">
           <div className={`w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 ${s.color}`}>
             <Icons type={s.icon} className="w-4 h-4" />
           </div>

@@ -17,7 +17,7 @@ export const HubNavCard: React.FC<HubNavCardProps> = ({
 }) => (
   <Link
     to={href}
-    className={`group relative flex flex-col gap-2.5 p-4 bg-itec-box border border-white/[0.07] rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${accentClass}`}
+    className={`group relative flex flex-col gap-2.5 p-4 bg-itec-box border border-white/[0.07] rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${accentClass}`}
   >
     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-br from-white/[0.02] to-transparent" />
     <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 ${iconBgClass}`}>

@@ -47,7 +47,7 @@ export const PostulanteModal: React.FC<Props> = ({ postulante, onClose }) => {
             {postulante.ofertas.map((oferta) => (
               <div
                 key={oferta._id}
-                className="flex flex-col gap-2 rounded-2xl border border-itec-border bg-itec-surface p-4"
+                className="flex flex-col gap-2 rounded-xl border border-itec-border bg-itec-surface p-4"
               >
                 {/* Materia */}
                 <div className="flex items-start gap-2">

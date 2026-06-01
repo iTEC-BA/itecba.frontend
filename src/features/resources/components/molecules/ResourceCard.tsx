@@ -7,7 +7,7 @@ import type { ResourceData } from '../../types/resource.types';
 interface Props { resource: ResourceData }
 
 export const ResourceCard: React.FC<Props> = ({ resource: r }) => (
-  <article className="group bg-itec-box border border-itec-gray/40 hover:border-orange-500/40 rounded-2xl p-4 flex gap-3 items-start transition-all hover:shadow-lg hover:shadow-orange-900/10">
+  <article className="group bg-itec-box border border-itec-gray/40 hover:border-orange-500/40 rounded-xl p-4 flex gap-3 items-start transition-all hover:shadow-lg hover:shadow-orange-900/10">
     {/* Icono */}
     <div className="w-10 h-10 shrink-0 rounded-xl bg-itec-sidebar border border-itec-gray/50 flex items-center justify-center text-itec-gray group-hover:text-orange-400 transition-colors">
       <div className="w-5 h-5"><Icons type="documentFill" /></div>

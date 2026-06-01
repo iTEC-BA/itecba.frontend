@@ -9,9 +9,9 @@ const RewardsWidget = lazy(() =>
 
 const WidgetSkeleton = () => (
   <div className="space-y-3 pt-2 animate-pulse">
-    <div className="h-24 rounded-3xl bg-white/5 border border-itec-border" />
-    <div className="h-16 rounded-2xl bg-white/5 border border-itec-border" />
-    <div className="h-16 rounded-2xl bg-white/5 border border-itec-border" />
+    <div className="h-24 rounded-xl bg-white/5 border border-itec-border" />
+    <div className="h-16 rounded-xl bg-white/5 border border-itec-border" />
+    <div className="h-16 rounded-xl bg-white/5 border border-itec-border" />
   </div>
 );
 
@@ -68,7 +68,7 @@ export const NavbarQquickAccess = () => {
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-itec-muted pl-1 flex items-center gap-1.5">
               <Calendar size={12} /> Agenda ITEC
             </h3>
-            <div className="flex flex-col gap-3 p-4 rounded-2xl bg-itec-card border border-white/5 shadow-glass">
+            <div className="flex flex-col gap-3 p-4 rounded-xl bg-itec-card border border-white/5 shadow-glass">
               {/* Ítem de ejemplo */}
               <div className="flex items-start gap-3">
                 <div className="flex flex-col items-center justify-center w-10 h-10 rounded-lg bg-itec-red/10 border border-itec-red/20 shrink-0">

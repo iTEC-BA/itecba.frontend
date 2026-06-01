@@ -20,7 +20,7 @@ export const HamburgerButton: React.FC<HamburgerButtonProps> = ({
     aria-expanded={open}
     className={cn(
       "group inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px]",
-      "rounded-2xl border border-itec-border bg-itec-box shadow-[0_12px_30px_rgba(0,0,0,0.28)]",
+      "rounded-xl border border-itec-border bg-itec-box shadow-[0_12px_30px_rgba(0,0,0,0.28)]",
       "transition-all duration-200 hover:bg-itec-box focus:outline-none focus:ring-2 focus:ring-itec-sky/30",
       className
     )}

@@ -42,7 +42,7 @@ export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onM
   }, [nextEvent]);
 
   return (
-    <div className="bg-itec-box border border-purple-500/20 rounded-3xl p-6 shadow-[0_0_20px_rgba(168,85,247,0.05)] relative overflow-hidden mb-6 animate-in fade-in duration-500 group">
+    <div className="bg-itec-box border border-purple-500/20 rounded-xl p-6 shadow-[0_0_20px_rgba(168,85,247,0.05)] relative overflow-hidden mb-6 animate-in fade-in duration-500 group">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-600/50 to-purple-400/50"></div>
       <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full group-hover:bg-purple-500/10 transition-all duration-700"></div>
 

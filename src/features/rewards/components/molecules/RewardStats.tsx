@@ -33,7 +33,7 @@ export const RewardStats: React.FC<Props> = ({
       {stats.map((s) => (
         <div
           key={s.label}
-          className="bg-itec-card border border-white/5 rounded-2xl p-3.5 flex flex-col gap-1.5"
+          className="bg-itec-card border border-white/5 rounded-xl p-3.5 flex flex-col gap-1.5"
         >
           <div className="flex items-center gap-1.5">
             {(() => {

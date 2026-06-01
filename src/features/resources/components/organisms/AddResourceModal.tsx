@@ -67,7 +67,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   return (
     <>
     <div className="fixed inset-0 z-100 flex items-end sm:items-center justify-center bg-black/80  p-0 sm:p-4">
-      <div className="w-full sm:max-w-lg bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-3xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[90vh]">
+      <div className="w-full sm:max-w-lg bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[90vh]">
 
         {/* Header fijo */}
         <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-itec-border shrink-0">

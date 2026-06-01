@@ -21,7 +21,7 @@ export const RewardSuccessModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/80 backdrop-blur-md animate-in fade-in duration-200 px-4">
-      <div className="w-full max-w-sm bg-itec-card border border-green-500/20 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-90 duration-300 text-center">
+      <div className="w-full max-w-sm bg-itec-card border border-green-500/20 rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-90 duration-300 text-center">
         <div className="relative p-8">
           <div className="absolute inset-0 bg-gradient-to-b from-green-500/5 to-transparent pointer-events-none" />
 
@@ -41,7 +41,7 @@ export const RewardSuccessModal: React.FC<Props> = ({
               <strong className="text-itec-rewards">{newBalance.toLocaleString()} pts</strong>.
             </p>
 
-            <div className="bg-itec-bg border border-white/8 rounded-2xl p-4 mb-6 text-left">
+            <div className="bg-itec-bg border border-white/8 rounded-xl p-4 mb-6 text-left">
               <p className="text-xs text-itec-text/60 leading-relaxed">
                 📩 El equipo de ITEC se pondrá en contacto con vos a la brevedad para coordinar el beneficio.
               </p>
@@ -49,7 +49,7 @@ export const RewardSuccessModal: React.FC<Props> = ({
 
             <button
               onClick={onClose}
-              className="w-full h-11 rounded-2xl bg-green-500/15 border border-green-500/25 text-green-400 font-bold text-sm hover:bg-green-500/25 transition-colors"
+              className="w-full h-11 rounded-xl bg-green-500/15 border border-green-500/25 text-green-400 font-bold text-sm hover:bg-green-500/25 transition-colors"
             >
               Entendido
             </button>

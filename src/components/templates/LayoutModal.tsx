@@ -42,13 +42,13 @@ export const LayoutModal: React.FC<LayoutModalProps> = ({
       ref={backdropRef}
       onClick={(e) => e.target === backdropRef.current && onClose()}
       // p-0 en mobile para que pegue abajo, p-4 en desktop
-      className="fixed inset-0 z-200 flex items-end sm:items-center justify-center bg-itec-bg  p-0 sm:p-4"
+      className="fixed inset-0 z-200 flex items-end sm:items-center justify-center bg-itec-bg  p-0 sm:p-3"
     >
       <div
-        className={`w-full sm:${maxWidth} flex flex-col bg-itec-bg border border-itec-border rounded-t-4xl sm:rounded-4xl shadow-[0_24px_80px_rgba(0,0,0,0.7)] max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-500`}
+        className={`w-full sm:${maxWidth} flex flex-col bg-itec-bg border border-itec-border rounded-t-4xl sm:rounded-xl shadow-[0_24px_80px_rgba(0,0,0,0.7)] max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-500`}
       >
         {/* Encabezado fijo (Sticky) */}
-        <div className="shrink-0 flex items-center justify-between gap-4 border-b border-white/10 px-6 py-5">
+        <div className="shrink-0 flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3">
           <div>
             <h2 className="text-xl font-bold text-white">{title}</h2>
             {description && (

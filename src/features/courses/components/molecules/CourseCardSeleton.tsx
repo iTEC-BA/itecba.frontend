@@ -1,6 +1,6 @@
 export const CourseCardSkeleton = () => {
   return (
-    <article className="group relative bg-itec-card rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300">
+    <article className="group relative bg-itec-card rounded-xl overflow-hidden flex flex-col h-full transition-all duration-300">
       <div className="relative w-full aspect-video overflow-hidden bg-itec-gray/33 shrink-0 animate-pulse" />
 
       <div className="flex flex-col flex-1 p-3 gap-2">

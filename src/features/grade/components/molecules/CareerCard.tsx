@@ -12,7 +12,7 @@ export const CareerCard: React.FC<Props> = ({ career, isAvailable, onClick }) =>
   return (
     <div 
       onClick={() => isAvailable && onClick(career.id)}
-      className={`relative bg-itec-box border rounded-3xl p-6 flex flex-col justify-between transition-all duration-500 group overflow-hidden h-full min-h-[220px]
+      className={`relative bg-itec-box border rounded-xl p-6 flex flex-col justify-between transition-all duration-500 group overflow-hidden h-full min-h-[220px]
         ${isAvailable 
           ? `border-itec-gray cursor-pointer ${career.border} hover:shadow-2xl ${career.shadow} hover:-translate-y-2` 
           : 'border-itec-gray/30 cursor-not-allowed opacity-75 hover:opacity-90 grayscale'}`}
@@ -23,7 +23,7 @@ export const CareerCard: React.FC<Props> = ({ career, isAvailable, onClick }) =>
       )}
 
       <div className="relative z-10 flex justify-between items-start mb-6">
-        <div className={`w-14 h-14 rounded-2xl bg-itec-bg border border-itec-gray flex items-center justify-center text-3xl shadow-inner transition-transform duration-500 ${isAvailable ? 'group-hover:scale-110 group-hover:rotate-3' : ''}`}>
+        <div className={`w-14 h-14 rounded-xl bg-itec-bg border border-itec-gray flex items-center justify-center text-3xl shadow-inner transition-transform duration-500 ${isAvailable ? 'group-hover:scale-110 group-hover:rotate-3' : ''}`}>
           {career.icon}
         </div>
         

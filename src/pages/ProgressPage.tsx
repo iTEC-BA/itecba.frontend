@@ -28,7 +28,7 @@ export const ProgressPage: React.FC = () => {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-[70vh]">
-          <div className="text-center p-10 bg-itec-bg border border-itec-gray rounded-3xl max-w-lg shadow-xl">
+          <div className="text-center p-10 bg-itec-bg border border-itec-gray rounded-xl max-w-lg shadow-xl">
             <span className="text-6xl block mb-6">🔒</span>
             <h2 className="text-2xl font-bold text-itec-text mb-3">
               Acceso Restringido
@@ -61,7 +61,7 @@ export const ProgressPage: React.FC = () => {
     return (
       <MainLayout>
         <div className="flex flex-col justify-center items-center h-[70vh]">
-          <div className="bg-itec-accent/10 border border-itec-accent/30 text-itec-accent p-8 rounded-2xl text-center max-w-md">
+          <div className="bg-itec-accent/10 border border-itec-accent/30 text-itec-accent p-8 rounded-xl text-center max-w-md">
             <span className="text-4xl block mb-4">⚠️</span>
             <h3 className="text-xl font-bold mb-2">Error al cargar datos</h3>
             <p className="text-sm mb-6">
@@ -85,7 +85,7 @@ export const ProgressPage: React.FC = () => {
     return (
       <MainLayout>
         <div className="flex flex-col justify-center items-center h-[70vh]">
-          <div className="text-center p-10 bg-itec-bg border border-itec-gray rounded-3xl max-w-lg shadow-xl">
+          <div className="text-center p-10 bg-itec-bg border border-itec-gray rounded-xl max-w-lg shadow-xl">
             <span className="text-6xl block mb-6">🎓</span>
             <h2 className="text-2xl font-bold text-itec-text mb-3">
               Configurá tu carrera

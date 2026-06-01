@@ -34,7 +34,7 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
-      <div className="bg-itec-box border border-itec-gray rounded-3xl w-full max-w-md shadow-2xl p-6 relative">
+      <div className="bg-itec-box border border-itec-gray rounded-xl w-full max-w-md shadow-2xl p-6 relative">
         <button onClick={onClose} className="absolute top-5 right-5 text-gray-500 hover:text-white">
           <Icons type="close" className="w-4 h-4" />
         </button>
@@ -62,7 +62,7 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
         </div>
 
         {/* Formulario para Nuevo Evento */}
-        <form onSubmit={handleAdd} className="bg-itec-bg p-4 rounded-2xl border border-itec-gray">
+        <form onSubmit={handleAdd} className="bg-itec-bg p-4 rounded-xl border border-itec-gray">
           <h4 className="text-xs font-bold text-purple-400 mb-3">Nuevo Evento</h4>
           <div className="space-y-3">
             <Input 

@@ -43,7 +43,7 @@ const MessageModal: React.FC<{ email: string; uid: string; onClose: () => void }
   return (
     /* Bottom-sheet en mobile, modal centrado en sm+ */
     <div className="fixed inset-0 z-[400] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-md">
-      <div className="relative w-full sm:max-w-md overflow-hidden rounded-t-4xl sm:rounded-3xl border border-itec-border bg-itec-box p-6 shadow-glass">
+      <div className="relative w-full sm:max-w-md overflow-hidden rounded-t-4xl sm:rounded-xl border border-itec-border bg-itec-box p-6 shadow-glass">
         {/* glow */}
         <div className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-itec-sky/5 blur-3xl" />
 
@@ -84,7 +84,7 @@ const MessageModal: React.FC<{ email: string; uid: string; onClose: () => void }
               placeholder="Escribí el aviso que recibirá el estudiante..."
               value={form.content}
               onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
-              className="w-full resize-none rounded-2xl border border-itec-border bg-itec-surface/80 px-4 py-2.5 text-sm text-itec-text outline-none transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+              className="w-full resize-none rounded-xl border border-itec-border bg-itec-surface/80 px-4 py-2.5 text-sm text-itec-text outline-none transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
             />
           </div>
           <div className="flex gap-3 pt-1">
@@ -153,7 +153,7 @@ export const AdminRedemptions: React.FC = () => {
       </div>
 
       {/* Tabla */}
-      <div className="overflow-hidden rounded-3xl border border-itec-border bg-itec-box">
+      <div className="overflow-hidden rounded-xl border border-itec-border bg-itec-box">
         {isLoading ? (
           <div className="p-10 text-center text-sm text-itec-muted animate-pulse">
             Cargando historial...

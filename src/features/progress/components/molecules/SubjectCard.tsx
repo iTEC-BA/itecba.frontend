@@ -51,7 +51,7 @@ export const SubjectCard: React.FC<Props> = ({ subject }) => {
 
   return (
     <div
-      className={`rounded-2xl border shadow-md relative transition-all duration-300 transform ${config.bg} ${config.border} ${subject.status !== "bloqueada" ? "hover:-translate-y-1 hover:shadow-lg" : ""}`}
+      className={`rounded-xl border shadow-md relative transition-all duration-300 transform ${config.bg} ${config.border} ${subject.status !== "bloqueada" ? "hover:-translate-y-1 hover:shadow-lg" : ""}`}
     >
       <div className="flex flex-col space-y-1.5 p-6">
         <div className="flex justify-between items-start gap-4">

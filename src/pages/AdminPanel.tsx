@@ -55,13 +55,13 @@ const TutoriasSection = lazy(() =>
 // ── Skeleton de sección ───────────────────────────────────────────────────────
 const SectionSkeleton: React.FC = () => (
   <div className="space-y-4 animate-pulse pt-4">
-    <div className="h-8 w-64 rounded-3xl bg-white/5 border border-itec-border" />
-    <div className="h-4 w-48 rounded-2xl bg-white/5" />
+    <div className="h-8 w-64 rounded-xl bg-white/5 border border-itec-border" />
+    <div className="h-4 w-48 rounded-xl bg-white/5" />
     <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="h-28 rounded-3xl bg-white/5 border border-itec-border"
+          className="h-28 rounded-xl bg-white/5 border border-itec-border"
           style={{ animationDelay: `${i * 80}ms` }}
         />
       ))}
@@ -89,9 +89,9 @@ const LockIcon: React.FC = () => (
 const AccessDenied: React.FC = () => (
   <MainLayout>
     <div className="flex min-h-[70vh] items-center justify-center px-4">
-      <div className="relative w-full max-w-sm overflow-hidden rounded-4xl border border-itec-border bg-itec-box p-8 text-center shadow-glass">
+      <div className="relative w-full max-w-sm overflow-hidden rounded-xl border border-itec-border bg-itec-box p-8 text-center shadow-glass">
         <div className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-itec-accent/5 blur-3xl" />
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-itec-border bg-itec-surface ">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-itec-border bg-itec-surface ">
           <LockIcon />
         </div>
         <p className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">
@@ -139,7 +139,7 @@ export const AdminPanel: React.FC = () => {
               {active}
             </h1>
           </div>
-          <div className="rounded-2xl border border-itec-border p-1 transition-colors hover:bg-white/5">
+          <div className="rounded-xl border border-itec-border p-1 transition-colors hover:bg-white/5">
             <HamburgerButton open={isOpen} onToggle={toggle} />
           </div>
         </header>

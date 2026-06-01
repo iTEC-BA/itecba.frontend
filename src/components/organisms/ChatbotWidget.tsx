@@ -73,7 +73,7 @@ export const ChatbotWidget: React.FC = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {isOpen && (
-        <div className="bg-itec-box border border-itec-gray rounded-2xl w-80 sm:w-87.5 h-112.5 shadow-2xl flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-5">
+        <div className="bg-itec-box border border-itec-gray rounded-xl w-80 sm:w-87.5 h-112.5 shadow-2xl flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-5">
           
           <div className="bg-itec-blue text-itec-text p-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -92,7 +92,7 @@ export const ChatbotWidget: React.FC = () => {
 
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 custom-scrollbar bg-itec-bg/50">
             {messages.map((msg, index) => (
-              <div key={index} className={`max-w-[85%] p-3.5 rounded-2xl text-[14px] ${
+              <div key={index} className={`max-w-[85%] p-3.5 rounded-xl text-[14px] ${
                 msg.role === 'user' 
                   ? 'bg-itec-blue text-itec-textself-end rounded-tr-sm shadow-md' 
                   : 'bg-itec-sidebar text-itec-text border border-itec-gray self-start rounded-tl-sm shadow-md'
@@ -117,7 +117,7 @@ export const ChatbotWidget: React.FC = () => {
               </div>
             ))}
             {isLoading && (
-              <div className="bg-itec-sidebar text-itec-text p-3.5 rounded-2xl text-sm self-start rounded-tl-sm w-16 flex justify-center border border-itec-gray shadow-md">
+              <div className="bg-itec-sidebar text-itec-text p-3.5 rounded-xl text-sm self-start rounded-tl-sm w-16 flex justify-center border border-itec-gray shadow-md">
                 <span className="animate-pulse font-bold tracking-widest">...</span>
               </div>
             )}

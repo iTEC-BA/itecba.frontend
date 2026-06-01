@@ -30,7 +30,7 @@ export const PointsHeader: React.FC = () => {
   const ringMaxRelative = ringMax - ringBase;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-itec-rewards/12 bg-itec-box p-5 sm:p-7">
+    <div className="relative overflow-hidden rounded-xl border border-itec-rewards/12 bg-itec-box p-5 sm:p-7">
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-5">
         <div className="flex items-center gap-4 sm:gap-0">
           <PointsRing
@@ -75,7 +75,7 @@ export const PointsHeader: React.FC = () => {
         </div>
 
         <div className="hidden lg:flex flex-col items-end gap-1.5 shrink-0">
-          <div className="flex items-center gap-2 bg-itec-box border border-itec-rewards/15 rounded-2xl px-4 py-2.5">
+          <div className="flex items-center gap-2 bg-itec-box border border-itec-rewards/15 rounded-xl px-4 py-2.5">
             <Icons type="star" className="size-5 text-itec-rewards" />
             <div>
               <p className="text-[10px] text-itec-rewards/70 font-bold uppercase tracking-wider leading-none mb-0.5">

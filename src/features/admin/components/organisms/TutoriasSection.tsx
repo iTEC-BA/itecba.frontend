@@ -67,7 +67,7 @@ export const TutoriasSection: React.FC = () => {
         {STATS.map((s) => (
           <div
             key={s.label}
-            className="relative overflow-hidden rounded-3xl border border-itec-border bg-itec-box p-5 shadow-glass"
+            className="relative overflow-hidden rounded-xl border border-itec-border bg-itec-box p-5 shadow-glass"
           >
             <div className="pointer-events-none absolute -top-8 -right-8 h-20 w-20 rounded-full opacity-50 blur-2xl"
               style={{ background: "var(--itec-sky, #38bdf8)" }}
@@ -92,7 +92,7 @@ export const TutoriasSection: React.FC = () => {
             key={f}
             onClick={() => setFilter(f)}
             className={cn(
-              "rounded-2xl px-3 py-1.5 text-xs font-bold transition-all active:scale-95",
+              "rounded-xl px-3 py-1.5 text-xs font-bold transition-all active:scale-95",
               filter === f
                 ? "bg-itec-sky/20 border border-itec-sky/30 text-itec-sky"
                 : "border border-itec-border bg-itec-surface/60 text-itec-muted hover:bg-itec-surface hover:text-itec-text"

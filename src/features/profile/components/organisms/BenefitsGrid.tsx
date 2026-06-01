@@ -53,7 +53,7 @@ export const BenefitsGrid: React.FC = () => {
       </div>
 
       {error && (
-        <div className="mb-4 rounded-2xl border border-itec-accent/20 bg-itec-accent/10 px-4 py-3 text-sm text-rose-200">
+        <div className="mb-4 rounded-xl border border-itec-accent/20 bg-itec-accent/10 px-4 py-3 text-sm text-rose-200">
           {error}
         </div>
       )}

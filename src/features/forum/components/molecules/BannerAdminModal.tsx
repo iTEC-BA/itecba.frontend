@@ -54,7 +54,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
       className="fixed inset-0 z-[400] flex items-center justify-center bg-black/70  p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-2xl bg-itec-bg border border-itec-border rounded-3xl shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-2xl bg-itec-bg border border-itec-border rounded-xl shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-itec-border shrink-0">
           <div>
@@ -62,7 +62,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <p className="text-xs text-itec-muted mt-0.5">TrendingBanner institucional</p>
           </div>
           <button onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center rounded-2xl bg-white/5 hover:bg-white/10 text-itec-muted hover:text-white transition-colors">
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-itec-muted hover:text-white transition-colors">
             <X size={16} />
           </button>
         </div>
@@ -81,7 +81,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
               {loading ? (
                 <div className="space-y-2">
-                  {[1,2,3].map(i => <div key={i} className="h-14 rounded-2xl bg-white/5 animate-pulse" />)}
+                  {[1,2,3].map(i => <div key={i} className="h-14 rounded-xl bg-white/5 animate-pulse" />)}
                 </div>
               ) : banners.length === 0 ? (
                 <div className="text-center py-12 text-itec-muted text-sm">Sin banners — creá el primero</div>
@@ -89,7 +89,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <div className="space-y-2">
                   {banners.map(b => (
                     <div key={b.id}
-                      className="flex items-center gap-3 p-3 bg-itec-card border border-itec-border rounded-2xl hover:border-white/20 transition-colors">
+                      className="flex items-center gap-3 p-3 bg-itec-card border border-itec-border rounded-xl hover:border-white/20 transition-colors">
                       {/* Estado */}
                       <div className={`shrink-0 ${b.is_active ? 'text-emerald-400' : 'text-itec-muted'}`}>
                         {b.is_active ? <CheckCircle size={16} /> : <XCircle size={16} />}

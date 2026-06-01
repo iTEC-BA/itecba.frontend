@@ -17,7 +17,7 @@ export const TrueketecCard: React.FC<Props> = ({ post, onContact }) => {
   return (
     <article
       className={`
-        relative flex flex-col gap-3 rounded-3xl border p-4 transition-all duration-200
+        relative flex flex-col gap-3 rounded-xl border p-4 transition-all duration-200
         ${isPerfect
           ? "border-emerald-500/50 bg-emerald-500/5 shadow-[0_0_32px_rgba(16,185,129,0.12)]"
           : "border-white/8 bg-itec-box hover:border-white/14 hover:bg-itec-card"
@@ -95,7 +95,7 @@ export const TrueketecCard: React.FC<Props> = ({ post, onContact }) => {
           <button
             onClick={() => onContact(post)}
             className={`
-              inline-flex items-center gap-1.5 rounded-2xl px-3 py-1.5 text-xs font-semibold
+              inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold
               transition-all duration-150 active:scale-95
               ${isPerfect
                 ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/30 hover:bg-emerald-400"

@@ -18,7 +18,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
   copySuccess, onToggleWatched, onOpenMaterialModal, onShare,
 }) => {
   if (!activeVideo) return (
-    <div className="w-full aspect-video bg-itec-card rounded-2xl flex items-center justify-center text-itec-gray">
+    <div className="w-full aspect-video bg-itec-card rounded-xl flex items-center justify-center text-itec-gray">
       <div className="text-center">
         <span className="text-4xl block mb-2 opacity-30">🎬</span>
         <p className="text-xs font-bold uppercase tracking-widest opacity-50">Sin video</p>
@@ -32,7 +32,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
   return (
     <div className="flex flex-col gap-4">
       {/* iFrame */}
-      <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden border border-white/8 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+      <div className="w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/8 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
         {activeVideo.youtubeId ? (
           <iframe
             className="w-full h-full"

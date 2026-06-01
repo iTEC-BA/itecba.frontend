@@ -13,12 +13,12 @@ export const BannerInstallPWA: React.FC = () => {
   return (
     <div
       role="banner"
-      className="fixed bottom-20 left-0 right-0 z-9999 mx-auto overflow-hidden border border-white/10 bg-slate-950/85 px-4 py-4 text-white shadow-[0_24px_70px_rgba(0,0,0,0.5)] backdrop-blur-2xl animate-fade-in-up sm:bottom-6 sm:left-6 sm:right-6 sm:max-w-md sm:rounded-3xl sm:px-5 sm:py-5"
+      className="fixed bottom-20 left-0 right-0 z-9999 mx-auto overflow-hidden border border-white/10 bg-slate-950/85 px-4 py-4 text-white shadow-[0_24px_70px_rgba(0,0,0,0.5)] backdrop-blur-2xl animate-fade-in-up sm:bottom-6 sm:left-6 sm:right-6 sm:max-w-md sm:rounded-xl sm:px-5 sm:py-5"
       style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}
     >
       <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4 min-w-0">
-          <div className="shrink-0 flex h-12 w-12 items-center justify-center rounded-2xl bg-itec-red">
+          <div className="shrink-0 flex h-12 w-12 items-center justify-center rounded-xl bg-itec-red">
             <Download className="h-6 w-6 text-itec-accent" strokeWidth={2.5} />
           </div>
 

@@ -26,7 +26,7 @@ export const LoginPage: React.FC = () => {
         <div className="animate-[fade-in_0.6s_ease-out]">
           <FormLogin />
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-itec-box/80 border border-itec-box/10 py-4 px-6 rounded-2xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-itec-box/80 border border-itec-box/10 py-4 px-6 rounded-xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]">
             <div className="flex -space-x-3 shrink-0">
               <img
                 className="w-10 h-10 rounded-full border-2 border-[#111111] object-cover"

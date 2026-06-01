@@ -36,7 +36,7 @@ export const BenefitCard: React.FC<{ benefit: Benefit }> = ({ benefit }) => {
     >
       <div className={cn("pointer-events-none absolute inset-0 bg-gradient-to-br", cat.glow, "to-transparent opacity-0 group-hover:opacity-100 transition-opacity")} />
       <div className="relative flex items-start justify-between gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-itec-border bg-itec-surface text-base overflow-hidden">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-base overflow-hidden">
           {benefit.logoUrl ? (
             <img src={benefit.logoUrl} alt="" className="h-full w-full object-contain p-1.5" />
           ) : (

@@ -70,7 +70,7 @@ export const RewardsManagement: React.FC = () => {
 
   return (
     <>
-    <div className="bg-itec-box border border-itec-border rounded-3xl overflow-hidden">
+    <div className="bg-itec-box border border-itec-border rounded-xl overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-itec-border">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-itec-rewards/12 border border-itec-rewards/20 flex items-center justify-center">
@@ -180,7 +180,7 @@ export const RewardsManagement: React.FC = () => {
     </div>
 
     {/* ── Gestión de actividades de puntos ─────────────────────────────── */}
-    <div className="bg-itec-box border border-itec-border rounded-3xl overflow-hidden mt-6">
+    <div className="bg-itec-box border border-itec-border rounded-xl overflow-hidden mt-6">
       <div className="flex items-center gap-2.5 px-5 py-4 border-b border-itec-border">
         <div className="w-9 h-9 rounded-xl bg-yellow-500/12 border border-yellow-500/20 flex items-center justify-center">
           <span className="text-yellow-400 text-base leading-none">⭐</span>

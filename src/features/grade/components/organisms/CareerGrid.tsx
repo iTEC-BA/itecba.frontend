@@ -37,7 +37,7 @@ export const CareerGrid: React.FC<Props> = ({ onSelect }) => {
             placeholder="Buscar tu carrera..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-itec-box border border-itec-gray text-itec-textpl-12 pr-4 py-3.5 rounded-2xl focus:outline-none focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-lg"
+            className="w-full bg-itec-box border border-itec-gray text-itec-textpl-12 pr-4 py-3.5 rounded-xl focus:outline-none focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-lg"
           />
         </div>
       </div>
@@ -58,7 +58,7 @@ export const CareerGrid: React.FC<Props> = ({ onSelect }) => {
           })}
         </div>
       ) : (
-        <div className="text-center py-20 bg-itec-box border border-itec-gray rounded-3xl">
+        <div className="text-center py-20 bg-itec-box border border-itec-gray rounded-xl">
           <span className="text-4xl mb-4 block">🔍</span>
           <h3 className="text-itec-textfont-bold text-lg">No encontramos esa carrera</h3>
           <p className="text-itec-text text-sm">Verificá que el nombre esté bien escrito.</p>

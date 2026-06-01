@@ -51,7 +51,7 @@ export const RedeemFormFields: React.FC<Props> = ({ type, value, onChange }) => 
               placeholder="Ej: Ayuda con punteros, arquitectura MVC..."
               value={value.notes ?? ""}
               onChange={(e) => update({ notes: e.target.value })}
-              className="w-full bg-itec-bg border border-white/8 text-itec-text text-sm px-4 py-3 rounded-2xl focus:outline-none focus:border-itec-blue-skye transition-colors resize-none placeholder:text-itec-text/25"
+              className="w-full bg-itec-bg border border-white/8 text-itec-text text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-itec-blue-skye transition-colors resize-none placeholder:text-itec-text/25"
             />
           </div>
         </>
@@ -65,7 +65,7 @@ export const RedeemFormFields: React.FC<Props> = ({ type, value, onChange }) => 
             placeholder="Algo que quieras aclarar sobre tu asistencia..."
             value={value.notes ?? ""}
             onChange={(e) => update({ notes: e.target.value })}
-            className="w-full bg-itec-bg border border-white/8 text-itec-text text-sm px-4 py-3 rounded-2xl focus:outline-none focus:border-itec-blue-skye transition-colors resize-none placeholder:text-itec-text/25"
+            className="w-full bg-itec-bg border border-white/8 text-itec-text text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-itec-blue-skye transition-colors resize-none placeholder:text-itec-text/25"
           />
         </div>
       )}

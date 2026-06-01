@@ -26,7 +26,7 @@ export const RewardCardFeatured: React.FC<Props> = ({
 
   return (
     <div
-      className={`group relative rounded-3xl border overflow-hidden transition-all duration-300 ${
+      className={`group relative rounded-xl border overflow-hidden transition-all duration-300 ${
         canAfford
           ? "bg-gradient-to-br from-itec-rewards/10 via-itec-card to-itec-card border-itec-rewards/20 hover:border-itec-rewards/40 hover:shadow-[0_0_40px_rgba(240,177,0,0.12)]"
           : "bg-itec-card border-white/6 hover:border-white/12"
@@ -59,7 +59,7 @@ export const RewardCardFeatured: React.FC<Props> = ({
       <div className="relative z-10 p-6 sm:p-7">
         <div className="flex items-start gap-4 mb-4">
           <div
-            className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border ${
+            className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 border ${
               canAfford
                 ? "bg-itec-rewards/12 border-itec-rewards/25 text-itec-rewards shadow-[0_0_20px_rgba(240,177,0,0.15)]"
                 : "bg-white/5 border-white/8 text-itec-text/30"
@@ -98,7 +98,7 @@ export const RewardCardFeatured: React.FC<Props> = ({
         <button
           onClick={() => canAfford && onSelect(reward)}
           disabled={!canAfford}
-          className={`mt-5 w-full h-12 rounded-2xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] ${
+          className={`mt-5 w-full h-12 rounded-xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] ${
             canAfford
               ? "bg-itec-rewards text-itec-bg hover:bg-amber-400 shadow-[0_4px_24px_rgba(240,177,0,0.3)]"
               : "bg-white/4 border border-white/5 text-itec-text/25 cursor-not-allowed"

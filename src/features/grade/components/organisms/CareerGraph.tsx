@@ -53,7 +53,7 @@ export const CareerGraph: React.FC<CareerGraphProps> = ({ planData }) => {
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   return (
-    <div className="w-full h-full bg-[#0C1014] rounded-2xl overflow-hidden border border-itec-gray relative shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
+    <div className="w-full h-full bg-[#0C1014] rounded-xl overflow-hidden border border-itec-gray relative shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
       
       {/* LEYENDA FLOTANTE */}
       <div className="absolute bottom-6 right-6 z-20 bg-itec-box border border-itec-gray p-4 rounded-xl shadow-2xl flex flex-col gap-2">

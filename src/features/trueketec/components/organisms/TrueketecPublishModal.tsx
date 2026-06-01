@@ -96,7 +96,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
     }
   };
 
-  const fieldCls = "w-full px-4 py-3 text-sm rounded-2xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
+  const fieldCls = "w-full px-4 py-3 text-sm rounded-xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
 
   return (
     <LayoutModal
@@ -132,7 +132,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
             className={fieldCls}
           />
           {suggest.length > 0 && (
-            <ul className="absolute top-full mt-1 left-0 right-0 z-50 rounded-2xl border border-itec-border bg-itec-box shadow-xl max-h-48 overflow-y-auto">
+            <ul className="absolute top-full mt-1 left-0 right-0 z-50 rounded-xl border border-itec-border bg-itec-box shadow-xl max-h-48 overflow-y-auto">
               {suggest.map((s) => (
                 <li
                   key={s}
@@ -204,7 +204,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
         </div>
 
         {error && (
-          <p className="rounded-2xl border border-itec-accent/30 bg-itec-accent/10 px-4 py-2.5 text-sm text-itec-accent">
+          <p className="rounded-xl border border-itec-accent/30 bg-itec-accent/10 px-4 py-2.5 text-sm text-itec-accent">
             {error}
           </p>
         )}
@@ -215,7 +215,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
             hierarchy="ghost"
             text="Cancelar"
             onClick={onClose}
-            className="flex-1 rounded-2xl py-3"
+            className="flex-1 rounded-xl py-3"
           />
           <Button
             variant="success"
@@ -223,7 +223,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
             text="Publicar solicitud"
             isLoading={saving}
             onClick={handleSubmit}
-            className="flex-1 rounded-2xl py-3"
+            className="flex-1 rounded-xl py-3"
           />
         </div>
       </div>

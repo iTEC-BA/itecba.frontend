@@ -53,7 +53,7 @@ export const AdminTable: React.FC<Props> = ({ admins, isLoading, currentUserEmai
                         <div className="relative">
                           <img
                             src={admin.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(admin.name ?? "A")}`}
-                            className="h-11 w-11 rounded-2xl border border-itec-border object-cover"
+                            className="h-11 w-11 rounded-xl border border-itec-border object-cover"
                             alt="avatar"
                           />
                           <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-itec-box bg-itec-emerald" />

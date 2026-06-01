@@ -37,8 +37,8 @@ const EMPTY: AulaFormData = {
   descripcion: "", referencias: "", videos: [],
 };
 
-const fieldCls = "w-full px-4 py-2.5 text-sm rounded-2xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
-const labelCls = "text-xs font-semibold text-itec-muted uppercase tracking-widest";
+const fieldCls = "w-full px-4 py-2.5 text-xs rounded-xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
+const labelCls = "text-xs font-semibold text-itec-muted";
 
 export const AulaFormModal: React.FC<Props> = ({ isOpen, onClose, onSaved, aula }) => {
   const isEdit = !!aula;
@@ -109,15 +109,15 @@ export const AulaFormModal: React.FC<Props> = ({ isOpen, onClose, onSaved, aula 
       description={isEdit ? `Editando: ${aula?.numero}` : "Completá los datos del nuevo espacio"}
       maxWidth="max-w-2xl"
     >
-      <div className="flex flex-col gap-4 px-6 py-5">
+      <div className="flex flex-col gap-4 px-4 py-3">
         {error && (
-          <div className="rounded-2xl bg-red-500/10 border border-red-500/25 px-4 py-3 text-sm text-red-400">
+          <div className="rounded-xl bg-red-500/10 border border-red-500/25 px-4 py-3 text-sm text-red-400">
             {error}
           </div>
         )}
 
         {/* Fila 1: Número + Sede */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 ">
           <div className="flex flex-col gap-1.5">
             <label className={labelCls}>Número / Nombre *</label>
             <input
@@ -137,7 +137,7 @@ export const AulaFormModal: React.FC<Props> = ({ isOpen, onClose, onSaved, aula 
         </div>
 
         {/* Fila 2: Piso + Función */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <label className={labelCls}>Piso *</label>
             <input
@@ -158,7 +158,7 @@ export const AulaFormModal: React.FC<Props> = ({ isOpen, onClose, onSaved, aula 
         </div>
 
         {/* Fila 3: Pasillo + Ala */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <label className={labelCls}>Pasillo</label>
             <input
@@ -180,7 +180,7 @@ export const AulaFormModal: React.FC<Props> = ({ isOpen, onClose, onSaved, aula 
         </div>
 
         {/* Fila 4: Capacidad + Carrera */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <label className={labelCls}>Capacidad</label>
             <input

@@ -10,8 +10,8 @@ interface Props {
 
 const sizeMap = {
   sm: { wrap: "w-9 h-9 rounded-xl", icon: "size-4" },
-  md: { wrap: "w-12 h-12 rounded-2xl", icon: "size-6" },
-  lg: { wrap: "w-16 h-16 rounded-2xl", icon: "size-8" },
+  md: { wrap: "w-12 h-12 rounded-xl", icon: "size-6" },
+  lg: { wrap: "w-16 h-16 rounded-xl", icon: "size-8" },
 };
 
 export const IconBadge: React.FC<Props> = ({

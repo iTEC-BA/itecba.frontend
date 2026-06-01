@@ -62,7 +62,7 @@ export const AdminKPICard: React.FC<AdminKPICardProps> = ({
       </div>
 
       {loading ? (
-        <div className="h-10 w-24 animate-pulse rounded-2xl bg-itec-border/50" />
+        <div className="h-10 w-24 animate-pulse rounded-xl bg-itec-border/50" />
       ) : (
         <span className={cn("text-4xl font-bold leading-none tracking-tight", accent)}>{value}</span>
       )}

@@ -18,7 +18,7 @@ export const AddDateModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4  transition-all">
-      <div className="w-full sm:max-w-sm rounded-t-[2rem] sm:rounded-3xl border border-itec-border bg-itec-box p-6 shadow-2xl animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-10 duration-300">
+      <div className="w-full sm:max-w-sm rounded-t-[2rem] sm:rounded-xl border border-itec-border bg-itec-box p-6 shadow-2xl animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-10 duration-300">
         
         <div className="mx-auto mb-6 h-1.5 w-12 rounded-full bg-itec-border sm:hidden" />
         

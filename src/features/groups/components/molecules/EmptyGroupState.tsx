@@ -4,8 +4,8 @@ import { Icons } from '@components/ui/icons/Icons';
 interface Props { onAddClick: () => void; }
 
 export const EmptyGroupState: React.FC<Props> = ({ onAddClick }) => (
-  <div className="flex flex-col items-center justify-center py-16 gap-4 text-center border border-dashed border-itec-border rounded-2xl bg-itec-box/40">
-    <div className="w-14 h-14 rounded-2xl bg-itec-groups/10 border border-itec-groups/20 flex items-center justify-center text-2xl">
+  <div className="flex flex-col items-center justify-center py-16 gap-4 text-center border border-dashed border-itec-border rounded-xl bg-itec-box/40">
+    <div className="w-14 h-14 rounded-xl bg-itec-groups/10 border border-itec-groups/20 flex items-center justify-center text-2xl">
       🚀
     </div>
     <div>

@@ -35,7 +35,7 @@ const FormLogin: React.FC = () => {
 
         <button
           onClick={loginWithGoogle}
-          className="w-full bg-itec-red hover:bg-itec-red text-itec-textfont-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 shadow-[0_0_20px_rgba(212,19,19,0.15)] hover:-translate-y-1 border border-itec-border hover:border-white/20 cursor-pointer relative overflow-hidden"
+          className="w-full bg-itec-red hover:bg-itec-red text-itec-textfont-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 shadow-[0_0_20px_rgba(212,19,19,0.15)] hover:-translate-y-1 border border-itec-border hover:border-white/20 cursor-pointer relative overflow-hidden"
         >
           <div className="w-6 h-6">
             <Icons type="google" />
@@ -52,7 +52,7 @@ const FormLogin: React.FC = () => {
   }
 
   return (
-    <div className="flex h-64 items-center justify-center w-full bg-itec-box rounded-3xl border border-itec-box/5">
+    <div className="flex h-64 items-center justify-center w-full bg-itec-box rounded-xl border border-itec-box/5">
       <p className="text-itec-gray font-medium animate-pulse">
         Entrando a tu campus...
       </p>

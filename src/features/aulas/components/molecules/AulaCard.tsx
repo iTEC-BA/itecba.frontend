@@ -16,7 +16,7 @@ const SEDE_LABEL: Record<string, string> = { medrano: "Medrano", campus: "Campus
 
 export const AulaCard: React.FC<Props> = ({ aula, isAdmin, onEdit, onDelete }) => {
   return (
-    <article className="group relative flex flex-col gap-3 rounded-3xl border border-white/8 bg-itec-box p-4 transition-all duration-200 hover:border-white/14 hover:bg-itec-card">
+    <article className="group relative flex flex-col gap-3 rounded-xl border border-white/8 bg-itec-box p-4 transition-all duration-200 hover:border-white/14 hover:bg-itec-card">
 
       {/* Admin controls — visibles solo en hover */}
       {isAdmin && (

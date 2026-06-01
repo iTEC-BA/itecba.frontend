@@ -32,7 +32,7 @@ export const GradePage: React.FC = () => {
             colorTheme="yellow"
           />
         ) : (
-          <div className="flex items-center justify-between bg-itec-box/90 border border-itec-gray px-6 py-4 rounded-2xl mb-4 shadow-xl shrink-0 animate-in slide-in-from-top-4 duration-300">
+          <div className="flex items-center justify-between bg-itec-box/90 border border-itec-gray px-6 py-4 rounded-xl mb-4 shadow-xl shrink-0 animate-in slide-in-from-top-4 duration-300">
             <h2 className="text-itec-textfont-bold hidden md:block">Mapa Interactivo de Correlativas</h2>
             <button
               onClick={() => setSelectedCareer(null)}
@@ -52,7 +52,7 @@ export const GradePage: React.FC = () => {
 
           {/* MODO MAPA INTERACTIVO */}
           {selectedCareer && PLANES_DB[selectedCareer] && (
-            <div className="w-full flex-1 bg-gradient-to-br from-itec-box to-itec-bg border border-itec-gray rounded-3xl overflow-hidden animate-in zoom-in-95 duration-500 shadow-2xl relative ring-1 ring-white/5">
+            <div className="w-full flex-1 bg-gradient-to-br from-itec-box to-itec-bg border border-itec-gray rounded-xl overflow-hidden animate-in zoom-in-95 duration-500 shadow-2xl relative ring-1 ring-white/5">
               <Suspense
                 fallback={
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-itec-box/90 z-50">

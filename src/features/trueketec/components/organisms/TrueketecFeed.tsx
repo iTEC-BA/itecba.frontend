@@ -22,7 +22,7 @@ export const TrueketecFeed: React.FC<Props> = ({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-44 rounded-3xl border border-itec-border bg-itec-box animate-pulse" />
+          <div key={i} className="h-44 rounded-xl border border-itec-border bg-itec-box animate-pulse" />
         ))}
       </div>
     );
@@ -59,7 +59,7 @@ export const TrueketecFeed: React.FC<Props> = ({
           <button
             onClick={() => onPage(currentPage - 1)}
             disabled={currentPage <= 1}
-            className="flex items-center gap-1 rounded-2xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
+            className="flex items-center gap-1 rounded-xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
           >
             <ChevronLeft size={14} /> Anterior
           </button>
@@ -69,7 +69,7 @@ export const TrueketecFeed: React.FC<Props> = ({
           <button
             onClick={() => onPage(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            className="flex items-center gap-1 rounded-2xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
+            className="flex items-center gap-1 rounded-xl border border-itec-border px-3 py-2 text-sm text-itec-muted transition-colors hover:bg-itec-surface disabled:opacity-30"
           >
             Siguiente <ChevronRight size={14} />
           </button>

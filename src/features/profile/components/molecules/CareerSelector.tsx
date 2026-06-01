@@ -77,7 +77,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
       {open && (
         <div className={cn(
           "absolute z-50 top-full mt-1.5 w-full",
-          "bg-itec-box border border-itec-border rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
+          "bg-itec-box border border-itec-border rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
           "overflow-hidden max-h-56 flex flex-col"
         )}>
           <div className="p-2 border-b border-itec-border shrink-0">

@@ -28,7 +28,7 @@ export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
   const hasFilters = !!(carrera || nivel || materia || comision);
 
   return (
-    <div className="bg-itec-box border border-white/[0.07] rounded-2xl p-4 sm:p-6 mb-5 relative">
+    <div className="bg-itec-box border border-white/[0.07] rounded-xl p-4 sm:p-6 mb-5 relative">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-itec-groups/40 to-transparent" />
       <div className="flex items-center gap-3 mb-5">
         <div className="w-9 h-9 bg-itec-groups/10 border border-itec-groups/20 rounded-xl flex items-center justify-center text-emerald-400">

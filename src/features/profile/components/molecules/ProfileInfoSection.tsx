@@ -27,7 +27,7 @@ export const ProfileInfoSection: React.FC<ProfileInfoSectionProps> = ({
 }) => (
   <div
     className={cn(
-      "rounded-2xl border border-itec-border bg-itec-box p-4 sm:p-5",
+      "rounded-xl border border-itec-border bg-itec-box p-4 sm:p-5",
       className
     )}
   >

@@ -75,7 +75,7 @@ export const InboxPanel: React.FC<Props> = ({ messages, isLoading, onRead, onRea
           <Skeleton />
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-14 gap-3 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-white/4 border border-white/6 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-white/4 border border-white/6 flex items-center justify-center">
               <Mail className="size-5 text-itec-text/20" />
             </div>
             <p className="text-sm font-bold text-itec-text/35">

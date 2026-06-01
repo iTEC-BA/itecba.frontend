@@ -31,7 +31,7 @@ export const CalendarCountdown: React.FC<Props> = ({ event, typeConfig }) => {
   const d   = new Date(event.date + "T00:00:00");
 
   return (
-    <div className={`mb-8 rounded-2xl border p-4 ${cfg.color}`}>
+    <div className={`mb-8 rounded-xl border p-4 ${cfg.color}`}>
       <div className="flex items-start gap-3 mb-3">
         <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${cfg.dot}`} />
         <div className="flex-1 min-w-0">

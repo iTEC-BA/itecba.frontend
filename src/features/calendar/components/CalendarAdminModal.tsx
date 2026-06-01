@@ -151,7 +151,7 @@ export const CalendarAdminModal: React.FC<Props> = ({
             placeholder="Descripción adicional del evento..."
             value={form.description}
             onChange={(e) => set("description", e.target.value)}
-            className="bg-itec-surface/80 border border-itec-border text-itec-text px-4 py-3 rounded-2xl shadow-inner shadow-black/10 placeholder:text-itec-muted/80 outline-none transition-all resize-none w-full focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
+            className="bg-itec-surface/80 border border-itec-border text-itec-text px-4 py-3 rounded-xl shadow-inner shadow-black/10 placeholder:text-itec-muted/80 outline-none transition-all resize-none w-full focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
           />
         </div>
         <div className="flex flex-col gap-1.5">

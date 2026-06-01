@@ -20,7 +20,7 @@ export const UserResultCard: React.FC<Props> = ({ user, isUpdating, onToggleRole
             <img
               src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name ?? "User")}&background=0D8ABC&color=fff`}
               alt="Avatar"
-              className="h-16 w-16 rounded-2xl border border-itec-border object-cover"
+              className="h-16 w-16 rounded-xl border border-itec-border object-cover"
             />
             <span className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-itec-box ${isAdmin ? "bg-itec-accent" : "bg-itec-emerald"}`} />
           </div>

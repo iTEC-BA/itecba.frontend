@@ -141,7 +141,7 @@ export const RewardsGrid: React.FC<Props> = ({ isAdmin = false }) => {
             placeholder="Buscar beneficios..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-itec-card border border-white/8 rounded-2xl pl-10 pr-4 py-3 text-sm text-itec-text placeholder:text-itec-text/30 focus:outline-none focus:border-white/20 transition-colors"
+            className="w-full bg-itec-card border border-white/8 rounded-xl pl-10 pr-4 py-3 text-sm text-itec-text placeholder:text-itec-text/30 focus:outline-none focus:border-white/20 transition-colors"
           />
           {searchQuery && (
             <button

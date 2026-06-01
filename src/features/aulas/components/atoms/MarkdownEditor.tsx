@@ -47,20 +47,20 @@ export const MarkdownEditor: React.FC<Props> = ({
   return (
     <div className="flex flex-col gap-0">
       {/* Label */}
-      <span className="text-xs font-semibold text-itec-muted uppercase tracking-widest mb-1.5">
+      <span className="text-xs font-semibold text-itec-muted mb-1.5">
         {label}
-        <span className="ml-2 font-normal normal-case tracking-normal text-itec-muted/50">
-          — soporta Markdown
-        </span>
+      </span>
+      <span className="text-xs ml-2 text-itec-description">
+        — soporta Markdown
       </span>
 
       {/* Tabs */}
       <div className="flex gap-1 items-end">
         <button type="button" className={tabCls(tab === "edit")}    onClick={() => setTab("edit")}>
-          ✏️ Editar
+          Editar
         </button>
         <button type="button" className={tabCls(tab === "preview")} onClick={() => setTab("preview")}>
-          👁 Preview
+          Preview
         </button>
       </div>
 
@@ -78,7 +78,7 @@ export const MarkdownEditor: React.FC<Props> = ({
       {/* Panel Preview */}
       {tab === "preview" && (
         <div
-          className="w-full px-4 py-3 rounded-b-2xl rounded-tr-2xl bg-itec-surface border border-itec-border overflow-auto"
+          className="w-full px-2 py-1 rounded-b-2xl rounded-tr-2xl bg-itec-surface border border-itec-border overflow-auto"
           style={{ minHeight: `${rows * 1.75}rem` }}
         >
           {value.trim() ? (

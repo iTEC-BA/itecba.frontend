@@ -38,7 +38,7 @@ export const RedeemModal: React.FC<Props> = ({
   return (
     <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="w-full sm:max-w-md bg-itec-card border border-white/8 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300"
+        className="w-full sm:max-w-md bg-itec-card border border-white/8 rounded-t-3xl sm:rounded-xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/5">
@@ -77,7 +77,7 @@ export const RedeemModal: React.FC<Props> = ({
             <p className="text-sm text-itec-text/70 leading-relaxed">
               {reward.description}
             </p>
-            <div className="bg-itec-blue/8 border border-itec-blue/15 rounded-2xl p-4">
+            <div className="bg-itec-blue/8 border border-itec-blue/15 rounded-xl p-4">
               <p className="text-xs text-itec-text/70 leading-relaxed">
                 Al confirmar, se descontarán{" "}
                 <strong className="text-itec-text">
@@ -92,7 +92,7 @@ export const RedeemModal: React.FC<Props> = ({
                 variant="slate" hierarchy="ghost"
                 onClick={onClose}
                 fullWidth
-                className="h-11 rounded-2xl text-sm font-bold"
+                className="h-11 rounded-xl text-sm font-bold"
               >
                 Cancelar
               </Button>
@@ -101,7 +101,7 @@ export const RedeemModal: React.FC<Props> = ({
                 variant="primary"
                 onClick={() => setStep("form")}
                 fullWidth
-                className="h-11 rounded-2xl text-sm font-bold"
+                className="h-11 rounded-xl text-sm font-bold"
               >
                 Continuar
               </Button>
@@ -130,7 +130,7 @@ export const RedeemModal: React.FC<Props> = ({
                 variant="slate" hierarchy="ghost"
                 onClick={onClose}
                 fullWidth
-                className="h-11 rounded-2xl text-sm font-bold"
+                className="h-11 rounded-xl text-sm font-bold"
               >
                 Cancelar
               </Button>

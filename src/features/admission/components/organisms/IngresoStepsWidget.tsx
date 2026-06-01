@@ -10,7 +10,7 @@ interface Props {
 
 export const IngresoStepsWidget: React.FC<Props> = ({ steps, completedSteps, onToggleStep, progressPercentage }) => {
   return (
-    <section className="bg-itec-box border border-itec-gray rounded-3xl p-6 md:p-8 shadow-xl animate-in fade-in duration-700 h-full flex flex-col">
+    <section className="bg-itec-box border border-itec-gray rounded-xl p-6 md:p-8 shadow-xl animate-in fade-in duration-700 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 border border-purple-500/20">

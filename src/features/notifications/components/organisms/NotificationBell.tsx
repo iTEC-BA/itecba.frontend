@@ -74,7 +74,7 @@ export const NotificationBell: React.FC = () => {
       {isOpen && (
         <Suspense
           fallback={
-            <div className="absolute right-0 w-80 sm:w-96 bg-itec-box border border-itec-box/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-4 z-100">
+            <div className="absolute right-0 w-80 sm:w-96 bg-itec-box border border-itec-box/10 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-4 z-100">
               <div className="animate-pulse space-y-3">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="h-12 rounded-xl bg-white/5" />

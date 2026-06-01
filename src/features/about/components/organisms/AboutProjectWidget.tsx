@@ -8,7 +8,7 @@ export const AboutProjectWidget: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Tarjeta Principal: Misión (Ocupa 2 columnas) */}
-        <div className="md:col-span-2 bg-itec-box border border-itec-gray rounded-3xl p-8 md:p-10 shadow-xl relative overflow-hidden group transition-all hover:border-red-500/30 flex flex-col justify-center">
+        <div className="md:col-span-2 bg-itec-box border border-itec-gray rounded-xl p-8 md:p-10 shadow-xl relative overflow-hidden group transition-all hover:border-red-500/30 flex flex-col justify-center">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-red-500/10 blur-[80px] rounded-full group-hover:bg-red-500/20 transition-all duration-700"></div>
           
           <div className="relative z-10">
@@ -25,7 +25,7 @@ export const AboutProjectWidget: React.FC = () => {
         </div>
 
         {/* 🟢 Tarjeta Secundaria: EL LOGO DE ITEC BRILLANDO */}
-        <div className="md:col-span-1 bg-gradient-to-br from-itec-box to-itec-sidebar border border-itec-gray rounded-3xl p-8 shadow-xl flex flex-col items-center justify-center relative overflow-hidden group hover:border-red-500/30 transition-all text-center">
+        <div className="md:col-span-1 bg-gradient-to-br from-itec-box to-itec-sidebar border border-itec-gray rounded-xl p-8 shadow-xl flex flex-col items-center justify-center relative overflow-hidden group hover:border-red-500/30 transition-all text-center">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           
           {/* Contenedor del Logo con Efecto Float y Glow */}
@@ -46,7 +46,7 @@ export const AboutProjectWidget: React.FC = () => {
         </div>
 
         {/* Mini Tarjetas de Pilares Institucionales */}
-        <div className="bg-itec-box border border-itec-gray p-6 rounded-3xl hover:bg-itec-sidebar transition-colors shadow-lg flex items-start gap-4">
+        <div className="bg-itec-box border border-itec-gray p-6 rounded-xl hover:bg-itec-sidebar transition-colors shadow-lg flex items-start gap-4">
           <span className="text-3xl">📚</span>
           <div>
             <h3 className="text-itec-textfont-bold text-sm mb-1">Aportes Gratuitos</h3>
@@ -54,7 +54,7 @@ export const AboutProjectWidget: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-itec-box border border-itec-gray p-6 rounded-3xl hover:bg-itec-sidebar transition-colors shadow-lg flex items-start gap-4">
+        <div className="bg-itec-box border border-itec-gray p-6 rounded-xl hover:bg-itec-sidebar transition-colors shadow-lg flex items-start gap-4">
           <span className="text-3xl">🤝</span>
           <div>
             <h3 className="text-itec-textfont-bold text-sm mb-1">Red de Alumnos</h3>
@@ -62,7 +62,7 @@ export const AboutProjectWidget: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-itec-box border border-itec-gray p-6 rounded-3xl hover:bg-itec-sidebar transition-colors shadow-lg flex items-start gap-4">
+        <div className="bg-itec-box border border-itec-gray p-6 rounded-xl hover:bg-itec-sidebar transition-colors shadow-lg flex items-start gap-4">
           <span className="text-3xl">🚀</span>
           <div>
             <h3 className="text-itec-textfont-bold text-sm mb-1">Crecimiento Constante</h3>

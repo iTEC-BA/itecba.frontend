@@ -40,7 +40,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-itec-border bg-black/35 p-3 backdrop-blur-md">
+        <div className="rounded-xl border border-itec-border bg-black/35 p-3 backdrop-blur-md">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 text-xs md:text-[14px]">
               <p className="mt-0.5 truncate text-white/60">

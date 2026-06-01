@@ -28,14 +28,14 @@ export const RewardCard: React.FC<Props> = ({
 
   return (
     <div
-      className={`group relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${
+      className={`group relative flex flex-col rounded-xl border transition-all duration-300 overflow-hidden ${
         canAfford
           ? "bg-itec-card border-itec-rewards/15 hover:border-itec-rewards/35"
           : "bg-itec-card border-white/5 hover:border-itec-border"
       }`}
     >
       {!canAfford && (
-        <div className="absolute inset-0 rounded-2xl bg-itec-bg/20 pointer-events-none z-0" />
+        <div className="absolute inset-0 rounded-xl bg-itec-bg/20 pointer-events-none z-0" />
       )}
 
       {canAfford && (

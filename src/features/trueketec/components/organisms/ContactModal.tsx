@@ -90,7 +90,7 @@ export const ContactModal: React.FC<Props> = ({
 
         {/* ── Email del publicador ─────────────────────────────────────── */}
         {email ? (
-          <div className="flex items-center gap-3 rounded-2xl border border-itec-border bg-itec-surface px-4 py-3">
+          <div className="flex items-center gap-3 rounded-xl border border-itec-border bg-itec-surface px-4 py-3">
             <Mail size={16} className="text-itec-sky shrink-0" />
             <div className="flex flex-col">
               <span className="text-[10px] font-bold text-itec-muted uppercase tracking-widest">Email de contacto</span>
@@ -100,7 +100,7 @@ export const ContactModal: React.FC<Props> = ({
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3 rounded-2xl border border-itec-border bg-itec-surface px-4 py-3 text-itec-muted">
+          <div className="flex items-center gap-3 rounded-xl border border-itec-border bg-itec-surface px-4 py-3 text-itec-muted">
             <Mail size={16} className="shrink-0" />
             <span className="text-sm">El email se revela cuando hay un match aceptado.</span>
           </div>
@@ -117,7 +117,7 @@ export const ContactModal: React.FC<Props> = ({
               disabled={yaPostulado}
               onClick={handlePostular}
               fullWidth
-              className="rounded-2xl py-3"
+              className="rounded-xl py-3"
             />
             <p className="text-[11px] text-itec-muted text-center">
               Al postularte, el publicador verá tu nombre y tus comisiones activas.
@@ -146,7 +146,7 @@ export const ContactModal: React.FC<Props> = ({
                     onClick={() => handleChangeEstado(e)}
                     disabled={isCurrentEstado || savingEstado}
                     className={`
-                      flex flex-col items-center gap-1 rounded-2xl border px-2 py-2.5 text-[10px] font-bold
+                      flex flex-col items-center gap-1 rounded-xl border px-2 py-2.5 text-[10px] font-bold
                       transition-all duration-150 disabled:opacity-40 disabled:cursor-default
                       ${isCurrentEstado
                         ? "border-itec-sky bg-itec-sky/10 text-itec-sky"
@@ -175,7 +175,7 @@ export const ContactModal: React.FC<Props> = ({
             {loadingPost ? (
               <div className="space-y-2">
                 {[1, 2].map((i) => (
-                  <div key={i} className="h-12 rounded-2xl bg-white/5 animate-pulse" />
+                  <div key={i} className="h-12 rounded-xl bg-white/5 animate-pulse" />
                 ))}
               </div>
             ) : postulantes.length === 0 ? (
@@ -188,7 +188,7 @@ export const ContactModal: React.FC<Props> = ({
                   <button
                     key={p.userId}
                     onClick={() => onOpenPostulante(p)}
-                    className="flex items-center justify-between gap-3 rounded-2xl border border-itec-border bg-itec-surface px-4 py-3 hover:border-itec-sky/30 hover:bg-itec-box transition-colors text-left"
+                    className="flex items-center justify-between gap-3 rounded-xl border border-itec-border bg-itec-surface px-4 py-3 hover:border-itec-sky/30 hover:bg-itec-box transition-colors text-left"
                   >
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-itec-text">{p.userName}</span>
@@ -207,7 +207,7 @@ export const ContactModal: React.FC<Props> = ({
 
         {/* ── Feedback ─────────────────────────────────────────────────── */}
         {feedbackMsg && (
-          <p className="rounded-2xl border border-itec-sky/20 bg-itec-sky/10 px-4 py-2.5 text-xs text-itec-sky text-center">
+          <p className="rounded-xl border border-itec-sky/20 bg-itec-sky/10 px-4 py-2.5 text-xs text-itec-sky text-center">
             {feedbackMsg}
           </p>
         )}

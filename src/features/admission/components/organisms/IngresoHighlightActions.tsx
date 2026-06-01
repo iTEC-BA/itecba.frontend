@@ -12,7 +12,7 @@ export const IngresoHighlightActions: React.FC<Props> = ({ actions }) => {
           key={action.id}
           href={action.url} 
           target="_blank" rel="noopener noreferrer"
-          className="relative bg-gradient-to-r from-itec-box to-itec-sidebar border border-itec-gray hover:border-purple-500/50 p-6 rounded-3xl flex items-center justify-between group transition-all duration-300 shadow-xl overflow-hidden hover:-translate-y-1"
+          className="relative bg-gradient-to-r from-itec-box to-itec-sidebar border border-itec-gray hover:border-purple-500/50 p-6 rounded-xl flex items-center justify-between group transition-all duration-300 shadow-xl overflow-hidden hover:-translate-y-1"
         >
           {/* Fondo animado sutil */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -28,7 +28,7 @@ export const IngresoHighlightActions: React.FC<Props> = ({ actions }) => {
             <p className="text-xs text-itec-text group-hover:text-gray-300 transition-colors">{action.subtitle}</p>
           </div>
           
-          <div className="relative z-10 bg-purple-500/10 p-3.5 rounded-2xl text-purple-400 group-hover:bg-purple-500 group-hover:text-itec-texttransition-all duration-300 shadow-sm border border-purple-500/20 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+          <div className="relative z-10 bg-purple-500/10 p-3.5 rounded-xl text-purple-400 group-hover:bg-purple-500 group-hover:text-itec-texttransition-all duration-300 shadow-sm border border-purple-500/20 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
             <div className="w-6 h-6"><Icons type="edit" /></div>
           </div>
         </a>

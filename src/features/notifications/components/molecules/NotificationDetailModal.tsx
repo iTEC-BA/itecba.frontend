@@ -61,7 +61,7 @@ export const NotificationDetailModal: React.FC<Props> = ({ item, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="w-full sm:max-w-lg bg-itec-card border border-white/8 rounded-t-3xl sm:rounded-3xl overflow-hidden animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-250"
+        className="w-full sm:max-w-lg bg-itec-card border border-white/8 rounded-t-3xl sm:rounded-xl overflow-hidden animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-250"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

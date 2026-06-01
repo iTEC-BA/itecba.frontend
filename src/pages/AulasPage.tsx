@@ -8,7 +8,8 @@ import { useAulas, invalidateAulasCache } from "@features/aulas/hooks/useAulas";
 import { AulaCard }         from "@features/aulas/components/molecules/AulaCard";
 import { AulaFormModal }    from "@features/aulas/components/organisms/AulaFormModal";
 import { DeleteAulaModal }  from "@features/aulas/components/organisms/DeleteAulaModal";
-import { Plus, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import { Plus, RotateCcw, Search } from "lucide-react";
+import { Button } from "@components/ui/Button";
 import { CustomSelect } from "@components/ui/CustomSelect";
 import type { AulaResumen, SedeAula, FuncionAula } from "@features/aulas/types/aulas.types";
 
@@ -53,63 +54,61 @@ export const AulasPage: React.FC = () => {
         colorTheme="teal"
       >
         {isAdmin && (
-          <button
+          <Button
             onClick={() => { setEditAula(null); setShowForm(true); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-itec-blue text-white text-sm font-semibold hover:bg-blue-600 transition-colors"
+            variant="primary"
+            hierarchy="solid"
+            icon={<Plus size={16} />}
+            className="text-sm font-semibold rounded-xl"
           >
-            <Plus size={16} /> Nueva aula
-          </button>
+            Nueva aula
+          </Button>
         )}
       </PageHeader>
 
       {/* ── Filtros ─────────────────────────────────────────────────────────── */}
       <section className="flex flex-col sm:flex-row gap-3 mb-6">
         {/* Buscador texto libre */}
-        <div className="relative flex-1">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-itec-muted pointer-events-none" />
+        <div className="flex">
           <input
-            type="text"
+            type="search"
             placeholder="Buscá por número, nombre, carrera..."
             value={filters.texto ?? ""}
             onChange={(e) => setFilters({ ...filters, texto: e.target.value })}
-            className="w-full pl-9 pr-4 py-2 text-sm rounded-2xl bg-itec-surface border border-itec-border text-itec-text focus:outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60"
+            className="w-full pl-9 pr-4 py-2 text-sm rounded-xl bg-itec-surface border border-itec-border text-itec-text focus:outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60"
+          />
+          {/* Reload / invalidar caché */}
+          <Button
+            onClick={() => { invalidateAulasCache(); reload(); }}
+            variant="slate"
+            hierarchy="solid"
+            icon={<RotateCcw size={14} />}
+            title="Actualizar lista"
+            className="w-10 h-10 p-0 rounded-xl shrink-0 bg-itec-surface border border-itec-border text-itec-muted hover:text-white hover:border-white/20"
           />
         </div>
-
+        
         {/* Filtro sede */}
-        <div className="flex items-center gap-1.5">
-          <SlidersHorizontal size={14} className="text-itec-muted shrink-0" />
-          <div className="w-48">
-            <CustomSelect
-              value={filters.sede ?? ""}
-              options={SEDES_OPTS}
-              onChange={(val) => setFilters({ ...filters, sede: val as SedeAula | "" })}
-            />
-          </div>
-        </div>
-
-        {/* Filtro función */}
-        <div className="w-72">
+        <div className="flex flex-col md:flex-row items-center gap-2">
+          <CustomSelect
+            value={filters.sede ?? ""}
+            options={SEDES_OPTS}
+            onChange={(val) => setFilters({ ...filters, sede: val as SedeAula | "" })}
+            className="w-full px-4 py-1"
+          />
+          {/* Filtro función */}
           <CustomSelect
             value={filters.funcion ?? ""}
             options={FUNCIONES_OPTS}
             onChange={(val) => setFilters({ ...filters, funcion: val as FuncionAula | "" })}
+            className="w-full px-4 py-1"
           />
         </div>
-
-        {/* Reload / invalidar caché */}
-        <button
-          onClick={() => { invalidateAulasCache(); reload(); }}
-          className="flex items-center justify-center w-10 h-10 rounded-2xl bg-itec-surface border border-itec-border text-itec-muted hover:text-white hover:border-white/20 transition-colors shrink-0"
-          title="Actualizar lista"
-        >
-          <RotateCcw size={14} />
-        </button>
       </section>
 
       {/* ── Error ───────────────────────────────────────────────────────────── */}
       {error && (
-        <div className="rounded-2xl bg-red-500/10 border border-red-500/25 px-4 py-3 text-sm text-red-400 mb-4">
+        <div className="rounded-xl bg-red-500/10 border border-red-500/25 px-4 py-3 text-sm text-red-400 mb-4">
           {error}
         </div>
       )}

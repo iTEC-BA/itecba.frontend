@@ -9,7 +9,7 @@ export const NotificationPush = () => {
         <button
         onClick={enable}
         disabled={isLoading}
-        className="text-[10px] font-bold uppercase tracking-widest text-itec-accent hover:opacity-80 transition-opacity disabled:opacity-40 border border-itec-gray border-dotted py-1 px-2 rounded-2xl"
+        className="text-[10px] font-bold uppercase tracking-widest text-itec-accent hover:opacity-80 transition-opacity disabled:opacity-40 border border-itec-gray border-dotted py-1 px-2 rounded-xl"
         >
         {isLoading ? 'Activando…' : '🔔 ¿Activar Notificaciones?'}
         </button>

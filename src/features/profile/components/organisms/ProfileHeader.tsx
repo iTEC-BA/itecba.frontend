@@ -20,7 +20,7 @@ export const ProfileHeader: React.FC = () => {
 
   return (
     <>
-      <section className="relative overflow-hidden rounded-3xl bg-itec-box border border-itec-border p-6 sm:p-8 shadow-glass transition-all">
+      <section className="relative overflow-hidden rounded-xl bg-itec-box border border-itec-border p-6 sm:p-8 shadow-glass transition-all">
 
         <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           

@@ -8,7 +8,7 @@ export const CourseResourcesModal: React.FC<Props> = ({ isOpen, onClose, resourc
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[200] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="bg-itec-box border border-itec-border rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md max-h-[80vh] flex flex-col shadow-2xl">
+      <div className="bg-itec-box border border-itec-border rounded-t-3xl sm:rounded-xl w-full sm:max-w-md max-h-[80vh] flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-white/8 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-itec-blue/20 border border-itec-blue-skye/25 text-itec-blue-skye flex items-center justify-center text-base">📚</div>

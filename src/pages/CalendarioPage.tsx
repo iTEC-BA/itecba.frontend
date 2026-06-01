@@ -122,7 +122,7 @@ export const CalendarioPage: React.FC = () => {
           <>
             {/* TEMPORIZADOR CON SUSPENSE */}
             {nextEvent && (
-              <Suspense fallback={<div className="h-[120px] bg-white/5 animate-pulse rounded-2xl mb-6"></div>}>
+              <Suspense fallback={<div className="h-[120px] bg-white/5 animate-pulse rounded-xl mb-6"></div>}>
                 <CalendarCountdown event={nextEvent} typeConfig={TYPE_CONFIG} />
               </Suspense>
             )}
@@ -130,7 +130,7 @@ export const CalendarioPage: React.FC = () => {
             {/* CARDS / GRID DE EVENTOS */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filtered.length === 0 && (
-                <div className="col-span-full py-12 text-center text-sm text-[#5a6475] border border-dashed border-itec-border rounded-2xl">
+                <div className="col-span-full py-12 text-center text-sm text-[#5a6475] border border-dashed border-itec-border rounded-xl">
                   No hay eventos para mostrar en esta categoría.
                 </div>
               )}
@@ -143,7 +143,7 @@ export const CalendarioPage: React.FC = () => {
                   <div 
                     key={ev.id} 
                     onClick={() => handleCardClick(ev)}
-                    className={`flex items-center gap-3 bg-itec-card border border-white/5 rounded-2xl p-4 cursor-pointer hover:border-white/10 hover:bg-white/[0.02] transition-colors ${isAdmin ? "hover:border-itec-red/30" : ""}`}
+                    className={`flex items-center gap-3 bg-itec-card border border-white/5 rounded-xl p-4 cursor-pointer hover:border-white/10 hover:bg-white/[0.02] transition-colors ${isAdmin ? "hover:border-itec-red/30" : ""}`}
                   >
                     <div className="flex flex-col items-center justify-center w-14 h-14 rounded-xl bg-black/20 shrink-0 border border-white/5">
                       <span className="text-xs text-[#5a6475] uppercase font-bold leading-none">{MONTHS[d.getMonth()].slice(0, 3)}</span>

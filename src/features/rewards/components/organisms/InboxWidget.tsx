@@ -50,7 +50,7 @@ export const InboxWidget: React.FC = () => {
   );
 
   return (
-    <div className="bg-itec-card border border-white/5 rounded-3xl overflow-hidden">
+    <div className="bg-itec-card border border-white/5 rounded-xl overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-itec-blue-skye/12 border border-itec-blue-skye/20 flex items-center justify-center">

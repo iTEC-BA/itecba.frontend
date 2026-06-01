@@ -21,14 +21,14 @@ export const CoursePlaylist: React.FC<Props> = ({
   }, [videos, watchedVideos]);
 
   if (!total) return (
-    <div className="flex flex-col items-center justify-center py-16 border border-dashed border-white/8 rounded-2xl text-itec-gray">
+    <div className="flex flex-col items-center justify-center py-16 border border-dashed border-white/8 rounded-xl text-itec-gray">
       <span className="text-3xl mb-3 opacity-40">📭</span>
       <p className="text-xs font-bold uppercase tracking-widest">Sin lecciones publicadas</p>
     </div>
   );
 
   return (
-    <div className="flex flex-col bg-itec-card rounded-2xl overflow-hidden h-full max-h-[70vh] md:max-h-[600px]">
+    <div className="flex flex-col bg-itec-card rounded-xl overflow-hidden h-full max-h-[70vh] md:max-h-[600px]">
       {/* Header progreso */}
       <div className="p-4 border-b border-white/8 shrink-0">
         <div className="flex items-center justify-between mb-3">

@@ -177,7 +177,7 @@ export const ForumFeed: React.FC = () => {
         <>
           <button
             onClick={() => setComposing(true)}
-            className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-12 h-12 rounded-2xl bg-itec-red hover:bg-itec-red/80 text-white flex items-center justify-center shadow-xl transition-all active:scale-95 z-30"
+            className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-12 h-12 rounded-xl bg-itec-red hover:bg-itec-red/80 text-white flex items-center justify-center shadow-xl transition-all active:scale-95 z-30"
             title="Nueva publicación"
           >
             <Plus size={22} strokeWidth={2.5} />

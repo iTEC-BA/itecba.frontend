@@ -47,7 +47,7 @@ export const ReportVideoModal: React.FC<Props> = ({
       />
 
       {/* Panel */}
-      <div className="relative w-full sm:max-w-md bg-itec-card border border-itec-border rounded-t-3xl sm:rounded-2xl p-6 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
+      <div className="relative w-full sm:max-w-md bg-itec-card border border-itec-border rounded-t-3xl sm:rounded-xl p-6 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>

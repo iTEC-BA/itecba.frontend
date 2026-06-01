@@ -96,7 +96,7 @@ export const CourseEditDetail: React.FC = () => {
         {error && <p className="mb-4 text-itec-red text-xs font-bold bg-itec-red/10 border border-itec-red/30 p-3 rounded-xl">{error}</p>}
 
         {/* Formulario */}
-        <div className="bg-itec-card rounded-2xl p-5 space-y-6">
+        <div className="bg-itec-card rounded-xl p-5 space-y-6">
           <CourseGeneralData title={title} setTitle={setTitle} image={image} setImage={setImage} desc={desc} setDesc={setDesc} materia={materia} setMateria={setMateria} categoria={categoria} setCategoria={setCategoria} />
           <CourseVideoListEditor videos={videos} setVideos={setVideos} mode={mode} setMode={setMode} playlistUrl={playlistUrl} setPlaylistUrl={setPlaylistUrl} onFetchPlaylist={handleFetchPlaylist} isFetching={isFetching} />
         </div>

@@ -40,7 +40,7 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
 
   return (
     <div className="fixed inset-0 z-[200] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="bg-itec-box border border-itec-border rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md flex flex-col shadow-2xl">
+      <div className="bg-itec-box border border-itec-border rounded-t-3xl sm:rounded-xl w-full sm:max-w-md flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-white/8">
           <div>
             <h2 className="text-sm font-bold text-itec-text">Vincular archivo</h2>

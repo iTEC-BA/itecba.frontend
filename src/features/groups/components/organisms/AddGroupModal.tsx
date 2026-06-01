@@ -153,7 +153,7 @@ export const AddGroupModal: React.FC<Props> = ({
           if (e.target === e.currentTarget) onClose();
         }}
       >
-        <div className="bg-itec-box border border-white/8 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
+        <div className="bg-itec-box border border-white/8 rounded-t-3xl sm:rounded-xl w-full sm:max-w-lg shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/6 shrink-0">
             <div>
