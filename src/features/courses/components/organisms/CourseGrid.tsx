@@ -29,7 +29,7 @@ export const CourseGrid: React.FC<Props> = ({ courses, isLoading, isAdmin, onDel
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {courses.map((curso, index) => {
-        const id = curso.id ?? (curso as any)._id;
+        const id = curso.id ?? ("_id" in curso ? curso._id : undefined);
         const hasData = Boolean(curso && (curso.title || curso.description || curso.imageUrl));
 
         if (!hasData || !id) {

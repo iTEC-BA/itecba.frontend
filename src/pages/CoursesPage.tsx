@@ -55,9 +55,10 @@ export const CoursesPage: React.FC = () => {
   const deleteMutation = useDeleteCourse();
 
   const { data: rawCourses = [], isLoading } = useCourses();
-  const coursesWithProgress = enrichWithProgress(rawCourses);
+  const coursesWithProgress: CourseWithLocalProgress[] = enrichWithProgress(rawCourses);
   const { filters, filteredCourses } = useCourseFilters(coursesWithProgress);
   const { paged, page, setPage, totalPages, reset } = usePagination(filteredCourses, PAGE_SIZE);
+  const pagedWithProgress: CourseWithLocalProgress[] = enrichWithProgress(paged);
 
   useEffect(() => {
     reset();
@@ -105,7 +106,7 @@ export const CoursesPage: React.FC = () => {
       />
 
       <CourseGrid
-        courses={paged}
+        courses={pagedWithProgress}
         isLoading={isLoading}
         isAdmin={isAdmin}
         onDelete={handleDelete}
