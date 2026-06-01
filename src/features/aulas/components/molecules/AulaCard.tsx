@@ -1,19 +1,48 @@
 // src/features/aulas/components/molecules/AulaCard.tsx
 import React from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Layers} from "lucide-react";
+import { MapPin, Layers, Pencil, Trash2 } from "lucide-react";
 import { FuncionBadge } from "../atoms/FuncionBadge";
+import { Button } from "@/components/ui/Button";
 import type { AulaResumen } from "../../types/aulas.types";
 
 interface Props {
   aula:      AulaResumen;
+  isAdmin?:  boolean;
+  onEdit?:   (aula: AulaResumen) => void;
+  onDelete?: (aula: AulaResumen) => void;
 }
 
 const SEDE_LABEL: Record<string, string> = { medrano: "Medrano", campus: "Campus" };
 
-export const AulaCard: React.FC<Props> = ({ aula}) => {
+export const AulaCard: React.FC<Props> = ({ aula, isAdmin, onEdit, onDelete }) => {
   return (
     <article className="group relative flex flex-col gap-3 rounded-xl border border-white/8 bg-itec-box p-4 transition-all duration-200 hover:border-white/14 hover:bg-itec-card">
+
+      {/* Admin controls — visibles solo en hover */}
+      {isAdmin && (
+        <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          <Button
+            type="button"
+            onClick={(e) => { e.preventDefault(); onEdit?.(aula); }}
+            variant="primary"
+            hierarchy="solid"
+            className="w-7 h-7 px-0 py-0 rounded-xl"
+            aria-label="Editar aula"
+            icon={<Pencil size={12} />}
+          />
+          <Button
+            type="button"
+            onClick={(e) => { e.preventDefault(); onDelete?.(aula); }}
+            variant="danger"
+            hierarchy="solid"
+            className="w-7 h-7 px-0 py-0 rounded-xl"
+            aria-label="Eliminar aula"
+            icon={<Trash2 size={12} />}
+          />
+        </div>
+      )}
+
       <Link to={`/aulas/${aula.slug}`} className="flex flex-col gap-3 flex-1 min-h-0">
 
         {/* Header: sede + número + badge función */}

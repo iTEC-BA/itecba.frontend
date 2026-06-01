@@ -39,7 +39,7 @@ const THEMES: Record<ButtonVariant, Record<ButtonHierarchy, string>> = {
     dashed: "border border-dashed border-itec-border text-itec-text hover:bg-itec-surface/70",
   },
   danger: {
-    solid: "bg-itec-red text-white hover:bg-rose-600",
+    solid: "bg-itec-red text-white hover:bg-itec-red/50",
     outline: "border border-rose-500/40 text-rose-300 hover:bg-rose-500/10",
     ghost: "text-rose-300 hover:bg-rose-500/10",
     dashed: "border border-dashed border-rose-500/50 text-rose-300 hover:bg-rose-500/10",
