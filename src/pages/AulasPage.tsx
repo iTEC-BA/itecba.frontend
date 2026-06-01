@@ -8,7 +8,7 @@ import { useAulas, invalidateAulasCache } from "@features/aulas/hooks/useAulas";
 import { AulaCard }         from "@features/aulas/components/molecules/AulaCard";
 import { AulaFormModal }    from "@features/aulas/components/organisms/AulaFormModal";
 import { DeleteAulaModal }  from "@features/aulas/components/organisms/DeleteAulaModal";
-import { Plus, RotateCcw, Search } from "lucide-react";
+import { Plus, RotateCcw } from "lucide-react";
 import { Button } from "@components/ui/Button";
 import { CustomSelect } from "@components/ui/CustomSelect";
 import type { AulaResumen, SedeAula, FuncionAula } from "@features/aulas/types/aulas.types";
