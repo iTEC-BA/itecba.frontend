@@ -67,7 +67,7 @@ export const CourseVideoListEditor: React.FC<Props> = ({
             className={`flex items-center gap-2 p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-transparent hover:border-white/8 transition-all group ${dragged === i ? "opacity-40 border-dashed border-white/20" : ""}`}>
             <span className="text-itec-gray cursor-grab active:cursor-grabbing px-1 text-lg font-bold leading-none">⋮⋮</span>
             <span className="w-5 h-5 rounded-full bg-itec-bg border border-itec-border flex items-center justify-center text-[9px] font-bold text-itec-gray shrink-0">{i + 1}</span>
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-1 items-center">
               <input type="text" placeholder="Título del video..." value={v.title} onChange={(e) => update(i, "title", e.target.value)}
                 className="sm:col-span-7 bg-transparent border border-transparent focus:border-itec-blue-skye/40 focus:bg-white/[0.04] rounded-lg px-2 py-1.5 text-xs text-itec-text placeholder-itec-gray/40 outline-none transition-all" />
               <input type="text" placeholder="ID YouTube" value={v.youtubeId} onChange={(e) => update(i, "youtubeId", e.target.value)}

@@ -1,117 +1,131 @@
 // src/pages/CoursesPage.tsx
-// Catálogo de cursos — usa useCourseFilters (Zustand) para persistir filtros entre navegaciones.
-// Los admins ven dos botones en el header:
-//   • "Nuevo curso"     → abre AddCourseModal (crear/editar cursos)
-//   • "Videos rotos"   → abre BrokenVideosModal (revisar y corregir reportes)
-import React, { useState, Suspense } from "react";
-import { MainLayout }       from "@/components/templates/MainLayout";
-import { PageHeader }       from "@components/ui/PageHeader";
-import { useAuth }          from "@context/AuthContext";
-import { usePageTitle }     from "@hooks/usePageTitle";
-import { useCourses, useDeleteCourse } from "@features/courses/hooks/useCourses";
-import { useCourseFilters }            from "@features/courses/hooks/useCourseFilters";
-import { CourseGrid }                  from "@features/courses/components/organisms/CourseGrid";
-import { CourseFilters }               from "@features/courses/components/molecules/CourseFilters";
-import { AlertOctagon, PlusIcon } from "lucide-react";
-import { Button }                from "@components/ui/Button";
+// Pagina de cursos: busqueda normalizada, filtros, paginacion y modales admin.
+// Debe estar envuelta en <ToastProvider> (lo hace App.tsx).
+import React, { useState, useEffect } from "react";
 
-// Lazy-load de modales admin (solo se descargan si el usuario es admin)
-const AddCourseModal = React.lazy(() =>
-  import("@features/courses/components/organisms/AddCourseModal").then((m) => ({
-    default: m.AddCourseModal,
-  }))
-);
-const BrokenVideosModal = React.lazy(() =>
-  import("@features/courses/components/organisms/BrokenVideosModal").then((m) => ({
-    default: m.BrokenVideosModal,
-  }))
-);
+import { MainLayout }     from "@/components/templates/MainLayout";
+import { PageHeader }     from "@/components/ui/PageHeader";
+import { PaginationBar }  from "@/components/ui/PaginationBar";
+import { usePagination }  from "@/hooks/usePagination";
+import { usePageTitle }   from "@/hooks/usePageTitle";
+import { useAuth }        from "@/context/AuthContext";
+import { useToast }       from "@/features/notifications/components/atoms/Toast";
+
+import { useCourses, useDeleteCourse }  from "@/features/courses/hooks/useCourses";
+import { useCourseFilters }             from "@/features/courses/hooks/useCourseFilters";
+import { CourseFilters }                from "@/features/courses/components/molecules/CourseFilters";
+import { CourseAdminBar }               from "@/features/courses/components/molecules/CourseAdminBar";
+import {
+  CourseGrid,
+  type CourseWithLocalProgress,
+} from "@/features/courses/components/organisms/CourseGrid";
+import { AddCourseModal }    from "@/features/courses/components/organisms/AddCourseModal";
+import { BrokenVideosModal } from "@/features/courses/components/organisms/BrokenVideosModal";
+import { CourseResultsInfo } from "@/features/courses/components/atoms/CourseResultsInfo";
+import type { CourseData }   from "@/features/courses/services/coursesService";
+
+const PAGE_SIZE = 9;
+
+const readLocalProgress = (courseId: string, totalVideos: number): number => {
+  if (!totalVideos) return 0;
+  try {
+    const raw = localStorage.getItem(`itec_course_${courseId}`);
+    if (!raw) return 0;
+    const { watched } = JSON.parse(raw) as { watched?: string[] };
+    return Math.min(100, Math.round(((watched?.length ?? 0) / totalVideos) * 100));
+  } catch {
+    return 0;
+  }
+};
+
+const enrichWithProgress = (courses: CourseData[]): CourseWithLocalProgress[] =>
+  courses.map((course) => {
+    const id = course._id ?? course.id ?? "";
+    return {
+      ...course,
+      localProgress: readLocalProgress(id, course.videos?.length ?? 0),
+    };
+  });
 
 export const CoursesPage: React.FC = () => {
   usePageTitle("Cursos");
-  const { isAdmin } = useAuth();
 
-  const [isAddOpen,    setIsAddOpen]    = useState(false);
-  const [isBrokenOpen, setIsBrokenOpen] = useState(false);
-
-  const { data: dbCourses = [], isLoading } = useCourses();
+  const { isAdmin }  = useAuth();
+  const { toast }    = useToast();
   const deleteMutation = useDeleteCourse();
 
-  const { filters: rawFilters, filteredCourses } = useCourseFilters(dbCourses);
+  const { data: rawCourses = [], isLoading } = useCourses();
+  const coursesWithProgress = enrichWithProgress(rawCourses);
+  const { filters, filteredCourses } = useCourseFilters(coursesWithProgress);
+  const { paged, page, setPage, totalPages, reset } = usePagination(filteredCourses, PAGE_SIZE);
 
-  const filters = {
-    ...rawFilters,
-    setSelectedCategoria: (c: string) =>
-      rawFilters.setSelectedCategoria(c as Parameters<typeof rawFilters.setSelectedCategoria>[0]),
-  };
+  useEffect(() => {
+    reset();
+  }, [filters.searchQuery, filters.selectedMateria, filters.selectedCategoria, reset]);
+
+  const [addOpen,    setAddOpen]    = useState(false);
+  const [brokenOpen, setBrokenOpen] = useState(false);
+  const [editCourse, setEditCourse] = useState<CourseWithLocalProgress | null>(null);
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    e.stopPropagation();
-    if (!window.confirm("¿Seguro que deseas eliminar este curso?")) return;
-    localStorage.removeItem(`itec_course_${id}`);
-    deleteMutation.mutate(id, { onError: () => alert("Error al eliminar.") });
+    if (!window.confirm("Eliminar este curso permanentemente?")) return;
+    deleteMutation.mutate(id, {
+      onSuccess: () => toast.success("Curso eliminado"),
+      onError:   () => toast.error("Error al eliminar el curso"),
+    });
   };
+
+  const handleEdit     = (course: CourseWithLocalProgress) => setEditCourse(course);
+  const handleAddClose = () => { setAddOpen(false); setEditCourse(null); };
 
   return (
     <MainLayout>
-      <div className="max-w-6xl mx-auto px-2 pb-10">
-        <PageHeader
-          title="Campus de Cursos"
-          description="Material audiovisual oficial y comunitario. Aprendé a tu ritmo."
-          iconType="playFill"
-          colorTheme="blue"
-        >
-          {/* ── Acciones admin (solo visible para admins) ─────────────────── */}
-          {isAdmin && (
-            <>
-              {/* Botón: Videos rotos */}
-              <Button
-                onClick={() => setIsBrokenOpen(true)}
-                variant="danger"
-                hierarchy="solid"
-                icon={<AlertOctagon className="size-4" />}
-                className="shrink-0"
-                title="Revisar videos reportados"
-              >
-                Videos rotos
-              </Button>
+      <PageHeader
+        title="Cursos"
+        description="Explora el contenido educativo creado por la comunidad iTEC y el equipo oficial."
+        iconType="video"
+        colorTheme="blue"
+      >
+        {isAdmin && (
+          <CourseAdminBar
+            onAdd={() => setAddOpen(true)}
+            onBrokenVideos={() => setBrokenOpen(true)}
+          />
+        )}
+      </PageHeader>
 
-              {/* Botón: Nuevo curso */}
-              <Button
-                onClick={() => setIsAddOpen(true)}
-                variant="primary"
-                hierarchy="solid"
-                icon={<PlusIcon className="size-4" />}
-                className="shrink-0"
-              >
-                Nuevo curso
-              </Button>
-            </>
-          )}
-        </PageHeader>
+      <CourseFilters filters={filters} isLoading={isLoading} />
 
-        <CourseFilters filters={filters} isLoading={isLoading} />
-        <CourseGrid
-          courses={filteredCourses}
-          isLoading={isLoading}
-          isAdmin={isAdmin}
-          onDelete={handleDelete}
-        />
-      </div>
+      <CourseResultsInfo
+        total={filteredCourses.length}
+        page={page}
+        totalPages={totalPages}
+        pageSize={PAGE_SIZE}
+      />
 
-      {/* ── Modales admin (lazy, solo se montan si isAdmin) ─────────────────── */}
+      <CourseGrid
+        courses={paged}
+        isLoading={isLoading}
+        isAdmin={isAdmin}
+        onDelete={handleDelete}
+        onEdit={isAdmin ? handleEdit : undefined}
+      />
+
+      <PaginationBar page={page} totalPages={totalPages} onChange={setPage} />
+
       {isAdmin && (
-        <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/60" />}>
+        <>
           <AddCourseModal
-            isOpen={isAddOpen}
-            onClose={() => setIsAddOpen(false)}
+            isOpen={addOpen || !!editCourse}
+            onClose={handleAddClose}
+            existingCourse={editCourse}
           />
           <BrokenVideosModal
-            isOpen={isBrokenOpen}
-            onClose={() => setIsBrokenOpen(false)}
+            isOpen={brokenOpen}
+            onClose={() => setBrokenOpen(false)}
           />
-        </Suspense>
+        </>
       )}
     </MainLayout>
   );

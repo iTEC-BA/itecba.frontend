@@ -1,3 +1,4 @@
+import { normalizeSearch } from '@/lib/normalize';
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/Input';
 
@@ -10,7 +11,7 @@ interface Props {
   disabled?: boolean;
 }
 
-const normalizeString = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
 
 export const AutocompleteInput: React.FC<Props> = ({ 
   label, value, suggestions, onChange, placeholder = "Escribir...", disabled = false 
@@ -27,7 +28,7 @@ export const AutocompleteInput: React.FC<Props> = ({
   }, []);
 
   const filteredSuggestions = (suggestions || []).filter(s => 
-    normalizeString(s).includes(normalizeString(value))
+    normalizeSearch(s).includes(normalizeSearch(value))
   );
 
   return (

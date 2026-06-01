@@ -13,6 +13,7 @@ import { useResources } from "@features/resources/hooks/useResources";
 import { CourseBreadcrumb } from "@features/courses/components/molecules/CourseBreadcrumb";
 import { CourseProgressBadge } from "@features/courses/components/atoms/CourseProgressBadge";
 import { ReportVideoModal } from "@features/courses/components/organisms/ReportVideoModal";
+import { Edit, Trash } from "lucide-react";
 
 const CourseAddResourceModal = React.lazy(() =>
   import("@features/courses/components/organisms/CourseAddResourceModal").then((m) => ({ default: m.CourseAddResourceModal }))
@@ -128,14 +129,14 @@ export const CourseDetail: React.FC = () => {
             <div className="flex items-center gap-2">
               <Link to={`/cursos/editar/${courseId}`}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-itec-border text-itec-gray hover:text-itec-text text-xs font-bold transition-all">
-                <Icons type="edit" className="w-3 h-3" /> Editar
+                <Edit className="size-4" /> Editar
               </Link>
               <Button
                 onClick={handleDelete}
                 variant="danger"
-                hierarchy="outline"
+                hierarchy="solid"
                 className="px-3 py-1.5 rounded-lg text-xs font-bold"
-                icon={<Icons type="trash" className="w-3 h-3" />}
+                icon={<Trash className="size-4" />}
               >
                 Eliminar
               </Button>

@@ -37,12 +37,11 @@ agregar_carpeta() {
 
 echo "📦 1/5 Agregando núcleo de la App (Rutas y Config)..."
 agregar_archivo "src/App.tsx"
-agregar_archivo "src/lib/firebase.ts"
-agregar_archivo "src/lib/utils.ts"
 agregar_archivo "src/context/AuthContext.tsx"
 
 echo "🖼️  2/5 Agregando Componentes universales"
 agregar_carpeta "src/components/"
+agregar_carpeta "src/lib/"
 
 echo "🛠️  3/5 Agregando Hooks Globales..."
 agregar_carpeta "src/hooks"

@@ -1,92 +1,77 @@
+// src/features/courses/components/organisms/CourseGrid.tsx
+// Grilla de tarjetas de cursos. Admins pueden editar (modal) o eliminar.
 import React from "react";
 import { Link } from "react-router-dom";
-import { Icons } from "@/components/ui/icons/Icons";
+import { Pencil, Trash2 } from "lucide-react";
+import { CourseCard }           from "../molecules/CourseCard";
+import { CourseLoadingState }   from "../atoms/LoadingState";
+import { EmptyState }           from "../atoms/EmptyState";
+import { CourseCardSkeleton }   from "../molecules/CourseCardSeleton";
+import type { CourseData }      from "../../services/coursesService";
 
-import { CourseCard } from "../molecules/CourseCard";
-
-import { CourseLoadingState } from "../atoms/LoadingState";
-import { EmptyState } from "../atoms/EmptyState";
-import type { CourseData } from "../../services/coursesService";
-import { CourseCardSkeleton } from "../molecules/CourseCardSeleton";
-
-export interface CourseWithLocalProgress extends CourseData {
-  localProgress: number;
-}
+export interface CourseWithLocalProgress extends CourseData { localProgress: number; }
 
 interface Props {
-  courses: CourseWithLocalProgress[];
+  courses:   CourseWithLocalProgress[];
   isLoading: boolean;
-  isAdmin: boolean;
-  onDelete: (e: React.MouseEvent, id: string) => void;
+  isAdmin:   boolean;
+  onDelete:  (e: React.MouseEvent, id: string) => void;
+  onEdit?:   (course: CourseWithLocalProgress) => void;
 }
 
-export const CourseGrid: React.FC<Props> = ({
-  courses,
-  isLoading,
-  isAdmin,
-  onDelete,
-}) => {
+const isSystem = (id: string, isOficial: boolean) =>
+  isOficial || id.startsWith("arquitectura") || id.startsWith("podcast");
+
+export const CourseGrid: React.FC<Props> = ({ courses, isLoading, isAdmin, onDelete, onEdit }) => {
   if (isLoading) return <CourseLoadingState />;
   if (!courses.length) return <EmptyState />;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {courses.map((curso, index) => {
-        // Extraemos el ID (Mongoose usa _id, Firebase/Supabase usan id)
-        const id = curso.id ?? (curso as unknown as { _id?: string })._id;
+        const id = curso.id ?? (curso as any)._id;
+        const hasData = Boolean(curso && (curso.title || curso.description || curso.imageUrl));
 
-        // Verificamos si tiene la información mínima para renderizarse
-        const hasData = Boolean(
-          curso && (curso.title || curso.description || curso.imageUrl),
-        );
-
-        // Si falta información, logueamos el error en la consola y mostramos el Skeleton
         if (!hasData || !id) {
-          console.warn(
-            `⚠️ [CourseGrid] Error al cargar la tarjeta del curso #${index}. Renderizando Skeleton.`,
-            `\nMotivo:`,
-            !id
-              ? "Falta el ID del curso."
-              : "Faltan datos básicos (título, descripción o imagen).",
-            `\nDatos recibidos de la base de datos:`,
-            curso,
-          );
+          console.warn(`⚠️ [CourseGrid] Tarjeta #${index} sin datos suficientes.`, curso);
           return <CourseCardSkeleton key={id ?? `skeleton-${index}`} />;
         }
 
-        const isOficial =
-          curso.categoria === "Oficial" ||
-          id.startsWith("seminario") ||
-          id.startsWith("analisis");
-        const isSystem =
-          isOficial ||
-          id.startsWith("arquitectura") ||
-          id.startsWith("podcast");
+        const oficial  = curso.categoria === "Oficial" || id.startsWith("seminario") || id.startsWith("analisis");
+        const noEditar = isSystem(id, oficial);
 
         return (
           <div key={id} className="relative group h-full">
             <Link to={`/cursos/${id}`} className="block h-full">
-              {/* Renderizamos la tarjeta real ahora que sabemos que tiene datos */}
               <CourseCard
                 title={curso.title}
                 description={curso.description ?? ""}
                 progress={curso.localProgress}
                 imageUrl={curso.imageUrl}
-                isOficial={isOficial}
+                isOficial={oficial}
               />
             </Link>
 
-            {isAdmin && !isSystem && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  onDelete(e, id);
-                }}
-                className="absolute top-2 right-2 z-20 w-7 h-7 rounded-lg bg-itec-red/90 hover:bg-itec-red text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md"
-                title="Eliminar curso"
-              >
-                <Icons type="trash" className="w-3.5 h-3.5" />
-              </button>
+            {/* Botones admin — solo visibles en hover y solo para admins */}
+            {isAdmin && !noEditar && (
+              <div className="absolute top-2 right-2 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                {onEdit && (
+                  <button
+                    onClick={(e) => { e.preventDefault(); onEdit(curso); }}
+                    className="w-7 h-7 rounded-lg bg-itec-blue-skye/90 hover:bg-itec-blue-skye text-white flex items-center justify-center shadow-md"
+                    title="Editar curso"
+                  >
+                    <Pencil className="size-3.5" />
+                  </button>
+                )}
+                <button
+                  onClick={(e) => { e.preventDefault(); onDelete(e, id); }}
+                  className="w-7 h-7 rounded-lg bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center shadow-md"
+                  title="Eliminar curso"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+              </div>
             )}
           </div>
         );

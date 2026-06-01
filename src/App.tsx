@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@components/templates/ProtectedRoute";
 import LoadingState from "@components/ui/LoadingState";
 import { BannerInstallPWA } from "./components/organisms/BannerInstallPWA";
 import { UpdatePWAToast } from "./components/organisms/UpdatePWAToast";
+import { ToastProvider } from "./features/notifications/components/atoms/Toast";
 
 const RewardsPage      = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
 const CourseEditDetail = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
@@ -56,7 +57,7 @@ export const App: React.FC = () => {
           <Route path="/foro"      element={<PageSuspense><ForumPage /></PageSuspense>} />
           <Route path="/foro/:postId" element={<PageSuspense><ForumThreadPage /></PageSuspense>} />
           <Route path="/login"      element={<PageSuspense><LoginPage /></PageSuspense>} />
-          <Route path="/cursos"     element={<PageSuspense><CoursesPage /></PageSuspense>} />
+          <Route path="/cursos"     element={<PageSuspense><ToastProvider><CoursesPage /></ToastProvider></PageSuspense>} />
           <Route path="/cursos/:id" element={<PageSuspense><CourseDetail /></PageSuspense>} />
           <Route path="/faqs"       element={<PageSuspense><FaqsPage /></PageSuspense>} />
           <Route path="/ingreso"    element={<PageSuspense><AdmissionPage /></PageSuspense>} />
@@ -97,6 +98,7 @@ export const App: React.FC = () => {
       */}
       <BannerInstallPWA />
       <UpdatePWAToast />
+      {/* <ToastProvider /> */}
     </AuthProvider>
   );
 };

@@ -67,7 +67,7 @@ export const LayoutModal: React.FC<LayoutModalProps> = ({
         </div>
 
         {/* Cuerpo del modal (Scrollable) */}
-        <div className="overflow-y-scroll">
+        <div className="overflow-y-auto custom-scrollbar">
           {children}
         </div>
       </div>

@@ -9,7 +9,7 @@ export interface Video {
 }
 
 export interface CourseData {
-  id?: string; 
+  id?: string;
   _id?: string;
   title: string;
   description: string;
@@ -22,31 +22,42 @@ export interface CourseData {
   categoria?: string;
 }
 
-
 const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/courses`;
 
 const getToken = async () => {
   const token = await auth.currentUser?.getIdToken();
-  if (!token) throw new Error("Debes iniciar sesión");
+  if (!token) throw new Error('Debes iniciar sesion');
   return token;
 };
 
 export const coursesService = {
+
+  // -------------------------------------------------------------------------
+  // GET /api/courses
+  // El backend puede devolver:
+  //   a) array plano (legacy)    -> [ {...}, ... ]
+  //   b) objeto paginado (nuevo) -> { courses: [...], pagination: {...} }
+  // Ambos se normalizan a CourseData[] con id === _id garantizado.
+  // -------------------------------------------------------------------------
   getCourses: async (): Promise<CourseData[]> => {
     try {
       const res = await fetch(API_URL);
       if (!res.ok) throw new Error('Error obteniendo cursos');
       const data = await res.json();
-      // Mapeamos para asegurar que id sea igual a _id para compatibilidad del frontend
-      return Array.isArray(data)
-        ? data.map((c: unknown) => {
-            const course = c as CourseData & { _id?: string };
-            return { ...course, id: course._id };
-          })
-        : [];
+
+      const rawList: unknown[] = Array.isArray(data)
+        ? data
+        : Array.isArray((data as { courses?: unknown[] }).courses)
+          ? (data as { courses: unknown[] }).courses
+          : [];
+
+      return rawList.map((c: unknown) => {
+        const course = c as CourseData & { _id?: string };
+        return { ...course, id: course._id ?? course.id };
+      });
     } catch (error) {
-      console.error(error);
-      return []; 
+      console.error('[coursesService] getCourses:', error);
+      return [];
     }
   },
 
@@ -54,7 +65,7 @@ export const coursesService = {
     const res = await fetch(`${API_URL}/${id}`);
     if (!res.ok) return null;
     const data = await res.json();
-    return { ...data, id: data._id }; 
+    return { ...data, id: data._id };
   },
 
   addCourse: async (courseData: Omit<CourseData, 'id' | '_id'>): Promise<string> => {
@@ -63,9 +74,9 @@ export const coursesService = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(courseData)
+      body: JSON.stringify(courseData),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'Error al guardar el curso');
@@ -76,42 +87,40 @@ export const coursesService = {
     const token = await getToken();
     const res = await fetch(`${API_URL}/${id}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${token}` },
     });
     if (!res.ok) throw new Error('Error al eliminar el curso');
   },
 
-  fetchPlaylistDetails: async (playlistUrl: string): Promise<{ title: string, videos: Video[] }> => {
+  fetchPlaylistDetails: async (
+    playlistUrl: string,
+  ): Promise<{ title: string; videos: Video[] }> => {
     const token = await getToken();
     const res = await fetch(`${API_URL}/fetch-playlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ playlistUrl })
+      body: JSON.stringify({ playlistUrl }),
     });
-    
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Error al conectar con YouTube');
+      const err = await res.json().catch(() => ({}));
+      throw new Error((err as { message?: string }).message || 'Error al conectar con YouTube');
     }
-    
-    return await res.json();
+    return res.json();
   },
 
-  // Agrega esto debajo de addCourse en tu coursesService.ts
   updateCourse: async (id: string, courseData: Partial<CourseData>): Promise<void> => {
     const token = await getToken();
     const res = await fetch(`${API_URL}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(courseData)
+      body: JSON.stringify(courseData),
     });
     if (!res.ok) throw new Error('Error al actualizar el curso');
   },
 };
-

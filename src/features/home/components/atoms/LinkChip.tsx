@@ -19,10 +19,10 @@ export const LinkChip: React.FC<LinkChipProps> = ({
       href={url}
       target={url.startsWith('/') ? '_self' : '_blank'}
       rel="noopener noreferrer"
-      className="flex items-center gap-1.5 bg-itec-card border border-white/10 hover:border-white/20 rounded-full px-3 py-1.5 font-medium transition-all duration-150 select-none"
+      className="flex items-center gap-1.5 bg-itec-red text-itec-text font-semibold rounded-full px-3 py-2 transition-all duration-150 select-none"
     >
       <span className="leading-none">{icon}</span>
-      <span className="text-xs md:text-base text-itec-gray">{title}</span>
+      <span className="text-xs">{title}</span>
     </a>
     {isAdmin && (
       <div className="absolute -top-1 -right-1 hidden group-hover:flex items-center gap-0.5 z-10">
