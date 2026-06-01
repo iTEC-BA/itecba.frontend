@@ -12,15 +12,11 @@ interface MetricCardProps {
 export const MetricCard: React.FC<MetricCardProps> = ({
   title, value, subtitle, icon, highlight,
 }) => (
-  <div className="bg-itec-bg border border-itec-gray/50 rounded-xl p-5 flex flex-col justify-between transition-colors hover:border-itecBlue/50 relative overflow-hidden group">
-    <div className="absolute top-0 right-0 p-4 opacity-5 text-6xl transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform select-none">
-      {icon}
-    </div>
-    <div className="flex justify-between items-start mb-6 relative z-10">
-      <span className="text-itec-text text-xs font-bold uppercase tracking-widest">{title}</span>
+  <div className="bg-itec-bg flex flex-col justify-between transition-colors hover:border-itecBlue/50 relative overflow-hidden group">
+    <div className="flex justify-between items-start relative z-10">
+      <span className="text-itec-text text-xs font-bold tracking-widest">{icon} {title} : <span className={`font-bold ${highlight ?? 'text-itec-text'}`}>{value}</span></span>
     </div>
     <div className="relative z-10">
-      <span className={`text-4xl font-bold ${highlight ?? 'text-itec-text'}`}>{value}</span>
       {subtitle && <p className="text-xs text-gray-500 mt-2 font-medium">{subtitle}</p>}
     </div>
   </div>

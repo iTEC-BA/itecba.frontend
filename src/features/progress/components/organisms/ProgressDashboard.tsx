@@ -2,21 +2,21 @@
 // FIX: muestra un estado vacío explícito cuando subjects = [] (carrera sin plan)
 //   en lugar de una tabla en blanco que confunde al usuario.
 // REGLA: usa exclusivamente Button, CustomSelect de @components/ui.
-import React, { useState }  from 'react';
-import { ProgressTable }    from '../molecules/ProgressTable';
-import { GradeModal }       from '../molecules/GradeModal';
-import { MetricCard, StressMonitor, PromocionadasCard } from '../atoms/Widgets';
-import { Button }           from '@components/ui/Button';
-import { CustomSelect }     from '@components/ui/CustomSelect';
-import { CAREER_NAMES }     from '../../data/careers.data';
+import React, { useState } from "react";
+import { ProgressTable } from "../molecules/ProgressTable";
+import { GradeModal } from "../molecules/GradeModal";
+import { MetricCard, StressMonitor, PromocionadasCard } from "../atoms/Widgets";
+import { Button } from "@components/ui/Button";
+import { CustomSelect } from "@components/ui/CustomSelect";
+import { CAREER_NAMES } from "../../data/careers.data";
 import type {
   CareerProgress,
   Subject,
   UpdateSubjectArgs,
-} from '../../types/progress';
+} from "../../types/progress";
 
 interface Props {
-  data:           CareerProgress;
+  data: CareerProgress;
   onUpdateStatus: (args: UpdateSubjectArgs) => void;
   onSwitchCareer: (careerId: string) => void;
   onRemoveCareer: (careerId: string) => void;
@@ -25,9 +25,9 @@ interface Props {
 type ModalState =
   | { isOpen: false }
   | {
-      isOpen:       true;
-      subject:      Subject;
-      targetStatus: 'aprobada' | 'regular' | 'promocionada';
+      isOpen: true;
+      subject: Subject;
+      targetStatus: "aprobada" | "regular" | "promocionada";
     };
 
 // ── Inner component con clave de carrera para remount limpio ──────────────────
@@ -41,16 +41,20 @@ const DashboardContent: React.FC<Props> = ({
   const { metrics, subjects } = data;
 
   const levels = Array.from(new Set(subjects.map((s) => s.level))).sort(
-    (a, b) => a - b
+    (a, b) => a - b,
   );
   const [activeLevel, setActiveLevel] = useState<number>(levels[0] ?? 1);
 
   const availableCareersToAdd = Object.keys(CAREER_NAMES).filter(
-    (c) => !data.enrolledCareers.includes(c)
+    (c) => !data.enrolledCareers.includes(c),
   );
 
   const handleActionClick = (subject: Subject, action: string) => {
-    if (action === 'aprobada' || action === 'regular' || action === 'promocionada') {
+    if (
+      action === "aprobada" ||
+      action === "regular" ||
+      action === "promocionada"
+    ) {
       setModal({ isOpen: true, subject, targetStatus: action });
       return;
     }
@@ -58,16 +62,16 @@ const DashboardContent: React.FC<Props> = ({
   };
 
   const handleModalConfirm = (
-    id:     string,
+    id: string,
     status: string,
     grade?: number,
-    year?:  number
+    year?: number,
   ) => {
     onUpdateStatus({ id, status, grade, year });
     setModal({ isOpen: false });
   };
 
-  const levelSubjects    = subjects.filter((s) => s.level === activeLevel);
+  const levelSubjects = subjects.filter((s) => s.level === activeLevel);
   const addCareerOptions = availableCareersToAdd.map((c) => ({
     value: c,
     label: CAREER_NAMES[c] ?? c,
@@ -89,9 +93,14 @@ const DashboardContent: React.FC<Props> = ({
             <Button
               key={careerId}
               onClick={() => onSwitchCareer(careerId)}
-              variant={careerId === data.activeCareerId ? 'primary' : 'secondary'}
-              hierarchy={careerId === data.activeCareerId ? 'outline' : 'ghost'}
-              text={CAREER_NAMES[careerId]?.split(' ').slice(-2).join(' ') ?? careerId}
+              variant={
+                careerId === data.activeCareerId ? "primary" : "secondary"
+              }
+              hierarchy={careerId === data.activeCareerId ? "outline" : "ghost"}
+              text={
+                CAREER_NAMES[careerId]?.split(" ").slice(-2).join(" ") ??
+                careerId
+              }
             />
           ))}
 
@@ -99,7 +108,9 @@ const DashboardContent: React.FC<Props> = ({
             <CustomSelect
               value=""
               options={addCareerOptions}
-              onChange={(val) => { if (val) onSwitchCareer(val); }}
+              onChange={(val) => {
+                if (val) onSwitchCareer(val);
+              }}
               placeholder="+ Agregar carrera"
             />
           )}
@@ -125,7 +136,8 @@ const DashboardContent: React.FC<Props> = ({
             </p>
             <p className="text-gray-500 text-sm mt-1 max-w-sm">
               El plan para <strong>{data.careerName}</strong> no está cargado en
-              este momento. Seleccioná otra carrera o contactá al equipo de iTEC.
+              este momento. Seleccioná otra carrera o contactá al equipo de
+              iTEC.
             </p>
           </div>
         </div>
@@ -149,7 +161,6 @@ const DashboardContent: React.FC<Props> = ({
               icon="✅"
               highlight="text-green-400"
             />
-            <PromocionadasCard count={metrics.promocionadas} />
             <MetricCard
               title="Regularizadas"
               value={metrics.regulares}
@@ -163,9 +174,6 @@ const DashboardContent: React.FC<Props> = ({
               icon="📊"
               highlight="text-yellow-400"
             />
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <MetricCard
               title="Cursando"
               value={metrics.cursando}
@@ -173,7 +181,13 @@ const DashboardContent: React.FC<Props> = ({
               icon="📚"
               highlight="text-fuchsia-400"
             />
-            <StressMonitor horas={metrics.horasSemanales} nivel={metrics.nivelEstres} />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <PromocionadasCard count={metrics.promocionadas} />
+            <StressMonitor
+              horas={metrics.horasSemanales}
+              nivel={metrics.nivelEstres}
+            />
             {metrics.vencimientosProximos.length > 0 && (
               <div className="bg-itec-accent/5 border border-itec-accent/20 rounded-xl p-5 flex flex-col justify-between">
                 <span className="text-xs font-bold uppercase tracking-widest text-itec-accent mb-2">
@@ -186,7 +200,9 @@ const DashboardContent: React.FC<Props> = ({
                     </div>
                   ))}
                 </div>
-                <p className="text-[10px] text-gray-500 mt-2">Regularidad &gt; 3 años</p>
+                <p className="text-[10px] text-gray-500 mt-2">
+                  Regularidad &gt; 3 años
+                </p>
               </div>
             )}
           </div>
@@ -194,9 +210,9 @@ const DashboardContent: React.FC<Props> = ({
           {/* ── Tabs de año — usa Button global ───────────────────── */}
           <div className="flex flex-wrap gap-2">
             {levels.map((lvl) => {
-              const lvlSubs   = subjects.filter((s) => s.level === lvl);
+              const lvlSubs = subjects.filter((s) => s.level === lvl);
               const aprobadas = lvlSubs.filter(
-                (s) => s.status === 'aprobada' || s.status === 'promocionada'
+                (s) => s.status === "aprobada" || s.status === "promocionada",
               ).length;
               const pct =
                 lvlSubs.length > 0
@@ -208,15 +224,17 @@ const DashboardContent: React.FC<Props> = ({
                   key={lvl}
                   onClick={() => setActiveLevel(lvl)}
                   variant="primary"
-                  hierarchy={isActive ? 'outline' : 'ghost'}
+                  hierarchy={isActive ? "outline" : "ghost"}
                   className={`rounded-t-xl rounded-b-none border-b-2 ${
                     isActive
-                      ? 'border-itecBlue'
-                      : 'border-transparent text-gray-500 hover:text-itec-text'
+                      ? "border-itecBlue"
+                      : "border-transparent text-gray-500 hover:text-itec-text"
                   }`}
                 >
-                  <span>{lvl === 0 ? 'Ingreso' : `Año ${lvl}`}</span>
-                  <span className={`text-[10px] font-mono ml-1 ${pct === 100 ? 'text-green-400' : 'text-gray-500'}`}>
+                  <span>{lvl === 0 ? "Ingreso" : `Año ${lvl}`}</span>
+                  <span
+                    className={`text-[10px] font-mono ml-1 ${pct === 100 ? "text-green-400" : "text-gray-500"}`}
+                  >
                     {pct}%
                   </span>
                 </Button>
