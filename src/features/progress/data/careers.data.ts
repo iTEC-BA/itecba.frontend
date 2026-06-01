@@ -1,6 +1,3 @@
-// src/features/progress/data/careers.data.ts
-// FIX (tabla vacía): re-exporta los planes reales de src/data/carreras.ts
-// para que getCareerPlan en useProgress devuelva materias en lugar de [].
 import {
   CAREERS_DATA,
   type SubjectDef,

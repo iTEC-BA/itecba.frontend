@@ -3,8 +3,9 @@
 import React from "react";
 import { X } from "lucide-react";
 import { CourseSearchInput } from "../atoms/CourseSearchInput";
-import { MateriaSelect }     from "../atoms/MateriaSelect";
+// import { MateriaSelect }     from "../atoms/MateriaSelect";
 import { CategoryPill }      from "../atoms/CategoryPill";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 
 export interface FiltersState {
   searchQuery:          string;
@@ -44,11 +45,15 @@ export const CourseFilters: React.FC<Props> = ({ filters, isLoading }) => {
       <div className="flex flex-col sm:flex-row gap-2">
         <CourseSearchInput value={searchQuery} onChange={setSearchQuery} disabled={isLoading} />
         {materiasDisponibles.length > 0 && (
-          <MateriaSelect
+          <CustomSelect 
             value={selectedMateria}
-            options={materiasDisponibles}
+            options={materiasDisponibles.map((materia) => ({
+              label: materia,
+              value: materia,
+            }))}
             onChange={setSelectedMateria}
             disabled={isLoading}
+            placeholder="Todas las materias"
           />
         )}
       </div>

@@ -13,7 +13,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <input
       className={cn(
-        "text-itec-text placeholder:text-itec-muted/80 outline-none",
+        "text-itec-text placeholder:text-itec-muted/80 outline-none placeholder:text-sm",
         "transition-all",
         fullWidth && "w-full",
         className

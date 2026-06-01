@@ -17,11 +17,11 @@ export const ProgressTable: React.FC<Props> = ({
   if (subjects.length === 0) return null;
 
   return (
-    <div className="bg-itec-box border border-itec-gray/50 rounded-b-xl rounded-tr-xl overflow-hidden shadow-lg animate-fade-in">
+    <div className="bg-itec-box border border-itec-border rounded-b-xl rounded-tr-xl overflow-hidden shadow-lg animate-fade-in cursor-pointer">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[850px]">
+        <table className="w-full text-left border-collapse min-w-212.5">
           <thead>
-            <tr className="bg-itec-bg/80 border-b border-itec-gray text-xs uppercase tracking-widest text-itec-text">
+            <tr className="bg-itec-box border-b border-itec-gray text-xs uppercase tracking-widest text-itec-text">
               <th className="px-5 py-4 font-bold w-16 text-center">Cód</th>
               <th className="px-5 py-4 font-bold w-64">Materia</th>
               <th className="px-5 py-4 font-bold w-48">Correlativas Req.</th>
@@ -29,7 +29,7 @@ export const ProgressTable: React.FC<Props> = ({
               <th className="px-5 py-4 font-bold text-right pr-6 w-56">Mi Seguimiento</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-itec-gray/30">
+          <tbody className="divide-y divide-itec-border">
             {subjects.map((sub) => (
               <SubjectTableRow
                 key={sub.id}

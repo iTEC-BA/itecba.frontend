@@ -1,7 +1,3 @@
-// src/features/progress/components/organisms/ProgressDashboard.tsx
-// FIX: muestra un estado vacío explícito cuando subjects = [] (carrera sin plan)
-//   en lugar de una tabla en blanco que confunde al usuario.
-// REGLA: usa exclusivamente Button, CustomSelect de @components/ui.
 import React, { useState } from "react";
 import { ProgressTable } from "../molecules/ProgressTable";
 import { GradeModal } from "../molecules/GradeModal";
@@ -94,13 +90,13 @@ const DashboardContent: React.FC<Props> = ({
               key={careerId}
               onClick={() => onSwitchCareer(careerId)}
               variant={
-                careerId === data.activeCareerId ? "primary" : "secondary"
+                careerId === data.activeCareerId ? "danger" : "danger"
               }
-              hierarchy={careerId === data.activeCareerId ? "outline" : "ghost"}
+              hierarchy={careerId === data.activeCareerId ? "solid" : "dashed"}
               text={
-                CAREER_NAMES[careerId]?.split(" ").slice(-2).join(" ") ??
                 careerId
               }
+              className="uppercase"
             />
           ))}
 
@@ -146,67 +142,68 @@ const DashboardContent: React.FC<Props> = ({
       {/* ── Métricas (solo si hay materias) ──────────────────────── */}
       {subjects.length > 0 && (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            <MetricCard
-              title="Avance Plan"
-              value={`${metrics.porcentajeAvance}%`}
-              subtitle={`${metrics.aprobadas + metrics.promocionadas} / ${metrics.total} materias`}
-              icon="🎓"
-              highlight="text-itecBlue"
-            />
-            <MetricCard
-              title="Aprobadas"
-              value={metrics.aprobadas}
-              subtitle="Final rendido"
-              icon="✅"
-              highlight="text-green-400"
-            />
-            <MetricCard
-              title="Regularizadas"
-              value={metrics.regulares}
-              subtitle="Pendiente final"
-              icon="📋"
-            />
-            <MetricCard
-              title="Promedio"
-              value={metrics.promedio}
-              subtitle="Sobre materias aprobadas"
-              icon="📊"
-              highlight="text-yellow-400"
-            />
-            <MetricCard
-              title="Cursando"
-              value={metrics.cursando}
-              subtitle="Materias este cuatrimestre"
-              icon="📚"
-              highlight="text-fuchsia-400"
-            />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-3">
+              <MetricCard
+                title="Avance Plan"
+                value={`${metrics.porcentajeAvance}%`}
+                subtitle={`${metrics.aprobadas + metrics.promocionadas} / ${metrics.total} materias`}
+                icon="🎓"
+                highlight="text-itec-blue-skye"
+              />
+              <MetricCard
+                title="Aprobadas"
+                value={metrics.aprobadas}
+                subtitle="Final rendido"
+                icon="✅"
+                highlight="text-green-400"
+              />
+              <MetricCard
+                title="Regularizadas"
+                value={metrics.regulares}
+                subtitle="Pendiente final"
+                icon="📋"
+              />
+              <MetricCard
+                title="Promedio"
+                value={metrics.promedio}
+                subtitle="Sobre materias aprobadas"
+                icon="📊"
+                highlight="text-yellow-400"
+              />
+              <MetricCard
+                title="Cursando"
+                value={metrics.cursando}
+                subtitle="Materias este cuatrimestre"
+                icon="📚"
+                highlight="text-fuchsia-400"
+              />
+            </div>
+            <div className="flex gap-3 md:flex-col">
+              <PromocionadasCard count={metrics.promocionadas} />
+              <StressMonitor
+                horas={metrics.horasSemanales}
+                nivel={metrics.nivelEstres}
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <PromocionadasCard count={metrics.promocionadas} />
-            <StressMonitor
-              horas={metrics.horasSemanales}
-              nivel={metrics.nivelEstres}
-            />
-            {metrics.vencimientosProximos.length > 0 && (
-              <div className="bg-itec-accent/5 border border-itec-accent/20 rounded-xl p-5 flex flex-col justify-between">
-                <span className="text-xs font-bold uppercase tracking-widest text-itec-accent mb-2">
-                  ⚠️ Vencimientos
-                </span>
-                <div className="space-y-1">
-                  {metrics.vencimientosProximos.slice(0, 3).map((s) => (
-                    <div key={s.id} className="text-xs text-itec-text truncate">
-                      {s.name}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-[10px] text-gray-500 mt-2">
-                  Regularidad &gt; 3 años
-                </p>
+          {metrics.vencimientosProximos.length > 0 && (
+            <div className="bg-itec-accent/5 border border-itec-accent/20 rounded-xl p-5 flex flex-col justify-between">
+              <span className="text-xs font-bold uppercase tracking-widest text-itec-accent mb-2">
+                ⚠️ Vencimientos
+              </span>
+              <div className="space-y-1">
+                {metrics.vencimientosProximos.slice(0, 3).map((s) => (
+                  <div key={s.id} className="text-xs text-itec-text truncate">
+                    {s.name}
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-
+              <p className="text-[10px] text-gray-500 mt-2">
+                Regularidad &gt; 3 años
+              </p>
+            </div>
+              )}
           {/* ── Tabs de año — usa Button global ───────────────────── */}
           <div className="flex flex-wrap gap-2">
             {levels.map((lvl) => {

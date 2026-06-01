@@ -78,7 +78,7 @@ export const SubjectTableRow: React.FC<Props> = ({
             <div>
               <span className="font-semibold text-gray-500">Cursada: </span>
               {sub.reqCursada
-                .map((id) => allSubjects.find((s) => s.id === id)?.name ?? id)
+                .map((id) => allSubjects.find((s) => s.id === id)?.code ?? id)
                 .join(', ')}
             </div>
           )}
@@ -86,7 +86,7 @@ export const SubjectTableRow: React.FC<Props> = ({
             <div>
               <span className="font-semibold text-gray-500">Final: </span>
               {sub.reqAprobada
-                .map((id) => allSubjects.find((s) => s.id === id)?.name ?? id)
+                .map((id) => allSubjects.find((s) => s.id === id)?.code ?? id)
                 .join(', ')}
             </div>
           )}

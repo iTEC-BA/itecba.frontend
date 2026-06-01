@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/Input';
+import { cn } from '@/lib/utils';
 
 export interface SelectOption {
   value: string;
@@ -13,10 +14,11 @@ interface Props {
   onChange: (val: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 export const CustomSelect: React.FC<Props> = ({ 
-  label, value, options, onChange, placeholder = "Seleccionar...", disabled = false 
+  label, value, options, onChange, placeholder = "Seleccionar...", disabled = false ,className
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,24 +35,23 @@ export const CustomSelect: React.FC<Props> = ({
   }, []);
 
   const selectedLabel = options.find(o => o.value === value)?.label || '';
-
   return (
-    <div ref={containerRef} className={`relative flex flex-col transition-all duration-300 ${disabled ? 'grayscale' : ''}`}>
-      {label && <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-2 pl-1">{label}</label>}
+    <div ref={containerRef} className={cn("relative flex flex-col transition-all duration-300",disabled ? 'grayscale' : '')}>
+      {label && <label className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-2 pl-1">{label}</label>}
       <div onClick={() => !disabled && setIsOpen(!isOpen)}>
         <Input 
           fullWidth readOnly disabled={disabled}
           placeholder={placeholder} 
           value={selectedLabel} 
-          className="cursor-pointer text-sm p-3 bg-slate-950/50 border-itec-border hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl disabled:cursor-not-allowed select-none" 
+          className={cn("cursor-pointer text-xs rounded-md disabled:cursor-not-allowed select-none border border-itec-border hover:border-itec-description", className ? className : "px-2 py-1")} 
         />
       </div>
       {isOpen && !disabled && (
-        <ul className="absolute z-100 w-full top-full mt-2 bg-slate-800 border border-itec-border rounded-2xl max-h-60 overflow-y-scroll">
+        <ul className="absolute z-100 w-full top-full mt-2 bg-itec-card border border-itec-border rounded-md max-h-60 overflow-y-scroll">
           {options.map((opt) => (
             <li 
               key={opt.value} onClick={() => { onChange(opt.value); setIsOpen(false); }} 
-              className="cursor-pointer px-3 py-2 text-sm text-slate-300 hover:bg-emerald-600 hover:text-itec-text border-b border-white/5 last:border-0 transition-colors"
+              className="cursor-pointer px-3 py-2 text-xs text-slate-300 hover:bg-itec-bg hover:text-itec-text border-b border-white/5 last:border-0 transition-colors"
             >
               {opt.label}
             </li>
