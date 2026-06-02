@@ -62,7 +62,7 @@ agregar_archivo "./src/pages/NotificationsPage.tsx"
 # agregar_archivo "./src/pages/ForumThreadPage.tsx"
 # agregar_archivo "./src/pages/CourseDetail.tsx"
 # agregar_archivo "./src/pages/CourseEditDetail.tsx"
-# agregar_archivo "./src/pages/CourseDetail.tsx"
+agregar_archivo "./src/pages/GradeDetailPage.tsx"
 # agregar_archivo "./src/pages/CourseDetail.tsx"
 
 # Agregar la página (View) principal del feature

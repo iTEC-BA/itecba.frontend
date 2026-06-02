@@ -7,6 +7,7 @@ import LoadingState from "@components/ui/LoadingState";
 import { BannerInstallPWA } from "./components/organisms/BannerInstallPWA";
 import { UpdatePWAToast } from "./components/organisms/UpdatePWAToast";
 import { ToastProvider } from "./features/notifications/components/atoms/Toast";
+import GradeDetailPage from '@pages/gradeDetailPage';
 
 const RewardsPage      = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
 const CourseEditDetail = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
@@ -62,6 +63,7 @@ export const App: React.FC = () => {
           <Route path="/faqs"       element={<PageSuspense><FaqsPage /></PageSuspense>} />
           <Route path="/ingreso"    element={<PageSuspense><AdmissionPage /></PageSuspense>} />
           <Route path="/grado"      element={<PageSuspense><GradePage /></PageSuspense>} />
+          <Route path='/grado/:carreraId' element={<GradeDetailPage />} />
           <Route path="/nosotros"   element={<PageSuspense><AboutPage /></PageSuspense>} />
           <Route path="/grupos"     element={<PageSuspense><GroupsPage /></PageSuspense>} />
           <Route path="/aulas"      element={<PageSuspense><AulasPage /></PageSuspense>} />

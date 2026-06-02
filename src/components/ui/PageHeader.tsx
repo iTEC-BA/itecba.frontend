@@ -11,13 +11,14 @@ interface Props {
   title: string;
   description: string;
   iconType?: string;
+  icon?: React.ReactNode;
   imageUrl?: string;
   colorTheme: HeaderColorTheme;
   children?: React.ReactNode;
 }
 
 export const PageHeader: React.FC<Props> = ({ 
-  title, description, iconType, imageUrl, colorTheme, children 
+  title, description, iconType, icon, imageUrl, colorTheme, children
 }) => {
   
   // Diccionario centralizado: Más limpio que un switch gigante y fácil de mantener.
@@ -38,7 +39,6 @@ export const PageHeader: React.FC<Props> = ({
   };
 
   const currentStyle = themeStyles[colorTheme] || themeStyles.slate;
-
   return (
     <header className="mb-6 md:mb-8 animate-in fade-in slide-in-from-top-2 duration-500">
       {/* sm:flex-row permite que en tablets/PC el header y los botones se pongan uno a cada lado */}
@@ -57,9 +57,7 @@ export const PageHeader: React.FC<Props> = ({
             />
           ) : (
             <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center border shrink-0 mt-1 transition-all ${currentStyle.box}`}>
-              <div className="w-6 h-6 md:w-7 md:h-7">
-                <Icons type={iconType as any} />
-              </div>
+                {icon ? icon : <div className="w-6 h-6 md:w-7 md:h-7"><Icons type={iconType as any} /></div>}
             </div>
           )}
 
