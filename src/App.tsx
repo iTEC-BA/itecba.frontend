@@ -8,6 +8,7 @@ import { BannerInstallPWA } from "./components/organisms/BannerInstallPWA";
 import { UpdatePWAToast } from "./components/organisms/UpdatePWAToast";
 import { ToastProvider } from "./features/notifications/components/atoms/Toast";
 import GradeDetailPage from '@pages/gradeDetailPage';
+import PadronPage from '@pages/PadronPage';
 
 const RewardsPage      = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
 const CourseEditDetail = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
@@ -54,6 +55,7 @@ export const App: React.FC = () => {
       <BrowserRouter>
         <Routes>
           {/* RUTAS PÚBLICAS */}
+          <Route path="/padron" element={<PadronPage />} />
           <Route path="/"           element={<PageSuspense><HomePage /></PageSuspense>} />
           <Route path="/foro"      element={<PageSuspense><ForumPage /></PageSuspense>} />
           <Route path="/foro/:postId" element={<PageSuspense><ForumThreadPage /></PageSuspense>} />
