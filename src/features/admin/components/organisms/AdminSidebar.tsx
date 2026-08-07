@@ -28,11 +28,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ active, onNavigate, 
       {/* Backdrop - Fondo oscuro con blur */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 z-150 bg-black/60  animate-in fade-in duration-300"
+        className="fixed inset-0 z-1 bg-black/60  animate-in fade-in duration-300"
       />
 
       {/* Panel lateral - Siempre sale de derecha a izquierda */}
-      <aside className="fixed right-0 top-0 z-[160] h-full w-[85vw] max-w-xs border-l border-itec-border bg-itec-box shadow-2xl animate-in slide-in-from-right duration-300">
+      <aside className="fixed right-0 top-0 z-40 h-full w-[85vw] max-w-xs border-l border-itec-border bg-itec-box shadow-2xl animate-in slide-in-from-right duration-300">
         <div className="flex h-full flex-col">
           
           {/* Header del Sidebar */}

@@ -16,7 +16,7 @@ export const NavbarTop = () => {
   const { toggle } = useSidebarMobile();
 
   return (
-    <header className="shrink-0 z-100 h-16 flex items-center px-4 bg-itec-sidebar border-b border-white/5">
+    <header className="shrink-0 z-30 h-16 flex items-center px-4 bg-itec-sidebar border-b border-white/5">
       <div className="w-full mx-auto flex items-center gap-3">
         {/* ── Izquierda: hamburguesa (solo mobile) + logo ── */}
         <div className="flex items-center gap-2 shrink-0">

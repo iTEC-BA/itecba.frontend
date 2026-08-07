@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card } from "@components/atoms/Card";
 import { Icons } from "@components/ui/icons/Icons";
+import { Button } from "@components/ui/Button";
 import { auth } from "@/lib/firebase";
-
-const BASE = import.meta.env.VITE_API_URL ?? "";
+import { adminService } from "../services/adminService";
 
 interface Benefit {
   _id: string;
@@ -29,62 +30,60 @@ const FIELD_LABELS: Record<keyof BenefitForm, string> = {
   category: "Categoría",
 };
 
+const getToken = async () => {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) throw new Error("No autenticado");
+  return token;
+};
+
 export const BenefitsManagement: React.FC = () => {
-  const [benefits, setBenefits] = useState<Benefit[]>([]);
-  const [loading,  setLoading]  = useState(true);
-  const [form,     setForm]     = useState<BenefitForm>(EMPTY);
-  const [saving,   setSaving]   = useState(false);
-  const [error,    setError]    = useState<string | null>(null);
-  const [editId,   setEditId]   = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const [form,   setForm]   = useState<BenefitForm>(EMPTY);
+  const [error,  setError]  = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
 
-  const load = async () => {
-    setLoading(true);
-    const t = await auth.currentUser?.getIdToken();
-    const res = await fetch(`${BASE}/benefits/all`, {
-      headers: { Authorization: `Bearer ${t}` },
-    });
-    const data = await res.json();
-    setBenefits(data.benefits ?? []);
-    setLoading(false);
-  };
+  const { data: benefits = [], isLoading } = useQuery<Benefit[]>({
+    queryKey: ["adminBenefits"],
+    queryFn: async () => {
+      const token = await getToken();
+      return adminService.getAllBenefits(token);
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
-  useEffect(() => { load(); }, []);
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return adminService.saveBenefit(form, editId, token);
+    },
+    onSuccess: () => {
+      setForm(EMPTY);
+      setEditId(null);
+      setError(null);
+      queryClient.invalidateQueries({ queryKey: ["adminBenefits"] });
+    },
+    onError: (err: Error) => setError(err.message ?? "Error al guardar"),
+  });
 
-  const save = async () => {
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const token = await getToken();
+      return adminService.deleteBenefit(id, token);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["adminBenefits"] }),
+  });
+
+  const save = () => {
     if (!form.title || !form.discount) {
       setError("Título y descuento son obligatorios.");
       return;
     }
-    setSaving(true);
-    setError(null);
-    const t      = await auth.currentUser?.getIdToken();
-    const url    = editId ? `${BASE}/benefits/${editId}` : `${BASE}/benefits`;
-    const method = editId ? "PATCH" : "POST";
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${t}` },
-      body: JSON.stringify(form),
-    });
-    if (!res.ok) {
-      const e = await res.json();
-      setError(e.message ?? "Error al guardar");
-      setSaving(false);
-      return;
-    }
-    setForm(EMPTY);
-    setEditId(null);
-    setSaving(false);
-    load();
+    saveMutation.mutate();
   };
 
-  const remove = async (id: string) => {
+  const remove = (id: string) => {
     if (!window.confirm("¿Desactivar este beneficio?")) return;
-    const t = await auth.currentUser?.getIdToken();
-    await fetch(`${BASE}/benefits/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${t}` },
-    });
-    load();
+    deleteMutation.mutate(id);
   };
 
   const startEdit = (b: Benefit) => {
@@ -98,7 +97,7 @@ export const BenefitsManagement: React.FC = () => {
     });
   };
 
-  const cancelEdit = () => { setEditId(null); setForm(EMPTY); };
+  const cancelEdit = () => { setEditId(null); setForm(EMPTY); setError(null); };
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
@@ -109,7 +108,7 @@ export const BenefitsManagement: React.FC = () => {
       </div>
 
       {/* ── Formulario ─────────────────────────────────────────────────────── */}
-      <GlassCard className="p-6" variant="elevated" glow="sky">
+      <Card className="p-6 border-itec-sky/20 shadow-[0_0_40px_-15px_rgba(56,189,248,0.3)]">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Formulario</p>
@@ -118,12 +117,13 @@ export const BenefitsManagement: React.FC = () => {
             </h3>
           </div>
           {editId && (
-            <button
+            <Button
               onClick={cancelEdit}
-              className="flex h-8 w-8 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted transition-all hover:bg-itec-box hover:text-itec-text active:scale-95"
-            >
-              <Icons type="close" className="h-4 w-4" />
-            </button>
+              variant="slate"
+              hierarchy="outline"
+              className="h-8 w-8 p-0 rounded-xl"
+              icon={<Icons type="close" className="h-4 w-4" />}
+            />
           )}
         </div>
 
@@ -167,26 +167,29 @@ export const BenefitsManagement: React.FC = () => {
         )}
 
         <div className="mt-5 flex gap-3">
-          <button
+          <Button
             onClick={save}
-            disabled={saving}
-            className="rounded-xl border border-itec-sky/30 bg-itec-sky/20 px-5 py-2.5 text-xs font-bold text-itec-sky transition-all hover:bg-itec-sky/30 active:scale-95 disabled:opacity-50"
-          >
-            {saving ? "Guardando..." : editId ? "Actualizar" : "Crear"}
-          </button>
+            disabled={saveMutation.isPending}
+            isLoading={saveMutation.isPending}
+            variant="primary"
+            hierarchy="outline"
+            className="rounded-xl px-5 py-2.5 text-xs"
+            text={editId ? "Actualizar" : "Crear"}
+          />
           {editId && (
-            <button
+            <Button
               onClick={cancelEdit}
-              className="rounded-xl border border-itec-border bg-itec-surface/60 px-5 py-2.5 text-xs font-bold text-itec-muted transition-all hover:text-itec-text active:scale-95"
-            >
-              Cancelar
-            </button>
+              variant="slate"
+              hierarchy="ghost"
+              className="rounded-xl px-5 py-2.5 text-xs"
+              text="Cancelar"
+            />
           )}
         </div>
-      </GlassCard>
+      </Card>
 
       {/* ── Listado ─────────────────────────────────────────────────────────── */}
-      <GlassCard className="overflow-hidden" variant="elevated">
+      <Card className="overflow-hidden">
         <div className="flex items-center justify-between gap-4 border-b border-itec-border px-5 py-4">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Catálogo</p>
@@ -197,7 +200,7 @@ export const BenefitsManagement: React.FC = () => {
           </span>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="space-y-3 p-5">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="h-10 animate-pulse rounded-xl bg-itec-surface/40" />
@@ -240,20 +243,22 @@ export const BenefitsManagement: React.FC = () => {
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                        <button
+                        <Button
                           onClick={() => startEdit(b)}
-                          className="rounded-xl border border-itec-sky/20 bg-itec-sky/10 p-1.5 text-itec-sky transition-all hover:bg-itec-sky/20 active:scale-95"
+                          variant="primary"
+                          hierarchy="outline"
+                          className="p-1.5 rounded-xl"
+                          icon={<Icons type="edit" className="h-3.5 w-3.5" />}
                           aria-label="Editar"
-                        >
-                          <Icons type="edit" className="h-3.5 w-3.5" />
-                        </button>
-                        <button
+                        />
+                        <Button
                           onClick={() => remove(b._id)}
-                          className="rounded-xl border border-itec-accent/20 bg-itec-accent/10 p-1.5 text-itec-accent transition-all hover:bg-itec-accent/20 active:scale-95"
+                          variant="danger"
+                          hierarchy="outline"
+                          className="p-1.5 rounded-xl"
+                          icon={<Icons type="trash" className="h-3.5 w-3.5" />}
                           aria-label="Desactivar"
-                        >
-                          <Icons type="trash" className="h-3.5 w-3.5" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -262,7 +267,7 @@ export const BenefitsManagement: React.FC = () => {
             </table>
           </div>
         )}
-      </GlassCard>
+      </Card>
     </div>
   );
 };

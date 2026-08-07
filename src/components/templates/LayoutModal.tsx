@@ -17,6 +17,19 @@ interface LayoutModalProps {
   children: React.ReactNode;
 }
 
+// Mapa estático de anchos: Tailwind JIT necesita ver la clase completa
+// escrita literalmente en el código fuente para generarla en el build.
+// Si se agrega un nuevo maxWidth en algún llamador, sumarlo acá también.
+const MAX_WIDTH_CLASS: Record<string, string> = {
+  "max-w-sm":  "sm:max-w-sm",
+  "max-w-md":  "sm:max-w-md",
+  "max-w-lg":  "sm:max-w-lg",
+  "max-w-xl":  "sm:max-w-xl",
+  "max-w-2xl": "sm:max-w-2xl",
+  "max-w-3xl": "sm:max-w-3xl",
+  "max-w-4xl": "sm:max-w-4xl",
+};
+
 export const LayoutModal: React.FC<LayoutModalProps> = ({
   isOpen,
   onClose,
@@ -42,10 +55,10 @@ export const LayoutModal: React.FC<LayoutModalProps> = ({
       ref={backdropRef}
       onClick={(e) => e.target === backdropRef.current && onClose()}
       // p-0 en mobile para que pegue abajo, p-4 en desktop
-      className="fixed inset-0 z-200 flex items-end sm:items-center justify-center bg-itec-bg  p-0 sm:p-3"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-itec-bg  p-0 sm:p-3"
     >
       <div
-        className={`w-full sm:${maxWidth} flex flex-col bg-itec-bg border border-itec-border rounded-t-4xl sm:rounded-xl shadow-[0_24px_80px_rgba(0,0,0,0.7)] max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-500`}
+        className={`w-full flex flex-col bg-itec-bg border border-itec-border rounded-t-4xl sm:rounded-xl shadow-[0_24px_80px_rgba(0,0,0,0.7)] max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-500 ${MAX_WIDTH_CLASS[maxWidth] ?? maxWidth}`}
       >
         {/* Encabezado fijo (Sticky) */}
         <div className="shrink-0 flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3">

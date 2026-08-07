@@ -1,7 +1,7 @@
 // src/features/courses/hooks/useCourseFilters.ts
 // Filtra cursos con búsqueda normalizada (sin tildes ni caracteres especiales).
 import { useState, useMemo, useCallback } from "react";
-import { normalizeStr } from "@/lib/normalizeStr";
+import { normalizeSearch } from "@/lib/normalize";
 import type { CourseData } from "../services/coursesService";
 
 export interface CourseFiltersState {
@@ -17,12 +17,12 @@ export interface CourseFiltersState {
 
 const matchesSearch = (course: CourseData, normalized: string): boolean => {
   if (!normalized) return true;
-  const searchable = normalizeStr(`${course.title ?? ""} ${course.description ?? ""} ${course.materia ?? ""}`);
+  const searchable = normalizeSearch(`${course.title ?? ""} ${course.description ?? ""} ${course.materia ?? ""}`);
   return searchable.includes(normalized);
 };
 
 const matchesMateria = (course: CourseData, materia: string): boolean =>
-  !materia || normalizeStr(course.materia ?? "") === normalizeStr(materia);
+  !materia || normalizeSearch(course.materia ?? "") === normalizeSearch(materia);
 
 const matchesCategoria = (course: CourseData, categoria: string): boolean =>
   !categoria || course.categoria === categoria;
@@ -44,7 +44,7 @@ export const useCourseFilters = (courses: CourseData[]) => {
   }, [courses]);
 
   const filteredCourses = useMemo(() => {
-    const normalized = normalizeStr(searchQuery);
+    const normalized = normalizeSearch(searchQuery);
     return courses.filter((c) =>
       matchesSearch(c, normalized) &&
       matchesMateria(c, selectedMateria) &&

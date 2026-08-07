@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import Raccoon from "../ui/icons/Raccoon";
+import { Icons } from "../ui/icons/Icons";
 import { useAuth } from "../../context/AuthContext";
-import { BellDot, Grid, Home, BookKey, Users } from "lucide-react";
 
 export const NavbarBottom = () => {
   const location = useLocation();
@@ -15,17 +15,17 @@ export const NavbarBottom = () => {
     }`;
 
   return (
-    <nav className="h-16 w-full bg-itec-sidebar border-t border-white/5 sticky bottom-0 z-[99] flex items-center justify-around px-2 shrink-0 pb-safe">
+    <nav className="h-16 w-full bg-itec-sidebar border-t border-white/5 sticky bottom-0 z-30 flex items-center justify-around px-2 shrink-0 pb-safe">
       <div className="flex gap-1 justify-around w-full items-center">
         {/* Inicio */}
         <Link to="/" className={linkClass("/")}>
-          <Home />
+          <Icons type="home" className="size-6" />
           <span className="text-[9px] font-medium truncate">Inicio</span>
         </Link>
 
         {/* Aulas */}
         <Link to="/aulas" className={linkClass("/aulas")}>
-          <BookKey  className="size-6" strokeWidth={2}/>
+          <Icons type="entry" className="size-6" />
           <span className="text-[9px] font-medium truncate">Aulas</span>
         </Link>
 
@@ -41,7 +41,7 @@ export const NavbarBottom = () => {
 
         {/* Grupos */}
         <Link to="/grupos" className={linkClass("/grupos")}>
-          <Users  className="size-6" strokeWidth={2}/>
+          <Icons type="users" className="size-6" />
           <span className="text-[9px] font-medium truncate">Grupos</span>
         </Link>
 
@@ -50,7 +50,7 @@ export const NavbarBottom = () => {
           to={isAuthenticated ? "/notificaciones" : "/plugins"}
           className={linkClass(isAuthenticated ? "/notificaciones" : "/plugins")}
         >
-          {isAuthenticated ?<BellDot className="size-6" strokeWidth={1}/> : <Grid className="size-6" strokeWidth={1}/> }
+          <Icons type={isAuthenticated ? "bellDot" : "grid"} className="size-6" />
           <span className="text-[9px] font-medium truncate">
             {isAuthenticated ? "Notificaciones" : "Plugins"}
           </span>

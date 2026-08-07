@@ -715,7 +715,7 @@ export const ItecMediaSlider: React.FC<ItecMediaSliderProps> = ({
         {/* ── Tira de thumbnails ───────────────────────────────────────────── */}
         {showThumbnails && total > 1 && (
           <div
-            className="flex gap-2 mt-2 overflow-x-auto pb-1"
+            className="flex gap-2 mt-2 overflow-x-auto pb-1 no-scrollbar"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             role="tablist"
             aria-label="Miniaturas"
@@ -839,10 +839,9 @@ export const ItecCarousel = ({
         ref={scrollRef}
         onScroll={checkScroll}
         className={cn(
-          "flex overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4",
+          "flex overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar",
           gap
         )}
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         role="region"
         aria-label="Carrusel"
       >

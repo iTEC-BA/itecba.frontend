@@ -43,12 +43,14 @@ echo "🖼️  2/5 Agregando Componentes universales"
 agregar_carpeta "src/components/"
 agregar_carpeta "src/lib/"
 
-echo "🛠️  3/5 Agregando Hooks Globales..."
+echo "🛠️  3/5 Agregando Hooks Globales y data..."
 agregar_carpeta "src/hooks/"
+agregar_carpeta "src/data/"
+
 
 echo "🧩 4/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
-agregar_carpeta "src/features/notifications/"
+# agregar_carpeta "src/features/notifications/"
 
 echo "📦 5/5 Agregando a estilo"
 agregar_archivo "./package.json"
@@ -57,12 +59,13 @@ agregar_archivo "./vite.config.ts"
 agregar_archivo "./src/index.css"
 agregar_archivo "./src/pages/NotificationsPage.tsx"
 # agregar_archivo "./add_classroom_frontend.sh"
+agregar_archivo "./src/pages/AdminPanel.tsx"
 # agregar_archivo "./src/pages/AulaDetallePage.tsx"
 # agregar_archivo "./src/pages/TruekeTECPage.tsx"
 # agregar_archivo "./src/pages/ForumThreadPage.tsx"
 # agregar_archivo "./src/pages/CourseDetail.tsx"
 # agregar_archivo "./src/pages/CourseEditDetail.tsx"
-agregar_archivo "./src/pages/GradeDetailPage.tsx"
+# agregar_archivo "./src/pages/GradeDetailPage.tsx"
 # agregar_archivo "./src/pages/CourseDetail.tsx"
 
 # Agregar la página (View) principal del feature

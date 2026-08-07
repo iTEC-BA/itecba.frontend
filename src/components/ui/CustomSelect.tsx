@@ -47,7 +47,7 @@ export const CustomSelect: React.FC<Props> = ({
         />
       </div>
       {isOpen && !disabled && (
-        <ul className="absolute z-100 w-full top-full mt-2 bg-itec-card border border-itec-border rounded-md max-h-60 overflow-y-scroll">
+        <ul className="absolute z-20 w-full top-full mt-2 bg-itec-card border border-itec-border rounded-md max-h-60 overflow-y-scroll">
           {options.map((opt) => (
             <li 
               key={opt.value} onClick={() => { onChange(opt.value); setIsOpen(false); }} 

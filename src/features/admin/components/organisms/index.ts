@@ -1,3 +1,3 @@
 export { AdminSidebar }          from "./AdminSidebar";
-export { AdminDashboard }        from "./AdminDashboard";
-export { TutoriasSection }       from "./TutoriasSection";
+export { AdminDashboard }        from "../../pages/AdminDashboard";
+export { TutoriasSection }       from "../../pages/TutoriasSection";

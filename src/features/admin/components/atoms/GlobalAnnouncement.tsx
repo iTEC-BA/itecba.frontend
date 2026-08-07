@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { adminService, type AnnouncementData } from "../../services/adminService";
-import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { Card } from "@components/atoms/Card";
 import { Button } from "@components/ui/Button";
 
 const safeParseJSON = (key: string, fallback: any) => {
@@ -88,8 +88,8 @@ export const GlobalAnnouncement: React.FC = () => {
   } catch {}
 
   return (
-    <div className="fixed bottom-5 right-5 z-[9999] w-[calc(100%-2.5rem)] sm:w-[420px]">
-      <GlassCard variant="elevated" className={`p-4 sm:p-5 ${isExiting ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"} transition-all duration-300`}>
+    <div className="fixed bottom-5 right-5 z-[60] w-[calc(100%-2.5rem)] sm:w-[420px]">
+      <Card className={`p-4 sm:p-5 shadow-xl ${isExiting ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"} transition-all duration-300`}>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Comunicado crítico</p>
@@ -120,7 +120,7 @@ export const GlobalAnnouncement: React.FC = () => {
             </Button>
           </div>
         </div>
-      </GlassCard>
+      </Card>
     </div>
   );
 };

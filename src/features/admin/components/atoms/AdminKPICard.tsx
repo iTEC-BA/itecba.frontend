@@ -1,5 +1,5 @@
 import React from "react";
-import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { Card } from "@components/atoms/Card";
 import { Icons } from "@/components/ui/icons/Icons";
 import { cn } from "@/lib/utils";
 
@@ -34,40 +34,35 @@ export const AdminKPICard: React.FC<AdminKPICardProps> = ({
 }) => {
   const t = trend ? TREND_MAP[trend] : null;
 
-  const glowColor =
-    accent.includes("amber")   ? "amber"   :
-    accent.includes("emerald") ? "emerald" :
-    accent.includes("purple")  ? "purple"  :
-    accent.includes("accent")  ? "accent"  : "sky";
-
   return (
-    <GlassCard
-      hover={!!onClick}
-      onClick={onClick}
-      variant="elevated"
-      glow={glowColor}
-      className="group flex cursor-default flex-col gap-3 p-5"
-    >
-      <div className="flex items-start justify-between">
-        {icon && (
-          <div className={cn("h-5 w-5 shrink-0 transition-transform duration-300 group-hover:scale-110", accent)}>
-            <Icons type={icon} />
-          </div>
+    <div onClick={onClick} className={cn(onClick ? "cursor-pointer" : "cursor-default")}>
+      <Card
+        className={cn(
+          "group flex flex-col gap-3 p-5 shadow-lg transition-all duration-300",
+          onClick && "hover:-translate-y-0.5 hover:border-itec-sky/40 hover:shadow-xl",
         )}
-        {t && (
-          <span className={cn("ml-auto text-xs font-bold", t.cls)}>
-            {t.icon} {trendLabel}
-          </span>
+      >
+        <div className="flex items-start justify-between">
+          {icon && (
+            <div className={cn("h-5 w-5 shrink-0 transition-transform duration-300 group-hover:scale-110", accent)}>
+              <Icons type={icon} />
+            </div>
+          )}
+          {t && (
+            <span className={cn("ml-auto text-xs font-bold", t.cls)}>
+              {t.icon} {trendLabel}
+            </span>
+          )}
+        </div>
+
+        {loading ? (
+          <div className="h-10 w-24 animate-pulse rounded-xl bg-itec-border/50" />
+        ) : (
+          <span className={cn("text-4xl font-bold leading-none tracking-tight", accent)}>{value}</span>
         )}
-      </div>
 
-      {loading ? (
-        <div className="h-10 w-24 animate-pulse rounded-xl bg-itec-border/50" />
-      ) : (
-        <span className={cn("text-4xl font-bold leading-none tracking-tight", accent)}>{value}</span>
-      )}
-
-      <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-itec-muted">{label}</span>
-    </GlassCard>
+        <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-itec-muted">{label}</span>
+      </Card>
+    </div>
   );
 };

@@ -31,7 +31,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const SUPER_ADMIN_EMAIL = 'jtumiricuellar@frba.utn.edu.ar';
+export const SUPER_ADMIN_EMAIL = import.meta.env.VITE_SUPER_ADMIN_EMAIL || "";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           const docRef = doc(db, 'users', firebaseUser.uid);
           const docSnap = await getDoc(docRef);
-          
+
           if (docSnap.exists()) {
             setUser({ id: firebaseUser.uid, ...docSnap.data() } as User);
           } else {
@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               role: initialRole,
               points: 0 // <-- Inicia con 0 puntos
             };
-            
+
             await setDoc(docRef, newUser);
             setUser(newUser);
           }
@@ -107,10 +107,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Función para sumar puntos en tiempo real
-// Función para sumar/restar puntos en tiempo real
+  // Función para sumar/restar puntos en tiempo real
   const addPoints = async (pointsToAdd: number, updateDatabase: boolean = false) => {
     if (!auth.currentUser) return;
-    
+
     // Solo actualizamos la DB desde el front si se indica expresamente.
     // En el caso de recompensas, el Backend ya hizo el descuento.
     if (updateDatabase) {
@@ -121,7 +121,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error("Error actualizando puntos en DB:", error);
       }
     }
-    
+
     // Siempre actualizamos la interfaz para que el usuario lo vea
     setUser((prev) => prev ? { ...prev, points: (prev.points || 0) + pointsToAdd } : prev);
   };
@@ -129,9 +129,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logoutUser = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ 
-      user, loginWithGoogle, updateProfile, addPoints, logout: logoutUser, 
-      isAuthenticated: !!user, isAdmin: user?.role === 'admin', loading 
+    <AuthContext.Provider value={{
+      user, loginWithGoogle, updateProfile, addPoints, logout: logoutUser,
+      isAuthenticated: !!user, isAdmin: user?.role === 'admin', loading
     }}>
       {children}
     </AuthContext.Provider>

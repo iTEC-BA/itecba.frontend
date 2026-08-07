@@ -7,6 +7,9 @@ import LoadingState from "@components/ui/LoadingState";
 import { BannerInstallPWA } from "./components/organisms/BannerInstallPWA";
 import { UpdatePWAToast } from "./components/organisms/UpdatePWAToast";
 import { ToastProvider } from "./features/notifications/components/atoms/Toast";
+import { AnalyticsTracker } from "./components/utils/AnalyticsTracker";
+import ReactGA from "react-ga4";
+
 import GradeDetailPage from '@pages/gradeDetailPage';
 import PadronPage from '@pages/PadronPage';
 
@@ -35,8 +38,14 @@ const TerminosPage     = lazy(() => import("@pages/TerminosPage").then(m => ({ d
 const ForumPage        = lazy(() => import('@pages/ForumPage').then(m => ({ default: m.ForumPage })));
 const ForumThreadPage  = lazy(() => import('@pages/ForumThreadPage').then(m => ({ default: m.ForumThreadPage })));
 const TruekeTECPage    = lazy(() => import("@pages/TruekeTECPage").then(m => ({ default: m.TruekeTECPage })));
-const NotificationsPage = lazy(() => import('@/pages/NotificationsPage').then(m => ({ default: m.NotificationsPage }))
-  );
+const NotificationsPage = lazy(() => import('@/pages/NotificationsPage').then(m => ({ default: m.NotificationsPage })));
+
+// Inicializar Google Analytics 4
+const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+if (GA_MEASUREMENT_ID) {
+  ReactGA.initialize(GA_MEASUREMENT_ID);
+}
+
 // ── Wrapper reutilizable para Suspense por ruta ───────────────────────────────
 const PageSuspense: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <Suspense fallback={<LoadingState />}>{children}</Suspense>
@@ -44,15 +53,15 @@ const PageSuspense: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 // ── App ───────────────────────────────────────────────────────────────────────
 export const App: React.FC = () => {
-  // Warm-up: precarga el catálogo de actividades en localStorage
-  // para que usePointsGrant pueda leer los valores sin hacer una petición de red.
   useEffect(() => {
-    getActivities().catch(() => {}); // silencioso — no bloquea la UI
+    getActivities().catch(() => {});
   }, []);
 
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* El rastreador debe estar dentro del BrowserRouter para acceder a useLocation */}
+        <AnalyticsTracker />
         <Routes>
           {/* RUTAS PÚBLICAS */}
           <Route path="/padron" element={<PadronPage />} />
@@ -84,7 +93,7 @@ export const App: React.FC = () => {
             <Route path="/progreso"          element={<PageSuspense><ProgressPage /></PageSuspense>} />
             <Route path="/perfil"            element={<PageSuspense><ProfilePage /></PageSuspense>} />
             <Route path="/perfil/:username"  element={<PageSuspense><ProfilePage /></PageSuspense>} />
-            <Route path="/admin"             element={<PageSuspense><AdminPanel /></PageSuspense>} />
+            <Route path="/admin/*"           element={<PageSuspense><AdminPanel /></PageSuspense>} />
             <Route path="/notificaciones"    element={<PageSuspense><NotificationsPage /></PageSuspense>} />
           </Route>
 
@@ -93,7 +102,7 @@ export const App: React.FC = () => {
         </Routes>
       </BrowserRouter>
 
-      {/*
+       {/*
         ── PWA: Banner de instalación y Toast de actualización ────────────────
         Deben estar FUERA del BrowserRouter porque son overlays globales
         (position: fixed) que no pertenecen a ninguna ruta específica.

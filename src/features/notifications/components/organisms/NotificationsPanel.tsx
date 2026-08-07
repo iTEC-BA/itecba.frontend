@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Bell } from "lucide-react";
+import { Icons } from "@components/ui/icons/Icons";
 import { NotificationItem } from "../molecules/NotificationItem";
 import { NotificationDetailModal } from "../molecules/NotificationDetailModal";
 import { PaginationBar } from "@components/ui/PaginationBar";
 import { usePagination } from "@hooks/usePagination";
+import { Button } from "@components/ui/Button";
 import type { InAppNotification } from "../../types/notification";
 
 interface Props {
@@ -36,7 +37,7 @@ export const NotificationsPanel: React.FC<Props> = ({ items, isLoading, onMarkRe
       {/* Header */}
       <div className="flex items-center justify-between px-1 py-3">
         <div className="flex items-center gap-2">
-          <Bell className="size-4 text-itec-text/40" />
+          <Icons type="bell" className="size-4 text-itec-text/40" />
           <h2 className="text-sm font-bold text-itec-text">Notificaciones</h2>
           {unread > 0 && (
             <span className="text-[10px] font-bold bg-itec-blue-skye/10 text-itec-blue-skye px-2 py-0.5 rounded-full border border-itec-blue-skye/15">
@@ -45,12 +46,13 @@ export const NotificationsPanel: React.FC<Props> = ({ items, isLoading, onMarkRe
           )}
         </div>
         {unread > 0 && (
-          <button
+          <Button
             onClick={onMarkAll}
-            className="text-[11px] text-itec-blue-skye font-bold hover:opacity-70 transition-opacity"
-          >
-            Marcar todo
-          </button>
+            variant="primary"
+            hierarchy="ghost"
+            className="h-auto px-0 py-0 text-[11px] normal-case"
+            text="Marcar todo"
+          />
         )}
       </div>
 
@@ -61,7 +63,7 @@ export const NotificationsPanel: React.FC<Props> = ({ items, isLoading, onMarkRe
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-14 gap-3 text-center">
             <div className="w-12 h-12 rounded-xl bg-white/4 border border-white/6 flex items-center justify-center">
-              <Bell className="size-5 text-itec-text/20" />
+              <Icons type="bell" className="size-5 text-itec-text/20" />
             </div>
             <p className="text-sm font-bold text-itec-text/35">Sin notificaciones</p>
             <p className="text-xs text-itec-text/25 max-w-[200px]">

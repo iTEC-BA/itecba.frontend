@@ -69,24 +69,17 @@ export const NavbarQquickAccess = () => {
               <Calendar size={12} /> Agenda ITEC
             </h3>
             <div className="flex flex-col gap-3 p-4 rounded-xl bg-itec-card border border-white/5 shadow-glass">
-              {/* Ítem de ejemplo */}
-              <div className="flex items-start gap-3">
-                <div className="flex flex-col items-center justify-center w-10 h-10 rounded-lg bg-itec-red/10 border border-itec-red/20 shrink-0">
-                  <span className="text-[9px] font-bold text-itec-red uppercase leading-none">
-                    May
-                  </span>
-                  <span className="text-sm font-black text-white leading-none mt-1">
-                    19
-                  </span>
-                </div>
-                <div className="flex flex-col pt-0.5">
-                  <span className="text-xs font-bold text-white leading-tight">
-                    Turno final MAYO
-                  </span>
-                  <span className="text-[10px] text-itec-muted mt-0.5">
-                    No se dictarán clases
-                  </span>
-                </div>
+              {/*
+                TODO: Conectar con el endpoint real de fechas académicas
+                (p. ej. adminService.getUpcomingDates()) y renderizar aquí
+                los próximos eventos devueltos por el backend.
+                Se elimina el dato quemado "Turno final MAYO — 19 de Mayo".
+              */}
+              <div className="flex flex-col items-center justify-center gap-2 py-4 text-center">
+                <Calendar size={18} className="text-itec-muted/60" />
+                <p className="text-[11px] text-itec-muted">
+                  No hay fechas próximas programadas.
+                </p>
               </div>
             </div>
           </section>

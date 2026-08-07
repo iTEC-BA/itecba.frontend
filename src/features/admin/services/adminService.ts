@@ -11,7 +11,8 @@ export interface AnnouncementData {
   createdAt: { toDate: () => Date };
 }
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/announcements`;
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_URL = `${BASE_URL}/announcements`;
 
 const getToken = async () => {
   const token = await auth.currentUser?.getIdToken();
@@ -37,6 +38,24 @@ export const adminService = {
 
   updateUserRole: async (userId: string, newRole: 'admin' | 'student'): Promise<void> => {
     await updateDoc(doc(db, 'users', userId), { role: newRole });
+  },
+
+  // Total de usuarios registrados — endpoint liviano del backend
+  // (evita paginar /api/users completo solo para contar).
+  getUsersCount: async (): Promise<number> => {
+    try {
+      const token = await getToken();
+      const base = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
+      const res = await fetch(`${base}/users/count`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data.total ?? 0;
+    } catch (error) {
+      console.error("❌ Error en getUsersCount:", error);
+      return 0;
+    }
   },
 
   // --- AVISOS GLOBALES ---
@@ -106,5 +125,38 @@ export const adminService = {
       console.error("❌ Error al borrar aviso:", error);
       throw error;
     }
-  }
+  },
+
+  // ── Beneficios (TarjeTEC) ──────────────────────────────────────────────
+  getAllBenefits: async (token: string) => {
+    const res = await fetch(`${BASE_URL}/benefits/all`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    return data.benefits ?? [];
+  },
+  saveBenefit: async (
+    payload: Record<string, unknown>,
+    editId: string | null,
+    token: string
+  ) => {
+    const url    = editId ? `${BASE_URL}/benefits/${editId}` : `${BASE_URL}/benefits`;
+    const method = editId ? "PATCH" : "POST";
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const e = await res.json();
+      throw new Error(e.message ?? "Error al guardar");
+    }
+    return res.json();
+  },
+  deleteBenefit: async (id: string, token: string) => {
+    await fetch(`${BASE_URL}/benefits/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
 };

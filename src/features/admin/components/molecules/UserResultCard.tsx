@@ -1,7 +1,7 @@
 import React from "react";
 import type { User } from "@context/AuthContext";
 import { Button } from "@components/ui/Button";
-import { GlassCard } from "@features/profile/components/atoms/GlassCard";
+import { Card } from "@components/atoms/Card";
 
 interface Props {
   user: User;
@@ -13,7 +13,7 @@ export const UserResultCard: React.FC<Props> = ({ user, isUpdating, onToggleRole
   const isAdmin = user.role === "admin";
 
   return (
-    <GlassCard className="overflow-hidden p-5 sm:p-6" variant="elevated">
+    <Card className="overflow-hidden p-5 sm:p-6 shadow-lg">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -47,6 +47,6 @@ export const UserResultCard: React.FC<Props> = ({ user, isUpdating, onToggleRole
           </Button>
         </div>
       </div>
-    </GlassCard>
+    </Card>
   );
 };
