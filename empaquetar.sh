@@ -15,6 +15,8 @@ find . -type f \
     -not -path "*/.git/*" \
     -not -path "*/dist/*" \
     -not -path "*/build/*" \
+    -not -path "*/public/*" \
+    -not -path "*/src/assets/*" \
     -not -name "*.gif" \
     -not -name "*.ico" \
     -not -name "*.pdf" \

@@ -46,7 +46,6 @@ export const PageHeader: React.FC<Props> = ({
         
         {/* Lado izquierdo: Icono y Textos (Alineados en fila para ahorrar muchísimo espacio en mobile) */}
         <div className="flex items-start gap-3 md:gap-4">
-          
           {imageUrl ? (
             <img 
               src={imageUrl} 

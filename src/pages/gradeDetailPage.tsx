@@ -8,7 +8,10 @@ import { Button }           from '@components/ui/Button';
 import { Icons }            from '@components/ui/icons/Icons';
 import { GRADE_CONFIGS }    from '@features/grade/config';
 import { useMaterias }      from '@features/grade/hooks/useMaterias';
-import { GradeMediaSlider } from '@features/grade/components/molecules/GradeMediaSlider';
+
+// 🔄 1. Importamos el nuevo Slider Global y la función adaptadora de datos
+import { ItecMediaSlider } from '@components/ui/ItecCarousel';
+
 import { GradePlanSection } from '@features/grade/components/organisms/GradePlanSection';
 import { GradeInfoSection } from '@features/grade/components/organisms/GradeInfoSection';
 
@@ -58,8 +61,16 @@ const GradeDetailPage: React.FC = () => {
           </div>
         )}
 
-        {/* 3. Media Slider */}
-        {config.media.length > 0 && <GradeMediaSlider media={config.media} />}
+        {/* 🔄 3. Media Slider Refactorizado */}
+        {config.media.length > 0 && (
+          <ItecMediaSlider 
+            items={config.media.map((item) => ({
+              ...item,
+              tipo: item.tipo === 'imagen' ? 'image' : 'video',
+            }))}
+            aspectRatio="video"
+          />
+        )}
 
         {/* 4. Plan de Estudios */}
         <GradePlanSection plan={config.plan} byCode={byCode} loadingDB={loadingDB} />
