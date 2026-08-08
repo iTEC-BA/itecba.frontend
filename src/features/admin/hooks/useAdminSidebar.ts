@@ -8,7 +8,8 @@ export type AdminSection =
   | "news"
   | "benefits"
   | "redemptions"
-  | "tutorias";
+  | "tutorias"
+  | "pages";
 
 export interface SidebarLink {
   id: AdminSection;
@@ -26,6 +27,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   { id: "benefits",    label: "Beneficios",   icon: "gift",   path: "beneficios"  },
   { id: "redemptions", label: "Canjes",       icon: "ticket", path: "canjes"      },
   { id: "tutorias",    label: "Tutorías",     icon: "video",  path: "tutorias"    },
+  { id: "pages",       label: "Páginas",      icon: "lock",   path: "paginas"     },
 ];
 
 const DEFAULT_SECTION: AdminSection = "dashboard";

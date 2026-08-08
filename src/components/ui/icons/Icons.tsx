@@ -6,10 +6,10 @@ import {
   FileSpreadsheet, Pencil, FileText, Archive, File, Folder, MapPin, Zap,
   Info, ShieldCheck, Settings, Star, ChevronUp, ChevronDown, LayoutGrid,
   Video, Library, Newspaper, Calculator, Wrench, Gift, TrendingUp, Bell,
-  BellDot, BarChart3, Ticket,
+  BellDot, BarChart3, Ticket, Lock,
   type LucideIcon,
 } from 'lucide-react';
-
+ 
 // ==========================================
 // ÍCONOS PERSONALIZADOS SIN EQUIVALENTE EN LUCIDE
 // (marcas, ilustraciones propias, etc.)
@@ -26,7 +26,7 @@ const customIcons: { [key: string]: React.ReactNode } = {
   nfc: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><path d="M4 8a10 10 0 0 1 16 0M6 12a6 6 0 0 1 12 0M8 16a2 2 0 0 1 8 0"/></svg>,
   documentFill: <svg fill="currentColor" viewBox="0 0 24 24" className="w-full h-full"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>,
 };
-
+ 
 // ==========================================
 // MAPA DE ÍCONOS ESTÁNDAR → lucide-react
 // ==========================================
@@ -54,6 +54,7 @@ const lucideIcons: { [key: string]: LucideIcon } = {
   download: Download,
   check: Check,
   shareNetwork: Share2,
+  share: Share2,
   clock: Clock,
   close: X,
   externalLink: ExternalLink,
@@ -91,18 +92,19 @@ const lucideIcons: { [key: string]: LucideIcon } = {
   ticket: Ticket,
   bell: Bell,
   bellDot: BellDot,
+  lock: Lock,
 };
-
+ 
 // Íconos que deben renderizarse con relleno sólido ("versión Fill")
 const FILLED_TYPES = new Set(["playFill", "bookmarkFilled"]);
-
+ 
 // Tamaño/color fijo heredado para los badges de tipo de archivo
 const FIXED_STYLE: { [key: string]: string } = {
   pdf: "w-6 h-6 shrink-0 text-red-500",
   zip: "w-6 h-6 shrink-0 text-yellow-500",
   file: "w-6 h-6 shrink-0 text-gray-500",
 };
-
+ 
 // ==========================================
 // COMPONENTE Icons
 // Delega en lucide-react para los íconos estándar y en customIcons para
@@ -110,7 +112,7 @@ const FIXED_STYLE: { [key: string]: string } = {
 // ==========================================
 export const Icons = ({ type, className }: { type: string, className?: string }) => {
   const LucideIcon = lucideIcons[type];
-
+ 
   const renderGeometry = () => {
     if (LucideIcon) {
       return (
@@ -124,14 +126,14 @@ export const Icons = ({ type, className }: { type: string, className?: string })
     // Fallback: ícono de archivo genérico (mismo comportamiento que antes)
     return <File className="w-6 h-6 shrink-0 text-gray-500" />;
   };
-
+ 
   return (
     <div className={`flex items-center justify-center shrink-0 ${className}`}>
       {renderGeometry()}
     </div>
   );
 };
-
+ 
 // ==========================================
 // GRÁFICO DINÁMICO DE PROGRESO (DONUT)
 // ==========================================
@@ -140,7 +142,7 @@ interface ProgressCircleProps {
   size?: number;
   strokeWidth?: number;
 }
-
+ 
 export const ProgressCircle: React.FC<ProgressCircleProps> = ({
   percentage,
   size = 160,
@@ -149,7 +151,7 @@ export const ProgressCircle: React.FC<ProgressCircleProps> = ({
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
+ 
   return (
     <svg width={size} height={size} className="transform -rotate-90">
       {/* Círculo de fondo (Gris) */}

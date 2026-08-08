@@ -16,6 +16,7 @@ import { UserManagement } from "@features/admin/pages/UserManagement";
 import { NewsManagement } from "@features/admin/pages/NewsManagement";
 import { BenefitManagement } from "@features/admin/pages/BenefitManagement";
 import { AdminRedemptions } from "@features/admin/pages/AdminRedemptions";
+import { PageAccessManagement } from "@features/admin/pages/PageAccessManagement";
 import { useAdminSidebar, type AdminSection } from "@features/admin/hooks/useAdminSidebar";
 
 interface AdminOutletContext {
@@ -67,6 +68,7 @@ export const AdminPanel: React.FC = () => (
       <Route path="beneficios" element={<BenefitManagement />} />
       <Route path="canjes" element={<AdminRedemptions />} />
       <Route path="tutorias" element={<TutoriasSection />} />
+      <Route path="paginas" element={<PageAccessManagement />} />
       <Route path="*" element={<Navigate to="dashboard" replace />} />
     </Route>
   </Routes>
