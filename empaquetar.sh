@@ -17,6 +17,7 @@ find . -type f \
     -not -path "*/build/*" \
     -not -path "*/public/*" \
     -not -path "*/src/assets/*" \
+    -not -path "*.dev-dist" \
     -not -name "*.gif" \
     -not -name "*.ico" \
     -not -name "*.pdf" \

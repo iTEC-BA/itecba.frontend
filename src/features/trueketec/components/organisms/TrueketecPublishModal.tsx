@@ -1,230 +1,98 @@
-// src/features/trueketec/components/organisms/TrueketecPublishModal.tsx
 import React, { useState } from "react";
 import { LayoutModal } from "@components/templates/LayoutModal";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
+import { CustomSelect } from "@components/ui/CustomSelect";
 import type { TrueketecFormData, Turno, TurnoDeseado } from "../../types/trueketec.types";
 
-interface Props {
-  isOpen:    boolean;
-  onClose:   () => void;
-  onPublish: (data: TrueketecFormData) => Promise<void>;
-}
+interface Props { isOpen: boolean; onClose: () => void; onPublish: (data: TrueketecFormData) => Promise<void>; }
 
-const DEPARTAMENTOS = [
-  "Ciencias Básicas",
-  "Civil",
-  "Eléctrica",
-  "Electrónica",
-  "Industrial",
-  "Mecánica",
-  "Naval",
-  "Sistemas de Información",
-  "Química",
-  "Textil",
-  "Curso de Ingreso",
-];
-
-const TURNOS:          Turno[]        = ["Mañana", "Tarde", "Noche"];
+const DEPARTAMENTOS = ["Ciencias Básicas", "Civil", "Eléctrica", "Electrónica", "Industrial", "Mecánica", "Naval", "Sistemas de Información", "Química", "Textil", "Curso de Ingreso"];
+const TURNOS: Turno[] = ["Mañana", "Tarde", "Noche"];
 const TURNOS_DESEADOS: TurnoDeseado[] = ["Mañana", "Tarde", "Noche", "Cualquiera"];
-
-const EMPTY: TrueketecFormData = {
-  departamento: "",
-  materia: "", comision_actual: "", turno_actual: "",
-  comision_deseada: "", turno_deseado: "",
-};
-
-// Materias comunes UTN FRBA
-const MATERIAS_COMUNES = [
-  "Análisis Matemático I", "Análisis Matemático II",
-  "Álgebra y Geometría Analítica",
-  "Física I", "Física II",
-  "Química General",
-  "Sistemas de Representación",
-  "Introducción a la Informática",
-  "Algoritmos y Estructuras de Datos",
-  "Análisis de Sistemas",
-  "Paradigmas de Programación",
-  "Estructura de Datos",
-  "Organización de Computadoras",
-  "Bases de Datos",
-  "Sistemas Operativos",
-  "Redes de Información",
-  "Inglés I", "Inglés II",
-];
+const EMPTY: TrueketecFormData = { departamento: "", materia: "", comision_actual: "", turno_actual: "", comision_deseada: "", turno_deseado: "" };
 
 export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPublish }) => {
-  const [form,    setForm]    = useState<TrueketecFormData>(EMPTY);
-  const [saving,  setSaving]  = useState(false);
-  const [error,   setError]   = useState("");
-  const [suggest, setSuggest] = useState<string[]>([]);
+  const [form, setForm] = useState<TrueketecFormData>(EMPTY);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const set = <K extends keyof TrueketecFormData>(k: K, v: TrueketecFormData[K]) =>
-    setForm((prev) => ({ ...prev, [k]: v }));
-
-  const handleMateriaChange = (val: string) => {
-    set("materia", val);
-    setSuggest(
-      val.length >= 2
-        ? MATERIAS_COMUNES.filter((m) => m.toLowerCase().includes(val.toLowerCase()))
-        : []
-    );
-  };
-
-  const validate = (): string | null => {
-    if (!form.departamento)            return "Seleccioná el departamento.";
-    if (!form.materia.trim())          return "Indicá la materia.";
-    if (!form.comision_actual.trim())  return "Indicá tu comisión actual.";
-    if (!form.turno_actual)            return "Seleccioná tu turno actual.";
-    if (!form.comision_deseada.trim()) return "Indicá la comisión deseada (o 'Cualquiera').";
-    if (!form.turno_deseado)           return "Seleccioná el turno deseado.";
-    return null;
-  };
+  const set = (k: keyof TrueketecFormData, v: string) => setForm(p => ({ ...p, [k]: v }));
 
   const handleSubmit = async () => {
-    const err = validate();
-    if (err) { setError(err); return; }
-    setError(""); setSaving(true);
-    try {
-      await onPublish(form);
-      setForm(EMPTY);
-      onClose();
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Error al publicar.");
-    } finally {
-      setSaving(false);
+    if(!form.departamento || !form.materia || !form.comision_actual || !form.turno_actual || !form.comision_deseada || !form.turno_deseado) {
+      setError("Todos los campos son obligatorios."); return;
     }
+    setError(""); setSaving(true);
+    try { await onPublish(form); setForm(EMPTY); onClose(); } catch (e: any) { setError(e.message || "Error al publicar."); } finally { setSaving(false); }
   };
 
-  const fieldCls = "w-full px-4 py-3 text-sm rounded-xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
+  const inputCls = "w-full rounded-md border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-white/30";
+  
+  // Transformar listas para CustomSelect
+  const deptoOptions = DEPARTAMENTOS.map(d => ({ value: d, label: d }));
+  const turnoOptions = TURNOS.map(t => ({ value: t, label: t }));
+  const turnoDeseadoOptions = TURNOS_DESEADOS.map(t => ({ value: t, label: t }));
 
   return (
-    <LayoutModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Publicar intercambio"
-      description="Encontrá a otro estudiante para cambiar comisiones"
-      maxWidth="max-w-lg"
-    >
-      <div className="flex flex-col gap-4 px-6 py-5 overflow-y-auto">
-
-        {/* Departamento */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-itec-muted uppercase tracking-widest">Departamento</label>
-          <select
-            value={form.departamento}
-            onChange={(e) => set("departamento", e.target.value)}
-            className={fieldCls}
-          >
-            <option value="">Seleccioná...</option>
-            {DEPARTAMENTOS.map((d) => <option key={d} value={d}>{d}</option>)}
-          </select>
-        </div>
-
-        {/* Materia con sugerencias */}
-        <div className="relative flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-itec-muted uppercase tracking-widest">Materia</label>
-          <Input
-            placeholder="Ej: Análisis Matemático II"
-            value={form.materia}
-            onChange={(e) => handleMateriaChange(e.target.value)}
-            fullWidth
-            className={fieldCls}
-          />
-          {suggest.length > 0 && (
-            <ul className="absolute top-full mt-1 left-0 right-0 z-50 rounded-xl border border-itec-border bg-itec-box shadow-xl max-h-48 overflow-y-auto">
-              {suggest.map((s) => (
-                <li
-                  key={s}
-                  onClick={() => { set("materia", s); setSuggest([]); }}
-                  className="cursor-pointer px-4 py-2.5 text-sm text-itec-text hover:bg-itec-surface border-b border-white/5 last:border-0 transition-colors"
-                >
-                  {s}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Comisión actual + Turno actual */}
-        <div className="grid grid-cols-2 gap-3">
+    <LayoutModal isOpen={isOpen} onClose={onClose} title="Publicar Intercambio" description="Encontrá a otro estudiante para cambiar de comisión." maxWidth="max-w-lg">
+      <div className="flex flex-col gap-6 px-6 py-6">
+        
+        <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-itec-muted uppercase tracking-widest">Comisión actual</label>
-            <Input
-              placeholder="Ej: K1021"
-              value={form.comision_actual}
-              onChange={(e) => set("comision_actual", e.target.value.toUpperCase())}
-              fullWidth
-              className={`${fieldCls} font-mono`}
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white/50 pl-1">Departamento *</label>
+            <CustomSelect 
+              value={form.departamento} 
+              onChange={val => set("departamento", val)} 
+              options={deptoOptions} 
+              placeholder="Seleccioná..." 
+              className="w-full rounded-md border-white/10 bg-white/5 py-3 px-4 text-sm text-white focus:border-white/30" 
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-itec-muted uppercase tracking-widest">Turno actual</label>
-            <select
-              value={form.turno_actual}
-              onChange={(e) => set("turno_actual", e.target.value as Turno | "")}
-              className={fieldCls}
-            >
-              <option value="">Seleccioná...</option>
-              {TURNOS.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white/50 pl-1">Materia *</label>
+            <Input placeholder="Ej: Análisis Matemático II" value={form.materia} onChange={e => set("materia", e.target.value)} fullWidth className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-white/30" />
           </div>
         </div>
 
-        {/* Separador */}
-        <div className="relative flex items-center gap-3">
-          <div className="flex-1 h-px bg-itec-border" />
-          <span className="text-[11px] font-bold text-itec-muted uppercase tracking-widest">Busco cambiar a</span>
-          <div className="flex-1 h-px bg-itec-border" />
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60 border-b border-white/10 pb-2 pl-1">Tu cursada actual</span>
+            <div className="grid grid-cols-2 gap-3">
+              <Input placeholder="Comisión (K1021)" value={form.comision_actual} onChange={e => set("comision_actual", e.target.value.toUpperCase())} fullWidth className={`${inputCls} font-mono placeholder:font-sans`} />
+              <CustomSelect 
+                value={form.turno_actual} 
+                onChange={val => set("turno_actual", val)} 
+                options={turnoOptions} 
+                placeholder="Turno..." 
+                className="w-full rounded-md border-white/10 bg-black/20 py-3 px-4 text-sm text-white focus:border-white/30" 
+              />
+            </div>
+          </div>
+          <div className="flex justify-center -my-3 relative z-10">
+            <div className="bg-itec-box p-1.5 rounded-full border border-white/10 text-white/30"><ArrowRight size={14}/></div>
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-itec-emerald border-b border-itec-emerald/20 pb-2 pl-1">La que estás buscando</span>
+            <div className="grid grid-cols-2 gap-3">
+              <Input placeholder="Comisión (K1032)" value={form.comision_deseada} onChange={e => set("comision_deseada", e.target.value.toUpperCase())} fullWidth className={`${inputCls} font-mono border-itec-emerald/20 focus:border-itec-emerald/50 placeholder:font-sans`} />
+              <CustomSelect 
+                value={form.turno_deseado} 
+                onChange={val => set("turno_deseado", val)} 
+                options={turnoDeseadoOptions} 
+                placeholder="Turno..." 
+                className="w-full rounded-md border-itec-emerald/20 bg-black/20 py-3 px-4 text-sm text-white focus:border-itec-emerald/50" 
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Comisión deseada + Turno deseado */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-itec-muted uppercase tracking-widest">Comisión deseada</label>
-            <Input
-              placeholder="Ej: K1032 o Cualquiera"
-              value={form.comision_deseada}
-              onChange={(e) => set("comision_deseada", e.target.value.toUpperCase())}
-              fullWidth
-              className={`${fieldCls} font-mono`}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-itec-muted uppercase tracking-widest">Turno deseado</label>
-            <select
-              value={form.turno_deseado}
-              onChange={(e) => set("turno_deseado", e.target.value as TurnoDeseado | "")}
-              className={fieldCls}
-            >
-              <option value="">Seleccioná...</option>
-              {TURNOS_DESEADOS.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </div>
-        </div>
+        {error && <p className="text-[10px] font-bold uppercase tracking-widest text-itec-red text-center bg-itec-red/10 border border-itec-red/20 py-2 rounded-lg">{error}</p>}
 
-        {error && (
-          <p className="rounded-xl border border-itec-accent/30 bg-itec-accent/10 px-4 py-2.5 text-sm text-itec-accent">
-            {error}
-          </p>
-        )}
-
-        <div className="flex gap-2 pt-1">
-          <Button
-            variant="secondary"
-            hierarchy="ghost"
-            text="Cancelar"
-            onClick={onClose}
-            className="flex-1 rounded-xl py-3"
-          />
-          <Button
-            variant="success"
-            hierarchy="solid"
-            text="Publicar solicitud"
-            isLoading={saving}
-            onClick={handleSubmit}
-            className="flex-1 rounded-xl py-3"
-          />
+        <div className="flex gap-3 pt-2">
+          <Button variant="slate" hierarchy="ghost" text="Cancelar" onClick={onClose} className="w-1/3 py-3 rounded-xl" />
+          <Button variant="success" hierarchy="solid" text="Publicar ahora" isLoading={saving} onClick={handleSubmit} className="w-2/3 py-3 rounded-xl bg-itec-emerald text-black hover:bg-emerald-500" />
         </div>
       </div>
     </LayoutModal>

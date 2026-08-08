@@ -1,5 +1,6 @@
 // src/features/trueketec/hooks/useTrueketec.ts
 import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "@context/AuthContext";
 import { trueketecService } from "../services/trueketec.service";
 import type {
   TrueketecPost,
@@ -9,6 +10,7 @@ import type {
 } from "../types/trueketec.types";
 
 export const useTrueketec = () => {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [posts,       setPosts]       = useState<TrueketecPost[]>([]);
   const [myPosts,     setMyPosts]     = useState<TrueketecPost[]>([]);
   const [matches,     setMatches]     = useState<TrueketecPost[]>([]);
@@ -21,7 +23,12 @@ export const useTrueketec = () => {
   const [hasSearched, setHasSearched] = useState(false);
 
   // Carga inicial: mis posts + mis matches (sin feed hasta que el usuario busque)
+  // Espera a que Firebase Auth termine de rehidratar la sesión (authLoading)
+  // y a que haya un usuario autenticado antes de pedir el token, para
+  // evitar 401 por pedir el fetch antes de tiempo.
   useEffect(() => {
+    if (authLoading || !isAuthenticated) return;
+
     const init = async () => {
       try {
         const [myData, matchData] = await Promise.all([
@@ -35,7 +42,7 @@ export const useTrueketec = () => {
       }
     };
     init();
-  }, []);
+  }, [authLoading, isAuthenticated]);
 
   const loadFeed = useCallback(async (f: TrueketecFilters, page: number) => {
     // Sin filtros mínimos, no se lanza query (validación en el componente de filtros)

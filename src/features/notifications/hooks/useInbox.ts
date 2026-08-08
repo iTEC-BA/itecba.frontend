@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { getAuth } from "firebase/auth";
+import { useAuth } from "@context/AuthContext";
 import { inboxService } from "../services/inboxService";
 import type { InboxMessage } from "../types/inbox";
 
 export const useInbox = () => {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [messages, setMessages] = useState<InboxMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,7 +23,13 @@ export const useInbox = () => {
     }
   }, []);
 
-  useEffect(() => { fetchMessages(); }, [fetchMessages]);
+  // Espera a que Firebase Auth termine de rehidratar la sesión antes de
+  // pedir los mensajes, para evitar 401 por pedir el token antes de tiempo.
+  useEffect(() => {
+    if (authLoading) return;
+    if (!isAuthenticated) { setIsLoading(false); return; }
+    fetchMessages();
+  }, [authLoading, isAuthenticated, fetchMessages]);
 
   const markAsRead = useCallback(async (id: string) => {
     try {
