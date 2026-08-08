@@ -7,7 +7,6 @@ export type AdminSection =
   | "users"
   | "news"
   | "benefits"
-  | "rewards"
   | "redemptions"
   | "tutorias";
 
@@ -24,8 +23,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   { id: "dashboard",   label: "Dashboard",    icon: "chart",  path: "dashboard"   },
   { id: "users",       label: "Usuarios",     icon: "users",  path: "usuarios"    },
   { id: "news",        label: "Avisos",       icon: "bell",   path: "avisos"      },
-  { id: "benefits",    label: "Beneficios",   icon: "star",   path: "beneficios"  },
-  { id: "rewards",     label: "Recompensas",  icon: "gift",   path: "recompensas" },
+  { id: "benefits",    label: "Beneficios",   icon: "gift",   path: "beneficios"  },
   { id: "redemptions", label: "Canjes",       icon: "ticket", path: "canjes"      },
   { id: "tutorias",    label: "Tutorías",     icon: "video",  path: "tutorias"    },
 ];

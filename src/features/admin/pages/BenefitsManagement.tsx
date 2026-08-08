@@ -5,268 +5,99 @@ import { Icons } from "@components/ui/icons/Icons";
 import { Button } from "@components/ui/Button";
 import { auth } from "@/lib/firebase";
 import { adminService } from "../services/adminService";
+import { PointsActivityManager } from "@features/points/components/PointsActivityManager";
+import type { Benefit, BenefitFormData, BenefitCategory } from "@features/benefits/types/benefits";
 
-interface Benefit {
-  _id: string;
-  title: string;
-  discount: string;
-  location: string;
-  category: string;
-  isActive: boolean;
-  logoUrl?: string;
-}
-
-type BenefitForm = Omit<Benefit, "_id" | "isActive">;
-
-const EMPTY: BenefitForm = {
-  title: "", discount: "", location: "", category: "medrano", logoUrl: "",
-};
-
-const FIELD_LABELS: Record<keyof BenefitForm, string> = {
-  title:    "Título",
-  discount: "Descuento",
-  location: "Ubicación",
-  logoUrl:  "URL del logo",
-  category: "Categoría",
-};
-
-const getToken = async () => {
-  const token = await auth.currentUser?.getIdToken();
-  if (!token) throw new Error("No autenticado");
-  return token;
-};
+const EMPTY: BenefitFormData = { title: "", description: "", discount: "", location: "", category: "medrano", pointsCost: 0, img: "", icon: "" };
 
 export const BenefitsManagement: React.FC = () => {
   const queryClient = useQueryClient();
-  const [form,   setForm]   = useState<BenefitForm>(EMPTY);
-  const [error,  setError]  = useState<string | null>(null);
+  const [form, setForm] = useState<BenefitFormData>(EMPTY);
   const [editId, setEditId] = useState<string | null>(null);
 
   const { data: benefits = [], isLoading } = useQuery<Benefit[]>({
     queryKey: ["adminBenefits"],
-    queryFn: async () => {
-      const token = await getToken();
-      return adminService.getAllBenefits(token);
-    },
-    staleTime: 1000 * 60 * 5,
+    queryFn: async () => adminService.getAllBenefits(await auth.currentUser!.getIdToken()),
   });
 
   const saveMutation = useMutation({
-    mutationFn: async () => {
-      const token = await getToken();
-      return adminService.saveBenefit(form, editId, token);
-    },
-    onSuccess: () => {
-      setForm(EMPTY);
-      setEditId(null);
-      setError(null);
-      queryClient.invalidateQueries({ queryKey: ["adminBenefits"] });
-    },
-    onError: (err: Error) => setError(err.message ?? "Error al guardar"),
+    mutationFn: async () => adminService.saveBenefit(form, editId, await auth.currentUser!.getIdToken()),
+    onSuccess: () => { setForm(EMPTY); setEditId(null); queryClient.invalidateQueries({ queryKey: ["adminBenefits"] }); },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const token = await getToken();
-      return adminService.deleteBenefit(id, token);
-    },
+    mutationFn: async (id: string) => adminService.deleteBenefit(id, await auth.currentUser!.getIdToken()),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["adminBenefits"] }),
   });
-
-  const save = () => {
-    if (!form.title || !form.discount) {
-      setError("Título y descuento son obligatorios.");
-      return;
-    }
-    saveMutation.mutate();
-  };
-
-  const remove = (id: string) => {
-    if (!window.confirm("¿Desactivar este beneficio?")) return;
-    deleteMutation.mutate(id);
-  };
-
-  const startEdit = (b: Benefit) => {
-    setEditId(b._id);
-    setForm({
-      title:    b.title,
-      discount: b.discount,
-      location: b.location,
-      category: b.category,
-      logoUrl:  b.logoUrl ?? "",
-    });
-  };
-
-  const cancelEdit = () => { setEditId(null); setForm(EMPTY); setError(null); };
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">TarjeTEC</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight text-itec-text">Descuentos y beneficios</h2>
-        <p className="text-xs text-itec-muted">Administrá el catálogo desde la base de datos.</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Catálogo General</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight text-itec-text">Beneficios y Recompensas</h2>
+        <p className="text-xs text-itec-muted">Administrá descuentos gratis y recompensas premium (con puntos).</p>
       </div>
 
-      {/* ── Formulario ─────────────────────────────────────────────────────── */}
-      <Card className="p-6 border-itec-sky/20 shadow-[0_0_40px_-15px_rgba(56,189,248,0.3)]">
-        <div className="mb-5 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Formulario</p>
-            <h3 className="mt-1 text-base font-bold text-itec-text">
-              {editId ? "Editar beneficio" : "Nuevo beneficio"}
-            </h3>
-          </div>
-          {editId && (
-            <Button
-              onClick={cancelEdit}
-              variant="slate"
-              hierarchy="outline"
-              className="h-8 w-8 p-0 rounded-xl"
-              icon={<Icons type="close" className="h-4 w-4" />}
-            />
-          )}
-        </div>
-
+      <Card className="p-6 border-itec-sky/20 shadow-none">
+        <h3 className="mb-4 text-base font-bold text-itec-text">{editId ? "Editar ítem" : "Nuevo ítem del catálogo"}</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {(["title", "discount", "location", "logoUrl"] as const).map((field) => (
-            <label key={field} className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-                {FIELD_LABELS[field]}
-              </span>
-              <input
-                className="rounded-xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all placeholder:text-itec-muted/50 focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
-                value={(form as Record<string, string>)[field]}
-                placeholder={`Ej: ${field === "title" ? "Burger King" : field === "discount" ? "20% OFF" : field === "location" ? "Av. Corrientes 1234" : "https://..."}`}
-                onChange={(e) => setForm((p) => ({ ...p, [field]: e.target.value }))}
-              />
-            </label>
-          ))}
-
-          <label className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-              {FIELD_LABELS.category}
-            </span>
-            <select
-              className="appearance-none rounded-xl border border-itec-border bg-itec-surface/80 px-3 py-2.5 text-sm text-itec-text outline-none  transition-all focus:border-itec-sky/40 focus:ring-2 focus:ring-itec-sky/10"
-              value={form.category}
-              onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
-            >
-              {["medrano", "campus", "digital"].map((c) => (
-                <option key={c} value={c} className="bg-itec-box">
-                  {c.charAt(0).toUpperCase() + c.slice(1)}
-                </option>
-              ))}
+          <label className="flex flex-col gap-1.5"><span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Título</span>
+            <input className="rounded-xl border border-itec-border bg-itec-surface/80 px-3 py-2 text-sm outline-none focus:border-itec-sky/40" value={form.title} onChange={e => setForm((p: BenefitFormData) => ({...p, title: e.target.value}))} />
+          </label>
+          <label className="flex flex-col gap-1.5"><span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Descripción Corta / Descuento</span>
+            <input className="rounded-xl border border-itec-border bg-itec-surface/80 px-3 py-2 text-sm outline-none focus:border-itec-sky/40" value={form.discount} onChange={e => setForm((p: BenefitFormData) => ({...p, discount: e.target.value}))} />
+          </label>
+          <label className="flex flex-col gap-1.5"><span className="text-[10px] font-bold uppercase tracking-widest text-itec-sky">Costo en Puntos (0 = Gratis)</span>
+            <input type="number" className="rounded-xl border border-itec-sky/30 bg-itec-surface/80 px-3 py-2 text-sm outline-none focus:border-itec-sky font-bold text-itec-sky" value={form.pointsCost} onChange={e => setForm((p: BenefitFormData) => ({...p, pointsCost: Number(e.target.value)}))} />
+          </label>
+          <label className="flex flex-col gap-1.5"><span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Categoría</span>
+            <select className="appearance-none rounded-xl border border-itec-border bg-itec-surface/80 px-3 py-2 text-sm outline-none" value={form.category} onChange={e => setForm((p: BenefitFormData) => ({...p, category: e.target.value as BenefitCategory}))}>
+              <option value="medrano">Medrano</option><option value="campus">Campus</option><option value="digital">Digital</option>
             </select>
           </label>
         </div>
-
-        {error && (
-          <p className="mt-3 rounded-xl border border-itec-accent/20 bg-itec-accent/10 px-3 py-2 text-xs text-itec-accent">
-            {error}
-          </p>
-        )}
-
         <div className="mt-5 flex gap-3">
-          <Button
-            onClick={save}
-            disabled={saveMutation.isPending}
-            isLoading={saveMutation.isPending}
-            variant="primary"
-            hierarchy="outline"
-            className="rounded-xl px-5 py-2.5 text-xs"
-            text={editId ? "Actualizar" : "Crear"}
-          />
-          {editId && (
-            <Button
-              onClick={cancelEdit}
-              variant="slate"
-              hierarchy="ghost"
-              className="rounded-xl px-5 py-2.5 text-xs"
-              text="Cancelar"
-            />
-          )}
+          <Button onClick={() => saveMutation.mutate()} disabled={!form.title || saveMutation.isPending} variant="primary" hierarchy="outline" text={editId ? "Actualizar" : "Crear"} />
+          {editId && <Button onClick={() => {setEditId(null); setForm(EMPTY);}} variant="slate" hierarchy="ghost" text="Cancelar" />}
         </div>
       </Card>
 
-      {/* ── Listado ─────────────────────────────────────────────────────────── */}
-      <Card className="overflow-hidden">
-        <div className="flex items-center justify-between gap-4 border-b border-itec-border px-5 py-4">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Catálogo</p>
-            <h3 className="mt-1 text-sm font-bold text-itec-text">Beneficios activos</h3>
-          </div>
-          <span className="rounded-full border border-itec-sky/20 bg-itec-sky/10 px-3 py-1 text-xs font-bold text-itec-sky">
-            {benefits.filter((b) => b.isActive).length} activos
-          </span>
-        </div>
-
-        {isLoading ? (
-          <div className="space-y-3 p-5">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-10 animate-pulse rounded-xl bg-itec-surface/40" />
-            ))}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead className="border-b border-itec-border bg-itec-box/50">
-                <tr>
-                  {["Nombre", "Descuento", "Categoría", "Estado", ""].map((h) => (
-                    <th
-                      key={h}
-                      className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted"
-                    >
-                      {h}
-                    </th>
-                  ))}
+      <Card className="overflow-hidden p-0">
+        <div className="px-5 py-4 border-b border-itec-border"><h3 className="text-sm font-bold">Ítems activos</h3></div>
+        {isLoading ? <div className="p-5 text-center text-xs">Cargando...</div> : (
+          <table className="w-full text-xs text-left">
+            <thead className="bg-white/5 border-b border-itec-border">
+              <tr>
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Nombre</th>
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Costo</th>
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Categoría</th>
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-itec-border/50">
+              {benefits.map((b: Benefit) => (
+                <tr key={b._id} className="hover:bg-white/[0.02]">
+                  <td className="px-5 py-3 font-bold">{b.title}</td>
+                  <td className="px-5 py-3 font-bold text-itec-sky">{b.pointsCost > 0 ? `${b.pointsCost} pts` : "Gratis"}</td>
+                  <td className="px-5 py-3 capitalize">{b.category}</td>
+                  <td className="px-5 py-3">{b.isActive ? "Activo" : "Inactivo"}</td>
+                  <td className="px-5 py-3 flex gap-2">
+                    <Button onClick={() => { setEditId(b._id); setForm(b); }} variant="slate" hierarchy="ghost" text="Editar" className="h-7 px-2" />
+                    <Button onClick={() => { if(window.confirm("Borrar?")) deleteMutation.mutate(b._id); }} variant="danger" hierarchy="ghost" text="Borrar" className="h-7 px-2" />
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-itec-border/40">
-                {benefits.map((b) => (
-                  <tr
-                    key={b._id}
-                    className="group transition-colors hover:bg-itec-surface/30"
-                  >
-                    <td className="px-5 py-3 font-bold text-itec-text">{b.title}</td>
-                    <td className="px-5 py-3 font-bold text-itec-sky">{b.discount}</td>
-                    <td className="px-5 py-3 capitalize text-itec-muted">{b.category}</td>
-                    <td className="px-5 py-3">
-                      <span
-                        className={`rounded-xl border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                          b.isActive
-                            ? "border-itec-emerald/20 bg-itec-emerald/10 text-itec-emerald"
-                            : "border-itec-border bg-itec-surface/50 text-itec-muted"
-                        }`}
-                      >
-                        {b.isActive ? "Activo" : "Inactivo"}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3">
-                      <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                        <Button
-                          onClick={() => startEdit(b)}
-                          variant="primary"
-                          hierarchy="outline"
-                          className="p-1.5 rounded-xl"
-                          icon={<Icons type="edit" className="h-3.5 w-3.5" />}
-                          aria-label="Editar"
-                        />
-                        <Button
-                          onClick={() => remove(b._id)}
-                          variant="danger"
-                          hierarchy="outline"
-                          className="p-1.5 rounded-xl"
-                          icon={<Icons type="trash" className="h-3.5 w-3.5" />}
-                          aria-label="Desactivar"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         )}
+      </Card>
+
+      <Card className="overflow-hidden mt-2 p-0">
+        <div className="px-5 py-4 border-b border-itec-border flex items-center gap-2">
+           <Icons type="star" className="w-4 h-4 text-itec-rewards" /><h3 className="text-sm font-bold">Sistema de Puntos</h3>
+        </div>
+        <div className="p-5"><PointsActivityManager /></div>
       </Card>
     </div>
   );

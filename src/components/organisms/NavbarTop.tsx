@@ -2,10 +2,9 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@context/AuthContext";
 import { Icons } from "@components/ui/icons/Icons";
-// import { UniversalSearch } from "@features/home/components/organisms/UniversalSearch";
 
 import logo from "@assets/logo.png";
-import { RewardsWidgetPoints } from "@features/rewards/components/atoms/RewardsWidgetPoints";
+import { PointsWidget } from "@/features/points/components/atoms/PointsWidget";
 import { useSidebarMobile } from "@hooks/useSidebarMobile";
 import { Suspense } from "react";
 import { NotificationBell } from "@/features/notifications/components/organisms/NotificationBell";
@@ -53,11 +52,6 @@ export const NavbarTop = () => {
             </span>
           </Link>
         </div>
-
-        {/* ── Centro: buscador (oculto en mobile muy pequeño) ──
-        <div className="hidden sm:flex flex-1 max-w-xl mx-auto items-center gap-0">
-          <UniversalSearch />
-        </div> */}
 
         {/* ── Derecha: redes, puntos, notificaciones, perfil ── */}
         <div className="flex items-center gap-1 shrink-0 ml-auto">
@@ -125,7 +119,7 @@ export const NavbarTop = () => {
               </div>
               {/* Puntos de recompensa */}
               <div className="px-2.5 py-1">
-                <RewardsWidgetPoints />
+                <PointsWidget />
               </div>
             </div>
           )}

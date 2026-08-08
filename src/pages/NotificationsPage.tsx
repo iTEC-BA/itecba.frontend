@@ -6,17 +6,16 @@ import { MainLayout }     from "@components/templates/MainLayout";
 import { usePageTitle }   from "@hooks/usePageTitle";
 import { useNotificationCenter } from "@features/notifications/hooks/useNotificationCenter";
 import { adminService }   from "@features/admin/services/adminService";
-import { useInbox }       from "@features/rewards/hooks/useInbox";
+import { useInbox }       from "@features/notifications/hooks/useInbox";
 import { SectionTab, type TabId } from "@/features/notifications/components/organisms/SectionTab";
-import { UnreadBadge }    from "@features/rewards/components/atoms/UnreadBadge";
+import { UnreadBadge }    from "@features/notifications/components/atoms/UnreadBadge";
 import { NotificationPush } from "@/features/notifications/components/atoms/NotificationPush";
-import { ToastProvider }  from "@features/notifications/components/atoms/Toast";
 
 const NotificationsPanel = lazy(() =>
   import("@/features/notifications/components/organisms/NotificationsPanel").then((m) => ({ default: m.NotificationsPanel }))
 );
 const InboxPanel = lazy(() =>
-  import("@features/rewards/components/organisms/InboxPanel").then((m) => ({ default: m.InboxPanel }))
+  import("@features/notifications/components/organisms/InboxPanel").then((m) => ({ default: m.InboxPanel }))
 );
 
 const PanelSkeleton = () => (
@@ -71,6 +70,6 @@ const NotificationsPageContent: React.FC = () => {
 };
 
 export const NotificationsPage: React.FC = () => (
-  <ToastProvider><NotificationsPageContent /></ToastProvider>
+  <NotificationsPageContent />
 );
 export default NotificationsPage;

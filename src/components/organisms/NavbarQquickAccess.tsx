@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
 import { Calendar, ExternalLink } from "lucide-react";
 
-const RewardsWidget = lazy(() =>
-  import("@/features/rewards/components/organisms/RewardsWidget").then((m) => ({
-    default: m.RewardsWidget,
+const BenefitsWidget = lazy(() =>
+  import("@/features/benefits/components/organisms/BenefitsWidget").then((m) => ({
+    default: m.BenefitsWidget,
   })),
 );
 
@@ -21,7 +21,7 @@ export const NavbarQquickAccess = () => {
       {/* Columna Derecha — solo desktop */}
       <aside className="w-62 w-max-56 h-full hidden lg:block p-4 overflow-y-auto bg-itec-sidebar">
         <Suspense fallback={<WidgetSkeleton />}>
-          <RewardsWidget />
+          <BenefitsWidget />
 
           {/* Separador sutil */}
           <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />

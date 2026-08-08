@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { adminService } from "@features/admin/services/adminService";
 import { useNotificationCenter } from "../../hooks/useNotificationCenter";
-import { useUnreadCount } from "@features/rewards/hooks/useUnreadCount";
+import { useUnreadCount } from "@features/notifications/hooks/useUnreadCount";
 import { Icons } from "@components/ui/icons/Icons";
 import useSizeWindow from "@/hooks/useSizeWindow";
 import { Link } from "react-router-dom";

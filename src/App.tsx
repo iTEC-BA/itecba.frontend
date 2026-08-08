@@ -13,7 +13,7 @@ import ReactGA from "react-ga4";
 import GradeDetailPage from '@pages/gradeDetailPage';
 import PadronPage from '@pages/PadronPage';
 
-const RewardsPage      = lazy(() => import("@pages/RewardsPage").then(m => ({ default: m.RewardsPage })));
+const BenefitsPage     = lazy(() => import("@pages/BenefitsPage").then(m => ({ default: m.BenefitsPage })));
 const CourseEditDetail = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
 const HomePage         = lazy(() => import("@pages/HomePage").then(m => ({ default: m.HomePage })));
 const CoursesPage      = lazy(() => import("@pages/CoursesPage").then(m => ({ default: m.CoursesPage })));
@@ -59,59 +59,52 @@ export const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        {/* El rastreador debe estar dentro del BrowserRouter para acceder a useLocation */}
-        <AnalyticsTracker />
-        <Routes>
-          {/* RUTAS PÚBLICAS */}
-          <Route path="/padron" element={<PadronPage />} />
-          <Route path="/"           element={<PageSuspense><HomePage /></PageSuspense>} />
-          <Route path="/foro"      element={<PageSuspense><ForumPage /></PageSuspense>} />
-          <Route path="/foro/:postId" element={<PageSuspense><ForumThreadPage /></PageSuspense>} />
-          <Route path="/login"      element={<PageSuspense><LoginPage /></PageSuspense>} />
-          <Route path="/cursos"     element={<PageSuspense><ToastProvider><CoursesPage /></ToastProvider></PageSuspense>} />
-          <Route path="/cursos/:id" element={<PageSuspense><CourseDetail /></PageSuspense>} />
-          <Route path="/faqs"       element={<PageSuspense><FaqsPage /></PageSuspense>} />
-          <Route path="/ingreso"    element={<PageSuspense><AdmissionPage /></PageSuspense>} />
-          <Route path="/grado"      element={<PageSuspense><GradePage /></PageSuspense>} />
-          <Route path='/grado/:carreraId' element={<GradeDetailPage />} />
-          <Route path="/nosotros"   element={<PageSuspense><AboutPage /></PageSuspense>} />
-          <Route path="/grupos"     element={<PageSuspense><GroupsPage /></PageSuspense>} />
-          <Route path="/aulas"      element={<PageSuspense><AulasPage /></PageSuspense>} />
-          <Route path="/aulas/:slug"  element={<PageSuspense><AulaDetallePage /></PageSuspense>} />
-          <Route path="/guiatec"    element={<PageSuspense><GuiaTECPage /></PageSuspense>} />
-          <Route path="/calendario" element={<PageSuspense><CalendarioPage /></PageSuspense>} />
-          <Route path="/plugins"    element={<PageSuspense><PluginsPage /></PageSuspense>} />
-          <Route path="/terminos"   element={<PageSuspense><TerminosPage /></PageSuspense>} />
+      <ToastProvider>
+        <BrowserRouter>
+          <AnalyticsTracker />
+          <Routes>
+            {/* RUTAS PÚBLICAS */}
+            <Route path="/padron" element={<PadronPage />} />
+            <Route path="/"           element={<PageSuspense><HomePage /></PageSuspense>} />
+            <Route path="/foro"      element={<PageSuspense><ForumPage /></PageSuspense>} />
+            <Route path="/foro/:postId" element={<PageSuspense><ForumThreadPage /></PageSuspense>} />
+            <Route path="/login"      element={<PageSuspense><LoginPage /></PageSuspense>} />
+            <Route path="/cursos"     element={<PageSuspense><CoursesPage /></PageSuspense>} />
+            <Route path="/cursos/:id" element={<PageSuspense><CourseDetail /></PageSuspense>} />
+            <Route path="/faqs"       element={<PageSuspense><FaqsPage /></PageSuspense>} />
+            <Route path="/ingreso"    element={<PageSuspense><AdmissionPage /></PageSuspense>} />
+            <Route path="/grado"      element={<PageSuspense><GradePage /></PageSuspense>} />
+            <Route path='/grado/:carreraId' element={<GradeDetailPage />} />
+            <Route path="/nosotros"   element={<PageSuspense><AboutPage /></PageSuspense>} />
+            <Route path="/grupos"     element={<PageSuspense><GroupsPage /></PageSuspense>} />
+            <Route path="/aulas"      element={<PageSuspense><AulasPage /></PageSuspense>} />
+            <Route path="/aulas/:slug"  element={<PageSuspense><AulaDetallePage /></PageSuspense>} />
+            <Route path="/guiatec"    element={<PageSuspense><GuiaTECPage /></PageSuspense>} />
+            <Route path="/calendario" element={<PageSuspense><CalendarioPage /></PageSuspense>} />
+            <Route path="/plugins"    element={<PageSuspense><PluginsPage /></PageSuspense>} />
+            <Route path="/terminos"   element={<PageSuspense><TerminosPage /></PageSuspense>} />
 
-          {/* RUTAS PRIVADAS */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/trueketec"         element={<PageSuspense><TruekeTECPage /></PageSuspense>} />
-            <Route path="/cursos/editar/:id" element={<PageSuspense><CourseEditDetail /></PageSuspense>} />
-            <Route path="/beneficios"        element={<PageSuspense><RewardsPage /></PageSuspense>} />
-            <Route path="/recursos"          element={<PageSuspense><ResourcesPage /></PageSuspense>} />
-            <Route path="/progreso"          element={<PageSuspense><ProgressPage /></PageSuspense>} />
-            <Route path="/perfil"            element={<PageSuspense><ProfilePage /></PageSuspense>} />
-            <Route path="/perfil/:username"  element={<PageSuspense><ProfilePage /></PageSuspense>} />
-            <Route path="/admin/*"           element={<PageSuspense><AdminPanel /></PageSuspense>} />
-            <Route path="/notificaciones"    element={<PageSuspense><NotificationsPage /></PageSuspense>} />
-          </Route>
+            {/* RUTAS PRIVADAS */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/trueketec"         element={<PageSuspense><TruekeTECPage /></PageSuspense>} />
+              <Route path="/cursos/editar/:id" element={<PageSuspense><CourseEditDetail /></PageSuspense>} />
+              <Route path="/beneficios"        element={<PageSuspense><BenefitsPage /></PageSuspense>} />
+              <Route path="/recursos"          element={<PageSuspense><ResourcesPage /></PageSuspense>} />
+              <Route path="/progreso"          element={<PageSuspense><ProgressPage /></PageSuspense>} />
+              <Route path="/perfil"            element={<PageSuspense><ProfilePage /></PageSuspense>} />
+              <Route path="/perfil/:username"  element={<PageSuspense><ProfilePage /></PageSuspense>} />
+              <Route path="/admin/*"           element={<PageSuspense><AdminPanel /></PageSuspense>} />
+              <Route path="/notificaciones"    element={<PageSuspense><NotificationsPage /></PageSuspense>} />
+            </Route>
 
-          {/* 404 */}
-          <Route path="*" element={<PageSuspense><ErrorPage /></PageSuspense>} />
-        </Routes>
-      </BrowserRouter>
+            {/* 404 */}
+            <Route path="*" element={<PageSuspense><ErrorPage /></PageSuspense>} />
+          </Routes>
+        </BrowserRouter>
 
-       {/*
-        ── PWA: Banner de instalación y Toast de actualización ────────────────
-        Deben estar FUERA del BrowserRouter porque son overlays globales
-        (position: fixed) que no pertenecen a ninguna ruta específica.
-        InstallPWABanner → aparece cuando Chrome detecta que la PWA es instalable
-        UpdatePWAToast   → aparece cuando hay una nueva versión del Service Worker
-      */}
-      <BannerInstallPWA />
-      <UpdatePWAToast />
-      {/* <ToastProvider /> */}
+        <BannerInstallPWA />
+        <UpdatePWAToast />
+      </ToastProvider>
     </AuthProvider>
   );
 };

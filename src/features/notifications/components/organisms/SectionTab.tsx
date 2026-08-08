@@ -1,5 +1,5 @@
 import React from "react";
-import { UnreadBadge } from "@features/rewards/components/atoms/UnreadBadge";
+import { UnreadBadge } from "@features/notifications/components/atoms/UnreadBadge";
 
 export type TabId = "notifications" | "inbox";
 

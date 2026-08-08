@@ -50,7 +50,8 @@ agregar_carpeta "src/data/"
 
 echo "🧩 4/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
-# agregar_carpeta "src/features/notifications/"
+agregar_carpeta "src/features/admin/"
+agregar_carpeta "src/features/notifications/"
 
 echo "📦 5/5 Agregando a estilo"
 agregar_archivo "./package.json"

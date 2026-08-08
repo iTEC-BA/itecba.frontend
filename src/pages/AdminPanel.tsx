@@ -14,8 +14,7 @@ import {
 import { AdminDashboard } from "@features/admin/pages/AdminDashboard";
 import { UserManagement } from "@features/admin/pages/UserManagement";
 import { NewsManagement } from "@features/admin/pages/NewsManagement";
-import { BenefitsManagement } from "@features/admin/pages/BenefitsManagement";
-import { RewardsManagement } from "@/features/admin/pages/RewardsManagement";
+import { BenefitManagement } from "@features/admin/pages/BenefitManagement";
 import { AdminRedemptions } from "@features/admin/pages/AdminRedemptions";
 import { useAdminSidebar, type AdminSection } from "@features/admin/hooks/useAdminSidebar";
 
@@ -65,8 +64,7 @@ export const AdminPanel: React.FC = () => (
       <Route path="dashboard" element={<DashboardRoute />} />
       <Route path="usuarios" element={<UserManagement />} />
       <Route path="avisos" element={<NewsManagement />} />
-      <Route path="beneficios" element={<BenefitsManagement />} />
-      <Route path="recompensas" element={<RewardsManagement />} />
+      <Route path="beneficios" element={<BenefitManagement />} />
       <Route path="canjes" element={<AdminRedemptions />} />
       <Route path="tutorias" element={<TutoriasSection />} />
       <Route path="*" element={<Navigate to="dashboard" replace />} />

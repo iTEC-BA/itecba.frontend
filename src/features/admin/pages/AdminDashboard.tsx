@@ -15,7 +15,6 @@ import {
   MessageSquare,
   FileWarning,
   Server,
-  Gift,
   Video,
   Activity,
   PieChart
@@ -27,8 +26,7 @@ interface AdminDashboardProps {
 
 const QUICK_ACTIONS = [
   { icon: BellRing, text: "Publicar aviso", section: "news" as AdminSection, tone: "text-itec-amber hover:bg-itec-amber/10 hover:border-itec-amber/40" },
-  { icon: Star, text: "Nuevo beneficio", section: "benefits" as AdminSection, tone: "text-itec-sky hover:bg-itec-sky/10 hover:border-itec-sky/40" },
-  { icon: Gift, text: "Nueva recompensa", section: "rewards" as AdminSection, tone: "text-itec-purple hover:bg-itec-purple/10 hover:border-itec-purple/40" },
+  { icon: Star, text: "Nuevo ítem", section: "benefits" as AdminSection, tone: "text-itec-sky hover:bg-itec-sky/10 hover:border-itec-sky/40" },
   { icon: Users, text: "Gestionar roles", section: "users" as AdminSection, tone: "text-itec-red hover:bg-itec-red/10 hover:border-itec-red/40" },
   { icon: Ticket, text: "Ver canjes", section: "redemptions" as AdminSection, tone: "text-itec-emerald hover:bg-itec-emerald/10 hover:border-itec-emerald/40" },
   { icon: Video, text: "Tutorías", section: "tutorias" as AdminSection, tone: "text-itec-blue-skye hover:bg-itec-blue-skye/10 hover:border-itec-blue-skye/40" },

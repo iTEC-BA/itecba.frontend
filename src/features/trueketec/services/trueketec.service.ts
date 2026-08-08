@@ -9,7 +9,7 @@ import type {
   Postulante,
 } from "../types/trueketec.types";
 
-const BASE = `${import.meta.env.VITE_API_URL ?? ""}/api/trueketec`;
+const BASE = `${import.meta.env.VITE_API_URL ?? ""}/trueketec`;
 
 const getHeaders = async (): Promise<HeadersInit> => {
   const token = await auth.currentUser?.getIdToken();
