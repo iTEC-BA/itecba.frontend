@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRightLeft, Sparkles, BookOpen, Mail, MapPin } from "lucide-react";
+import { ArrowRightLeft, Sparkles, Mail, MapPin } from "lucide-react";
 import { EstadoBadge } from "../atoms/EstadoBadge";
 import { TurnoBadge }  from "../atoms/TurnoBadge";
 import type { TrueketecPost } from "../../types/trueketec.types";
