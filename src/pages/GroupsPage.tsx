@@ -41,7 +41,7 @@ const GroupsPageContent: React.FC = () => {
   const [isAdminOpen,    setIsAdminOpen]    = useState(false);
   const [isMateriasOpen, setIsMateriasOpen] = useState(false);
 
-  const { filters, filteredResults, pagination, hasSearched, isSearching, searchError, handlePageChange, handleSpecialtyClick } = useGroupSearch();
+  const { filters, filteredResults, pagination, hasSearched, isSearching, searchError, handlePageChange } = useGroupSearch();
 
   return (
     <MainLayout>
