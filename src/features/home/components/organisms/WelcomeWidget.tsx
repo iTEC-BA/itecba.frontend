@@ -1,117 +1,116 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@context/AuthContext";
-import { BentoCard } from "@features/home/components/atoms/BentoCard";
-import { GlowDot } from "@features/home/components/atoms/GlowDot";
 import { Icons } from "@components/ui/icons/Icons";
+import { ChartLine, ChevronRight, GraduationCap, Star } from "lucide-react";
 
 export const WelcomeWidget: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   const firstName = user?.name ? user.name.split(" ")[0] : null;
+
   const hour = new Date().getHours();
-  const greeting =
-    hour < 12 ? "Buenos días" : hour < 19 ? "Buenas tardes" : "Buenas noches";
+  const greeting = hour < 12 ? "Buenos días" : hour < 19 ? "Buenas tardes" : "Buenas noches";
 
-  return (
-    <div className="flex flex-col sm:flex-row gap-3 mb-3">
-      <section className="flex-1 relative overflow-hidden rounded-xl p-0.25 shadow-xl shadow-black/20">
-        <div className="animate-[spin_25s_ease-in-out_infinite] absolute inset-0 h-full w-full rounded-full bg-itec-red/55 shadow-xl shadow-itec-red/20 -z-1" />
-        <BentoCard className="flex-1 p-6">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1.5">
-                <GlowDot color="green" />
-                <span className="text-[10px] font-bold text-itec-gray uppercase tracking-widest">
-                  Plataforma activa
-                </span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-itec-text leading-tight">
-                {firstName ? (
-                  <>
-                    {greeting},{" "}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-itec-red to-itec-red-skye">
-                      {firstName}
-                    </span>{" "}
-                    👋
-                  </>
-                ) : (
-                  <>
-                    Bienvenido a{" "}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-itec-red to-itec-red-skye">
-                      iTEC BA
-                    </span>
-                  </>
-                )}
-              </h1>
-              <p className="text-itec-gray text-[12px] mt-1 leading-relaxed">
-                {isAuthenticated
-                  ? "Tu campus universitario, todo en un lugar."
-                  : "La plataforma estudiantil de UTN Buenos Aires."}
-              </p>
-            </div>
-            {user?.photoURL && (
-              <Link to="/perfil" className="shrink-0">
-                <img
-                  src={user.photoURL}
-                  alt="Perfil"
-                  className="size-12 rounded-xl border border-itec-border object-cover hover:opacity-80 transition-opacity"
-                />
-              </Link>
-            )}
+  // ── ESTADO: NO AUTENTICADO ────────────────────────────────────────────────
+  if (!isAuthenticated) {
+    return (
+      <section className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-2xl border border-white/10 bg-itec-box p-6 sm:p-8">
+        <div className="flex-1">
+          <div className="mb-4 inline-flex items-center gap-1.5 rounded-lg border border-itec-emerald/20 bg-itec-emerald/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-700" />
+            Sistema en línea
           </div>
-          {!isAuthenticated && (
-            <Link
-              to="/login"
-              className="flex mt-3 w-max items-center border border-itec-red/30 gap-2 bg-itec-red/10 hover:bg-itec-red/60 text-white text-xs font-bold px-5 py-3 rounded-xl transition-colors"
-            >
-              <Icons type="google" className="w-4 h-4" />
-              Iniciar sesión con @frba
-            </Link>
-          )}
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
+            Bienvenido a iTEC BA
+          </h1>
+          <p className="text-sm text-white/50 max-w-md leading-relaxed">
+            La plataforma colaborativa e independiente construida exclusivamente por y para estudiantes de la UTN FRBA.
+          </p>
+        </div>
+        <Link
+          to="/login"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-itec-red/33 px-6 py-3.5 text-sm font-bold  transition-colors hover:bg-gray-200 active:scale-95"
+        >
+          <Icons type="google" className="h-4 w-4" />
+          Ingresar con @frba
+        </Link>
+      </section>
+    );
+  }
 
-          {isAuthenticated && (
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {user?.specialty && (
-                <span className="text-[10px] font-medium bg-itec-blue-skye/10 text-itec-blue-skye border border-itec-blue-skye/20 px-2.5 py-1 rounded-full">
-                  Ing. {user.specialty}
-                </span>
-              )}
-              {(user as any)?.points != null && (
-                <span className="text-[10px] font-medium bg-itec-rewards/10 text-itec-rewards border border-itec-rewards/20 px-2.5 py-1 rounded-full">
-                  ⭐ {(user as any).points} pts
-                </span>
-              )}
-            </div>
-          )}
-        </BentoCard>
+  // ── ESTADO: AUTENTICADO (Bento Grid Flat) ─────────────────────────────────
+  return (
+    <div className="mb-8 grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
+      
+      {/* ── 1. TARJETA PRINCIPAL (Bienvenida y Perfil) - Ocupa 6 a 8 columnas ── */}
+      <section className="md:col-span-6 lg:col-span-8 flex items-center gap-4 sm:gap-5 rounded-2xl border border-white/10 bg-itec-box p-5 sm:p-6 transition-colors hover:border-white/20">
+        {user?.photoURL ? (
+          <Link to="/perfil" className="shrink-0 group">
+            <img
+              src={user.photoURL}
+              alt="Perfil"
+              className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl border border-white/10 bg-white/5 object-cover transition-transform group-hover:scale-105"
+            />
+          </Link>
+        ) : (
+          <div className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center text-white/75">
+            <GraduationCap className="h-8 w-8" />
+          </div>
+        )}
+        
+        <div className="flex flex-col justify-center min-w-0">
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-itec-emerald" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 flex gap-2">
+            <GraduationCap className="h-4 w-4" />
+            {greeting}
+            </span>
+          </div>
+          <h1 className="truncate text-xl sm:text-3xl font-bold tracking-tight text-white mb-1">
+            Hola, {firstName}
+          </h1>
+          <p className="truncate text-xs sm:text-sm text-white/50">
+            Tu campus universitario en un solo lugar.
+          </p>
+        </div>
       </section>
 
-      {isAuthenticated && (
-        <div className="flex flex-row sm:flex-col gap-2.5 sm:w-36">
-          <Link
-            to="/beneficios"
-            className="flex-1 group flex flex-col items-center justify-center gap-1.5 p-3 bg-itec-box border border-white/[0.07] rounded-xl hover:border-itec-rewards/40 hover:bg-itec-rewards/5 transition-all duration-200 text-center"
-          >
-            <div className="w-8 h-8 bg-itec-rewards/10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-              <Icons type="gift" className="w-4 h-4 text-itec-rewards" />
-            </div>
-            <span className="text-[10px] font-semibold text-itec-gray group-hover:text-itec-rewards transition-colors leading-tight">
-              Beneficios
-            </span>
-          </Link>
-          <Link
-            to="/progreso"
-            className="flex-1 group flex flex-col items-center justify-center gap-1.5 p-3 bg-itec-box border border-white/[0.07] rounded-xl hover:border-itec-groups/40 hover:bg-itec-groups/5 transition-all duration-200 text-center"
-          >
-            <div className="w-8 h-8 bg-itec-groups/10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-              <Icons type="chart-line" className="w-4 h-4 text-itec-groups" />
-            </div>
-            <span className="text-[10px] font-semibold text-itec-gray group-hover:text-itec-groups transition-colors leading-tight">
-              Progreso
-            </span>
-          </Link>
+      {/* ── 2. TARJETA PUNTOS / BENEFICIOS - Ocupa 3 a 2 columnas ── */}
+      <Link
+        to="/beneficios"
+        className="md:col-span-3 lg:col-span-2 group flex flex-col justify-center rounded-2xl border border-white/10 bg-white/2 p-5 transition-all hover:bg-white/2 hover:border-itec-rewards/30"
+      >
+        <div className="mb-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-itec-rewards/20 bg-itec-rewards/10 text-itec-rewards transition-transform group-hover:scale-110">
+          <Star className="h-4 w-4" fill="currentColor" />
         </div>
-      )}
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="text-lg sm:text-xl font-bold text-white tracking-tight flex items-baseline gap-1">
+            {user && 'points' in user ? user.points : 0} <span className="text-xs text-white/40 font-normal">pts</span>
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-itec-rewards transition-colors flex items-center gap-1 mt-1">
+            Beneficios <ChevronRight className="h-3 w-3" />
+          </span>
+        </div>
+      </Link>
+
+      {/* ── 3. TARJETA CARRERA / PROGRESO - Ocupa 3 a 2 columnas ── */}
+      <Link
+        to="/progreso"
+        className="md:col-span-3 lg:col-span-2 group flex flex-col justify-center rounded-2xl border border-white/10 bg-white/2 p-5 transition-all hover:bg-white/2 hover:border-itec-groups/30"
+      >
+        <div className="mb-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-itec-groups/20 bg-itec-groups/10 text-itec-groups transition-transform group-hover:scale-110">
+          <ChartLine className="h-4 w-4" />
+        </div>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="text-sm sm:text-base font-bold text-white truncate leading-tight mt-0.5 uppercase">
+            {user?.specialty ? `${user.specialty}` : "Mi Carrera"}
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-itec-groups transition-colors flex items-center gap-1 mt-1.5">
+            Progreso <ChevronRight className="h-3 w-3" />
+          </span>
+        </div>
+      </Link>
+
     </div>
   );
 };

@@ -9,7 +9,7 @@ export const ContributorsWidget: React.FC = () => {
   return (
     <section className="animate-in fade-in slide-in-from-bottom-6 duration-700 pb-10">
       <div className="bg-itec-box border border-itec-gray rounded-xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
-        
+          
         <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-500/5 via-transparent to-transparent pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">

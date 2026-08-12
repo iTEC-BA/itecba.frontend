@@ -7,7 +7,9 @@ import {
   LineChart, User, FileText, 
   Handshake,
   LandPlot,
-  MessageCircleQuestionMark
+  MessageCircleQuestionMark,
+  Baby,
+  Info
 } from "lucide-react";
 
 export const useSidebarLinks = () => {
@@ -46,6 +48,7 @@ export const useSidebarLinks = () => {
         title: "Principal",
         links: applyPageAccess([
           { path: "/", label: "Inicio", icon: Home },
+          { path: "/ingreso", label: "Ingreso", icon: Baby },
           { path: "/foro", label: "Comunidad", icon: MessageCircle },
           { path: "/trueketec", label: "TruekeTEC", icon: Handshake, requireAuth: true },
           { path: "/aulas", label: "Buscar aula", icon: MapPin },
@@ -64,6 +67,7 @@ export const useSidebarLinks = () => {
         links: applyPageAccess([
           { path: "/grupos", label: "Grupos", icon: Users },
           { path: "/faqs", label: "Preguntas Frecuentes", icon: MessageCircleQuestionMark },
+          { path: "/nosotros", label: "Nosotros", icon: Info },
         ]),
       },
       {

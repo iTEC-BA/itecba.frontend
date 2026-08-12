@@ -10,7 +10,7 @@ interface Announcement {
   createdAt: any;
 }
 
-export const useAnnouncements = () => {
+export const useNotificationBanner = () => {
   const { data: announcements = [], isLoading, isError } = useQuery<Announcement[]>({
     queryKey: ['announcements', 'active'],
     queryFn: async () => (await adminService.getActiveAnnouncements()) as any,

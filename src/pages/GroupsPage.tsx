@@ -9,7 +9,7 @@ import { usePendingGroups, useGroupStats } from "@features/groups/hooks/useGroup
 import { useGroupSearch }   from "@features/groups/hooks/useGroupFilters";
 import { GroupFilters }     from "@features/groups/components/organisms/GroupFilters";
 import { GroupResults }     from "@features/groups/components/organisms/GroupResults";
-import { SpecialtyGrid }    from "@features/groups/components/organisms/SpecialtyGrid";
+import { WhatsAppGroupsList }    from "@/features/groups/components/organisms/WhatsAppGroupsList";
 import { GroupsStatsBar }   from "@features/groups/components/molecules/GroupsStatsBar";
 import { usePageTitle }     from "@hooks/usePageTitle";
 import { ToastProvider }    from "@features/notifications/components/atoms/Toast";
@@ -70,7 +70,7 @@ const GroupsPageContent: React.FC = () => {
       {hasSearched ? (
         <GroupResults results={filteredResults} onClear={filters.handleClear} onAddClick={() => setIsAddOpen(true)} isLoading={isSearching} searchError={searchError} pagination={pagination} onPageChange={handlePageChange} />
       ) : (
-        <SpecialtyGrid onSpecialtyClick={handleSpecialtyClick} />
+        <WhatsAppGroupsList />
       )}
 
       {isAddOpen && (

@@ -4,8 +4,6 @@ import { Icons } from "@components/ui/icons/Icons";
 import { BentoCard } from "@features/home/components/atoms/BentoCard";
 import { SectionLabel } from "@features/home/components/atoms/SectionLabel";
 
-import { CalendarWidget } from "@/features/calendar/components/CalendarWidget";
-
 const QUICK_ACTIONS = [
   {
     href: "/faqs",
@@ -38,12 +36,6 @@ const QUICK_ACTIONS = [
 ];
 
 export const QuickStatsRow: React.FC = () => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 items-stretch">
-    <BentoCard className="p-4 h-full" hover={false}>
-      <div className="h-54 overflow-auto relative">
-        <CalendarWidget />
-      </div>
-    </BentoCard>
     <BentoCard className="p-4 h-full" hover={false}>
       <SectionLabel>Accesos rápidos</SectionLabel>
       <div className="grid grid-cols-2 gap-2">
@@ -65,5 +57,4 @@ export const QuickStatsRow: React.FC = () => (
         ))}
       </div>
     </BentoCard>
-  </div>
 );

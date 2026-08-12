@@ -1,101 +1,138 @@
-Aquí tenés la documentación unificada, estructurada y mejorada. Combiné tu README original con el nuevo análisis técnico de la PWA para crear un documento maestro, ideal para cualquier desarrollador que se sume a tu equipo.
+Aquí tenés un `README.md` completo, detallado y estructurado, ideal para que cualquier desarrollador que se sume al proyecto entienda exactamente cómo está armada la plataforma, qué reglas visuales y de código debe respetar, y qué herramientas se utilizan.
 
-Podés copiar este bloque y guardarlo directamente como tu nuevo `README.md` en la raíz de `itecba-frontend`.
-
----
-
-# Documentación del Proyecto iTEC.BA (Frontend & PWA)
-
-Este repositorio contiene el código fuente del frontend de la plataforma **iTEC.BA**. Desarrollado como una Single Page Application (SPA) y configurado como una Progressive Web App (PWA), interactúa con nuestro [backend de gestión](https://github.com/iTEC-BA/itecba.backend). Este documento detalla la arquitectura, el entorno local, la configuración de la PWA y las guías de contribución.
+Podés copiar y pegar este contenido directamente en el archivo `README.md` en la raíz de tu frontend.
 
 ---
 
-## 🏛️ Arquitectura y Estructura del Proyecto
+# 🎓 iTEC BA — Frontend & PWA
 
-El frontend utiliza una arquitectura híbrida altamente escalable que combina el **Patrón de Diseño Atómico (Atomic Design)** para componentes globales, con una **Arquitectura Orientada a Funcionalidades (Feature-Driven Architecture)** para encapsular la lógica de negocio.
+Bienvenido al repositorio oficial del frontend de **iTEC BA**, la plataforma colaborativa e independiente exclusiva para estudiantes de la UTN FRBA.
 
-### Estructura de Directorios
-
-* **`src/components/`**: Contiene componentes de interfaz gráfica reutilizables y agnósticos, organizados bajo Atomic Design (`atoms`, `molecules`, `organisms`, `templates`).
-* **`src/features/`**: El núcleo de la aplicación. Cada funcionalidad (ej. `about`, `courses`, `forum`, `rewards`) encapsula sus propios componentes, hooks, servicios y tipos. Esto aísla el alcance y facilita las refactorizaciones.
-* **`src/pages/`**: Componentes de alto nivel que componen las vistas principales mapeadas a las rutas de la aplicación.
-* **`src/context/`**: Contextos globales de React (ej. `AuthContext.tsx`).
-* **`src/lib/`**: Instancias y configuraciones de clientes externos (Firebase, Supabase).
+Este proyecto está construido como una **Single Page Application (SPA)** altamente interactiva y configurada como una **Progressive Web App (PWA)**, optimizada para ofrecer una experiencia nativa tanto en escritorio como en dispositivos móviles.
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 🎨 1. Sistema de Diseño (UI/UX)
 
-* **Core:** React 19 & TypeScript. Tipado estático estricto para reducir errores en tiempo de ejecución.
-* **Build Tool:** Vite. Entorno de desarrollo ultra rápido y optimización para producción.
-* **Estilos:** Tailwind CSS (v4).
-* **Enrutamiento:** React Router DOM (v7).
-* **Fetching & Estado:** `@tanstack/react-query`. Herramienta fundamental para el caché y sincronización del estado del servidor.
-* **BaaS:** Firebase (Autenticación y DB en tiempo real) y Supabase (Base de datos relacional Postgres).
-* **Librerías Especializadas:** `@xyflow/react` (diagramas de correlatividades) y `@google/generative-ai` junto a `React Markdown` (para el chatbot de IA).
+La plataforma utiliza un diseño **Dark Theme por defecto**, combinando el estilo **Flat Design** con toques sutiles de **Glassmorphism**. El objetivo es transmitir seriedad, modernidad y velocidad.
 
----
+### Reglas Visuales y Restricciones
 
-## 📱 Progressive Web App (PWA) y Caché
+* **Paleta de Colores Estricta:** No se deben usar colores arbitrarios de Tailwind. Se deben usar las variables CSS globales definidas en `index.css`:
+* `bg-itec-bg` / `bg-itec-box` / `bg-itec-surface`: Jerarquía de fondos oscuros.
+* `border-itec-border`: Para todos los delineados sutiles (`#171717`).
+* `text-itec-text` / `text-itec-muted`: Para textos primarios y secundarios.
+* *Acentos:* `itec-blue-skye` (Primario), `itec-red` (Peligro/Acción), `itec-emerald` (Éxito/Gratis), `itec-amber` / `itec-rewards` (Premium/Puntos).
 
-El proyecto está configurado como una PWA instalable gracias al script `instalador-PWA.sh`. Este módulo depende de `vite-plugin-pwa` (con actualización automática) y `workbox-window`.
 
-### Archivos Generados por el Instalador
-
-| Archivo | Propósito |
-| --- | --- |
-| `src/hooks/useInstallPWA.ts` | Gestiona el ciclo de vida del prompt nativo (`beforeinstallprompt`) y detecta el estado de instalación. |
-| `src/components/molecules/InstallPWABanner.tsx` | Banner fijo en la parte inferior para incitar a la instalación cuando la app corre en navegador. |
-| `src/components/molecules/UpdatePWAToast.tsx` | Toast superior que avisa cuando hay una nueva versión del Service Worker disponible. |
-| `public/_redirects` & `vercel.json` | Reglas de redirección de rutas a `index.html` para despliegues en Netlify y Vercel. |
-
-### Estrategias de Caché (Workbox)
-
-La PWA utiliza las siguientes estrategias para optimizar la carga y permitir el funcionamiento offline parcial:
-
-| Recurso / URL | Estrategia | TTL (Tiempo de vida) | Entradas Máx. |
-| --- | --- | --- | --- |
-| **Google Fonts** (`fonts.googleapis.com`) | `CacheFirst` | 365 días | 20 |
-| **API Backend** (`*.itec.ba/api/*`) | `NetworkFirst` | 5 minutos (Timeout: 10s) | 100 |
-| **BaaS** (`*.supabase.co` / `*.firebaseio.com`) | `StaleWhileRevalidate` | 1 hora | 50 |
-| **Imágenes** (`png|jpg|svg|webp`) | `CacheFirst` | 30 días | 60 |
-| **Assets estáticos** (`js`, `css`, `html`) | `Precache` | - | Todos |
+* **Sin Sombras Excesivas:** Evitar el uso abusivo de `shadow-lg` o brillos intensos. Privilegiar los bordes finos (`border-white/10`) y fondos semi-transparentes (`bg-white/5`).
+* **Íconos:** Toda la iconografía utiliza `lucide-react`, centralizada a través del componente `<Icons/>` (`src/components/ui/icons/Icons.tsx`). No instalar otras librerías de íconos.
+* **Componentes Modales:** Todas las interacciones complejas (formularios de creación, detalles, etc.) deben renderizarse usando la plantilla global `<LayoutModal/>` para mantener la consistencia móvil/escritorio.
 
 ---
 
-## 🚀 Guías de Integración para Desarrolladores
+## 🏛️ 2. Estructura y Arquitectura
 
-### 1. Requisitos Previos
+El proyecto emplea una arquitectura híbrida y escalable que combina el **Atomic Design** (para la UI global) con el patrón **Feature-Driven Architecture** (para la lógica de negocio).
 
-* Node.js (versión 20.x o superior).
-* Gestor de paquetes NPM.
-* Instancia local o remota de MongoDB.
-* Credenciales del archivo `.env` (Firebase, Supabase, Google Generative AI).
+### Árbol de Directorios Principal
 
-### 2. Configuración Local
+```text
+src/
+├── assets/          # Imágenes estáticas, logos y SVGs.
+├── components/      # Componentes UI globales (Agnósticos al negocio - Atomic Design)
+│   ├── atoms/       # Elementos indivisibles (Botones, Badges, Inputs)
+│   ├── molecules/   # Combinaciones simples (SearchBars, Tarjetas simples)
+│   ├── organisms/   # Bloques complejos (Sidebars, Navbars, Widgets)
+│   └── templates/   # Estructuras de página (MainLayout, LayoutModal, ProtectedRoute)
+├── features/        # MÓDULOS DE NEGOCIO (¡El núcleo de la app!)
+│   ├── about/       # Ej: Lógica y componentes de la página "Sobre Nosotros"
+│   ├── admin/       # Ej: Panel de administración, métricas y gestión.
+│   ├── trueketec/   # Ej: Intercambio de comisiones (hooks, types, services propios)
+│   └── ...          
+├── pages/           # Vistas enrutables. Solo ensamblan layouts y features.
+├── data/            # Datos estáticos o diccionarios (ej. careers.ts, projects.data.ts).
+├── context/         # Estados globales de React (AuthContext, PageAccessContext).
+├── hooks/           # Custom Hooks globales (useInstallPWA, usePagination).
+├── lib/             # Instancias de terceros (Firebase, Supabase, axios/fetch utils).
+└── index.css        # Variables globales de CSS y directivas base de Tailwind.
 
-1. Clonar el repositorio.
-2. Navegar al directorio: `cd itecba-frontend`.
-3. Instalar dependencias: `npm install`.
-4. Configurar el archivo `.env` en la raíz con las URLs y claves correspondientes.
-5. Iniciar el servidor: `npm run dev`.
+```
 
-### 3. Pasos Manuales Post-Instalación PWA
+### 🚫 Restricción de Arquitectura:
 
-Si ejecutas el `instalador-PWA.sh` desde cero, debes asegurar los siguientes pasos:
+**Aislamiento de Features:** Si estás creando un componente, hook o tipo que *sólo* se usa en la sección "TruekeTEC", **debe** ir dentro de `src/features/trueketec/`. La carpeta `src/components/` está estrictamente reservada para elementos genéricos que se usan a lo largo de toda la plataforma (como `<Button/>`, `<Input/>`, `<CustomSelect/>`).
 
-1. **Generar Íconos:** Asegurate de tener un `public/logo.png` y utiliza `npx pwa-asset-generator` para crear las imágenes de las tiendas y el favicon en `public/icons/`.
-2. **Inyectar Componentes UI:** Importar `<InstallPWABanner />` y `<UpdatePWAToast />` dentro del retorno principal en `src/App.tsx`.
+---
 
-### 4. Flujo de Trabajo y Git Flow
+## 🛠️ 3. Stack Tecnológico & Librerías
 
-Para mantener un código limpio y estable, todos los colaboradores deben seguir estas reglas:
+El ecosistema está elegido para maximizar el rendimiento bajo capas gratuitas (Free Tiers) y mantener el bundle final ligero.
 
-* **Ramas (Branches):** La rama `main` (o `master`) está protegida. No se permiten *pushes* directos. Utiliza Feature Branches:
-* `feature/nombre-de-la-funcionalidad`
-* `fix/descripcion-del-bug`
-* `refactor/descripcion-de-mejora`
+* **Core:** React 19 + TypeScript (Tipado estricto obligatorio).
+* **Build Tool:** Vite 7 (Rendimiento ultra rápido).
+* **Estilos:** Tailwind CSS 4 (Configurado vía variables CSS puras).
+* **Enrutamiento:** React Router DOM v7 (`BrowserRouter`).
+* **Sincronización y Caché de Datos:** `@tanstack/react-query` v5 (Manejo de estado del servidor, reintentos, refetching).
+* **Notificaciones In-App:** Sistema propio mediante Context API (`<ToastProvider/>`).
+* **BaaS (Backend as a Service):**
+* `firebase`: Autenticación, Firestore (Usuarios, Puntos, Configuración global).
+* `@supabase/supabase-js`: PostgreSQL Serverless (Foro anónimo, Materias, Calendario).
 
 
-* **Pull Requests (PRs):** Todo código nuevo ingresa mediante PR. Debe incluir un título descriptivo y superar las reglas de linting locales ejecutando `npm run lint`.
-* **Arquitectura Estricta:** Prioriza la arquitectura *Feature-Driven*. Si un componente pertenece únicamente a "Cursos", créalo en `src/features/courses/components/`. Reserva las carpetas globales en `src/components/` solo para elementos genéricos y reutilizables en toda la aplicación.
+* **PWA & Service Workers:** `vite-plugin-pwa` y `workbox-window`.
+* **Markdown & Renderizado Matemático:** `react-markdown`, `remark-math`, `rehype-katex` y `katex` (usados en el Chatbot IA y recursos).
+
+---
+
+## 📱 4. PWA (Progressive Web App) y Modo Offline
+
+La app está diseñada con un enfoque **Mobile-First**. El Service Worker (`sw.js`) gestiona el caché de la aplicación mediante políticas de Workbox:
+
+1. **`NetworkFirst` (Prioridad Red):** Para todas las consultas a la API del backend (`*.itec.ba/api/*`). Si no hay internet, muestra los últimos datos cacheados.
+2. **`StaleWhileRevalidate`:** Para consultas al BaaS (Firebase y Supabase).
+3. **`CacheFirst` (Prioridad Caché):** Para imágenes locales, Google Fonts y assets estáticos.
+
+**Safe Areas:** El CSS incluye variables (`env(safe-area-inset-bottom)`) para evitar que el contenido colisione con el "notch" o la barra inferior de los iPhones. Al desarrollar vistas móviles, utilizá la clase utilitaria `pb-safe`.
+
+---
+
+## 🚀 5. Flujo de Trabajo (Git Flow) y Contribuciones
+
+Para mantener la base de código estable, seguimos un proceso estricto:
+
+1. **Ramas Protegidas:** La rama `main` (o `master`) está bloqueada para push directos.
+2. **Nomenclatura de Ramas:**
+* Nuevas funcionalidades: `feature/nombre-de-la-funcionalidad`
+* Solución de errores: `fix/nombre-del-error`
+* Refactorizaciones: `refactor/nombre-del-refactor`
+
+
+3. **Pull Requests (PRs):** Todos los cambios deben integrarse a través de un PR. Debe ser revisado y aprobado.
+4. **Linting:** Antes de subir código, asegurate de no tener errores de tipado o de linter ejecutando `npm run lint` y `npm run build`.
+
+---
+
+## 💻 6. Entorno de Desarrollo Local
+
+### Requisitos previos
+
+* **Node.js**: v20.x o superior.
+* Archivo `.env` proporcionado por un administrador con las credenciales de Firebase, Supabase, y la URL del Backend local.
+
+### Instalación y ejecución
+
+```bash
+# 1. Clonar el proyecto
+git clone https://github.com/iTEC-BA/itecba-frontend.git
+cd itecba-frontend
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Levantar el entorno de desarrollo (con hot-reload)
+npm run dev
+
+```
+
+El servidor arrancará (típicamente en `http://localhost:5173`). Para probar funcionalidades completas, asegúrese de tener el backend de iTEC BA ejecutándose simultáneamente en el puerto `5001`.
