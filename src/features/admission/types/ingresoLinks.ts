@@ -1,11 +1,9 @@
-// 1. Definición de Tipos
 export interface ActionLink { id: string; title: string; subtitle: string; url: string; }
 export interface MainLink { id: string; title: string; subtitle: string; url: string; iconType: 'whatsapp' | 'instagram' | 'youtube' | 'sheets'; colorClass: string; hoverClass: string; }
 export interface MaterialLink { id: string; title: string; subtitle: string; url: string; emoji: string; }
 export interface SiuLink { id: string; title: string; subtitle: string; url: string; }
-
-// Pasos del Ingreso
 export interface AdmissionStep { id: string; stepNumber: number; title: string; description: string; status: 'done' | 'current' | 'pending'; }
+export interface AdmissionModality { id: string; title: string; shortDesc: string; content: string[]; }
 
 export interface IngresoDataProps {
   actions: ActionLink[];
@@ -13,34 +11,62 @@ export interface IngresoDataProps {
   materials: MaterialLink[];
   siuLinks: SiuLink[];
   steps: AdmissionStep[];
+  modalities: AdmissionModality[];
 }
 
-// 2. Base de Datos
 export const INGRESO_DATA: IngresoDataProps = {
   actions: [
-    { id: 'act1', title: 'Inscripción - TIVU', subtitle: 'Taller de Inicio a la Vida Universitaria', url: 'https://docs.google.com/forms/d/e/1FAIpQLSd1gMnFehCE7menTbnO0dJ6ybJq2eo_hdVkAf18EVRoQJf2HQ/viewform' },
-    { id: 'act2', title: 'Simulacro de 2° Parcial', subtitle: '¡Inscribite acá para practicar!', url: 'https://bit.ly/simulacro2P-iTEC' }
+    { id: 'act1', title: 'SIU Preinscripción', subtitle: 'Anotate por primera vez', url: 'https://guarani.frba.utn.edu.ar/preinscripcion/utn/acceso/' },
+    { id: 'act2', title: 'SIU Aspirantes', subtitle: 'Para alumnos de años anteriores', url: 'https://guarani.frba.utn.edu.ar/autogestion/aspirantes/' }
   ],
   mainLinks: [
-    { id: 'ml1', title: 'Grupo de WhatsApp', subtitle: 'Ingreso 2026', url: 'https://chat.whatsapp.com/FwTft3cZZ6g5Re8JccjGV2?mode=gi_t', iconType: 'whatsapp', colorClass: 'text-green-500', hoverClass: 'hover:border-green-500 hover:shadow-green-500/20' },
-    { id: 'ml2', title: 'Seguinos en IG', subtitle: '@itecba', url: 'https://www.instagram.com/itecba', iconType: 'instagram', colorClass: 'text-pink-500', hoverClass: 'hover:border-pink-500 hover:shadow-pink-500/20' },
-    { id: 'ml3', title: 'YouTube / Clases', subtitle: 'Clases Grabadas', url: 'https://drive.google.com/drive/folders/1hD5wlG2Eu6xStYjBw1siFlhkurOKnXha', iconType: 'youtube', colorClass: 'text-red-500', hoverClass: 'hover:border-red-500 hover:shadow-red-500/20' },
-    { id: 'ml4', title: 'Grupos por aula', subtitle: '(Comisiones)', url: 'https://docs.google.com/spreadsheets/d/1oopEG5XrVHnXLd10fxlDmy9x4dFCFICt/edit?pli=1&gid=1089878495#gid=1089878495', iconType: 'sheets', colorClass: 'text-green-400', hoverClass: 'hover:border-green-400 hover:shadow-green-400/20' }
+    { id: 'ml1', title: 'WhatsApp', subtitle: 'Grupo Oficial', url: 'https://chat.whatsapp.com/FwTft3cZZ6g5Re8JccjGV2?mode=gi_t', iconType: 'whatsapp', colorClass: 'text-emerald-400', hoverClass: 'hover:border-emerald-500' },
+    { id: 'ml2', title: 'Instagram', subtitle: '@itecba', url: 'https://www.instagram.com/itecba', iconType: 'instagram', colorClass: 'text-pink-400', hoverClass: 'hover:border-pink-500' },
+    { id: 'ml3', title: 'YouTube', subtitle: 'Clases Grabadas', url: 'https://youtube.com/@itecba', iconType: 'youtube', colorClass: 'text-red-400', hoverClass: 'hover:border-red-500' }
   ],
   materials: [
-    { id: 'mat1', title: 'FINALES', subtitle: 'Resueltos paso a paso', url: 'https://drive.google.com/drive/folders/1ZE3FNe-zes1woiEw-ct0glWvBP_FbZKO?usp=drive_link', emoji: '🎓' },
-    { id: 'mat2', title: 'PARCIALES', subtitle: 'Resueltos paso a paso', url: 'https://drive.google.com/drive/folders/1lRr5MXyjosxNiAQ-cyJrzIDSri4tiJ73?usp=drive_link', emoji: '✍️' },
-    { id: 'mat3', title: 'TEORÍA', subtitle: 'Matemática y Física', url: 'https://drive.google.com/drive/folders/14iNjzc6SD5Q3zhaiev_e0KPAO8cq1V_k?usp=drive_link', emoji: '📚' },
-    { id: 'mat4', title: 'RESUMEN TIVU', subtitle: 'Presentación Interactiva', url: 'https://view.genially.com/67915badbba0dbb2de069182/presentation-resumen-tivu-itec', emoji: '💡' }
+    { id: 'mat1', title: 'BiblioTEC', subtitle: 'Todo el material de ingreso', url: 'https://bit.ly/biblioTEC', emoji: '📚' },
   ],
   siuLinks: [
-    { id: 'siu1', title: 'SIU GUARANÍ ASPIRANTES', subtitle: 'Únicamente si ya estás inscripto', url: 'https://guarani.frba.utn.edu.ar/autogestion/aspirantes/' },
-    { id: 'siu2', title: 'SIU PREINSCRIPCIÓN', subtitle: 'Para anotarte por primera vez', url: 'https://guarani.frba.utn.edu.ar/preinscripcion/utn/acceso/' }
+    { id: 'siu2', title: 'Campus Virtual', subtitle: 'Aulas virtuales UTN', url: 'https://aulasvirtuales.frba.utn.edu.ar/' }
   ],
   steps: [
     { id: 'st1', stepNumber: 1, title: 'Preinscripción Online', description: 'Completar el formulario en el SIU y elegir turno.', status: 'done' },
-    { id: 'st2', stepNumber: 2, title: 'Entrega de Documentación', description: 'Llevar DNI y Título Secundario a la sede.', status: 'done' },
-    { id: 'st3', stepNumber: 3, title: 'Cursar el TIVU', description: 'Taller de Inicio a la Vida Universitaria (Obligatorio).', status: 'current' },
-    { id: 'st4', stepNumber: 4, title: 'Exámenes de Ingreso', description: 'Rendir Matemática y Física.', status: 'pending' },
+    { id: 'st2', stepNumber: 2, title: 'Documentación', description: 'Presentar documentación requerida.', status: 'done' },
+    { id: 'st3', stepNumber: 3, title: 'Modalidad de Ingreso', description: 'Elegir y cursar una de las modalidades disponibles.', status: 'current' },
+    { id: 'st4', stepNumber: 4, title: 'TIVU', description: 'Taller de Inicio a la Vida Universitaria.', status: 'pending' },
+  ],
+  modalities: [
+    { 
+      id: 'mod1', 
+      title: 'Instancia Evaluación Diagnóstica', 
+      shortDesc: 'Octubre a Diciembre - Actividades Virtuales', 
+      content: [
+        'Las actividades virtuales de Matemática y Física son preparatorias para la evaluación y deben ser cumplimentadas.',
+        'El objetivo es que los aspirantes realicen una autoevaluación de sus conocimientos.',
+        'No son clases tradicionales, son actividades asincrónicas en el Campus Virtual.',
+        'Quienes no aprueben o no se presenten a la Evaluación Diagnóstica podrán anotarse al Curso de Verano.'
+      ]
+    },
+    { 
+      id: 'mod2', 
+      title: 'Seminario Universitario Intensivo', 
+      shortDesc: 'Febrero a Marzo - Modalidad Presencial', 
+      content: [
+        'Se desarrolla de forma presencial en la Sede Campus (Mozart 2300).',
+        'Materias a cursar: Matemática y Física (tres encuentros semanales).',
+        'Taller de Inicio a la Vida Universitaria (TIVU): Se cursa luego de aprobar las materias exactas.',
+        'Si no se logra aprobar, habrá dos instancias de Evaluación Diagnóstica Libre.'
+      ]
+    },
+    { 
+      id: 'mod3', 
+      title: 'Expo Carreras y Reglas de Comunidad', 
+      shortDesc: 'Información general y normas', 
+      content: [
+        'Expo Carreras: Jornada para conocer de cerca la propuesta académica. Presencial en Sede Campus. Requiere inscripción previa.',
+        'Normas de la Comunidad iTEC: No Spam, No contenido obsceno, Respeto a todos, No salirse de la temática.'
+      ]
+    }
   ]
 };
