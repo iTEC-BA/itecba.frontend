@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Mail, CheckCircle2, Clock, Handshake, Users, ArrowRightLeft } from "lucide-react";
+import { Mail, ArrowRight, Info, AlertCircle } from "lucide-react";
 import { LayoutModal } from "@components/templates/LayoutModal";
 import { Button } from "@components/ui/Button";
 import { EstadoBadge } from "../atoms/EstadoBadge";
 import { trueketecService } from "../../services/trueketec.service";
 import type { TrueketecPost, EstadoPost, Postulante } from "../../types/trueketec.types";
-import { cn } from "@/lib/utils";
+import { getAuth } from "firebase/auth";
 
-interface Props {
-  post: TrueketecPost | null;
-  isOwn: boolean;
-  onClose: () => void;
-  onEstadoChanged: (postId: string, estado: EstadoPost) => void;
-  onOpenPostulante: (postulante: Postulante) => void;
-}
-
+interface Props { post: TrueketecPost | null; isOwn: boolean; onClose: () => void; onEstadoChanged: (postId: string, estado: EstadoPost) => void; onOpenPostulante: (postulante: Postulante) => void; }
 const ESTADOS_OPCIONES: EstadoPost[] = ["Activo", "En Negociación", "Trueque Realizado"];
 
 export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoChanged, onOpenPostulante }) => {
@@ -28,7 +21,10 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
   useEffect(() => {
     if (!post || !isOwn) return;
     setLoadingPost(true);
-    trueketecService.getPostulantes(post._id).then(({ postulantes: p }) => setPostulantes(p)).catch(() => {}).finally(() => setLoadingPost(false));
+    getAuth().currentUser?.getIdToken().then(token => {
+      if(token) return trueketecService.getPostulantes(token, post._id);
+      throw new Error("No token");
+    }).then(({ postulantes: p }) => setPostulantes(p)).catch(() => {}).finally(() => setLoadingPost(false));
   }, [post, isOwn]);
 
   if (!post) return null;
@@ -37,95 +33,106 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
     if (savingEstado) return;
     setSavingEstado(true);
     try {
-      await trueketecService.changeEstado(post._id, estado);
+      const token = await getAuth().currentUser?.getIdToken();
+      if(!token) throw new Error("Sin sesión");
+      await trueketecService.changeEstado(token, post._id, estado);
       onEstadoChanged(post._id, estado);
-      setFeedbackMsg(`Estado actualizado a "${estado}"`);
-    } catch { setFeedbackMsg("Error al actualizar el estado."); } finally { setSavingEstado(false); }
+      setFeedbackMsg(`Trámite actualizado a: ${estado}`);
+    } catch { setFeedbackMsg("Error interno."); } finally { setSavingEstado(false); }
   };
 
   const handlePostular = async () => {
     if (postulando || yaPostulado) return;
     setPostulando(true);
     try {
-      await trueketecService.postular(post._id);
+      const token = await getAuth().currentUser?.getIdToken();
+      if(!token) throw new Error("Sin sesión");
+      await trueketecService.postular(token, post._id);
       setYaPostulado(true);
-      setFeedbackMsg("¡Te postulaste! El publicador recibirá una notificación.");
-    } catch (e: any) { setFeedbackMsg(e.message || "Error al postularse."); } finally { setPostulando(false); }
+      setFeedbackMsg("Postulación asentada correctamente.");
+    } catch (e: any) { setFeedbackMsg(e.message || "Error al procesar."); } finally { setPostulando(false); }
   };
 
   const email = post.userEmail || post.authorEmail;
 
   return (
-    <LayoutModal isOpen={!!post} onClose={onClose} title={isOwn ? "Mi publicación" : "Contactar estudiante"} description={post.materia} maxWidth="max-w-lg">
+    <LayoutModal isOpen={!!post} onClose={onClose} title="Expediente de Permuta" description={`ID: ${post._id.slice(-6).toUpperCase()}`} maxWidth="max-w-md">
       <div className="flex flex-col gap-6 px-6 py-6">
         
-        {/* ── Resumen de Intercambio ── */}
-        <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Origen</span>
-            <span className="font-mono text-sm font-bold text-white">{post.comision_actual}</span>
+        <div className="flex flex-col bg-itec-box rounded-2xl p-5 gap-4">
+          <div className="flex items-start justify-between gap-4 border-b border-itec-bg pb-4">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-itec-blue-skye">{post.departamento}</span>
+              <h2 className="text-base font-bold text-white mt-1 leading-tight">{post.materia}</h2>
+            </div>
+            <EstadoBadge estado={post.estado} />
           </div>
-          <ArrowRightLeft size={16} className="text-white/30" />
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Destino</span>
-            <span className={cn("font-mono text-sm font-bold", post.isPerfectMatch ? "text-itec-emerald" : "text-white")}>{post.comision_deseada}</span>
-          </div>
-        </div>
 
-        {/* ── Estado Actual ── */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-5">
-          <span className="text-xs font-bold uppercase tracking-widest text-white/40">Estado de solicitud</span>
-          <EstadoBadge estado={post.estado} size="md" />
-        </div>
-
-        {/* ── Email ── */}
-        {email ? (
-          <div className="flex items-center gap-3 rounded-xl border border-itec-sky/20 bg-itec-sky/10 px-4 py-3">
-            <div className="p-2 bg-itec-sky/20 rounded-lg"><Mail size={16} className="text-itec-sky" /></div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-itec-sky/70">Correo de contacto</span>
-              <a href={`mailto:${email}`} className="text-sm font-bold text-itec-sky hover:underline">{email}</a>
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+            <div className="flex flex-col text-center bg-itec-surface p-3 rounded-xl">
+              <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Ofrece</span>
+              <span className="font-mono text-base font-bold text-white mt-1">{post.comision_actual}</span>
+            </div>
+            <ArrowRight size={16} className="text-itec-muted" />
+            <div className="flex flex-col text-center bg-itec-surface p-3 rounded-xl">
+              <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Busca</span>
+              <span className="font-mono text-base font-bold text-itec-blue-skye mt-1">{post.comision_deseada}</span>
             </div>
           </div>
+        </div>
+
+        {/* ── INFO DE OFICIALIZACIÓN ── */}
+        <div className="flex flex-col gap-2 bg-itec-blue-skye/10 border border-itec-blue-skye/20 p-4 rounded-xl">
+          <div className="flex items-center gap-2 text-itec-blue-skye">
+            <AlertCircle size={16} />
+            <span className="text-[11px] font-bold uppercase tracking-widest">¿Cómo finalizar el Trueque?</span>
+          </div>
+          <p className="text-xs text-itec-text/80 leading-relaxed mt-1">
+            Una vez acordado el intercambio, <strong className="text-white">AMBOS estudiantes</strong> deben enviar un correo a <strong className="text-itec-blue-skye">sguglielmino@frba.utn.edu.ar</strong> confirmando el trueque, indicando sus nombres, legajos y comisiones a intercambiar.
+          </p>
+          <p className="text-[10px] text-itec-muted mt-1">En caso de inconvenientes con la gestión, comunicarse al 1128629988 (Santiago).</p>
+        </div>
+
+        {email ? (
+          <div className="flex flex-col gap-1 bg-itec-surface p-4 rounded-xl">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Contacto Habilitado</span>
+            <a href={`mailto:${email}`} className="flex items-center gap-2 text-sm font-mono text-white hover:text-itec-blue-skye transition-colors mt-2">
+              <Mail size={16} className="text-itec-muted" /> {email}
+            </a>
+          </div>
         ) : (
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white/40">
-            <Mail size={16} className="shrink-0" />
-            <span className="text-xs">El correo se revelará cuando ambas partes acepten el trueque.</span>
+          <div className="flex items-center gap-3 text-[11px] text-itec-muted bg-itec-surface p-4 rounded-xl leading-relaxed">
+            <Info size={16} className="shrink-0 text-itec-blue-skye" />
+            <p>El correo institucional está protegido. Se revelará al confirmar una coincidencia bilateral.</p>
           </div>
         )}
 
-        {/* ── Acciones de Dueño ── */}
         {isOwn && (
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Forzar cambio de estado</span>
-              <div className="grid grid-cols-3 gap-2">
-                {ESTADOS_OPCIONES.map((e) => {
-                  const icons: any = { "Activo": CheckCircle2, "En Negociación": Clock, "Trueque Realizado": Handshake };
-                  const Icon = icons[e];
-                  const isCurrent = post.estado === e;
-                  return (
-                    <button key={e} onClick={() => handleChangeEstado(e)} disabled={isCurrent || savingEstado} className={cn("flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-[10px] font-bold uppercase tracking-widest transition-all", isCurrent ? "border-itec-sky bg-itec-sky/10 text-itec-sky" : "border-white/10 bg-white/5 text-white/40 hover:border-white/30 hover:text-white")}>
-                      <Icon size={16} /> <span className="text-center">{e}</span>
-                    </button>
-                  );
-                })}
+          <div className="flex flex-col gap-4 mt-2">
+            <div className="flex flex-col gap-2 bg-itec-box rounded-xl p-5">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 px-1">Acciones Administrativas</span>
+              <div className="flex rounded-lg bg-itec-surface p-1 gap-1">
+                {ESTADOS_OPCIONES.map((e) => (
+                  <button key={e} onClick={() => handleChangeEstado(e)} disabled={post.estado === e || savingEstado} className={`flex-1 py-2.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-colors ${post.estado === e ? "bg-itec-box text-white" : "text-itec-muted hover:text-white disabled:opacity-30"}`}>
+                    {e === "Trueque Realizado" ? "Cerrar" : e}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 flex items-center gap-2"><Users size={12}/> Interesados ({postulantes.length})</span>
-              {loadingPost ? <div className="h-10 animate-pulse bg-white/5 rounded-xl" /> : postulantes.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-white/10 p-4 text-center text-xs text-white/30">Nadie se postuló todavía.</div>
+            <div className="flex flex-col gap-3 bg-itec-box rounded-xl p-5">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 px-1">Expedientes Interesados ({postulantes.length})</span>
+              {loadingPost ? <div className="h-14 bg-itec-surface animate-pulse rounded-xl" /> : postulantes.length === 0 ? (
+                <div className="p-4 text-center text-[10px] uppercase tracking-widest text-white/30 rounded-xl bg-itec-surface">Sin registros vinculados.</div>
               ) : (
                 <div className="flex flex-col gap-2">
                   {postulantes.map(p => (
-                    <button key={p.userId} onClick={() => onOpenPostulante(p)} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition-colors text-left">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-white">{p.userName}</span>
-                        <span className="text-[10px] font-mono text-white/40">{p.userEmail}</span>
+                    <button key={p.userId} onClick={() => onOpenPostulante(p)} className="flex items-center justify-between p-4 rounded-xl bg-itec-surface hover:bg-itec-bg transition-colors text-left">
+                      <div className="flex flex-col min-w-0 pr-4">
+                        <span className="text-sm font-bold text-white truncate">{p.userName}</span>
+                        <span className="text-[10px] font-mono text-itec-muted truncate mt-0.5">{p.userEmail}</span>
                       </div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-itec-sky border border-itec-sky/20 bg-itec-sky/10 px-2 py-1 rounded-md">{p.ofertas.length} Ofertas</span>
+                      <span className="text-[10px] font-bold text-itec-blue-skye bg-itec-box px-3 py-1.5 rounded-lg shrink-0">{p.ofertas.length} Ofertas</span>
                     </button>
                   ))}
                 </div>
@@ -134,15 +141,13 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
           </div>
         )}
 
-        {/* ── Acciones NO dueño ── */}
         {!isOwn && (
-          <div className="flex flex-col gap-2 mt-2">
-            <Button variant={yaPostulado ? "secondary" : "primary"} hierarchy={yaPostulado ? "ghost" : "solid"} text={yaPostulado ? "✓ Solicitud enviada" : "Postularme para este Trueque"} isLoading={postulando} disabled={yaPostulado} onClick={handlePostular} fullWidth className="rounded-xl py-3.5" />
-            <p className="text-[10px] text-white/40 text-center px-4">Al postularte, el publicador recibirá una alerta y podrá ver las comisiones que vos tenés activas para intercambiar.</p>
+          <div className="pt-2">
+            <Button variant={yaPostulado ? "slate" : "primary"} hierarchy={yaPostulado ? "outline" : "solid"} text={yaPostulado ? "Postulación Asentada" : "Registrar Interés"} isLoading={postulando} disabled={yaPostulado} onClick={handlePostular} fullWidth className="py-3.5 rounded-xl text-sm bg-itec-blue-skye hover:bg-itec-blue text-black font-bold" />
           </div>
         )}
 
-        {feedbackMsg && <p className="text-[10px] font-bold uppercase tracking-widest text-itec-sky text-center">{feedbackMsg}</p>}
+        {feedbackMsg && <p className="text-[10px] font-bold uppercase tracking-widest text-itec-blue-skye text-center py-3 bg-itec-surface rounded-xl">{feedbackMsg}</p>}
       </div>
     </LayoutModal>
   );

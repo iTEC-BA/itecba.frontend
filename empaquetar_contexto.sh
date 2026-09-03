@@ -35,39 +35,29 @@ agregar_carpeta() {
   fi
 }
 
-echo "📦 1/5 Agregando núcleo de la App (Rutas y Config)..."
+echo "1/5 Agregando núcleo de la App (Rutas y Config)..."
+agregar_archivo "src/main.tsx"
 agregar_archivo "src/App.tsx"
-agregar_archivo "src/context/AuthContext.tsx"
+agregar_carpeta "src/router/"
+agregar_carpeta "src/context/"
 
-echo "🖼️  2/5 Agregando Componentes universales"
+echo "2/5 Agregando a estilo"
+agregar_archivo "src/index.css"
+agregar_archivo "./tsconfig.app.json"
+
+echo "3/5 Agregando Componentes universales"
 agregar_carpeta "src/components/"
-agregar_carpeta "src/lib/"
-
-echo "🛠️  3/5 Agregando Hooks Globales y data..."
 agregar_carpeta "src/hooks/"
+agregar_carpeta "src/lib/"
 agregar_carpeta "src/data/"
 
+echo "4/5 Agregando Feature globales"
+agregar_carpeta "src/features/notifications/"
 
-echo "🧩 4/5 Agregando el Feature específico: $FEATURE_NAME..."
+echo "5/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
-# agregar_carpeta "src/features/admin/"
-agregar_carpeta "src/features/notificatwions/"
 
-echo "📦 5/5 Agregando a estilo"
-agregar_archivo "./package.json"
-agregar_archivo "./tsconfig.app.json"
-agregar_archivo "./vite.config.ts"
-agregar_archivo "./src/index.css"
-agregar_archivo "./src/pages/NotificationsPage.tsx"
-# agregar_archivo "./add_classroom_frontend.sh"
-agregar_archivo "./src/pages/AdminPanel.tsx"
-# agregar_archivo "./src/pages/AulaDetallePage.tsx"
-# agregar_archivo "./src/pages/TruekeTECPage.tsx"
-# agregar_archivo "./src/pages/ForumThreadPage.tsx"
-# agregar_archivo "./src/pages/CourseDetail.tsx"
-# agregar_archivo "./src/pages/CourseEditDetail.tsx"
-# agregar_archivo "./src/pages/GradeDetailPage.tsx"
-# agregar_archivo "./src/pages/CourseDetail.tsx"
+
 
 # Agregar la página (View) principal del feature
 PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"

@@ -1,16 +1,25 @@
-// src/features/trueketec/hooks/useTrueketec.ts
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "@context/AuthContext";
 import { trueketecService } from "../services/trueketec.service";
-import type {
-  TrueketecPost,
-  TrueketecFilters,
-  TrueketecFormData,
-  EstadoPost,
-} from "../types/trueketec.types";
+import type { TrueketecPost, TrueketecFilters, TrueketecFormData, EstadoPost } from "../types/trueketec.types";
+
+export const getMyCareerDept = (specialty?: string): string => {
+  if (!specialty) return ""; 
+  const s = specialty.toLowerCase();
+  if (s.includes("sistemas")) return "Sistemas de Información";
+  if (s.includes("mecánica") || s.includes("mecanica")) return "Mecánica";
+  if (s.includes("electrónica") || s.includes("electronica")) return "Electrónica";
+  if (s.includes("eléctrica") || s.includes("electrica")) return "Eléctrica";
+  if (s.includes("civil")) return "Civil";
+  if (s.includes("industrial")) return "Industrial";
+  if (s.includes("química") || s.includes("quimica")) return "Química";
+  if (s.includes("naval")) return "Naval";
+  if (s.includes("textil")) return "Textil";
+  return "";
+};
 
 export const useTrueketec = () => {
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [posts,       setPosts]       = useState<TrueketecPost[]>([]);
   const [myPosts,     setMyPosts]     = useState<TrueketecPost[]>([]);
   const [matches,     setMatches]     = useState<TrueketecPost[]>([]);
@@ -22,13 +31,15 @@ export const useTrueketec = () => {
   const [error,       setError]       = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // Carga inicial: mis posts + mis matches (sin feed hasta que el usuario busque)
-  // Espera a que Firebase Auth termine de rehidratar la sesión (authLoading)
-  // y a que haya un usuario autenticado antes de pedir el token, para
-  // evitar 401 por pedir el fetch antes de tiempo.
+  const allowedDepts = useMemo(() => {
+    const depts = ["Ciencias Básicas"];
+    const myDept = getMyCareerDept(user?.specialty);
+    if (myDept && !depts.includes(myDept)) depts.push(myDept);
+    return depts;
+  }, [user?.specialty]);
+
   useEffect(() => {
     if (authLoading || !isAuthenticated) return;
-
     const init = async () => {
       try {
         const [myData, matchData] = await Promise.all([
@@ -37,89 +48,65 @@ export const useTrueketec = () => {
         ]);
         setMyPosts(myData);
         setMatches(matchData.matches);
-      } catch {
-        // Silencioso en carga inicial
-      }
+      } catch { /* silencio en carga inicial */ }
     };
     init();
   }, [authLoading, isAuthenticated]);
 
   const loadFeed = useCallback(async (f: TrueketecFilters, page: number) => {
-    // Sin filtros mínimos, no se lanza query (validación en el componente de filtros)
     const hasComision = (f.comision?.length ?? 0) >= 2;
     const hasFilters  = !!(f.materia && f.departamento && f.turno_deseado);
     if (!hasComision && !hasFilters) return;
 
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null);
     try {
       const feedData = await trueketecService.getFeed(f, page);
-      setPosts(feedData.posts);
-      setTotal(feedData.total);
+      const filteredPosts = feedData.posts.filter(p => allowedDepts.includes(p.departamento));
+      
+      setPosts(filteredPosts);
+      setTotal(filteredPosts.length < feedData.total ? filteredPosts.length : feedData.total);
       setTotalPages(feedData.totalPages);
       setCurrentPage(feedData.page);
       setHasSearched(true);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Error al cargar el feed.");
+      setError(e instanceof Error ? e.message : "Error al cargar el directorio.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [allowedDepts]);
 
   const applyFilters = (newFilters: TrueketecFilters) => {
-    setFilters(newFilters);
-    setCurrentPage(1);
-    loadFeed(newFilters, 1);
+    setFilters(newFilters); setCurrentPage(1); loadFeed(newFilters, 1);
   };
-
   const goToPage = (page: number) => {
-    setCurrentPage(page);
-    loadFeed(filters, page);
+    setCurrentPage(page); loadFeed(filters, page);
   };
-
   const publish = async (data: TrueketecFormData) => {
     await trueketecService.createPost(data);
-    // Refrescar mis posts y matches tras publicar
-    const [myData, matchData] = await Promise.all([
-      trueketecService.getMyPosts(),
-      trueketecService.getMyMatches(),
-    ]);
-    setMyPosts(myData);
-    setMatches(matchData.matches);
-    // Si hay un feed cargado, recargarlo
+    const [myData, matchData] = await Promise.all([trueketecService.getMyPosts(), trueketecService.getMyMatches()]);
+    setMyPosts(myData); setMatches(matchData.matches);
     if (hasSearched) await loadFeed(filters, 1);
   };
-
   const remove = async (id: string) => {
     await trueketecService.deletePost(id);
-    setMyPosts((prev) => prev.filter((p) => p._id !== id));
-    setPosts((prev) => prev.filter((p) => p._id !== id));
+    setMyPosts(prev => prev.filter(p => p._id !== id));
+    setPosts(prev => prev.filter(p => p._id !== id));
   };
-
   const updateEstadoLocal = (postId: string, estado: EstadoPost) => {
-    setMyPosts((prev) => prev.map((p) => p._id === postId ? { ...p, estado } : p));
-    setPosts((prev)   => prev.map((p) => p._id === postId ? { ...p, estado } : p));
+    setMyPosts(prev => prev.map(p => p._id === postId ? { ...p, estado } : p));
+    setPosts(prev => prev.map(p => p._id === postId ? { ...p, estado } : p));
   };
-
   const accept = async (myPostId: string, targetPostId: string) => {
     const result = await trueketecService.acceptMatch(myPostId, targetPostId);
-    // Refrescar todo
-    const [myData, matchData] = await Promise.all([
-      trueketecService.getMyPosts(),
-      trueketecService.getMyMatches(),
-    ]);
-    setMyPosts(myData);
-    setMatches(matchData.matches);
+    const [myData, matchData] = await Promise.all([trueketecService.getMyPosts(), trueketecService.getMyMatches()]);
+    setMyPosts(myData); setMatches(matchData.matches);
     if (hasSearched) await loadFeed(filters, currentPage);
     return result;
   };
 
   return {
-    posts, myPosts, matches,
-    total, totalPages, currentPage,
+    posts, myPosts, matches, allowedDepts, total, totalPages, currentPage,
     filters, loading, error, hasSearched,
-    applyFilters, goToPage,
-    publish, remove, accept,
-    updateEstadoLocal,
+    applyFilters, goToPage, publish, remove, accept, updateEstadoLocal,
   };
 };

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAuth } from "firebase/auth";
 import { useAuth } from "@context/AuthContext";
 import { inboxService } from "../services/inboxService";
 import type { InboxMessage } from "../types/inbox";
@@ -11,10 +10,7 @@ export const useInbox = () => {
 
   const fetchMessages = useCallback(async () => {
     try {
-      const authUser = getAuth().currentUser;
-      if (!authUser) return;
-      const token = await authUser.getIdToken();
-      const data = await inboxService.getMyMessages(token);
+      const data = await inboxService.getMyMessages();
       setMessages(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error cargando mensajes:", err);
@@ -23,8 +19,6 @@ export const useInbox = () => {
     }
   }, []);
 
-  // Espera a que Firebase Auth termine de rehidratar la sesión antes de
-  // pedir los mensajes, para evitar 401 por pedir el token antes de tiempo.
   useEffect(() => {
     if (authLoading) return;
     if (!isAuthenticated) { setIsLoading(false); return; }
@@ -33,10 +27,7 @@ export const useInbox = () => {
 
   const markAsRead = useCallback(async (id: string) => {
     try {
-      const authUser = getAuth().currentUser;
-      if (!authUser) return;
-      const token = await authUser.getIdToken();
-      await inboxService.markAsRead(id, token);
+      await inboxService.markAsRead(id);
       setMessages((prev) => prev.map((m) => (m._id === id ? { ...m, isRead: true } : m)));
     } catch (err) {
       console.error("Error marcando como leído:", err);

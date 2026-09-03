@@ -7,7 +7,7 @@ import { ToastProvider } from "./features/notifications/components/atoms/Toast";
 import { BannerInstallPWA } from "./components/organisms/BannerInstallPWA";
 import { UpdatePWAToast } from "./components/organisms/UpdatePWAToast";
 import { AnalyticsTracker } from "./components/utils/AnalyticsTracker";
-import { AppRoutes } from "./Routes";
+import { AppRoutes } from "./routes";
 import ReactGA from "react-ga4";
 
 // Inicializar Google Analytics 4

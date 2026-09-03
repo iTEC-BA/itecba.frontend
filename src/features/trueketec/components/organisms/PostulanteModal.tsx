@@ -1,79 +1,41 @@
-// src/features/trueketec/components/organisms/PostulanteModal.tsx
-// Modal 2: Detalle de todas las comisiones que ofrece un interesado.
 import React from "react";
-import { ArrowRight, BookOpen, Mail } from "lucide-react";
+import { ArrowRight, Mail, BookOpen } from "lucide-react";
 import { LayoutModal } from "@components/templates/LayoutModal";
-import { TurnoBadge }  from "../atoms/TurnoBadge";
 import type { Postulante } from "../../types/trueketec.types";
 
-interface Props {
-  postulante: Postulante | null;
-  onClose:    () => void;
-}
-
-export const PostulanteModal: React.FC<Props> = ({ postulante, onClose }) => {
+export const PostulanteModal: React.FC<{ postulante: Postulante | null; onClose: () => void; }> = ({ postulante, onClose }) => {
   if (!postulante) return null;
-
   return (
-    <LayoutModal
-      isOpen={!!postulante}
-      onClose={onClose}
-      title={`Ofertas de ${postulante.userName}`}
-      description={postulante.userEmail}
-      maxWidth="max-w-md"
-    >
-      <div className="flex flex-col gap-4 px-6 py-5">
-
-        {/* ── Email del interesado ────────────────────────────────────── */}
-        <a
-          href={`mailto:${postulante.userEmail}`}
-          className="flex items-center gap-2 text-sm text-itec-sky hover:underline font-medium"
-        >
-          <Mail size={14} className="shrink-0" />
+    <LayoutModal isOpen={!!postulante} onClose={onClose} title={`Expediente: ${postulante.userName}`} description="Documentación vinculada al alumno." maxWidth="max-w-md">
+      <div className="flex flex-col gap-5 px-6 py-6">
+        <a href={`mailto:${postulante.userEmail}`} className="flex items-center gap-3 text-sm font-mono text-white hover:underline pb-5 border-b border-itec-border">
+          <div className="p-2.5 bg-itec-surface border border-itec-border rounded-xl"><Mail size={16} className="text-itec-blue-skye" /></div>
           {postulante.userEmail}
         </a>
 
-        {/* ── Publicaciones activas del interesado ───────────────────── */}
         {postulante.ofertas.length === 0 ? (
-          <div className="text-center py-8 text-itec-muted">
-            <p className="text-sm">Este interesado no tiene publicaciones activas actualmente.</p>
-            <p className="text-xs mt-1">Podés contactarlo por email para coordinar.</p>
-          </div>
+          <div className="bg-itec-surface rounded-xl border border-itec-border p-8 text-center text-[10px] uppercase tracking-widest font-bold text-white/30">0 Registros Activos</div>
         ) : (
-          <div className="flex flex-col gap-3">
-            <p className="text-xs font-bold uppercase tracking-widest text-itec-muted">
-              Sus intercambios activos
-            </p>
+          <div className="flex flex-col gap-4">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted px-1">Permutas Ofertadas</span>
             {postulante.ofertas.map((oferta) => (
-              <div
-                key={oferta._id}
-                className="flex flex-col gap-2 rounded-xl border border-itec-border bg-itec-surface p-4"
-              >
-                {/* Materia */}
-                <div className="flex items-start gap-2">
-                  <BookOpen size={12} className="mt-0.5 shrink-0 text-itec-muted" />
-                  <div>
-                    <p className="text-[10px] text-itec-muted">{oferta.departamento}</p>
-                    <p className="text-sm font-bold text-itec-text leading-tight">{oferta.materia}</p>
+              <div key={oferta._id} className="flex flex-col gap-4 rounded-xl border border-itec-border bg-itec-box p-5">
+                <div className="flex items-start gap-3 border-b border-itec-border pb-3">
+                  <BookOpen size={16} className="mt-0.5 shrink-0 text-itec-muted" />
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-bold text-itec-blue-skye uppercase tracking-wider mb-0.5">{oferta.departamento}</span>
+                    <span className="text-sm font-bold text-white leading-tight">{oferta.materia}</span>
                   </div>
                 </div>
-
-                {/* Comisiones */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-[9px] font-bold text-itec-muted uppercase tracking-widest">Tiene</span>
-                    <span className="rounded-lg bg-itec-box border border-itec-border px-2.5 py-0.5 font-mono text-xs font-bold text-itec-text">
-                      {oferta.comision_actual}
-                    </span>
-                    <TurnoBadge turno={oferta.turno_actual} />
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 bg-itec-surface border border-itec-border p-3 rounded-lg">
+                  <div className="flex flex-col text-center">
+                    <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Ofrece</span>
+                    <span className="font-mono text-sm font-bold text-white mt-1">{oferta.comision_actual}</span>
                   </div>
-                  <ArrowRight size={12} className="text-itec-muted shrink-0 mt-1" />
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-[9px] font-bold text-itec-muted uppercase tracking-widest">Busca</span>
-                    <span className="rounded-lg bg-itec-box border border-itec-border px-2.5 py-0.5 font-mono text-xs font-bold text-itec-text">
-                      {oferta.comision_deseada}
-                    </span>
-                    <TurnoBadge turno={oferta.turno_deseado} />
+                  <div className="text-white/20"><ArrowRight size={14} /></div>
+                  <div className="flex flex-col text-center">
+                    <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Busca</span>
+                    <span className="font-mono text-sm font-bold text-itec-blue-skye mt-1">{oferta.comision_deseada}</span>
                   </div>
                 </div>
               </div>
