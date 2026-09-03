@@ -36,6 +36,7 @@ agregar_carpeta() {
 }
 
 echo "1/5 Agregando núcleo de la App (Rutas y Config)..."
+agregar_archivo "README.md"
 agregar_archivo "src/main.tsx"
 agregar_archivo "src/App.tsx"
 agregar_carpeta "src/router/"
