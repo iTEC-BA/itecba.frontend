@@ -3,6 +3,7 @@ import React from "react";
 import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import { TrueketecCard } from "../molecules/TrueketecCard";
 import type { TrueketecPost } from "../../types/trueketec.types";
+import { MENSAJES } from "../../data";
 
 interface Props {
   posts:       TrueketecPost[];
@@ -32,7 +33,7 @@ export const TrueketecFeed: React.FC<Props> = ({
     return (
       <div className="flex flex-col items-center gap-3 py-20 text-itec-muted">
         <Inbox size={40} className="opacity-30" />
-        <p className="text-sm font-medium">No hay solicitudes activas con esos filtros.</p>
+        <p className="text-sm font-medium">{MENSAJES.sinResultadosFeed}</p>
       </div>
     );
   }
@@ -53,7 +54,6 @@ export const TrueketecFeed: React.FC<Props> = ({
         ))}
       </div>
 
-      {/* Paginación */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 pt-2">
           <button

@@ -28,7 +28,7 @@ export const PluginsPage       = lazy(() => import("@pages/PluginsPage").then(m 
 export const TerminosPage      = lazy(() => import("@pages/TerminosPage").then(m => ({ default: m.TerminosPage })));
 export const ForumPage         = lazy(() => import("@pages/ForumPage").then(m => ({ default: m.ForumPage })));
 export const ForumThreadPage   = lazy(() => import("@pages/ForumThreadPage").then(m => ({ default: m.ForumThreadPage })));
-export const TruekeTECPage     = lazy(() => import("@pages/TruekeTECPage").then(m => ({ default: m.TruekeTECPage })));
+export const TruekeTECPage     = lazy(() => import("@/pages/TrueketecPage").then(m => ({ default: m.TruekeTECPage })));
 export const NotificationsPage = lazy(() => import("@/pages/NotificationsPage").then(m => ({ default: m.NotificationsPage })));
 
 // GradeDetailPage y PadronPage no son lazy en el original (import directo,

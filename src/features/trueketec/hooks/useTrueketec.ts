@@ -4,7 +4,7 @@ import { trueketecService } from "../services/trueketec.service";
 import type { TrueketecPost, TrueketecFilters, TrueketecFormData, EstadoPost } from "../types/trueketec.types";
 
 export const getMyCareerDept = (specialty?: string): string => {
-  if (!specialty) return ""; 
+  if (!specialty) return "";
   const s = specialty.toLowerCase();
   if (s.includes("sistemas")) return "Sistemas de Información";
   if (s.includes("mecánica") || s.includes("mecanica")) return "Mecánica";
@@ -62,7 +62,7 @@ export const useTrueketec = () => {
     try {
       const feedData = await trueketecService.getFeed(f, page);
       const filteredPosts = feedData.posts.filter(p => allowedDepts.includes(p.departamento));
-      
+
       setPosts(filteredPosts);
       setTotal(filteredPosts.length < feedData.total ? filteredPosts.length : feedData.total);
       setTotalPages(feedData.totalPages);

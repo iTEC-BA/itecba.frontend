@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { Search, Filter, Hash, BookOpen } from "lucide-react";
+import { Search, ListFilter, Hash, BookOpen } from "lucide-react";
 import { Button } from "@components/ui/Button";
-import { Input }  from "@components/ui/Input";
+import { Input } from "@components/ui/Input";
 import { CustomSelect } from "@components/ui/CustomSelect";
 import type { TrueketecFilters as Filters, TurnoDeseado } from "../../types/trueketec.types";
+import { TURNOS_DESEADOS, MENSAJES } from "../../data";
 import { cn } from "@/lib/utils";
 
-interface Props { initialFilters: Filters; onApply: (f: Filters) => void; allowedDepts: string[]; }
+interface Props {
+  initialFilters: Filters;
+  onApply: (f: Filters) => void;
+  allowedDepts: string[];
+  materiaOptions: string[];
+}
 
-const TURNOS: TurnoDeseado[] = ["Mañana", "Tarde", "Noche", "Cualquiera"];
-const COMISION_REGEX = /^[A-Za-z]\d{4}$/;
-
-export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, allowedDepts }) => {
+export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, allowedDepts, materiaOptions }) => {
   const [mode, setMode]         = useState<"filtros" | "comision">("filtros");
   const [departamento, setDept] = useState(initialFilters.departamento ?? "");
   const [materia, setMateria]   = useState(initialFilters.materia ?? "");
@@ -22,8 +25,8 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
   const canSearch = mode === "comision" ? comision.length >= 2 : !!(departamento && materia && turno);
 
   const validate = (): string | null => {
-    if (mode === "comision") return comision.length < 2 ? "Requiere 2 caracteres mínimo." : null;
-    if (!departamento || !materia.trim() || !turno) return "Parámetros incompletos.";
+    if (mode === "comision") return comision.length < 2 ? MENSAJES.comisionCorta : null;
+    if (!departamento || !materia.trim() || !turno) return MENSAJES.filtrosIncompletos;
     return null;
   };
 
@@ -41,49 +44,85 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
   };
 
   const deptOptions = allowedDepts.map(d => ({ value: d, label: d }));
-  const turnoOptions = TURNOS.map(t => ({ value: t, label: t }));
+  const turnoOptions = TURNOS_DESEADOS.map(t => ({ value: t, label: t }));
+  const materiaSelectOptions = materiaOptions.map(m => ({ value: m, label: m }));
 
   return (
-    <div className="flex flex-col gap-4 bg-itec-box rounded-2xl p-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-itec-bg pb-3">
+    <div className="flex flex-col rounded-xl border border-itec-section-trueketec/10 p-4">
+
+      {/* ── Encabezado + Toggle de modo ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-white">
-          <div className="p-1.5 bg-itec-surface rounded border border-transparent"><Filter size={14} className="text-itec-blue-skye" /></div>
-          <span className="text-sm font-bold">Filtros de Búsqueda</span>
+          <div className="p-1.5 bg-itec-section-trueketec/10 rounded-lg border border-itec-section-trueketec/30">
+            <ListFilter size={14} className="text-itec-section-trueketec" />
+          </div>
+          <span className="text-sm font-bold">Buscar en el Directorio</span>
         </div>
-        <div className="flex rounded-lg bg-itec-surface p-1">
-          <button onClick={() => { setMode("filtros"); setError(""); }} className={cn("px-4 py-1.5 text-[11px] font-bold transition-all rounded-md", mode === "filtros" ? "bg-itec-box text-white" : "text-itec-muted hover:text-white")}>
-            <BookOpen size={12} className="inline mr-1.5 mb-0.5" /> Materia
+        <div className="flex rounded-lg bg-itec-surface p-1 border border-itec-border w-full sm:w-auto">
+          <button
+            onClick={() => { setMode("filtros"); setError(""); }}
+            className={cn(
+              "flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-[11px] font-bold transition-colors rounded-md",
+              mode === "filtros" ? "bg-itec-section-trueketec text-white" : "text-itec-muted hover:text-white"
+            )}
+          >
+            <BookOpen size={12} /> Por Materia
           </button>
-          <button onClick={() => { setMode("comision"); setError(""); }} className={cn("px-4 py-1.5 text-[11px] font-bold transition-all rounded-md", mode === "comision" ? "bg-itec-box text-white" : "text-itec-muted hover:text-white")}>
-            <Hash size={12} className="inline mr-1.5 mb-0.5" /> Comisión
+          <button
+            onClick={() => { setMode("comision"); setError(""); }}
+            className={cn(
+              "flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-[11px] font-bold transition-colors rounded-md",
+              mode === "comision" ? "bg-itec-section-trueketec text-white" : "text-itec-muted hover:text-white"
+            )}
+          >
+            <Hash size={12} /> Por Comisión
           </button>
         </div>
       </div>
 
-      <div className="bg-itec-surface p-4 rounded-xl">
+      {/* ── Campos del modo activo ── */}
+      <div className="px-5 py-5 flex flex-col gap-4">
         {mode === "filtros" ? (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <CustomSelect value={departamento} onChange={setDept} options={deptOptions} placeholder="Departamento" className="w-full bg-itec-box border-transparent py-2.5 text-sm rounded-lg" />
-            <div className="md:col-span-2">
-              <Input placeholder="Nombre de la materia..." value={materia} onChange={(e) => setMateria(e.target.value)} onKeyDown={(e) => e.key === "Enter" && apply()} fullWidth className="w-full bg-itec-box border-transparent rounded-lg px-4 py-2.5 text-sm" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Departamento</label>
+              <CustomSelect value={departamento} onChange={setDept} options={deptOptions} placeholder="Elegir" className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg" />
             </div>
-            <CustomSelect value={turno} onChange={(val) => setTurno(val as TurnoDeseado | "")} options={turnoOptions} placeholder="Turno" className="w-full bg-itec-box border-transparent py-2.5 text-sm rounded-lg" />
+            <div className="flex flex-col gap-1.5 lg:col-span-2">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Materia (tu carrera)</label>
+              <CustomSelect
+                value={materia}
+                onChange={setMateria}
+                options={materiaSelectOptions}
+                placeholder={materiaSelectOptions.length ? "Elegir materia" : "Sin materias disponibles"}
+                disabled={materiaSelectOptions.length === 0}
+                className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Turno</label>
+              <CustomSelect value={turno} onChange={(val) => setTurno(val as TurnoDeseado | "")} options={turnoOptions} placeholder="Elegir" className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg" />
+            </div>
           </div>
         ) : (
-          <div className="relative w-full">
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-itec-muted" />
-            <Input placeholder="Ej: K1094" value={comision} onChange={(e) => setComision(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && apply()} fullWidth className="w-full bg-itec-box border-transparent rounded-lg pl-11 pr-4 py-3 font-mono text-sm" />
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Código de comisión</label>
+            <div className="relative w-full">
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-itec-muted" />
+              <Input placeholder="Ej: K1094" value={comision} onChange={(e) => setComision(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && apply()} fullWidth className="w-full bg-itec-surface border-itec-border rounded-lg pl-11 pr-4 py-3 font-mono text-sm" />
+            </div>
           </div>
         )}
-      </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <span className="text-[10px] text-itec-muted font-medium bg-itec-surface px-3 py-1.5 rounded-lg w-max">
-          {error ? <span className="text-itec-red">{error}</span> : mode === "filtros" ? "Exclusivo materias de tu carrera y homogéneas." : "Formato estándar: Letra + 4 números."}
-        </span>
-        <div className="flex gap-2">
-          <Button variant="slate" hierarchy="ghost" text="Restablecer" onClick={clear} className="text-xs bg-itec-surface rounded-lg" />
-          <Button variant="primary" hierarchy="solid" text="Aplicar" onClick={apply} disabled={!canSearch} className="px-6 py-2 text-xs rounded-lg bg-itec-blue-skye text-black font-bold hover:bg-itec-blue" />
+        {/* ── Ayuda contextual + acciones, siempre en la misma línea visual ── */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+          <span className="text-[10px] font-medium text-itec-muted">
+            {error ? <span className="text-itec-red font-bold">{error}</span> : mode === "filtros" ? MENSAJES.ayudaFiltros : MENSAJES.ayudaComision}
+          </span>
+          <div className="flex gap-2 shrink-0">
+            <Button variant="slate" hierarchy="ghost" text="Restablecer" onClick={clear} className="text-xs bg-itec-surface border border-itec-border rounded-lg" />
+            <Button variant="primary" hierarchy="solid" text="Buscar" icon={<Search size={12} />} onClick={apply} disabled={!canSearch} className="px-6 py-2 text-xs rounded-lg bg-itec-section-trueketec text-white font-bold hover:bg-itec-section-trueketec/80" />
+          </div>
         </div>
       </div>
     </div>

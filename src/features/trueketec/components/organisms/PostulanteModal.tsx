@@ -9,7 +9,7 @@ export const PostulanteModal: React.FC<{ postulante: Postulante | null; onClose:
     <LayoutModal isOpen={!!postulante} onClose={onClose} title={`Expediente: ${postulante.userName}`} description="Documentación vinculada al alumno." maxWidth="max-w-md">
       <div className="flex flex-col gap-5 px-6 py-6">
         <a href={`mailto:${postulante.userEmail}`} className="flex items-center gap-3 text-sm font-mono text-white hover:underline pb-5 border-b border-itec-border">
-          <div className="p-2.5 bg-itec-surface border border-itec-border rounded-xl"><Mail size={16} className="text-itec-blue-skye" /></div>
+          <div className="p-2.5 bg-itec-surface border border-itec-border rounded-xl"><Mail size={16} className="text-itec-section-trueketec" /></div>
           {postulante.userEmail}
         </a>
 
@@ -23,7 +23,7 @@ export const PostulanteModal: React.FC<{ postulante: Postulante | null; onClose:
                 <div className="flex items-start gap-3 border-b border-itec-border pb-3">
                   <BookOpen size={16} className="mt-0.5 shrink-0 text-itec-muted" />
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-bold text-itec-blue-skye uppercase tracking-wider mb-0.5">{oferta.departamento}</span>
+                    <span className="text-[9px] font-bold text-itec-section-trueketec uppercase tracking-wider mb-0.5">{oferta.departamento}</span>
                     <span className="text-sm font-bold text-white leading-tight">{oferta.materia}</span>
                   </div>
                 </div>
@@ -35,7 +35,7 @@ export const PostulanteModal: React.FC<{ postulante: Postulante | null; onClose:
                   <div className="text-white/20"><ArrowRight size={14} /></div>
                   <div className="flex flex-col text-center">
                     <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Busca</span>
-                    <span className="font-mono text-sm font-bold text-itec-blue-skye mt-1">{oferta.comision_deseada}</span>
+                    <span className="font-mono text-sm font-bold text-itec-section-trueketec mt-1">{oferta.comision_deseada}</span>
                   </div>
                 </div>
               </div>
