@@ -1,6 +1,3 @@
-// src/features/courses/components/atoms/CourseSearchInput.tsx
-// Input de búsqueda que muestra el texto tal como el usuario escribe
-// pero envía el valor original al hook (la normalización ocurre en el filtro).
 import React from "react";
 import { Search, X } from "lucide-react";
 
@@ -15,7 +12,7 @@ export const CourseSearchInput: React.FC<Props> = ({
   value, onChange, disabled, placeholder = "Buscar cursos...",
 }) => (
   <div className="relative group flex-1">
-    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-itec-gray group-focus-within:text-itec-blue-skye transition-colors">
+    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-itec-gray group-focus-within:text-itec-section-courses transition-colors">
       <Search className="size-4" />
     </div>
     <input
@@ -24,7 +21,7 @@ export const CourseSearchInput: React.FC<Props> = ({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full bg-white/[0.04] border border-white/8 text-itec-text rounded-xl pl-11 pr-10 py-3 text-sm focus:outline-none focus:border-itec-blue-skye/60 focus:ring-2 focus:ring-itec-blue-skye/10 transition-all placeholder:text-itec-gray/60 disabled:opacity-40 hover:border-white/15"
+      className="w-full bg-itec-sidebar border border-itec-border text-itec-text rounded-xl pl-11 pr-10 py-3 text-sm focus:outline-none focus:border-itec-section-courses transition-colors placeholder:text-itec-gray/60 disabled:opacity-40 hover:border-itec-section-courses/60"
     />
     {value && !disabled && (
       <button
