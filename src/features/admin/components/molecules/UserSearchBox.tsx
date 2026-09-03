@@ -4,7 +4,6 @@ import type { User } from "@context/AuthContext";
 import { Icons } from "@/components/ui/icons/Icons";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { cn } from "@/lib/utils";
 
 interface Props {
   searchMutation: UseMutationResult<User | null, Error, string, unknown>;
