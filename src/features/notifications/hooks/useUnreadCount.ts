@@ -9,8 +9,7 @@ export const useUnreadCount = () => {
     const unsub = onAuthStateChanged(getAuth(), async (user) => {
       if (!user) { setCount(0); return; }
       try {
-        const token = await user.getIdToken();
-        const messages = await inboxService.getMyMessages(token);
+        const messages = await inboxService.getMyMessages();
         setCount(Array.isArray(messages) ? messages.filter((m) => !m.isRead).length : 0);
       } catch { setCount(0); }
     });

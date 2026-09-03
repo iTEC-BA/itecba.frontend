@@ -22,7 +22,7 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
     if (!post || !isOwn) return;
     setLoadingPost(true);
     getAuth().currentUser?.getIdToken().then(token => {
-      if (token) return trueketecService.getPostulantes(token, post._id);
+      if (token) return trueketecService.getPostulantes(post._id);
       throw new Error("No token");
     }).then(({ postulantes: p }) => setPostulantes(p)).catch(() => {}).finally(() => setLoadingPost(false));
   }, [post, isOwn]);
@@ -35,7 +35,7 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
     try {
       const token = await getAuth().currentUser?.getIdToken();
       if (!token) throw new Error(MENSAJES.sinSesion);
-      await trueketecService.changeEstado(token, post._id, estado);
+      await trueketecService.changeEstado(post._id, estado);
       onEstadoChanged(post._id, estado);
       setFeedbackMsg(`Trámite actualizado a: ${estado}`);
     } catch { setFeedbackMsg(MENSAJES.errorGenerico); } finally { setSavingEstado(false); }
@@ -47,7 +47,7 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
     try {
       const token = await getAuth().currentUser?.getIdToken();
       if (!token) throw new Error(MENSAJES.sinSesion);
-      await trueketecService.postular(token, post._id);
+      await trueketecService.postular(post._id);
       setYaPostulado(true);
       setFeedbackMsg(MENSAJES.postulacionOk);
     } catch (e: any) { setFeedbackMsg(e.message || "Error al procesar."); } finally { setPostulando(false); }
