@@ -5,10 +5,10 @@
 import { lazy } from "react";
 
 export const BenefitsPage      = lazy(() => import("@pages/BenefitsPage").then(m => ({ default: m.BenefitsPage })));
-export const CourseEditDetail  = lazy(() => import("@pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
+export const CourseEditDetail  = lazy(() => import("@/features/courses/pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
 export const HomePage          = lazy(() => import("@pages/HomePage").then(m => ({ default: m.HomePage })));
 export const CoursesPage       = lazy(() => import("@pages/CoursesPage").then(m => ({ default: m.CoursesPage })));
-export const CourseDetail      = lazy(() => import("@pages/CourseDetail").then(m => ({ default: m.CourseDetail })));
+export const CourseDetail      = lazy(() => import("@/features/courses/pages/CourseDetail").then(m => ({ default: m.CourseDetail })));
 export const ResourcesPage     = lazy(() => import("@pages/ResourcesPage").then(m => ({ default: m.ResourcesPage })));
 export const FaqsPage          = lazy(() => import("@pages/FaqsPage").then(m => ({ default: m.FaqsPage })));
 export const GroupsPage        = lazy(() => import("@pages/GroupsPage").then(m => ({ default: m.GroupsPage })));

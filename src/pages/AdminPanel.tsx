@@ -1,59 +1,55 @@
-// src/pages/AdminPanel.tsx
-// Panel de administración basado en subrutas (/admin/*): cada sección vive en
-// su propia URL (ej: /admin/usuarios, /admin/avisos) y es accesible de forma
-// directa. La navegación se controla íntegramente vía react-router-dom
-// (useNavigate/useLocation dentro de useAdminSidebar + <Outlet/> acá abajo).
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate, Outlet, useOutletContext } from "react-router-dom";
-import { MainLayout } from "@components/templates/MainLayout";
-import { HamburgerButton } from "@features/admin/components/atoms";
-import {
-  AdminSidebar,
-  TutoriasSection,
-} from "@features/admin/components/organisms";
-import { AdminDashboard } from "@features/admin/pages/AdminDashboard";
-import { UserManagement } from "@features/admin/pages/UserManagement";
-import { NewsManagement } from "@features/admin/pages/NewsManagement";
-import { BenefitManagement } from "@features/admin/pages/BenefitManagement";
-import { AdminRedemptions } from "@features/admin/pages/AdminRedemptions";
-import { PageAccessManagement } from "@features/admin/pages/PageAccessManagement";
 import { useAdminSidebar, type AdminSection } from "@features/admin/hooks/useAdminSidebar";
+import { AdminSidebar } from "@features/admin/components/organisms/AdminSidebar";
+import { HamburgerButton } from "@features/admin/components/atoms";
+
+const AdminDashboard = lazy(() => import("@features/admin/pages/AdminDashboard").then(m => ({ default: m.AdminDashboard })));
+const UserManagement = lazy(() => import("@features/admin/pages/UserManagement").then(m => ({ default: m.UserManagement })));
+const NewsManagement = lazy(() => import("@features/admin/pages/NewsManagement").then(m => ({ default: m.NewsManagement })));
+const BenefitManagement = lazy(() => import("@features/admin/pages/BenefitManagement").then(m => ({ default: m.BenefitManagement })));
+const AdminRedemptions = lazy(() => import("@features/admin/pages/AdminRedemptions").then(m => ({ default: m.AdminRedemptions })));
+const PageAccessManagement = lazy(() => import("@features/admin/pages/PageAccessManagement").then(m => ({ default: m.PageAccessManagement })));
+const ContentModeration = lazy(() => import("@features/admin/pages/ContentModeration").then(m => ({ default: m.ContentModeration })));
+const TutoriasSection = lazy(() => import("@features/admin/pages/TutoriasSection").then(m => ({ default: m.TutoriasSection })));
 
 interface AdminOutletContext {
   navigate: (section: AdminSection) => void;
 }
 
-// ── Layout compartido: header móvil + sidebar (drawer) + contenido de la subruta activa ──
 const AdminLayout: React.FC = () => {
   const { active, navigate, isOpen, toggle, close } = useAdminSidebar();
 
   return (
-    <MainLayout>
-      <div className="relative flex flex-col gap-6">
-        {/* Header: abre/cierra el drawer del sidebar de admin */}
-        <div className="flex items-center justify-between">
+    <div className="flex h-dvh w-full bg-itec-bg text-itec-text overflow-hidden">
+      <AdminSidebar active={active} onNavigate={navigate} isOpen={isOpen} onClose={close} />
+
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        <header className="md:hidden flex items-center justify-between px-5 py-4 border-b border-white/5 bg-itec-sidebar shrink-0">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">
-              Admin
-            </p>
-            <h1 className="text-xl font-bold text-itec-text">Panel de control</h1>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-itec-muted">Panel</p>
+            <h1 className="text-sm font-bold text-white">Administración</h1>
           </div>
           <HamburgerButton open={isOpen} onToggle={toggle} />
-        </div>
+        </header>
 
-        <AdminSidebar active={active} onNavigate={navigate} isOpen={isOpen} onClose={close} />
-
-        <div className="flex-1">
-          <Outlet context={{ navigate }} />
-        </div>
+        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8">
+          <div className="mx-auto w-full max-w-6xl">
+            <Suspense fallback={
+              <div className="flex h-40 w-full items-center justify-center">
+                <span className="w-8 h-8 rounded-full border-2 border-white/10 border-t-white animate-spin" />
+              </div>
+            }>
+              <Outlet context={{ navigate }} />
+            </Suspense>
+          </div>
+        </main>
       </div>
-    </MainLayout>
+    </div>
   );
 };
 
-// AdminDashboard necesita "onNavigate" para sus accesos rápidos: lo toma del
-// contexto que expone el <Outlet/> de AdminLayout.
-const DashboardRoute: React.FC = () => {
+const DashboardRoute = () => {
   const { navigate } = useOutletContext<AdminOutletContext>();
   return <AdminDashboard onNavigate={navigate} />;
 };
@@ -67,6 +63,7 @@ export const AdminPanel: React.FC = () => (
       <Route path="avisos" element={<NewsManagement />} />
       <Route path="beneficios" element={<BenefitManagement />} />
       <Route path="canjes" element={<AdminRedemptions />} />
+      <Route path="moderacion" element={<ContentModeration />} />
       <Route path="tutorias" element={<TutoriasSection />} />
       <Route path="paginas" element={<PageAccessManagement />} />
       <Route path="*" element={<Navigate to="dashboard" replace />} />

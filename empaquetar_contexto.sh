@@ -58,6 +58,9 @@ agregar_carpeta "src/features/notifications/"
 echo "5/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
 
+# agregar_carpeta "src/features/admin/"
+# agregar_archivo "src/pages/AdminPanel.tsx"
+
 
 
 # Agregar la página (View) principal del feature
