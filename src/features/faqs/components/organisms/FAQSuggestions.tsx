@@ -1,6 +1,5 @@
 import React from "react";
 import type { FAQ } from "../../types/faqs";
-import Raccoon from "@/components/ui/icons/Raccoon";
 
 interface Props {
   topFaqs: FAQ[];
@@ -11,15 +10,15 @@ interface Props {
 export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) => {
   // Top 4 por popularidad (ranking de la DB) — sin preguntas hardcodeadas
   const suggestions = topFaqs.slice(0, 4).map(f => f.question);
-
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 pb-4 pt-8 animate-in fade-in duration-300">
       {/* Logo / Avatar IA */}
       <div className="relative mb-8">
-        <div className="w-20 h-20 rounded-xl flex items-center justify-center">
-          <Raccoon size={96} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
+        <div className="relative w-30 h-30 rounded-xl flex items-center justify-center">
+          <img src="https://raw.githubusercontent.com/iTEC-BA/recursos/refs/heads/main/PNGs/mapache.png?token=GHSAT0AAAAAAEHZAJKR76W7F6BTEYR6EJZ22U2HV7Q" alt="" className="absolute inset-0 z-10 w-full h-full object-contain"/>
+          <img src="https://raw.githubusercontent.com/iTEC-BA/recursos/refs/heads/main/PNGs/mano1.png?token=GHSAT0AAAAAAEHZAJKRRFREZ7XVM4UXTVI42U2HZUA" alt="" className="absolute inset-0 z-20 w-full h-full object-contain"/>
         </div>
-        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+        <div className="absolute z-20 -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
       </div>
 
       <h2 className="text-xl font-bold text-white tracking-tight mb-1">Asistente ITEC</h2>
