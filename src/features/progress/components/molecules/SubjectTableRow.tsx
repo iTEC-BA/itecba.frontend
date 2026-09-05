@@ -1,112 +1,70 @@
-// src/features/progress/components/molecules/SubjectTableRow.tsx
-// Usa CustomSelect (componente global) en lugar de <select> HTML crudo.
-import React, { useMemo }   from 'react';
-import { CustomSelect }     from '@components/ui/CustomSelect';
-import { StatusBadge }      from '../atoms/StatusBadge';
+import React, { useMemo } from 'react';
+import { CustomSelect } from '@components/ui/CustomSelect';
+import { StatusBadge } from '../atoms/StatusBadge';
 import type { Subject, SubjectStatus } from '../../types/progress';
 
 interface Props {
-  sub:           Subject;
-  allSubjects:   Subject[];
+  sub: Subject;
+  allSubjects: Subject[];
   onActionClick: (subject: Subject, action: string) => void;
 }
 
 const STATUS_OPTIONS_BASE = [
-  { value: 'habilitada_cursar', label: 'Sin Cursar'      },
-  { value: 'cursando',          label: 'En Curso'        },
-  { value: 'regular',           label: 'Regularicé'      },
-  { value: 'aprobada',          label: 'Aprobé el Final' },
-  { value: 'promocionada',      label: 'Promocioné ✦'    },
+  { value: 'habilitada_cursar', label: 'Sin Cursar' },
+  { value: 'cursando',          label: 'Cursando' },
+  { value: 'regular',           label: 'Regularizada' },
+  { value: 'promocionada',      label: 'Promocionado' },
 ];
 
 const BLOCKED_OPTIONS = [
-  { value: 'bloqueada', label: 'Faltan Correlativas' },
+  { value: 'bloqueada', label: 'Bloqueada (Faltan Req.)' },
 ];
 
 const statusToDropdownValue = (status: SubjectStatus): string => {
-  if (status === 'aprobada' || status === 'promocionada') return status;
+  if (status === 'aprobada' || status === 'promocionada') return 'promocionada';
   if (status === 'habilitada_rendir' || status === 'regular_bloqueada') return 'regular';
   if (status === 'cursando') return 'cursando';
   if (status === 'bloqueada') return 'bloqueada';
   return 'habilitada_cursar';
 };
 
-export const SubjectTableRow: React.FC<Props> = ({
-  sub,
-  allSubjects,
-  onActionClick,
-}) => {
-  const isBloqueada   = sub.status === 'bloqueada';
-  const lacksFinalReq =
-    sub.status === 'regular_bloqueada' ||
-    sub.status === 'habilitada_cursar'  ||
-    sub.status === 'cursando';
+export const SubjectTableRow: React.FC<Props> = ({ sub, allSubjects, onActionClick }) => {
+  const isBloqueada = sub.status === 'bloqueada';
 
   const options = useMemo(() => {
-    if (isBloqueada)   return BLOCKED_OPTIONS;
-    if (lacksFinalReq) {
-      return STATUS_OPTIONS_BASE.filter(
-        (o) => o.value !== 'aprobada' && o.value !== 'promocionada'
-      );
-    }
-    return STATUS_OPTIONS_BASE;
-  }, [isBloqueada, lacksFinalReq]);
+    return isBloqueada ? BLOCKED_OPTIONS : STATUS_OPTIONS_BASE;
+  }, [isBloqueada]);
 
   const currentValue = statusToDropdownValue(sub.status);
 
   return (
-    <tr className={`hover:bg-itec-gray/10 transition-colors group ${isBloqueada ? 'bg-black/10' : ''}`}>
-      <td className="px-5 py-4 text-center font-mono text-xs text-gray-500">
-        {sub.code || '—'}
-      </td>
-
+    <tr className={`hover:bg-white/[0.03] transition-colors group ${isBloqueada ? 'opacity-60' : ''}`}>
+      <td className="px-5 py-4 text-center font-mono text-xs text-itec-muted">{sub.code || '—'}</td>
       <td className="px-5 py-4">
         <div className="font-semibold text-sm text-itec-text">{sub.name}</div>
         {sub.grade !== undefined && (
-          <div className="text-xs text-green-400 font-mono mt-1 font-bold">
-            Nota: {sub.grade}
-            {sub.status === 'promocionada' && (
-              <span className="text-emerald-300 ml-1">✦ Prom.</span>
-            )}
+          <div className="text-xs text-emerald-400 font-mono mt-1 font-bold">
+            Nota final: {sub.grade}
           </div>
         )}
       </td>
-
-      <td className="px-5 py-4 text-xs text-itec-text">
+      <td className="px-5 py-4 text-xs text-itec-muted">
         <div className="flex flex-col gap-1">
           {sub.reqCursada?.length > 0 && (
-            <div>
-              <span className="font-semibold text-gray-500">Cursada: </span>
-              {sub.reqCursada
-                .map((id) => allSubjects.find((s) => s.id === id)?.code ?? id)
-                .join(', ')}
-            </div>
+            <div><span className="font-semibold">Cursada: </span>{sub.reqCursada.map((id) => allSubjects.find((s) => s.id === id)?.code ?? id).join(', ')}</div>
           )}
           {sub.reqAprobada?.length > 0 && (
-            <div>
-              <span className="font-semibold text-gray-500">Final: </span>
-              {sub.reqAprobada
-                .map((id) => allSubjects.find((s) => s.id === id)?.code ?? id)
-                .join(', ')}
-            </div>
+            <div><span className="font-semibold">Final: </span>{sub.reqAprobada.map((id) => allSubjects.find((s) => s.id === id)?.code ?? id).join(', ')}</div>
           )}
-          {!sub.reqCursada?.length && !sub.reqAprobada?.length && (
-            <span className="text-gray-600 italic">Ninguna</span>
-          )}
+          {!sub.reqCursada?.length && !sub.reqAprobada?.length && <span className="italic opacity-50">Ninguna</span>}
         </div>
       </td>
-
-      <td className="px-5 py-4 text-center">
-        <StatusBadge status={sub.status} />
-      </td>
-
+      <td className="px-5 py-4 text-center"><StatusBadge status={sub.status} /></td>
       <td className="px-5 py-4 text-right pr-6">
         <CustomSelect
           value={currentValue}
           options={options}
-          onChange={(val) => {
-            if (val !== currentValue) onActionClick(sub, val);
-          }}
+          onChange={(val) => { if (val !== currentValue) onActionClick(sub, val); }}
           disabled={isBloqueada}
           placeholder="Seleccionar..."
         />

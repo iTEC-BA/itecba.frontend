@@ -14,20 +14,9 @@ interface ProfileForm {
   startYear?: number;
 }
 
-interface UserProfileExtras {
-  careers?: CareerOption[];
-  phone?: string;
-  bio?: string;
-  github?: string;
-  startYear?: number;
-}
-
-const getProfileExtras = (user: ReturnType<typeof useAuth>["user"]): UserProfileExtras =>
-  (user ? (user as unknown as UserProfileExtras) : {});
-
 const getInitialCareers = (user: ReturnType<typeof useAuth>["user"]): CareerOption[] => {
   if (!user) return [];
-  const rawCareers = getProfileExtras(user).careers;
+  const rawCareers = (user as any).careers;
   if (Array.isArray(rawCareers) && rawCareers.length > 0) {
     return rawCareers.map((c: { code: string; name: string }) => ({
       code: c.code, 
@@ -45,16 +34,15 @@ const getInitialCareers = (user: ReturnType<typeof useAuth>["user"]): CareerOpti
 
 export const useEditProfile = (onSuccess?: () => void) => {
   const { user, updateProfile } = useAuth();
-  const profileExtras = getProfileExtras(user);
 
   const [form, setForm] = useState<ProfileForm>({
     name:      user?.name      ?? "",
     dni:       user?.dni       ?? "",
     legajo:    user?.legajo    ?? "",
-    phone:     profileExtras.phone     ?? "",
-    bio:       profileExtras.bio       ?? "",
-    github:    profileExtras.github    ?? "",
-    startYear: profileExtras.startYear ?? undefined,
+    phone:     (user as any)?.phone     ?? "",
+    bio:       (user as any)?.bio       ?? "",
+    github:    (user as any)?.github    ?? "",
+    startYear: (user as any)?.startYear ?? undefined,
   });
 
   const [careers, setCareers] = useState<CareerOption[]>(() => getInitialCareers(user));
@@ -83,16 +71,17 @@ export const useEditProfile = (onSuccess?: () => void) => {
       try {
         const token = (await auth.currentUser?.getIdToken()) ?? "";
 
+        // Solo adjuntamos bio y github si NO están vacíos para evitar que express-validator falle
         const payload = {
           displayName: form.name.trim(),
           dni:         form.dni.trim(),
           legajo:      form.legajo.trim(),
           phone:       form.phone?.trim() ?? "",
-          bio:         form.bio?.trim() ?? "",
-          github:      form.github?.trim() ?? "",
-          specialty:   careers[0].name,
+          specialty:   careers[0]?.name ?? "",
           careers:     careers.map((c) => ({ code: c.code, name: c.name })),
           ...(form.startYear !== undefined && { startYear: form.startYear }),
+          ...(form.bio?.trim() ? { bio: form.bio.trim() } : {}),
+          ...(form.github?.trim() ? { github: form.github.trim() } : {}),
         };
 
         await profileService.updateProfile(user.id, token, payload);
@@ -102,13 +91,12 @@ export const useEditProfile = (onSuccess?: () => void) => {
           dni:       payload.dni,
           legajo:    payload.legajo,
           specialty: payload.specialty,
-          phone:     payload.phone,
-          ...(payload.startYear !== undefined && { startYear: payload.startYear }),
+          ...(payload as any),
         });
 
         onSuccess?.();
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Error al guardar. Intentá de nuevo.");
+      } catch (err: any) {
+        setError(err.message ?? "Error al guardar. Intentá de nuevo.");
       } finally {
         setSaving(false);
       }

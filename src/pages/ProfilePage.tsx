@@ -12,32 +12,34 @@ import { usePageTitle } from "@hooks/usePageTitle";
 const ProfileHeader = lazy(() =>
   import("@features/profile/components/organisms/ProfileHeader").then((m) => ({
     default: m.ProfileHeader,
-  }))
+  })),
 );
 
 const TarjeTec = lazy(() =>
   import("@features/profile/components/organisms/TarjeTec").then((m) => ({
     default: m.TarjeTec,
-  }))
+  })),
 );
 
 const ProfileStatsWidget = lazy(() =>
-  import("@features/profile/components/organisms/ProfileStatsWidget").then((m) => ({
-    default: m.ProfileStatsWidget,
-  }))
+  import("@features/profile/components/organisms/ProfileStatsWidget").then(
+    (m) => ({
+      default: m.ProfileStatsWidget,
+    }),
+  ),
 );
 
 const ProfileForm = lazy(() =>
   import("@features/profile/components/organisms/ProfileForm").then((m) => ({
     default: m.ProfileForm,
-  }))
+  })),
 );
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export const ProfilePage: React.FC = () => {
   usePageTitle("Perfil");
   const { user, isAuthenticated, loading } = useAuth();
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const { username } = useParams();
 
   // El perfil está "completo" cuando el usuario tiene DNI cargado
@@ -47,7 +49,8 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     if (isAuthenticated && user?.email) {
       const expected = user.email.split("@")[0];
-      if (username !== expected) navigate(`/perfil/${expected}`, { replace: true });
+      if (username !== expected)
+        navigate(`/perfil/${expected}`, { replace: true });
     } else if (!isAuthenticated && username) {
       navigate("/perfil", { replace: true });
     }
@@ -76,30 +79,24 @@ export const ProfilePage: React.FC = () => {
   // ── Vista normal del perfil ─────────────────────────────────────────────────
   return (
     <MainLayout>
-      <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="space-y-6">
+      {/* Header: avatar, nombre, carreras, botones de acción */}
+      <Suspense fallback={<LoadingState />}>
+        <ProfileHeader />
+      </Suspense>
 
-          {/* Header: avatar, nombre, carreras, botones de acción */}
+      {/* Cuerpo: TarjeTEC + estadísticas */}
+      <div className="flex flex-col gap-6 my-4">
+        {/* TarjeTEC — solo se muestra si el usuario existe y tiene datos */}
+        {user && (
           <Suspense fallback={<LoadingState />}>
-            <ProfileHeader />
+            <TarjeTec user={user} />
           </Suspense>
+        )}
 
-          {/* Cuerpo: TarjeTEC + estadísticas */}
-          <div className="flex flex-col gap-6">
-            {/* TarjeTEC — solo se muestra si el usuario existe y tiene datos */}
-            {user && (
-              <Suspense fallback={<LoadingState />}>
-                <TarjeTec user={user} />
-              </Suspense>
-            )}
-
-            {/* Estadísticas: puntos, beneficios, estado, carreras */}
-            <Suspense fallback={<LoadingState />}>
-              <ProfileStatsWidget />
-            </Suspense>
-          </div>
-
-        </div>
+        {/* Estadísticas: puntos, beneficios, estado, carreras */}
+        <Suspense fallback={<LoadingState />}>
+          <ProfileStatsWidget />
+        </Suspense>
       </div>
     </MainLayout>
   );

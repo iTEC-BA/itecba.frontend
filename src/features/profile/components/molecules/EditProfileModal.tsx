@@ -23,7 +23,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ onClose }) =
       description="Actualizá tus datos personales de contacto y trayectoria."
       maxWidth="max-w-2xl"
     >
-      <form onSubmit={handleSubmit} className="space-y-6 p-1">
+      <form onSubmit={handleSubmit} className="space-y-6 p-2">
         {/* Sección de Datos Institucionales (Bloqueados) */}
         <div className="bg-white/5 border border-white/10 rounded-[1.5rem] p-5 sm:p-6">
           <div className="flex items-center gap-2 mb-5">
@@ -32,7 +32,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ onClose }) =
               Datos Institucionales (No modificables)
             </h3>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 p-2">
             <div>
               <label className={labelCls}>Nombre completo</label>
               <Input fullWidth value={form.name} disabled className="opacity-50 cursor-not-allowed bg-black/20" />

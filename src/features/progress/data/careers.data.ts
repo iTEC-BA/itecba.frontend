@@ -1,27 +1,32 @@
-import {
-  CAREERS_DATA,
-  type SubjectDef,
-} from '@/data/carreras';
+import { subjectsService } from '@/services/subjectsService';
 
-export type { SubjectDef };
-
-/** Mapa de ID de carrera → nombre completo mostrado en la UI */
 export const CAREER_NAMES: Record<string, string> = {
-  sistemas:    'Ingeniería en Sistemas de Información',
-  industrial:  'Ingeniería Industrial',
-  civil:       'Ingeniería Civil',
-  electronica: 'Ingeniería Electrónica',
-  electrica:   'Ingeniería Eléctrica',
-  mecanica:    'Ingeniería Mecánica',
-  quimica:     'Ingeniería Química',
-  naval:       'Ingeniería Naval',
-  textil:      'Ingeniería Textil',
+  sistemas: 'Ing. en Sistemas de Información',
+  industrial: 'Ing. Industrial',
+  civil: 'Ing. Civil',
+  electronica: 'Ing. Electrónica',
+  electrica: 'Ing. Eléctrica',
+  mecanica: 'Ing. Mecánica',
+  quimica: 'Ing. Química',
+  naval: 'Ing. Naval',
+  textil: 'Ing. Textil',
+  homogeneas: 'Materias Homogéneas',
 };
 
-/**
- * Devuelve el plan de estudios de la carrera solicitada.
- * Si la carrera no existe en el catálogo retorna [] en lugar de crashear,
- * lo que produce una pantalla de "Sin materias" en lugar de una excepción.
- */
-export const getCareerPlan = (careerId: string): SubjectDef[] =>
-  CAREERS_DATA[careerId] ?? [];
+// Obtenemos el plan directo de la DB
+export const getCareerPlanAsync = async (careerId: string) => {
+  try {
+    const subjects = await subjectsService.getSubjects(careerId);
+    return subjects.map(s => ({
+      id: s.subject_key,
+      name: s.materia,
+      code: s.codigo || s.sigla || 'N/A',
+      level: s.nivel || 1,
+      reqCursada: [], // Se pueden popular luego con getCorrelativas si es necesario
+      reqAprobada: []
+    }));
+  } catch (error) {
+    console.error("Error al traer plan:", error);
+    return [];
+  }
+};

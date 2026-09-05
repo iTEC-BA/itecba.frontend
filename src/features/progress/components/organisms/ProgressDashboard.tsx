@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ProgressTable } from "../molecules/ProgressTable";
 import { GradeModal } from "../molecules/GradeModal";
-import { MetricCard, StressMonitor, PromocionadasCard } from "../atoms/Widgets";
 import { Button } from "@components/ui/Button";
 import { CustomSelect } from "@components/ui/CustomSelect";
-import { CAREER_NAMES } from "../../data/careers.data";
-import type {
-  CareerProgress,
-  Subject,
-  UpdateSubjectArgs,
-} from "../../types/progress";
+import { Icons } from "@components/ui/icons/Icons";
+import { subjectsService } from "@/services/subjectsService";
+import type { CareerProgress, Subject, UpdateSubjectArgs } from "../../types/progress";
 
 interface Props {
   data: CareerProgress;
@@ -18,251 +14,104 @@ interface Props {
   onRemoveCareer: (careerId: string) => void;
 }
 
-type ModalState =
-  | { isOpen: false }
-  | {
-      isOpen: true;
-      subject: Subject;
-      targetStatus: "aprobada" | "regular" | "promocionada";
-    };
+const FILTER_TABS = [
+  { id: 'sin_cursar', title: 'Sin Cursar', desc: 'Aún te falta cursar o te faltan materias correlativas promocionadas para poder cursar.', keys: ['bloqueada'], color: 'text-itec-gray', bg: 'bg-white/5', border: 'border-white/10' },
+  { id: 'cursar', title: 'Para Cursar', desc: 'Materias que ya podés iniciar a cursar.', keys: ['habilitada_cursar'], color: 'text-white', bg: 'bg-white/10', border: 'border-white/20' },
+  { id: 'cursando', title: 'Cursando', desc: 'Estás cursando la materia actualmente.', keys: ['cursando'], color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/20' },
+  { id: 'regularizada', title: 'Regularizada', desc: 'Menos de 8 en los 2 parciales y tenés que rendir mesa de finales.', keys: ['habilitada_rendir', 'regular_bloqueada'], color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/20' },
+  { id: 'promocionada', title: 'Promocionado', desc: 'Sacaste 8 o más en los 2 parciales y no rendís final, o ya rendiste el final con más de 6.', keys: ['aprobada', 'promocionada'], color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+];
 
-// ── Inner component con clave de carrera para remount limpio ──────────────────
-const DashboardContent: React.FC<Props> = ({
-  data,
-  onUpdateStatus,
-  onSwitchCareer,
-  onRemoveCareer,
-}) => {
-  const [modal, setModal] = useState<ModalState>({ isOpen: false });
-  const { metrics, subjects } = data;
+const DashboardContent: React.FC<Props> = ({ data, onUpdateStatus, onSwitchCareer, onRemoveCareer }) => {
+  const [modal, setModal] = useState<any>({ isOpen: false });
+  const [dbCareers, setDbCareers] = useState<{value: string, label: string}[]>([]);
+  const [activeTab, setActiveTab] = useState('cursando');
+  const { subjects } = data;
 
-  const levels = Array.from(new Set(subjects.map((s) => s.level))).sort(
-    (a, b) => a - b,
-  );
-  const [activeLevel, setActiveLevel] = useState<number>(levels[0] ?? 1);
-
-  const availableCareersToAdd = Object.keys(CAREER_NAMES).filter(
-    (c) => !data.enrolledCareers.includes(c),
-  );
+  useEffect(() => {
+    subjectsService.getCarreras().then(res => {
+      setDbCareers(res.filter(c => !data.enrolledCareers.includes(c)).map(c => ({ value: c, label: c })));
+    }).catch(() => {});
+  }, [data.enrolledCareers]);
 
   const handleActionClick = (subject: Subject, action: string) => {
-    if (
-      action === "aprobada" ||
-      action === "regular" ||
-      action === "promocionada"
-    ) {
+    if (["aprobada", "regular", "promocionada"].includes(action)) {
       setModal({ isOpen: true, subject, targetStatus: action });
       return;
     }
     onUpdateStatus({ id: subject.id, status: action });
   };
 
-  const handleModalConfirm = (
-    id: string,
-    status: string,
-    grade?: number,
-    year?: number,
-  ) => {
-    onUpdateStatus({ id, status, grade, year });
-    setModal({ isOpen: false });
-  };
-
-  const levelSubjects = subjects.filter((s) => s.level === activeLevel);
-  const addCareerOptions = availableCareersToAdd.map((c) => ({
-    value: c,
-    label: CAREER_NAMES[c] ?? c,
-  }));
+  const activeTabObj = FILTER_TABS.find(t => t.id === activeTab)!;
+  const filteredSubjects = subjects.filter(s => activeTabObj.keys.includes(s.status));
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* ── Header ──────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-itec-text tracking-tight">
-            Progreso Académico
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">{data.careerName}</p>
+          <h1 className="text-3xl md:text-4xl font-semibold text-itec-text tracking-tight mb-2">Progreso Académico</h1>
+          <p className="text-itec-gray text-sm">Gestioná tu avance en {data.careerName}.</p>
         </div>
-
-        <div className="flex flex-wrap gap-2 items-center">
-          {data.enrolledCareers.map((careerId) => (
-            <Button
-              key={careerId}
-              onClick={() => onSwitchCareer(careerId)}
-              variant={
-                careerId === data.activeCareerId ? "danger" : "danger"
-              }
-              hierarchy={careerId === data.activeCareerId ? "solid" : "dashed"}
-              text={
-                careerId
-              }
-              className="uppercase"
-            />
+        <div className="flex flex-wrap items-center gap-3">
+          {data.enrolledCareers.map((c) => (
+            <Button key={c} onClick={() => onSwitchCareer(c)} variant="primary" hierarchy={c === data.activeCareerId ? "solid" : "outline"} text={c.toUpperCase()} />
           ))}
-
-          {data.enrolledCareers.length < 2 && addCareerOptions.length > 0 && (
-            <CustomSelect
-              value=""
-              options={addCareerOptions}
-              onChange={(val) => {
-                if (val) onSwitchCareer(val);
-              }}
-              placeholder="+ Agregar carrera"
-            />
+          {dbCareers.length > 0 && (
+            <div className="w-48">
+              <CustomSelect value="" options={dbCareers} onChange={(v) => onSwitchCareer(v)} placeholder="+ Agregar carrera" />
+            </div>
           )}
-
           {data.enrolledCareers.length > 1 && (
-            <Button
-              onClick={() => onRemoveCareer(data.activeCareerId)}
-              variant="danger"
-              hierarchy="ghost"
-              text="− Quitar carrera"
-            />
+            <Button onClick={() => onRemoveCareer(data.activeCareerId)} variant="danger" hierarchy="ghost" text="Quitar" icon={<Icons type="trash" />} />
           )}
         </div>
       </div>
 
-      {/* ── Estado vacío: carrera sin plan de estudios cargado ──── */}
-      {subjects.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20 gap-4 text-center border border-dashed border-itec-gray/40 rounded-xl">
-          <span className="text-5xl">📋</span>
-          <div>
-            <p className="text-itec-text font-semibold text-lg">
-              Plan de estudios no disponible
-            </p>
-            <p className="text-gray-500 text-sm mt-1 max-w-sm">
-              El plan para <strong>{data.careerName}</strong> no está cargado en
-              este momento. Seleccioná otra carrera o contactá al equipo de
-              iTEC.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* ── Métricas (solo si hay materias) ──────────────────────── */}
-      {subjects.length > 0 && (
+      {subjects.length === 0 ? (
+         <div className="flex flex-col items-center justify-center py-20 border border-dashed border-itec-border bg-itec-box rounded-2xl">
+           <span className="text-4xl mb-4">📋</span>
+           <p className="text-itec-text font-semibold text-lg">Plan no disponible aún</p>
+         </div>
+      ) : (
         <>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-col gap-3">
-              <MetricCard
-                title="Avance Plan"
-                value={`${metrics.porcentajeAvance}%`}
-                subtitle={`${metrics.aprobadas + metrics.promocionadas} / ${metrics.total} materias`}
-                icon="🎓"
-                highlight="text-itec-blue-skye"
-              />
-              <MetricCard
-                title="Aprobadas"
-                value={metrics.aprobadas}
-                subtitle="Final rendido"
-                icon="✅"
-                highlight="text-green-400"
-              />
-              <MetricCard
-                title="Regularizadas"
-                value={metrics.regulares}
-                subtitle="Pendiente final"
-                icon="📋"
-              />
-              <MetricCard
-                title="Promedio"
-                value={metrics.promedio}
-                subtitle="Sobre materias aprobadas"
-                icon="📊"
-                highlight="text-yellow-400"
-              />
-              <MetricCard
-                title="Cursando"
-                value={metrics.cursando}
-                subtitle="Materias este cuatrimestre"
-                icon="📚"
-                highlight="text-fuchsia-400"
-              />
-            </div>
-            <div className="flex gap-3 md:flex-col">
-              <PromocionadasCard count={metrics.promocionadas} />
-              <StressMonitor
-                horas={metrics.horasSemanales}
-                nivel={metrics.nivelEstres}
-              />
-            </div>
-          </div>
-          {metrics.vencimientosProximos.length > 0 && (
-            <div className="bg-itec-accent/5 border border-itec-accent/20 rounded-xl p-5 flex flex-col justify-between">
-              <span className="text-xs font-bold uppercase tracking-widest text-itec-accent mb-2">
-                ⚠️ Vencimientos
-              </span>
-              <div className="space-y-1">
-                {metrics.vencimientosProximos.slice(0, 3).map((s) => (
-                  <div key={s.id} className="text-xs text-itec-text truncate">
-                    {s.name}
-                  </div>
-                ))}
-              </div>
-              <p className="text-[10px] text-gray-500 mt-2">
-                Regularidad &gt; 3 años
-              </p>
-            </div>
-              )}
-          {/* ── Tabs de año — usa Button global ───────────────────── */}
-          <div className="flex flex-wrap gap-2">
-            {levels.map((lvl) => {
-              const lvlSubs = subjects.filter((s) => s.level === lvl);
-              const aprobadas = lvlSubs.filter(
-                (s) => s.status === "aprobada" || s.status === "promocionada",
-              ).length;
-              const pct =
-                lvlSubs.length > 0
-                  ? Math.round((aprobadas / lvlSubs.length) * 100)
-                  : 0;
-              const isActive = activeLevel === lvl;
+          {/* TABS INTERACTIVOS (BENTO STYLE) */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {FILTER_TABS.map(tab => {
+              const count = subjects.filter(s => tab.keys.includes(s.status)).length;
+              const isActive = activeTab === tab.id;
               return (
-                <Button
-                  key={lvl}
-                  onClick={() => setActiveLevel(lvl)}
-                  variant="primary"
-                  hierarchy={isActive ? "outline" : "ghost"}
-                  className={`rounded-t-xl rounded-b-none border-b-2 ${
-                    isActive
-                      ? "border-itecBlue"
-                      : "border-transparent text-gray-500 hover:text-itec-text"
-                  }`}
+                <button 
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)} 
+                  className={`flex flex-col items-start p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer ${isActive ? `${tab.bg} ${tab.border} scale-[1.02] shadow-sm` : 'bg-itec-box border-itec-border opacity-60 hover:opacity-100 hover:bg-white/5'}`}
                 >
-                  <span>{lvl === 0 ? "Ingreso" : `Año ${lvl}`}</span>
-                  <span
-                    className={`text-[10px] font-mono ml-1 ${pct === 100 ? "text-green-400" : "text-gray-500"}`}
-                  >
-                    {pct}%
-                  </span>
-                </Button>
-              );
+                  <span className={`text-2xl sm:text-3xl font-bold tracking-tight ${tab.color}`}>{count}</span>
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-itec-text mt-2">{tab.title}</span>
+                </button>
+              )
             })}
           </div>
 
-          {/* ── Tabla del año activo ───────────────────────────────── */}
-          <ProgressTable
-            level={activeLevel}
-            subjects={levelSubjects}
-            allSubjects={subjects}
-            onActionClick={handleActionClick}
-          />
+          {/* DESCRIPCIÓN DEL ESTADO ACTIVO */}
+          <div className={`p-4 rounded-xl border flex items-start gap-3 ${activeTabObj.bg} ${activeTabObj.border}`}>
+            <Icons type="info" className={`size-5 mt-0.5 ${activeTabObj.color}`} />
+            <p className="text-sm text-itec-text/90 leading-relaxed">
+              <strong className="font-bold mr-2 text-white">{activeTabObj.title}:</strong> 
+              {activeTabObj.desc}
+            </p>
+          </div>
+
+          {/* TABLA FILTRADA */}
+          <ProgressTable subjects={filteredSubjects} allSubjects={subjects} onActionClick={handleActionClick} />
         </>
       )}
 
-      {/* ── Modal de confirmación ─────────────────────────────────── */}
       {modal.isOpen && (
-        <GradeModal
-          subject={modal.subject}
-          targetStatus={modal.targetStatus}
-          onClose={() => setModal({ isOpen: false })}
-          onConfirm={handleModalConfirm}
-        />
+        <GradeModal subject={modal.subject} targetStatus={modal.targetStatus} onClose={() => setModal({ isOpen: false })} onConfirm={(id, st, gr, yr) => { onUpdateStatus({ id, status: st, grade: gr, year: yr }); setModal({ isOpen: false }); }} />
       )}
     </div>
   );
 };
 
-// Wrapper con `key` para forzar remount limpio al cambiar carrera.
-export const ProgressDashboard: React.FC<Props> = (props) => (
-  <DashboardContent key={props.data.activeCareerId} {...props} />
-);
+export const ProgressDashboard: React.FC<Props> = (props) => <DashboardContent key={props.data.activeCareerId} {...props} />;

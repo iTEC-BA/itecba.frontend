@@ -34,8 +34,8 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
   useEffect(() => {
     profileService.getDbCareers()
       .then(carreras => {
-        const mapped = carreras.map(c => ({ 
-          code: c.substring(0, 3).toUpperCase(), 
+        const mapped = carreras.map((c, i) => ({ 
+          code: `${c.substring(0, 3).toUpperCase()}${i}`, // Garantizamos un código único
           name: c 
         }));
         setDbCareers(mapped);
@@ -48,14 +48,15 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
   );
 
   const toggle = (career: CareerOption) => {
-    if (value.find((v) => v.code === career.code)) {
-      onChange(value.filter((v) => v.code !== career.code));
+    // Usamos el nombre exacto como identificador para evitar la colisión ELE
+    if (value.find((v) => v.name === career.name)) {
+      onChange(value.filter((v) => v.name !== career.name));
     } else if (value.length < max) {
       onChange([...value, career]);
     }
   };
 
-  const isSelected = (code: string) => value.some((v) => v.code === code);
+  const isSelected = (name: string) => value.some((v) => v.name === name);
 
   return (
     <div ref={ref} className="relative">
@@ -75,7 +76,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
         )}
         {value.map((c) => (
           <span
-            key={c.code}
+            key={c.name}
             className={cn(
               "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border border-itec-border",
               c.colorClass ?? "bg-itec-box text-itec-text"
@@ -113,11 +114,11 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
           </div>
           <div className="overflow-y-auto custom-scrollbar">
             {filtered.map((c) => {
-              const sel = isSelected(c.code);
+              const sel = isSelected(c.name);
               const atMax = value.length >= max && !sel;
               return (
                 <button
-                  key={c.code}
+                  key={c.name}
                   type="button"
                   disabled={atMax}
                   onClick={() => toggle(c)}
@@ -136,15 +137,9 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
                     {sel && "✓"}
                   </span>
                   <span className="font-bold">{c.name}</span>
-                  <span className="ml-auto text-[10px] text-itec-muted">{c.code}</span>
                 </button>
               );
             })}
-          </div>
-          <div className="p-2 border-t border-itec-border shrink-0">
-            <p className="text-[10px] text-itec-muted text-center">
-              {value.length}/{max} seleccionadas
-            </p>
           </div>
         </div>
       )}

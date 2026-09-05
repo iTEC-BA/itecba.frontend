@@ -1,4 +1,3 @@
-import React from "react";
 import { Star } from "lucide-react";
 import { useAuth } from "@context/AuthContext";
 import { cn } from "@/lib/utils";

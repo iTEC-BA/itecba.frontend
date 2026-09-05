@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Star, Clock, Target, Pencil } from "lucide-react";
 import { auth } from "@/lib/firebase";
