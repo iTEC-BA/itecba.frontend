@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Search, ListFilter, Hash, BookOpen } from "lucide-react";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -11,12 +11,13 @@ interface Props {
   initialFilters: Filters;
   onApply: (f: Filters) => void;
   allowedDepts: string[];
-  materiaOptions: string[];
+  subjectsData: { materia: string; nivel: number }[];
 }
 
-export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, allowedDepts, materiaOptions }) => {
+export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, allowedDepts, subjectsData }) => {
   const [mode, setMode]         = useState<"filtros" | "comision">("filtros");
   const [departamento, setDept] = useState(initialFilters.departamento ?? "");
+  const [nivel, setNivel]       = useState("");
   const [materia, setMateria]   = useState(initialFilters.materia ?? "");
   const [turno, setTurno]       = useState<TurnoDeseado | "">(initialFilters.turno_deseado ?? "");
   const [comision, setComision] = useState(initialFilters.comision ?? "");
@@ -39,18 +40,27 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
   };
 
   const clear = () => {
-    setDept(""); setMateria(""); setTurno(""); setComision(""); setError("");
+    setDept(""); setNivel(""); setMateria(""); setTurno(""); setComision(""); setError("");
     onApply({});
   };
 
   const deptOptions = allowedDepts.map(d => ({ value: d, label: d }));
   const turnoOptions = TURNOS_DESEADOS.map(t => ({ value: t, label: t }));
-  const materiaSelectOptions = materiaOptions.map(m => ({ value: m, label: m }));
+  
+  const nivelOptions = useMemo(() => {
+    const niveles = new Set(subjectsData.map(s => s.nivel).filter(n => n));
+    return Array.from(niveles).sort((a, b) => a - b).map(n => ({ value: String(n), label: `Nivel ${n}` }));
+  }, [subjectsData]);
+
+  const materiaSelectOptions = useMemo(() => {
+    let filtered = subjectsData;
+    if (nivel) filtered = filtered.filter(s => s.nivel === Number(nivel));
+    const nombres = new Set(filtered.map(s => s.materia));
+    return Array.from(nombres).sort((a, b) => a.localeCompare(b, "es")).map(m => ({ value: m, label: m }));
+  }, [subjectsData, nivel]);
 
   return (
     <div className="flex flex-col rounded-xl border border-itec-section-trueketec/10 p-4">
-
-      {/* ── Encabezado + Toggle de modo ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-white">
           <div className="p-1.5 bg-itec-section-trueketec/10 rounded-lg border border-itec-section-trueketec/30">
@@ -80,13 +90,16 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
         </div>
       </div>
 
-      {/* ── Campos del modo activo ── */}
       <div className="px-5 py-5 flex flex-col gap-4">
         {mode === "filtros" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Departamento</label>
               <CustomSelect value={departamento} onChange={setDept} options={deptOptions} placeholder="Elegir" className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Nivel</label>
+              <CustomSelect value={nivel} onChange={(val) => { setNivel(val); setMateria(""); }} options={nivelOptions} placeholder="Todos" className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg" />
             </div>
             <div className="flex flex-col gap-1.5 lg:col-span-2">
               <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Materia (tu carrera)</label>
@@ -114,7 +127,6 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
           </div>
         )}
 
-        {/* ── Ayuda contextual + acciones, siempre en la misma línea visual ── */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
           <span className="text-[10px] font-medium text-itec-muted">
             {error ? <span className="text-itec-red font-bold">{error}</span> : mode === "filtros" ? MENSAJES.ayudaFiltros : MENSAJES.ayudaComision}

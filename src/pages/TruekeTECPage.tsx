@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   Handshake, ChevronLeft, ChevronRight, ChevronDown,
   Inbox, Plus, ShieldAlert, SlidersHorizontal, Settings2, PhoneCall
@@ -15,7 +16,8 @@ import { ContactModal } from "@features/trueketec/components/organisms/ContactMo
 import { PostulanteModal } from "@features/trueketec/components/organisms/PostulanteModal";
 import { MyPostsModal } from "@features/trueketec/components/organisms/MyPostsModal";
 import type { TrueketecPost, EstadoPost, Postulante } from "@features/trueketec/types/trueketec.types";
-import { PASOS_COMO_FUNCIONA, SOPORTE, MENSAJES, getMateriasDeCarrera } from "@features/trueketec/data";
+import { PASOS_COMO_FUNCIONA, SOPORTE, MENSAJES, getCarreraValue } from "@features/trueketec/data";
+import { subjectsService } from "@services/subjectsService";
 
 export const TruekeTECPage: React.FC = () => {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -76,7 +78,13 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
   const [postulante, setPostulante] = useState<Postulante | null>(null);
   const [comoFuncionaOpen, setComoFuncionaOpen] = useState(false);
 
-  const materiaOptions = useMemo(() => getMateriasDeCarrera(specialty), [specialty]);
+  // Consulta dinámica a subjectsService
+  const carreraDB = getCarreraValue(specialty);
+  const { data: subjectsData = [] } = useQuery({
+    queryKey: ["subjects", carreraDB],
+    queryFn: () => subjectsService.getSubjects(carreraDB || undefined),
+    enabled: !!carreraDB
+  });
 
   const handleContact = (p: TrueketecPost) => setContactPost(p);
   const isOwnContact = contactPost?.userId === userId;
@@ -85,7 +93,6 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
   return (
     <div className="mx-auto max-w-5xl w-full flex flex-col gap-6 pb-24 px-2 sm:px-4 mt-2">
 
-      {/* ── ENCABEZADO + ACCESOS RÁPIDOS (siempre visible, arriba de todo) ── */}
       <header className="flex flex-col gap-5 ">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div className="flex items-center gap-3">
@@ -122,13 +129,11 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
         </div>
       )}
 
-      {/* ── AVISO DE SOPORTE (línea corta, siempre visible) ── */}
       <div className="flex items-center gap-3 bg-itec-box rounded-2xl px-5 py-3 border border-itec-border text-xs text-itec-muted">
         <PhoneCall size={14} className="text-itec-section-trueketec shrink-0" />
         <p>Si gestión no da lugar al trueque, avisá de inmediato al <strong className="text-itec-text">{SOPORTE.telefono} ({SOPORTE.contactoNombre})</strong>.</p>
       </div>
 
-      {/* ── ACORDEÓN: ¿CÓMO FUNCIONA? (fondo /10 y borde /60 del acento) ── */}
       <div className="bg-itec-section-trueketec/10 rounded-3xl border border-itec-section-trueketec/60 overflow-hidden">
         <button
           onClick={() => setComoFuncionaOpen(v => !v)}
@@ -153,9 +158,8 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
         )}
       </div>
 
-      {/* ── DIRECTORIO PÚBLICO ── */}
       <section className="bg-itec-surface flex flex-col gap-6">
-        <TrueketecFiltersBar initialFilters={filters} onApply={applyFilters} allowedDepts={allowedDepts} materiaOptions={materiaOptions} />
+        <TrueketecFiltersBar initialFilters={filters} onApply={applyFilters} allowedDepts={allowedDepts} subjectsData={subjectsData} />
         <div className="mt-2">
           {!hasSearched ? (
             <div className="flex flex-col items-center justify-center gap-4 py-16 rounded-2xl bg-itec-box border border-itec-border">
@@ -196,11 +200,10 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
         </div>
       </section>
 
-      {/* ── MODALES ── */}
       <MyPostsModal isOpen={myPostsModalOpen} onClose={() => setMyPostsModalOpen(false)} matches={matches} myPosts={myPosts} onContact={handleContact} />
       <ContactModal post={contactPost} isOwn={!!isOwnContact} onClose={() => setContactPost(null)} onEstadoChanged={(id, estado) => { updateEstadoLocal(id, estado as EstadoPost); setContactPost((prev) => prev ? { ...prev, estado: estado as EstadoPost } : null); }} onOpenPostulante={(p) => { setContactPost(null); setPostulante(p); }} />
       <PostulanteModal postulante={postulante} onClose={() => setPostulante(null)} />
-      <TrueketecPublishModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onPublish={publish} allowedDepts={allowedDepts} materiaOptions={materiaOptions} />
+      <TrueketecPublishModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onPublish={publish} allowedDepts={allowedDepts} subjectsData={subjectsData} />
     </div>
   );
 };

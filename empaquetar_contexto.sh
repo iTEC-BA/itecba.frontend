@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 FEATURE_NAME=$1
-OUTPUT="contexto_ia_${FEATURE_NAME}.txt"
+OUTPUT="contexto_frontend_seccion_${FEATURE_NAME}.txt"
 
 echo "🚀 Generando contexto maestro para el feature: $FEATURE_NAME..."
 > $OUTPUT

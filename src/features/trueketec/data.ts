@@ -1,10 +1,4 @@
-// src/features/trueketec/data.ts
-// Configuración genérica y escalable: toda la información dura de TruekeTEC
-// vive acá para no mezclar texto de negocio con JSX.
-
 import type { Turno, TurnoDeseado, EstadoPost } from "./types/trueketec.types";
-import { CAREERS_DATA } from "@/data/carreras";
-import { ESPECIALIDADES_DB } from "@/data/specialties";
 
 export const TRUEKETEC_ACCENT = "itec-section-trueketec";
 
@@ -73,28 +67,10 @@ export const EMPTY_FORM = {
   turno_deseado: "" as TurnoDeseado | "",
 };
 
-// ----------------------------------------------------------------------------
-// Materias de la carrera del estudiante (para poblar el select de "Materia")
-// ----------------------------------------------------------------------------
-
-/**
- * Traduce el `specialty` guardado en el perfil del usuario (ej: "Ingeniería
- * en Sistemas de Información", "SISTEMAS", "sistemas") a la key que usa
- * `CAREERS_DATA` (ej: "sistemas"), apoyándose en `ESPECIALIDADES_DB`.
- */
 export const getCarreraValue = (specialty?: string): string | null => {
   if (!specialty) return null;
   const s = specialty.trim().toLowerCase();
 
-  // Match directo contra el nombre de la especialidad (ej: "sistemas", "mecánica")
-  const byName = ESPECIALIDADES_DB.find((e) => s.includes(e.name.toLowerCase()));
-  if (byName) return byName.carreraValue;
-
-  // Match directo contra la key ya usada en carreras.ts (ej: specialty ya viene como "sistemas")
-  const byValue = ESPECIALIDADES_DB.find((e) => e.carreraValue === s);
-  if (byValue) return byValue.carreraValue;
-
-  // Heurística por variantes comunes (acentos/sinónimos) no cubiertas arriba
   if (s.includes("sistemas")) return "sistemas";
   if (s.includes("mecanica") || s.includes("mecánica")) return "mecanica";
   if (s.includes("electronica") || s.includes("electrónica")) return "electronica";
@@ -106,14 +82,4 @@ export const getCarreraValue = (specialty?: string): string | null => {
   if (s.includes("textil")) return "textil";
 
   return null;
-};
-
-/** Nombres de materias (sin duplicados, orden alfabético) de la carrera del alumno. */
-export const getMateriasDeCarrera = (specialty?: string): string[] => {
-  const carreraValue = getCarreraValue(specialty);
-  if (!carreraValue) return [];
-  const plan = CAREERS_DATA[carreraValue];
-  if (!plan) return [];
-  const nombres = new Set(plan.map((materia) => materia.name));
-  return Array.from(nombres).sort((a, b) => a.localeCompare(b, "es"));
 };

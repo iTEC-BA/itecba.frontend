@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { LayoutModal } from "@components/templates/LayoutModal";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -11,11 +11,12 @@ interface Props {
   onClose: () => void;
   onPublish: (data: TrueketecFormData) => Promise<void>;
   allowedDepts: string[];
-  materiaOptions: string[];
+  subjectsData: { materia: string; nivel: number }[];
 }
 
-export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPublish, allowedDepts, materiaOptions }) => {
+export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPublish, allowedDepts, subjectsData }) => {
   const [form, setForm] = useState<TrueketecFormData>(EMPTY_FORM);
+  const [nivel, setNivel] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -26,32 +27,59 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
       setError(MENSAJES.documentacionIncompleta); return;
     }
     setError(""); setSaving(true);
-    try { await onPublish(form); setForm(EMPTY_FORM); onClose(); } catch (e: any) { setError(e.message || "Error al procesar solicitud."); } finally { setSaving(false); }
+    try { 
+      await onPublish(form); 
+      setForm(EMPTY_FORM); 
+      setNivel("");
+      onClose(); 
+    } catch (e: any) { setError(e.message || "Error al procesar solicitud."); } finally { setSaving(false); }
   };
 
   const deptoOptions = allowedDepts.map(d => ({ value: d, label: d }));
   const turnoOptions = TURNOS.map(t => ({ value: t, label: t }));
   const turnoDeseadoOptions = TURNOS_DESEADOS.map(t => ({ value: t, label: t }));
-  const materiaSelectOptions = materiaOptions.map(m => ({ value: m, label: m }));
+  
+  const nivelOptions = useMemo(() => {
+    const niveles = new Set(subjectsData.map(s => s.nivel).filter(n => n));
+    return Array.from(niveles).sort((a, b) => a - b).map(n => ({ value: String(n), label: `Nivel ${n}` }));
+  }, [subjectsData]);
+
+  const materiaSelectOptions = useMemo(() => {
+    let filtered = subjectsData;
+    if (nivel) filtered = filtered.filter(s => s.nivel === Number(nivel));
+    const nombres = new Set(filtered.map(s => s.materia));
+    return Array.from(nombres).sort((a, b) => a.localeCompare(b, "es")).map(m => ({ value: m, label: m }));
+  }, [subjectsData, nivel]);
+
   const inputCls = "w-full bg-itec-box border border-itec-border rounded px-3 py-2 text-sm focus:border-itec-section-trueketec";
 
   return (
     <LayoutModal isOpen={isOpen} onClose={onClose} title="Registro de Permuta" description="Ingreso de solicitud al sistema de gestión." maxWidth="max-w-lg">
       <div className="flex flex-col gap-6 px-6 py-6">
 
-        <div className="grid grid-cols-1 gap-4 border border-itec-border bg-itec-box rounded-lg p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-itec-border bg-itec-box rounded-lg p-4">
           <div className="flex flex-col gap-1.5 sm:col-span-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Departamento Académico</label>
             <CustomSelect value={form.departamento} onChange={val => set("departamento", val)} options={deptoOptions} placeholder="Seleccionar" className="w-full bg-itec-box border-itec-border py-2 text-sm" />
           </div>
-          <div className="flex flex-col gap-1.5 sm:col-span-2">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Nivel</label>
+            <CustomSelect 
+              value={nivel} 
+              onChange={val => { setNivel(val); set("materia", ""); }} 
+              options={nivelOptions} 
+              placeholder="Seleccionar Nivel" 
+              className="w-full bg-itec-box border-itec-border py-2 text-sm" 
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Materia (tu carrera)</label>
             <CustomSelect
               value={form.materia}
               onChange={val => set("materia", val)}
               options={materiaSelectOptions}
-              placeholder={materiaSelectOptions.length ? "Seleccionar materia" : "Sin materias disponibles"}
-              disabled={materiaSelectOptions.length === 0}
+              placeholder={!nivel ? "Elija Nivel primero" : materiaSelectOptions.length ? "Seleccionar materia" : "Sin materias"}
+              disabled={materiaSelectOptions.length === 0 || !nivel}
               className="w-full bg-itec-box border-itec-border py-2 text-sm"
             />
           </div>
