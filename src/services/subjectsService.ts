@@ -1,15 +1,4 @@
-// src/features/groups/services/subjectsService.ts
-//
-// Reemplaza a materiasService.ts. Apunta al nuevo endpoint /api/subjects
-// (tabla Supabase `subjects`, poblada desde src/data/subject.ts).
-//
-// Cambios de contrato respecto a MateriaRow / materiasService:
-//  - `nivel` es number (antes era string). Los callers que arman querystrings
-//    o comparan contra un <select> deben castear con String(nivel) / Number(nivel).
-//  - se agrega `subject_key` (el id estable usado en subject.ts) y `sigla`.
-//  - se agrega getCorrelativas(subjectKey) para consultar reqCursada/reqAprobada.
-
-import { auth } from '@lib/firebase';
+import { auth } from '@/lib/firebase';
 
 const API = `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/subjects`;
 
@@ -37,16 +26,18 @@ const getToken = async (): Promise<string> => {
 export const subjectsService = {
   getSubjects: async (carrera?: string, nivel?: number | string): Promise<SubjectRow[]> => {
     const params = new URLSearchParams();
-    if (carrera) params.set('carrera', carrera);
-    if (nivel !== undefined && nivel !== '') params.set('nivel', String(nivel));
+    
+    // Evitamos enviar la palabra "undefined" literal en la URL
+    if (carrera && carrera !== 'undefined') params.set('carrera', carrera);
+    if (nivel !== undefined && nivel !== '' && String(nivel) !== 'undefined') params.set('nivel', String(nivel));
+    
     const res = await fetch(`${API}?${params}`);
     if (!res.ok) throw new Error('Error al traer materias');
     return res.json();
   },
 
-  // Búsqueda: por nombre, código o sigla
   searchSubjects: async (q: string): Promise<SubjectRow[]> => {
-    if (!q || q.trim().length < 2) return [];
+    if (!q || q.trim().length < 2 || q === 'undefined') return [];
     const res = await fetch(`${API}/search?q=${encodeURIComponent(q.trim())}`);
     if (!res.ok) return [];
     return res.json();
@@ -64,9 +55,7 @@ export const subjectsService = {
     return res.json();
   },
 
-  createSubject: async (
-    data: Omit<SubjectRow, 'id' | 'subject_key'> & { subjectKey?: string }
-  ): Promise<SubjectRow> => {
+  createSubject: async (data: Omit<SubjectRow, 'id' | 'subject_key'> & { subjectKey?: string }): Promise<SubjectRow> => {
     const token = await getToken();
     const res = await fetch(API, {
       method: 'POST',
@@ -77,10 +66,7 @@ export const subjectsService = {
     return res.json();
   },
 
-  updateSubject: async (
-    id: number,
-    data: Omit<SubjectRow, 'id' | 'subject_key'>
-  ): Promise<SubjectRow> => {
+  updateSubject: async (id: number, data: Omit<SubjectRow, 'id' | 'subject_key'>): Promise<SubjectRow> => {
     const token = await getToken();
     const res = await fetch(`${API}/${id}`, {
       method: 'PUT',
@@ -100,8 +86,3 @@ export const subjectsService = {
     if (!res.ok) throw new Error('Error al eliminar materia');
   },
 };
-
-// Alias de retrocompatibilidad temporal, por si algún import viejo quedó
-// suelto durante la migración. Eliminar una vez confirmado que no se usa.
-/** @deprecated usar subjectsService */
-export const materiasService = subjectsService;

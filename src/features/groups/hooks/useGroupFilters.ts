@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { subjectsService, type SubjectRow } from '../../../lib/subjectsService';
+import { subjectsService, type SubjectRow } from '../../../services/subjectsService';
 import { groupsService, type SearchGroupsResult } from '../services/groupsService';
 
 const EMPTY_RESULT: SearchGroupsResult = {

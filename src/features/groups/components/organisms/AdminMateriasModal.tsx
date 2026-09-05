@@ -12,7 +12,7 @@ import { PaginationBar } from "@components/ui/PaginationBar";
 import { usePagination }  from "@hooks/usePagination";
 import { useToast }       from "@features/notifications/components/atoms/Toast";
 import { LayoutModal } from "@components/templates/LayoutModal";
-import { subjectsService, type SubjectRow } from "../../../../lib/subjectsService";
+import { subjectsService, type SubjectRow } from "../../../../services/subjectsService";
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS }   from "../../types/groups";
 
 interface Props { isOpen: boolean; onClose: () => void }

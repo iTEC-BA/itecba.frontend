@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { useToast } from "@features/notifications/components/atoms/Toast";
-import { subjectsService } from "../../../../lib/subjectsService";
+import { subjectsService } from "../../../../services/subjectsService";
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from "../../types/groups";
 import { LayoutModal } from "@/components/templates/LayoutModal";
 import { Button } from "@/components/ui/Button";

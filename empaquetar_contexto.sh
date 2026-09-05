@@ -50,6 +50,7 @@ echo "3/5 Agregando Componentes universales"
 agregar_carpeta "src/components/"
 agregar_carpeta "src/hooks/"
 agregar_carpeta "src/lib/"
+agregar_carpeta "src/services/"
 agregar_carpeta "src/data/"
 
 echo "4/5 Agregando Feature globales"

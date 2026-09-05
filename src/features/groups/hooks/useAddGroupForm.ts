@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { materiasService } from '../services/materiasService';
+import { subjectsService } from '@/services/subjectsService';
 
 export const useAddGroupForm = () => {
   const [form, setForm] = useState({
@@ -12,18 +12,22 @@ export const useAddGroupForm = () => {
     if (!form.carrera || !form.nivel) { setSupabaseMaterias([]); return; }
     setLoadingMaterias(true);
     
-    const peticiones = [materiasService.getMaterias(form.carrera, form.nivel)];
+    // Cambiado de materiasService a subjectsService
+    const peticiones = [subjectsService.getSubjects(form.carrera, form.nivel)];
     
     if (form.carrera !== 'homogeneas' && form.carrera !== 'ingreso' && (form.nivel === '1' || form.nivel === '2')) {
-      peticiones.push(materiasService.getMaterias('homogeneas', form.nivel));
+      peticiones.push(subjectsService.getSubjects('homogeneas', form.nivel));
     }
 
     Promise.all(peticiones)
       .then(resultados => {
-        const combinadas = resultados.flat().map(r => r.materia);
+        const combinadas = resultados.flat().map((r: any) => r.materia);
         setSupabaseMaterias(combinadas);
       })
-      .catch(() => setSupabaseMaterias([]))
+      .catch((err) => {
+        console.error("Error al cargar materias:", err);
+        setSupabaseMaterias([]);
+      })
       .finally(() => setLoadingMaterias(false));
   }, [form.carrera, form.nivel]);
 
