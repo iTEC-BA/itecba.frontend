@@ -27,10 +27,12 @@ export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
   return (
     <div className="flex items-start gap-3 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
       {/* Avatar asistente */}
-      <div className="w-8 h-8 rounded-xl bg-white/8 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/60">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-        </svg>
+      <div className="w-8 h-8 rounded-xl bg-white/2 border border-white/5 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+        <img
+          src="/mascot/TEC-respuesta.png"
+          alt="Asistente TEC de ITEC.ba"
+          className="w-full h-full object-cover"
+        />
       </div>
 
       <div className="flex-1 min-w-0">

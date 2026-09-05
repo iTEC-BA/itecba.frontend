@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { materiasService, type MateriaRow } from '../services/materiasService';
+import { subjectsService, type SubjectRow } from '../../../lib/subjectsService';
 import { groupsService, type SearchGroupsResult } from '../services/groupsService';
 
 const EMPTY_RESULT: SearchGroupsResult = {
@@ -18,7 +18,7 @@ export const useGroupSearch = () => {
   const [comision, setComision] = useState('');
 
   // Materias del catálogo (Supabase)
-  const [supabaseMaterias, setSupabaseMaterias] = useState<MateriaRow[]>([]);
+  const [supabaseMaterias, setSupabaseMaterias] = useState<SubjectRow[]>([]);
 
   // Resultados paginados
   const [result,      setResult]      = useState<SearchGroupsResult>(EMPTY_RESULT);
@@ -26,17 +26,18 @@ export const useGroupSearch = () => {
 
   // ── Carga de materias al cambiar carrera o nivel ──────────
   const loadMaterias = useCallback(async (c: string, n: string) => {
-    if (!c || !n) { setSupabaseMaterias([]); return; }
-    const reqs = [materiasService.getMaterias(c, n)];
-    const isEngineering = c !== 'homogeneas' && c !== 'ingreso';
-    if (isEngineering && (n === '1' || n === '2')) {
-      reqs.push(materiasService.getMaterias('homogeneas', n));
-    }
-    try {
-      const rows = (await Promise.all(reqs)).flat();
-      setSupabaseMaterias(rows);
-    } catch { setSupabaseMaterias([]); }
-  }, []);
+  if (!c || !n) { setSupabaseMaterias([]); return; }
+  const reqs = [subjectsService.getSubjects(c, Number(n))];
+  const isEngineering = c !== 'homogeneas' && c !== 'ingreso';
+  if (isEngineering && (n === '1' || n === '2')) {
+    reqs.push(subjectsService.getSubjects('homogeneas', Number(n)));
+  }
+  try {
+    const rows = (await Promise.all(reqs)).flat();
+    setSupabaseMaterias(rows);
+  } catch { setSupabaseMaterias([]); }
+}, []);
+
 
   useEffect(() => {
     loadMaterias(carrera, nivel);

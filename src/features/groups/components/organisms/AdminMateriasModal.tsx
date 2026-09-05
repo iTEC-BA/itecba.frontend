@@ -12,7 +12,7 @@ import { PaginationBar } from "@components/ui/PaginationBar";
 import { usePagination }  from "@hooks/usePagination";
 import { useToast }       from "@features/notifications/components/atoms/Toast";
 import { LayoutModal } from "@components/templates/LayoutModal";
-import { materiasService, type MateriaRow } from "../../services/materiasService";
+import { subjectsService, type SubjectRow } from "../../../../lib/subjectsService";
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS }   from "../../types/groups";
 
 interface Props { isOpen: boolean; onClose: () => void }
@@ -28,7 +28,7 @@ interface MateriaFormValue { carrera: string; nivel: string; materia: string; co
 const EMPTY_FORM: MateriaFormValue = { carrera: "", nivel: "", materia: "", codigo: "" };
 
 interface MateriaFormModalProps {
-  editing:  MateriaRow | null;
+  editing:  SubjectRow | null;
   onClose:  () => void;
   onSaved:  () => void;
 }
@@ -37,7 +37,7 @@ const MateriaFormModal: React.FC<MateriaFormModalProps> = ({ editing, onClose, o
   const { toast } = useToast();
   const [form, setForm]     = useState<MateriaFormValue>(
     editing
-      ? { carrera: editing.carrera, nivel: editing.nivel, materia: editing.materia, codigo: editing.codigo ?? "" }
+      ? { carrera: editing.carrera, nivel: String(editing.nivel), materia: editing.materia, codigo: editing.codigo ?? "" }
       : EMPTY_FORM,
   );
   const [saving,    setSaving]    = useState(false);
@@ -63,15 +63,16 @@ const MateriaFormModal: React.FC<MateriaFormModalProps> = ({ editing, onClose, o
     try {
       const payload = {
         carrera: form.carrera,
-        nivel:   form.nivel,
+        nivel:   Number(form.nivel),
         materia: form.materia.trim(),
-        codigo:  form.codigo.trim() || undefined,
+        codigo:  form.codigo.trim() || null,
+        sigla:   null,
       };
       if (editing) {
-        await materiasService.updateMateria(editing.id, payload);
+        await subjectsService.updateSubject(Number(editing.id), payload);
         toast.success(`"${payload.materia}" actualizada`);
       } else {
-        await materiasService.createMateria(payload);
+        await subjectsService.createSubject(payload);
         toast.success(`"${payload.materia}" agregada al catálogo`);
       }
       onSaved();
@@ -196,7 +197,7 @@ const MateriasToolbar: React.FC<ToolbarProps> = ({
 
 // ── MateriaListItem ────────────────────────────────────────────────────────────
 
-interface MateriaListItemProps { materia: MateriaRow; onEdit: (m: MateriaRow) => void; onDelete: (m: MateriaRow) => void }
+interface MateriaListItemProps { materia: SubjectRow; onEdit: (m: SubjectRow) => void; onDelete: (m: SubjectRow) => void }
 const MateriaListItem: React.FC<MateriaListItemProps> = ({ materia: m, onEdit, onDelete }) => (
   <div className="bg-itec-bg border border-white/7 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-white/12 transition-colors group">
     {m.codigo && (
@@ -209,7 +210,7 @@ const MateriaListItem: React.FC<MateriaListItemProps> = ({ materia: m, onEdit, o
       <p className="text-[11px] text-itec-gray">
         {CARRERAS_OPTIONS.find((o) => o.value === m.carrera)?.label ?? m.carrera}
         {" · "}
-        {NIVEL_OPTIONS.find((o) => o.value === m.nivel)?.label ?? `Nivel ${m.nivel}`}
+        {NIVEL_OPTIONS.find((o) => String(o.value) === String(m.nivel))?.label ?? `Nivel ${m.nivel}`}
       </p>
     </div>
     <div className="flex items-center gap-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
@@ -229,19 +230,19 @@ const PAGE_SIZE = 10;
 
 export const AdminMateriasModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { toast } = useToast();
-  const [materias,      setMaterias]      = useState<MateriaRow[]>([]);
+  const [materias,      setMaterias]      = useState<SubjectRow[]>([]);
   const [isLoading,     setIsLoading]     = useState(false);
   const [loadError,     setLoadError]     = useState("");
   const [searchQ,       setSearchQ]       = useState("");
   const [filterCarrera, setFilterCarrera] = useState("");
   const [filterNivel,   setFilterNivel]   = useState("");
-  const [formTarget,    setFormTarget]    = useState<MateriaRow | null | undefined>(null);
+  const [formTarget,    setFormTarget]    = useState<SubjectRow | null | undefined>(null);
   const isFormOpen = formTarget !== null;
 
   const fetchMaterias = useCallback(async () => {
     setIsLoading(true); setLoadError("");
     try {
-      const data = await materiasService.getMaterias(filterCarrera || undefined, filterNivel || undefined);
+      const data = await subjectsService.getSubjects(filterCarrera || undefined, filterNivel || undefined);
       setMaterias(data);
     } catch { setLoadError("Error al cargar materias."); }
     finally { setIsLoading(false); }
@@ -266,10 +267,10 @@ export const AdminMateriasModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { paged, page, setPage, totalPages, reset: resetPage } = usePagination(displayed, PAGE_SIZE);
   useEffect(() => { resetPage(); }, [searchQ, filterCarrera, filterNivel, resetPage]);
 
-  const handleDelete = async (m: MateriaRow) => {
+  const handleDelete = async (m: SubjectRow) => {
     if (!window.confirm(`¿Eliminar "${m.materia}"? Esta acción no se puede deshacer.`)) return;
     try {
-      await materiasService.deleteMateria(m.id);
+      await subjectsService.deleteSubject(Number(m.id));
       toast.success(`"${m.materia}" eliminada`);
       fetchMaterias();
     } catch { toast.error("No se pudo eliminar la materia."); }

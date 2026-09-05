@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { useToast } from "@features/notifications/components/atoms/Toast";
-import { materiasService } from "../../services/materiasService";
+import { subjectsService } from "../../../../lib/subjectsService";
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from "../../types/groups";
 import { LayoutModal } from "@/components/templates/LayoutModal";
 import { Button } from "@/components/ui/Button";
@@ -19,14 +19,24 @@ const FIELD_CLS =
   "bg-itec-bg border border-white/10 text-itec-text text-sm px-3 py-2.5 rounded-xl outline-none focus:border-itec-groups/50 placeholder:text-itec-gray/50 transition-colors w-full";
 
 export const AddMateriaInlineModal: React.FC<Props> = ({
-  isOpen, initialCarrera, initialNivel, onClose, onCreated,
+  isOpen,
+  initialCarrera,
+  initialNivel,
+  onClose,
+  onCreated,
 }) => {
   const { toast } = useToast();
-  const [form, setForm] = useState({ carrera: initialCarrera, nivel: initialNivel, materia: "", codigo: "" });
+  const [form, setForm] = useState({
+    carrera: initialCarrera,
+    nivel: initialNivel,
+    materia: "",
+    codigo: "",
+  });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const field = (k: keyof typeof form) =>
+  const field =
+    (k: keyof typeof form) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
       setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -38,12 +48,14 @@ export const AddMateriaInlineModal: React.FC<Props> = ({
     setSaving(true);
     setError("");
     try {
-      const created = await materiasService.createMateria({
+      const created = await subjectsService.createSubject({
         carrera: form.carrera,
-        nivel: form.nivel,
+        nivel: Number(form.nivel),
         materia: form.materia.trim(),
-        codigo: form.codigo.trim() || undefined,
+        codigo: form.codigo.trim() || null,
+        sigla: null,
       });
+
       toast.success(`"${created.materia}" agregada al catálogo`);
       onCreated(created.materia);
       onClose();
@@ -67,8 +79,14 @@ export const AddMateriaInlineModal: React.FC<Props> = ({
       <div className="p-5 space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold text-itec-gray uppercase tracking-wider">Carrera *</span>
-            <select className={FIELD_CLS} value={form.carrera} onChange={field("carrera")}>
+            <span className="text-[10px] font-bold text-itec-gray uppercase tracking-wider">
+              Carrera *
+            </span>
+            <select
+              className={FIELD_CLS}
+              value={form.carrera}
+              onChange={field("carrera")}
+            >
               <option value="">Elegir...</option>
               {CARRERAS_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -78,8 +96,14 @@ export const AddMateriaInlineModal: React.FC<Props> = ({
             </select>
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold text-itec-gray uppercase tracking-wider">Nivel *</span>
-            <select className={FIELD_CLS} value={form.nivel} onChange={field("nivel")}>
+            <span className="text-[10px] font-bold text-itec-gray uppercase tracking-wider">
+              Nivel *
+            </span>
+            <select
+              className={FIELD_CLS}
+              value={form.nivel}
+              onChange={field("nivel")}
+            >
               <option value="">Elegir...</option>
               {NIVEL_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -90,7 +114,9 @@ export const AddMateriaInlineModal: React.FC<Props> = ({
           </label>
         </div>
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold text-itec-gray uppercase tracking-wider">Nombre *</span>
+          <span className="text-[10px] font-bold text-itec-gray uppercase tracking-wider">
+            Nombre *
+          </span>
           <input
             className={FIELD_CLS}
             placeholder="Ej: Análisis Matemático I"
@@ -102,7 +128,10 @@ export const AddMateriaInlineModal: React.FC<Props> = ({
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-[10px] font-bold text-itec-gray uppercase tracking-wider">
-            Código <span className="normal-case font-normal text-itec-gray/50">(opcional)</span>
+            Código{" "}
+            <span className="normal-case font-normal text-itec-gray/50">
+              (opcional)
+            </span>
           </span>
           <input
             className={`${FIELD_CLS} font-mono`}

@@ -13,11 +13,11 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 pb-4 pt-8 animate-in fade-in duration-300">
       {/* Logo / Avatar IA */}
-      <div className="relative mb-8">
+      <div className="relative mb-4">
         <div className="relative w-30 h-30 rounded-xl flex items-center justify-center">
           <img src="mascot/TEC-Notebook.webp" alt="" className="absolute inset-0 z-10 w-full h-full object-contain"/>
         </div>
-        <div className="absolute z-20 -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+        <div className="absolute z-20 bottom-0 right-5 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
       </div>
 
       <h2 className="text-xl font-bold text-white tracking-tight mb-1">Asistente ITEC</h2>
