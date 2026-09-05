@@ -24,18 +24,18 @@ export const PageHeader: React.FC<Props> = ({
   // Diccionario centralizado: Más limpio que un switch gigante y fácil de mantener.
   // Colores sutiles: fondos translúcidos (/10), bordes suaves (/20) y sombras elegantes (15px)
   const themeStyles: Record<HeaderColorTheme, { box: string; glow: string }> = {
-    purple:  { box: 'bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.15)]', glow: 'rgba(168,85,247,0.4)' },
-    orange:  { box: 'bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.15)]', glow: 'rgba(249,115,22,0.4)' },
-    blue:    { box: 'bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.15)]',   glow: 'rgba(59,130,246,0.4)' },
-    green:   { box: 'bg-green-500/10 text-green-400 border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.15)]',  glow: 'rgba(34,197,94,0.4)' },
-    yellow:  { box: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.15)]',  glow: 'rgba(234,179,8,0.4)' },
-    teal:    { box: 'bg-teal-500/10 text-teal-400 border-teal-500/20 shadow-[0_0_15px_rgba(20,184,166,0.15)]',   glow: 'rgba(20,184,166,0.4)' },
-    red:     { box: 'bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.15)]',     glow: 'rgba(239,68,68,0.4)' },
-    pink:    { box: 'bg-pink-500/10 text-pink-400 border-pink-500/20 shadow-[0_0_15px_rgba(236,72,153,0.15)]',    glow: 'rgba(236,72,153,0.4)' },
-    indigo:  { box: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)]',  glow: 'rgba(99,102,241,0.4)' },
-    cyan:    { box: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.15)]',     glow: 'rgba(6,182,212,0.4)' },
-    emerald: { box: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]', glow: 'rgba(16,185,129,0.4)' },
-    slate:   { box: 'bg-slate-500/10 text-slate-400 border-slate-500/20 shadow-[0_0_15px_rgba(100,116,139,0.15)]',   glow: 'rgba(100,116,139,0.4)' },
+    purple:  { box: 'bg-purple-500/10 text-purple-400 border-purple-500/20 ', glow: 'rgba(168,85,247,0.4)' },
+    orange:  { box: 'bg-orange-500/10 text-orange-400 border-orange-500/20 ', glow: 'rgba(249,115,22,0.4)' },
+    blue:    { box: 'bg-blue-500/10 text-blue-400 border-blue-500/20 ',   glow: 'rgba(59,130,246,0.4)' },
+    green:   { box: 'bg-green-500/10 text-green-400 border-green-500/20 ',  glow: 'rgba(34,197,94,0.4)' },
+    yellow:  { box: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 ',  glow: 'rgba(234,179,8,0.4)' },
+    teal:    { box: 'bg-teal-500/10 text-teal-400 border-teal-500/20 ',   glow: 'rgba(20,184,166,0.4)' },
+    red:     { box: 'bg-red-500/10 text-red-400 border-red-500/20 ',     glow: 'rgba(239,68,68,0.4)' },
+    pink:    { box: 'bg-pink-500/10 text-pink-400 border-pink-500/20 ',    glow: 'rgba(236,72,153,0.4)' },
+    indigo:  { box: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 ',  glow: 'rgba(99,102,241,0.4)' },
+    cyan:    { box: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 ',     glow: 'rgba(6,182,212,0.4)' },
+    emerald: { box: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 ', glow: 'rgba(16,185,129,0.4)' },
+    slate:   { box: 'bg-slate-500/10 text-slate-400 border-slate-500/20 ',   glow: 'rgba(100,116,139,0.4)' },
   };
 
   const currentStyle = themeStyles[colorTheme] || themeStyles.slate;
@@ -52,7 +52,7 @@ export const PageHeader: React.FC<Props> = ({
               alt={title} 
               // Tamaños reducidos y lógicos para un encabezado
               className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0 mt-1" 
-              style={{ filter: `drop-shadow(0px 4px 12px ${currentStyle.glow})` }}
+              
             />
           ) : (
             <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center border shrink-0 mt-1 transition-all ${currentStyle.box}`}>

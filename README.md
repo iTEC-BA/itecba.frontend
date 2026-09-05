@@ -159,3 +159,10 @@ SubjectDef[]  → materias, códigos, correlatividades de esa carrera
 Cualquier feature que necesite "materias de la carrera del alumno" o "departamento
 del alumno" debe pasar por esta cadena.
 
+
+### 1.ter Simulación de Profundidad (Estricto Flat Design)
+Queda **completamente prohibido** el uso de `shadow-*`, `drop-shadow-*` o `backdrop-blur-*` en cualquier componente (incluyendo Modales, Toasts, Loaders y Banners). 
+Para separar visualmente elementos superpuestos, se debe utilizar la superposición de colores de fondo combinada con bordes sutiles:
+* Elemento base: `bg-itec-box border border-itec-border`
+* Elemento superpuesto (Modal/Toast): `bg-itec-card border border-white/10`
+* Ningún componente de la carpeta `@components/ui/` o `@components/organisms/` tiene excepciones a esta regla.
