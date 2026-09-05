@@ -33,4 +33,10 @@ export const profileService = {
       throw new Error((err as any).message ?? "Error al actualizar perfil");
     }
   },
+
+  async getDbCareers(): Promise<string[]> {
+    const res = await fetch(`${BASE_URL}/subjects/carreras`);
+    if (!res.ok) throw new Error("Error al obtener carreras de la base de datos");
+    return res.json();
+  }
 };

@@ -1,23 +1,28 @@
 import React, { useState, useRef, useEffect } from "react";
-import { CARRERAS_LIST } from "@features/profile/data/carreras";
 import { cn } from "@/lib/utils";
+import { profileService } from "@features/profile/services/profileService";
+
 export interface CareerOption {
   code: string;
   name: string;
   colorClass?: string;
 }
+
 interface CareerSelectorProps {
   value: CareerOption[];
   onChange: (careers: CareerOption[]) => void;
   max?: number;
   disabled?: boolean;
 }
+
 export const CareerSelector: React.FC<CareerSelectorProps> = ({
-  value, onChange, max = 2, disabled = false,
+  value, onChange, max = 5, disabled = false,
 }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [dbCareers, setDbCareers] = useState<CareerOption[]>([]);
   const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -25,9 +30,23 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
-  const filtered = CARRERAS_LIST.filter((c) =>
+
+  useEffect(() => {
+    profileService.getDbCareers()
+      .then(carreras => {
+        const mapped = carreras.map(c => ({ 
+          code: c.substring(0, 3).toUpperCase(), 
+          name: c 
+        }));
+        setDbCareers(mapped);
+      })
+      .catch(console.error);
+  }, []);
+
+  const filtered = dbCareers.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
+
   const toggle = (career: CareerOption) => {
     if (value.find((v) => v.code === career.code)) {
       onChange(value.filter((v) => v.code !== career.code));
@@ -35,7 +54,9 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
       onChange([...value, career]);
     }
   };
+
   const isSelected = (code: string) => value.some((v) => v.code === code);
+
   return (
     <div ref={ref} className="relative">
       <div
@@ -57,7 +78,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
             key={c.code}
             className={cn(
               "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border border-itec-border",
-              c.colorClass ?? "bg-itec-box  text-itec-text"
+              c.colorClass ?? "bg-itec-box text-itec-text"
             )}
           >
             {c.name}

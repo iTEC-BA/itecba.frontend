@@ -20,57 +20,21 @@ const SIZE_MAP = {
   "2xl": { ring: "w-32 h-32 text-4xl", dot: "w-5 h-5 border-[3px]" },
 };
 
-const getInitials = (name: string) =>
-  name
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
+const getInitials = (name: string) => name.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("");
 
-export const AvatarRing: React.FC<AvatarRingProps> = ({
-  src,
-  name,
-  size = "md",
-  glow = false,
-  online,
-  className,
-  ring,
-}) => {
+export const AvatarRing: React.FC<AvatarRingProps> = ({ src, name, size = "md", online, className, ring }) => {
   const s = SIZE_MAP[size];
   return (
     <div className={cn("relative shrink-0", className)}>
-      {glow && (
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-itec-sky/25 via-itec-purple/15 to-itec-accent/10 blur-xl scale-105 opacity-60" />
-      )}
-      <div
-        className={cn(
-          "relative overflow-hidden rounded-full flex items-center justify-center font-bold text-itec-muted",
-          "bg-gradient-to-br from-itec-box to-itec-surface border border-itec-border shadow-[0_16px_30px_rgba(0,0,0,0.3)]",
-          ring,
-          s.ring
-        )}
-      >
+      <div className={cn("relative overflow-hidden rounded-full flex items-center justify-center font-bold text-itec-muted bg-itec-surface border border-itec-border", ring, s.ring)}>
         {src ? (
-          <img
-            src={src}
-            alt={name}
-            className="h-full w-full object-cover"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
-          />
+          <img src={src} alt={name} className="h-full w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         ) : (
           <span className="select-none tracking-tight">{getInitials(name)}</span>
         )}
       </div>
       {online !== undefined && (
-        <span
-          className={cn(
-            "absolute bottom-0 right-0 rounded-full border-itec-box shadow-[0_0_0_4px_rgba(0,0,0,0.12)]",
-            s.dot,
-            online ? "bg-itec-emerald" : "bg-itec-gray"
-          )}
-        />
+        <span className={cn("absolute bottom-0 right-0 rounded-full border-itec-box", s.dot, online ? "bg-itec-emerald" : "bg-itec-gray")} />
       )}
     </div>
   );
