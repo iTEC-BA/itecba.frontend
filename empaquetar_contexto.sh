@@ -41,7 +41,7 @@ agregar_archivo() {
   fi
 }
 
-# Función para volcar una carpeta completa (Recursiva) con su contenido
+# Función para volcar una carpeta completa (Recursiva) con su contenido (solo código)
 agregar_carpeta() {
   local dir=$1
   if [ -d "$dir" ]; then
@@ -59,9 +59,11 @@ agregar_carpeta_nombres() {
     echo "==================================================" >> "$OUTPUT"
     echo "📂 ESTRUCTURA (Solo nombres): $dir" >> "$OUTPUT"
     echo "==================================================" >> "$OUTPUT"
-    # Busca e imprime solo la ruta de los archivos, excluyendo las carpetas ignoradas
-    find "$dir" "${EXCLUDES[@]}" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.json" \) -print >> "$OUTPUT"
+    # Se quitó el filtro de extensión para que atrape .png, .webp, .svg, etc.
+    find "$dir" "${EXCLUDES[@]}" -type f -print >> "$OUTPUT"
     echo -e "\n\n" >> "$OUTPUT"
+  else
+    echo "⚠️ Directorio no encontrado: $dir"
   fi
 }
 
@@ -77,7 +79,7 @@ agregar_archivo "src/index.css"
 agregar_archivo "./tsconfig.app.json"
 
 echo "3/5 Agregando Componentes universales"
-# Ejemplo: usar agregar_carpeta_nombres para no saturar el contexto con todo UI
+# Ruta corregida según tu captura de pantalla
 agregar_carpeta_nombres "public/mascot/"
 agregar_carpeta "src/hooks/"
 agregar_carpeta "src/lib/"
@@ -89,11 +91,11 @@ agregar_carpeta "src/features/notifications/"
 
 echo "5/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
-agregar_carpeta "src/features/profile"
-agregar_archivo "src/pages/profilePage.tsx"
+# agregar_carpeta "src/features/profile"
+# agregar_archivo "src/pages/profilePage.tsx"
+agregar_archivo "src/pages/ErrorPage.tsx"
 
 # Agregar la página (View) principal del feature
-# La sintaxis ${FEATURE_NAME^} pone la primera letra en mayúscula
 PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"
 if [ -f "$PAGE_FILE" ]; then
   agregar_archivo "$PAGE_FILE"

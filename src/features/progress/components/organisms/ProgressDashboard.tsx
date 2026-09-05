@@ -132,10 +132,10 @@ const DashboardContent: React.FC<Props> = ({ data, onUpdateStatus, onSwitchCaree
                 <button 
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)} 
-                  className={`flex flex-col items-start p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer ${isActive ? `${tab.bg} ${tab.border} scale-[1.02] shadow-sm` : 'bg-itec-box border-itec-border opacity-60 hover:opacity-100 hover:bg-white/5'}`}
+                  className={`flex flex-col items-start p-4 rounded-2xl border text-center transition-all duration-300 cursor-pointer ${isActive ? `${tab.bg} ${tab.border} scale-[1.02] shadow-sm` : 'bg-itec-box border-itec-border opacity-60 hover:opacity-100 hover:bg-white/5'}`}
                 >
-                  <span className={`text-2xl sm:text-3xl font-bold tracking-tight ${tab.color}`}>{count}</span>
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-itec-text mt-2">{tab.title}</span>
+                  <span className={`text-2xl sm:text-3xl font-bold ${tab.color}`}>{count}</span>
+                  <span className="text-[11px] font-bold uppercase text-itec-text mt-2">{tab.title}</span>
                 </button>
               )
             })}
