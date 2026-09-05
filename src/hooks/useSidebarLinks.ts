@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { usePageAccess } from "@features/pageAccess/context/PageAccessContext";
 import { 
   Home, MessageCircle, MapPin, 
@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 export const useSidebarLinks = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useAuthStore();
   const { getState } = usePageAccess();
 
   // Aplica el estado configurado desde /admin/paginas a cada link:

@@ -8,7 +8,7 @@ import { ComposeBox }      from '../atoms/ComposeBox';
 import { LayoutModal }     from '@components/templates/LayoutModal';
 import { Button }          from '@/components/ui/Button';
 import type { ForumPost }  from '../../types/forum';
-import { useAuth }         from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 
 const timeAgo = (iso: string): string => {
   const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
@@ -32,7 +32,7 @@ interface Props {
 export const ThreadView: React.FC<Props> = ({
   post, replies, loading, onClose, onVote, onRepost, onDelete, onReply,
 }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
   const [replying,     setReplying]     = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
   const [deleting,     setDeleting]     = useState(false);

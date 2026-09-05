@@ -1,3 +1,4 @@
+import { usePointsStore } from '@/stores/pointsStore';
 // src/features/points/hooks/usePointsGrant.ts
 //
 // Hook central de gamificación. Cualquier componente lo importa y llama a:
@@ -12,13 +13,14 @@
 //  5. Si el backend rechaza → revierte el update optimista.
 
 import { useCallback } from "react";
-import { useAuth }     from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { getAuth }     from "firebase/auth";
 import { getActivityFromCache, grantPointsAPI, getActivities } from "../services/points.service";
 import type { GrantResult } from "../points.types";
 
 export const usePointsGrant = () => {
-  const { isAuthenticated, addPoints } = useAuth();
+  const { isAuthenticated } = useAuthStore();
+  const { addPoints } = usePointsStore();;
 
   // Pre-calentamos la caché en segundo plano si está vacía
   // (sin bloquear — fire & forget)

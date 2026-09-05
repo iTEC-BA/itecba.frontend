@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { MainLayout }       from "@components/templates/MainLayout";
 import { PageHeader }       from "@components/ui/PageHeader";
 import { CardSkeletonGrid } from "@components/ui/skeletons/CardSkeleton";
-import { useAuth }          from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { useAulas, invalidateAulasCache } from "@features/aulas/hooks/useAulas";
 import { AulaCard }         from "@features/aulas/components/molecules/AulaCard";
 import { AulaFormModal }    from "@features/aulas/components/organisms/AulaFormModal";
@@ -33,7 +33,7 @@ const FUNCIONES_OPTS = [
 ];
 
 export const AulasPage: React.FC = () => {
-  const { isAdmin }    = useAuth();
+  const { isAdmin }    = useAuthStore();
   const { filtered, loading, error, filters, setFilters, reload } = useAulas();
 
   const [showForm,   setShowForm]   = useState(false);

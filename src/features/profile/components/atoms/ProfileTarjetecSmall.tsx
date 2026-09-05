@@ -2,11 +2,11 @@
 // Versión compacta de la TarjeTEC para el sidebar lateral.
 // Usada por: src/components/organisms/Sidebar.tsx
 import React from "react";
-import { useAuth, type User } from "@context/AuthContext";
+import { useAuthStore, type User } from '@/stores/authStore';
 import SvgTarjeTec from "@/components/ui/icons/SvgTarjeTec";
 
 export const ProfileTarjetecSmall: React.FC<{ user: User }> = ({ user }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
 
   const formattedLegajo = user.legajo
     ? user.legajo.replace(/(.{7})(?!$)/g, "$1 ")

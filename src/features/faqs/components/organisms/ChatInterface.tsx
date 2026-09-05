@@ -7,7 +7,7 @@ import { ChatInput } from "../molecules/ChatInput";
 import { FAQSuggestions } from "./FAQSuggestions";
 import { FAQAdminPanel } from "./FAQAdminPanel";
 import { AIBadge } from "../atoms/AIBadge";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import Logo from "@assets/logo.png";
 import { ArrowLeft, RotateCcw, Settings } from "lucide-react";
 
@@ -26,7 +26,7 @@ export const ChatInterface: React.FC = () => {
     AI_COST,
   } = useChatbot();
   const { topFaqs, loading: faqsLoading } = useFAQs();
-  const { isAdmin, isAuthenticated } = useAuth();
+  const { isAdmin, isAuthenticated } = useAuthStore();
   const [adminOpen, setAdminOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasConversation = messages.length > 1;

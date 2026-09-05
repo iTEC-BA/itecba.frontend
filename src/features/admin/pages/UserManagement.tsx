@@ -1,12 +1,12 @@
 import React from "react";
 import { useAdminData } from "../hooks/useAdminData";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { UserSearchBox } from "../components/molecules/UserSearchBox";
 import { AdminTable } from "../components/organisms/AdminTable";
 import { Icons } from "@components/ui/icons/Icons";
 
 export const UserManagement: React.FC = () => {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser } = useAuthStore();
   const { admins, isLoadingAdmins, searchUserMutation, toggleRoleMutation } = useAdminData();
 
   return (

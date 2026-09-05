@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { useMultiCareer } from "@features/profile/hooks/useMultiCareer";
 import { AvatarRing } from "@features/profile/components/atoms/AvatarRing";
 import { PointsBadgeProfile } from "@features/profile/components/atoms/PointsBadgeProfile";
@@ -10,7 +10,7 @@ import { Icons } from "@/components/ui/icons/Icons";
 import { Edit3, LogOut, MapPin, Mail, Phone, ExternalLink, BookOpen } from "lucide-react";
 
 export const ProfileHeader: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const { careers, isDoubleMajor, startYear } = useMultiCareer();
   const [editing, setEditing] = useState(false);
 

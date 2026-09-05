@@ -1,6 +1,6 @@
 import React from "react";
 import { usePageAccessState, usePageAccess } from "../context/PageAccessContext";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { ComingSoonPage } from "./ComingSoonPage";
 import { DisabledPage } from "./DisabledPage";
 
@@ -10,7 +10,7 @@ interface PageGateProps {
 }
 
 export const PageGate: React.FC<PageGateProps> = ({ path, children }) => {
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuthStore();
   const { loading } = usePageAccess();
   const state = usePageAccessState(path);
 

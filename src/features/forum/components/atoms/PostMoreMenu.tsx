@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { MoreHorizontal, Trash2, Share2, Flag } from 'lucide-react';
-import { useAuth } from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 
 interface Props {
   postId:   number;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const PostMoreMenu: React.FC<Props> = ({ postId, isAuthor, onDelete, onShare }) => {
-  const { isAdmin }           = useAuth();
+  const { isAdmin }           = useAuthStore();
   const [open, setOpen]       = useState(false);
   const menuRef               = useRef<HTMLDivElement>(null);
 

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Send }       from 'lucide-react';
 import { AnonAvatar } from './AnonAvatar';
 import { Button }     from '@/components/ui/Button';
-import { useAuth }    from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 
 const MAX_CHARS = 280;
 const WARN_THRESHOLD = 240;
@@ -50,7 +50,7 @@ interface Props {
 }
 
 export const ComposeBox: React.FC<Props> = ({ onSubmit, compact = false }) => {
-  const { user }                  = useAuth();
+  const { user }                  = useAuthStore();
   const [body,    setBody]        = useState('');
   const [loading, setLoading]     = useState(false);
   const [error,   setError]       = useState<string | null>(null);

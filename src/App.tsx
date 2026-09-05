@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { getActivities } from "@features/points/services/points.service";
-import { AuthProvider } from "@context/AuthContext";
+import { initAuthListener } from '@/stores/authStore';
 import { PageAccessProvider } from "@features/pageAccess/context/PageAccessContext";
 import { ToastProvider } from "./features/notifications/components/atoms/Toast";
 import { PermissionPopup } from "./features/notifications/components/organisms/PermissionPopup";
@@ -19,16 +19,13 @@ if (GA_MEASUREMENT_ID) {
 export const App: React.FC = () => {
   useEffect(() => {
     getActivities().catch(() => {});
+    initAuthListener(); // Zustand inicia la escucha de sesión aquí
 
     const requestInitialPermissions = async () => {
       try {
-        // 1. Solicitud de Notificaciones Push
         if ("Notification" in window && Notification.permission === "default") {
-          // Nota: Safari y Chrome pueden ignorar esta línea si no hay interacción previa.
           await Notification.requestPermission();
         }
-
-        // 2. Solicitud de Persistencia de Almacenamiento (Caché/Archivos PWA)
         if (navigator.storage && navigator.storage.persist) {
           const isPersisted = await navigator.storage.persist();
           console.log("Persistencia de datos otorgada:", isPersisted);
@@ -42,19 +39,17 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <AuthProvider>
-      <PageAccessProvider>
-        <ToastProvider>
-          <BrowserRouter>
-            <AnalyticsTracker />
-            <AppRoutes />
-          </BrowserRouter>
-          <PermissionPopup />
-          <BannerInstallPWA />
-          <UpdatePWAToast />
-        </ToastProvider>
-      </PageAccessProvider>
-    </AuthProvider>
+    <PageAccessProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <AnalyticsTracker />
+          <AppRoutes />
+        </BrowserRouter>
+        <PermissionPopup />
+        <BannerInstallPWA />
+        <UpdatePWAToast />
+      </ToastProvider>
+    </PageAccessProvider>
   );
 };
 

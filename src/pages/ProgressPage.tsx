@@ -4,7 +4,7 @@
 // REGLA: sin botones HTML crudos ni modales a mano.
 import React from 'react';
 
-import { useAuth }           from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 import { usePageTitle }      from '@hooks/usePageTitle';
 import { MainLayout }        from '@components/templates/MainLayout';
 import LoadingState          from '@components/ui/LoadingState';
@@ -14,7 +14,7 @@ import { Button }            from '@components/ui/Button';
 
 export const ProgressPage: React.FC = () => {
   usePageTitle('Progreso de Carrera');
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const {
     data,
     isLoading,

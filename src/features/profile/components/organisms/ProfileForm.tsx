@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { auth } from "@/lib/firebase";
 import { profileService } from "@features/profile/services/profileService";
 import { Input } from "@/components/ui/Input";
@@ -7,7 +7,7 @@ import { Button } from "@components/ui/Button";
 import { User, CreditCard, Phone, BookOpen, GraduationCap, ShieldCheck } from "lucide-react";
 
 export const ProfileForm: React.FC = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile } = useAuthStore();
 
   const [formData, setFormData] = useState({
     name:      "",

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 
 export const SidebarBadge = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -49,7 +49,7 @@ interface SidebarProtectProps {
 }
 
 export const SidebarProtect = ({ children, requireAuth, requireAdmin }: SidebarProtectProps) => {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuthStore();
 
   // Si la ruta es solo para admins y el usuario no lo es, ocultamos el ítem
   if (requireAdmin && !isAdmin) return null;

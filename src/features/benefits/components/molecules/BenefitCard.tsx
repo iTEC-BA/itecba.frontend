@@ -93,9 +93,9 @@ export const BenefitCard: React.FC<Props> = ({ benefit, userPoints, onSelect }) 
             className={cn(
               "flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold transition-all cursor-pointer",
               free
-                ? "bg-white/10 text-white hover:bg-white/20 border border-transparent"
+                ? "bg-itec-rewards/10 text-white hover:bg-white/20 border border-transparent"
                 : canAfford
-                ? "bg-itec-amber text-black hover:bg-yellow-500 border border-transparent"
+                ? "bg-itec-rewards/10 text-white hover:bg-white/20 border border-transparent"
                 : "cursor-not-allowed border border-white/10 bg-transparent text-white/30"
             )}
           >

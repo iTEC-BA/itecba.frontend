@@ -1,12 +1,12 @@
 import React from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { useQuery } from "@tanstack/react-query";
 import { profileService } from "@features/profile/services/profileService";
 import { useMultiCareer } from "@features/profile/hooks/useMultiCareer";
 import { Gift, ShieldCheck, BookOpen, Star } from "lucide-react";
 
 export const ProfileStatsWidget: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const { careers, isDoubleMajor, startYear } = useMultiCareer();
 
   const { data: benefits = [] } = useQuery({

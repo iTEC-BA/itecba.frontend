@@ -4,7 +4,7 @@ import { MainLayout } from "@components/templates/MainLayout";
 import { PageHeader } from "@components/ui/PageHeader";
 import { BenefitsGrid } from "@features/benefits/components/organisms/BenefitsGrid";
 import { usePageTitle } from "@hooks/usePageTitle";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 
 const LoginPrompt: React.FC = () => (
   <div className="flex flex-col items-center justify-center gap-5 px-4 py-24 text-center">
@@ -25,7 +25,7 @@ const LoginPrompt: React.FC = () => (
 
 export const BenefitsPage: React.FC = () => {
   usePageTitle("Beneficios");
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
 
   return (
     <MainLayout>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { PageHeader } from "@components/ui/PageHeader";
 import { usePageTitle } from "@hooks/usePageTitle";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 
 import { INGRESO_DATA } from "@features/admission/types/ingresoLinks";
 import { ADMISSION_YEAR } from "@features/admission/constants";
@@ -17,7 +17,7 @@ import { AdminAdmissionDatesModal } from "@features/admission/components/organis
 
 export const AdmissionPage: React.FC = () => {
   usePageTitle(`Ingreso UTN ${ADMISSION_YEAR} | ITEC`);
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuthStore();
   
   const { completedSteps, toggleStep, getProgressPercentage, isLoaded } = useAdmissionProgress();
   const { events, addEvent, removeEvent } = useAdmissionDates();

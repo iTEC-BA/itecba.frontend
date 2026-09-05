@@ -5,7 +5,7 @@ import { Button } from '@components/ui/Button';
 import { Icons } from '@/components/ui/icons/Icons';
 import { FilterField } from '../molecules/FilterField';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from '@features/groups/types/groups';
-import { useAuth } from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 import { usePointsGrant } from '@features/points/hooks/usePointsGrant';
 import { useSubmitResource } from '../../hooks/useResources';
 import { useResourceMaterias } from '../../hooks/useResourceMaterias';
@@ -18,7 +18,7 @@ const EMPTY: ResourceFormState = { title: '', carrera: '', nivel: '', materia: '
 const INPUT_CLS = 'text-sm py-2.5 bg-itec-bg border-itec-gray/60 focus:border-orange-500/70 transition-colors placeholder:text-itec-gray/40';
 
 export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { user, isAuthenticated, loginWithGoogle } = useAuth();
+  const { user, isAuthenticated, loginWithGoogle } = useAuthStore();
   const { grant } = usePointsGrant();
   const mutation = useSubmitResource();
 

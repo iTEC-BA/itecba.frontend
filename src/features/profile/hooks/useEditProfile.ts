@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { auth } from "@/lib/firebase";
 import { profileService } from "@features/profile/services/profileService";
 import type { CareerOption } from "@features/profile/components/molecules/CareerSelector";
@@ -33,7 +33,7 @@ const getInitialCareers = (user: ReturnType<typeof useAuth>["user"]): CareerOpti
 };
 
 export const useEditProfile = (onSuccess?: () => void) => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile } = useAuthStore();
 
   const [form, setForm] = useState<ProfileForm>({
     name:      user?.name      ?? "",

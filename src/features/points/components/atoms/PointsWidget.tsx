@@ -1,9 +1,9 @@
 import { Star } from "lucide-react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { cn } from "@/lib/utils";
 
 export const PointsWidget = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const points = user?.points || 0;
 
   return (

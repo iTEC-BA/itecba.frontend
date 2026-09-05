@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import Raccoon from "../ui/icons/Raccoon";
 import { Icons } from "../ui/icons/Icons";
-import { useAuth } from "../../context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 
 export const NavbarBottom = () => {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
 
   const isActive = (path: string) => location.pathname === path;
 

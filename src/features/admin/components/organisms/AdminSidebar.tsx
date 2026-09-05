@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { SIDEBAR_LINKS, type AdminSection } from "@features/admin/hooks/useAdminSidebar";
 import { Icons } from "@/components/ui/icons/Icons";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ interface AdminSidebarProps {
 }
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ active, onNavigate, isOpen, onClose }) => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   const groupedLinks = useMemo(() => {
     return SIDEBAR_LINKS.reduce((acc, link) => {

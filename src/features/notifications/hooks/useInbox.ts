@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { inboxService } from "../services/inboxService";
 import type { InboxMessage } from "../types/inbox";
 
 export const useInbox = () => {
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuthStore();
   const [messages, setMessages] = useState<InboxMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

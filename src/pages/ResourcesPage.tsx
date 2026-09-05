@@ -2,7 +2,7 @@ import React, { useState, useMemo, Suspense } from 'react';
 import { MainLayout } from '@/components/templates/MainLayout';
 import { PageHeader } from '@components/ui/PageHeader';
 import { Button } from '@components/ui/Button';
-import { useAuth } from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 import { usePageTitle } from '@hooks/usePageTitle';
 import { ResourceFilters } from '@features/resources/components/organisms/ResourceFilters';
 import { ResourcesTable } from '@features/resources/components/organisms/ResourcesTable';
@@ -19,7 +19,7 @@ const AdminPendingResourcesModal = React.lazy(() =>
 
 export const ResourcesPage: React.FC = () => {
   usePageTitle('Aportes de la Comunidad');
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuthStore();
 
   const { data: rawResources = [], isLoading } = useResources();
   const { data: pendingResources = [] } = usePendingResources(isAdmin);

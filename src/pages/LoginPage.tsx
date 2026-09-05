@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import FormLogin from "@features/login/components/organisms/FormLogin";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { usePageTitle } from "@hooks/usePageTitle";
 
 export const LoginPage: React.FC = () => {
   usePageTitle("Iniciar Sesión");
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
 

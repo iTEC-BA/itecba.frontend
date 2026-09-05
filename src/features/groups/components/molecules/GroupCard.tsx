@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Icons } from '@components/ui/icons/Icons';
 import { GroupBadge } from '../atoms/GroupBadge';
 import { GroupGlowCard } from '../atoms/GroupGlowCard';
-import { useAuth } from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 import { useReportGroup, useUpdateGroupLink } from '../../hooks/useGroups';
 import type { GroupData } from '../../services/groupsService';
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const GroupCard: React.FC<Props> = ({ group }) => {
-  const { isAdmin, user, isAuthenticated } = useAuth();
+  const { isAdmin, user, isAuthenticated } = useAuthStore();
   const reportMutation = useReportGroup();
   const updateLinkMutation = useUpdateGroupLink();
 

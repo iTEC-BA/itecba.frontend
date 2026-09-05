@@ -1,6 +1,6 @@
 // src/components/molecules/TopNavbar.tsx
 import { Link } from "react-router-dom";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { Icons } from "@components/ui/icons/Icons";
 
 import logo from "@assets/logo.png";
@@ -11,7 +11,7 @@ import { NotificationBell } from "@/features/notifications/components/organisms/
 import { Settings } from "lucide-react";
 
 export const NavbarTop = () => {
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuthStore();
   const { toggle } = useSidebarMobile();
 
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import type { User } from "@context/AuthContext";
+import type { User } from '@/stores/authStore';
 import SvgTarjeTec from "@/components/ui/icons/SvgTarjeTec";
 
 export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {

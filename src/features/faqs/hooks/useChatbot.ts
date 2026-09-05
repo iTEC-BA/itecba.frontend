@@ -1,7 +1,8 @@
+import { usePointsStore } from '@/stores/pointsStore';
 import { useState, useCallback, useRef, useEffect } from "react";
 import { chatbotService, AI_COST_DEFAULT } from "../services/chatbotService";
 import { faqService } from "../services/faqService";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import type { ChatMessage, ChatMode } from "../types/faqs";
 
 const makeWelcome = (suggestions: string[] = []): ChatMessage => ({
@@ -13,7 +14,8 @@ const makeWelcome = (suggestions: string[] = []): ChatMessage => ({
 });
 
 export const useChatbot = () => {
-  const { user, addPoints } = useAuth();
+  const { user } = useAuthStore();
+  const { addPoints } = usePointsStore();;
   const [messages, setMessages]   = useState<ChatMessage[]>([makeWelcome()]);
   const [loading, setLoading]     = useState(false);
   const [mode, setMode]           = useState<ChatMode>("faq");

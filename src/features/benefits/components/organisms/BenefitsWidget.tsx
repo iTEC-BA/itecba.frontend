@@ -1,12 +1,12 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { Icons } from "@components/ui/icons/Icons";
 import { auth } from "@/lib/firebase";
 import { Link } from "react-router-dom";
 
 export const BenefitsWidget: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
   
   const { data: benefits = [], isLoading } = useQuery({
     queryKey: ["benefits", "premium"],

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { Icons } from "@/components/ui/icons/Icons";
 import LoadingState from "@/components/ui/LoadingState";
 import { Button } from "@/components/ui/Button";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/Input";
 import { Mail, Lock, ShieldCheck } from "lucide-react";
 
 const FormLogin: React.FC = () => {
-  const { loginWithGoogle, isAuthenticated, loading } = useAuth();
+  const { loginWithGoogle, isAuthenticated, loading } = useAuthStore();
 
   if (loading) return <LoadingState />;
 

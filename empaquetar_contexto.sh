@@ -72,7 +72,7 @@ agregar_archivo "README.md"
 agregar_archivo "src/main.tsx"
 agregar_archivo "src/App.tsx"
 agregar_carpeta "src/routes/"
-agregar_carpeta "src/context/"
+agregar_carpeta "src/stores/"
 
 echo "2/5 Agregando a estilo"
 agregar_archivo "src/index.css"
@@ -92,8 +92,8 @@ agregar_carpeta "src/features/notifications/"
 
 echo "5/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
-# agregar_carpeta "src/features/profile"
-# agregar_archivo "src/pages/profilePage.tsx"
+agregar_carpeta "src/features/profile"
+agregar_archivo "src/pages/profilePage.tsx"
 # agregar_archivo "src/pages/ErrorPage.tsx"
 
 # Agregar la página (View) principal del feature

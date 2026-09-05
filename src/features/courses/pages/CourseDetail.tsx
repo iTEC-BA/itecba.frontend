@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { Icons } from "@/components/ui/icons/Icons";
 import { Button } from "@/components/ui/Button";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { CourseVideoPlayer } from "@features/courses/components/organisms/CourseVideoPlayer";
 import { CoursePlaylist } from "@features/courses/components/organisms/CoursePlaylist";
 import { useCourseById, useDeleteCourse } from "@features/courses/hooks/useCourses";
@@ -25,7 +25,7 @@ const CourseMaterialModal = React.lazy(() =>
 export const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin } = useAuthStore();
 
   const { data: course, isLoading } = useCourseById(id ?? "");
   const { data: allResources = [] } = useResources();

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { ProfileTarjetecSmall } from "@features/profile/components/atoms/ProfileTarjetecSmall";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { useSidebarLinks } from "@hooks/useSidebarLinks";
 import { SidebarItem } from "@components/molecules/SidebarItem";
 import { SidebarLabel, SidebarDivider, SidebarProtect } from "@components/atoms/SidebarState";
 import { useSidebarMobile } from "@hooks/useSidebarMobile";
  
 export const Sidebar = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
   const { sections, footerLinks } = useSidebarLinks();
   const { isOpen, close } = useSidebarMobile();
  

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { UseMutationResult } from "@tanstack/react-query";
-import type { User } from "@context/AuthContext";
+import type { User } from '@/stores/authStore';
 import { Icons } from "@/components/ui/icons/Icons";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";

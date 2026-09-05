@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useParams, Link }   from "react-router-dom";
 import { MainLayout }        from "@components/templates/MainLayout";
-import { useAuth }           from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { useAulaDetalle }    from "@features/aulas/hooks/useAulaDetalle";
 import { FuncionBadge }      from "@features/aulas/components/atoms/FuncionBadge";
 import { MediaSlider }       from "@features/aulas/components/molecules/MediaSlider";
@@ -49,7 +49,7 @@ const MarkdownContent: React.FC<{ content: string }> = ({ content }) => (
 
 export const AulaDetallePage: React.FC = () => {
   const { slug }   = useParams<{ slug: string }>();
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuthStore();
   const { aula, loading, error, reload } = useAulaDetalle(slug ?? "");
 
   const [showEdit,  setShowEdit]  = useState(false);

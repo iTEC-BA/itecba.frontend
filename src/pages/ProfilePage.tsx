@@ -1,12 +1,11 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from "@/stores/authStore";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { usePageTitle } from "@hooks/usePageTitle";
 import { Card } from "@components/atoms/Card";
 
-// Imports perezosos para no bloquear la carga principal
 const ProfileHeader = lazy(() => import("@features/profile/components/organisms/ProfileHeader").then((m) => ({ default: m.ProfileHeader })));
 const TarjeTec = lazy(() => import("@features/profile/components/organisms/TarjeTec").then((m) => ({ default: m.TarjeTec })));
 const ProfileStatsWidget = lazy(() => import("@features/profile/components/organisms/ProfileStatsWidget").then((m) => ({ default: m.ProfileStatsWidget })));
@@ -14,14 +13,12 @@ const ProfileForm = lazy(() => import("@features/profile/components/organisms/Pr
 
 export const ProfilePage: React.FC = () => {
   usePageTitle("Perfil");
-  const { user, isAuthenticated, loading } = useAuth();
+  
+  // Extraemos directamente hasTarjetec del store
+  const { user, isAuthenticated, loading, hasTarjetec } = useAuthStore();
   const navigate = useNavigate();
   const { username } = useParams();
 
-  // Se considera que tiene TarjeTEC si ya cargó su DNI
-  const hasCard = isAuthenticated && user && user.dni && user.dni.trim() !== "";
-
-  // Sincronización de URL con el usuario
   useEffect(() => {
     if (isAuthenticated && user?.email) {
       const expected = user.email.split("@")[0];
@@ -46,12 +43,10 @@ export const ProfilePage: React.FC = () => {
       </Suspense>
 
       <div className="flex flex-col gap-6 my-1">
-        {/* Lógica de TarjeTEC Opcional */}
         {user && (
           <Suspense fallback={<LoadingState />}>
-            {hasCard ? (
+            {hasTarjetec ? (
               <div className="relative flex flex-col items-center mt-4">
-                {/* Mascota asomándose por encima de la TarjeTEC */}
                 <img 
                   src="/mascot/TEC-Saludando.webp" 
                   alt="TEC Saludando" 
@@ -64,7 +59,6 @@ export const ProfilePage: React.FC = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-6">
-                {/* Recordatorio usando el componente Card global */}
                 <Card className="bg-itec-red/5 border-itec-red/20 sm:flex-row sm:text-left sm:justify-start">
                   <img 
                     src="/mascot/TEC-respuesta.png" 
@@ -81,8 +75,6 @@ export const ProfilePage: React.FC = () => {
                     </p>
                   </div>
                 </Card>
-                
-                {/* Formulario (Que ya cuenta con TEC-Euforico en la izquierda) */}
                 <ProfileForm />
               </div>
             )}

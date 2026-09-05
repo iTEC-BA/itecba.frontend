@@ -1,12 +1,14 @@
+import { usePointsStore } from '@/stores/pointsStore';
 import { useState, useEffect, useCallback } from "react";
 import { getAuth } from "firebase/auth";
 import { benefitsService } from "../services/benefitsService";
 import type { Benefit, BenefitFilter, RedemptionPayload } from "../types/benefits";
 import { isFreeBenefit } from "../types/benefits";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 
 export const useBenefits = () => {
-  const { user, isAuthenticated, addPoints } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
+  const { addPoints } = usePointsStore();;
   const [benefits, setBenefits] = useState<Benefit[]>([]);
   const [pointsBalance, setPointsBalance] = useState<number>(user?.points ?? 0);
   const [isLoading, setIsLoading] = useState(false);

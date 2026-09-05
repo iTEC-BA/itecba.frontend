@@ -8,7 +8,7 @@ import { PageHeader }     from "@/components/ui/PageHeader";
 import { PaginationBar }  from "@/components/ui/PaginationBar";
 import { usePagination }  from "@/hooks/usePagination";
 import { usePageTitle }   from "@/hooks/usePageTitle";
-import { useAuth }        from "@/context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { useToast }       from "@/features/notifications/components/atoms/Toast";
 
 import { useCourses, useDeleteCourse }  from "@/features/courses/hooks/useCourses";
@@ -50,7 +50,7 @@ const enrichWithProgress = (courses: CourseData[]): CourseWithLocalProgress[] =>
 export const CoursesPage: React.FC = () => {
   usePageTitle("Cursos");
 
-  const { isAdmin }  = useAuth();
+  const { isAdmin }  = useAuthStore();
   const { toast }    = useToast();
   const deleteMutation = useDeleteCourse();
 

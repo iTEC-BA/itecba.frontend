@@ -21,7 +21,6 @@ find . -type f \
     -not -name "*.gif" \
     -not -name "*.ico" \
     -not -name "*.pdf" \
-    -not -name ".env*" \
     -not -name "package-lock.json" \
     -not -name "yarn.lock" \
     -not -name "pnpm-lock.yaml" \

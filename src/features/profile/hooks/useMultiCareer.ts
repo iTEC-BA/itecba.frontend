@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import type { CareerOption } from "@features/profile/components/molecules/CareerSelector";
 
 interface Career {
@@ -21,7 +21,7 @@ interface MultiCareerReturn {
 }
 
 export const useMultiCareer = (): MultiCareerReturn => {
-  const { user } = useAuth() as { user: User | null };
+  const { user } = useAuthStore() as { user: User | null };
 
   const careers = useMemo<CareerOption[]>(() => {
     if (Array.isArray(user?.careers) && user.careers.length > 0) {

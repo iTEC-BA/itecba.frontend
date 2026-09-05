@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { calendarService } from "../services/calendarService";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 
 export type EventType = "examen" | "institucional" | "feriado" | "beca" | "actividad";
 
@@ -27,7 +27,7 @@ export const useCalendarEvents = () => {
   const [error, setError] = useState<string | null>(null);
   
   // Usar solo lo necesario desde AuthContext
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuthStore();
 
   const fetchEvents = useCallback(async () => {
     setLoading(true);

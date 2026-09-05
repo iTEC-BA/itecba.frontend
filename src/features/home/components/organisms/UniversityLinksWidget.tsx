@@ -1,5 +1,5 @@
 import React, { useState, Suspense, useCallback } from 'react';
-import { useAuth } from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 import { Icons } from '@components/ui/icons/Icons';
 import { Button } from '@components/ui/Button';
 import { BentoCard } from '@features/home/components/atoms/BentoCard';
@@ -50,7 +50,7 @@ const EmptyLinks: React.FC<{ isAdmin: boolean; onAdd: () => void }> = ({ isAdmin
 );
 
 export const UniversityLinksWidget: React.FC = () => {
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuthStore();
   const { links, isLoading, reload, deleteLink } = useLinks();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<CampusLink | undefined>(undefined);

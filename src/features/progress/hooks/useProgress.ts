@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { progressService, type ProgressData } from '../services/progress.service';
-import { useAuth } from '@/context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 import type { CareerProgress, Subject, UpdateSubjectArgs } from '../types/progress';
 import { decomposeProgressMap, calculateSubjectStatus, calculateStressLevel, uiStateToFirestore } from '../utils/academicLogic';
 import { CAREER_NAMES, getCareerPlanAsync } from '../data/careers.data';
@@ -48,7 +48,7 @@ const buildCareerProgress = (raw: ProgressData, careerId: string, plan: any[]): 
 };
 
 export const useProgress = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const queryKey = ['progress', user?.id] as const;
 

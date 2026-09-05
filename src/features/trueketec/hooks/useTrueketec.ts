@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { trueketecService } from "../services/trueketec.service";
 import type { TrueketecPost, TrueketecFilters, TrueketecFormData, EstadoPost } from "../types/trueketec.types";
 
@@ -19,7 +19,7 @@ export const getMyCareerDept = (specialty?: string): string => {
 };
 
 export const useTrueketec = () => {
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuthStore();
   const [posts,       setPosts]       = useState<TrueketecPost[]>([]);
   const [myPosts,     setMyPosts]     = useState<TrueketecPost[]>([]);
   const [matches,     setMatches]     = useState<TrueketecPost[]>([]);

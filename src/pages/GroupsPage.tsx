@@ -4,7 +4,7 @@ import { MainLayout }       from "@components/templates/MainLayout";
 import { PageHeader }       from "@components/ui/PageHeader";
 import { Icons }            from "@components/ui/icons/Icons";
 import { Button }           from "@/components/ui/Button";
-import { useAuth }          from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { usePendingGroups, useGroupStats } from "@features/groups/hooks/useGroups";
 import { useGroupSearch }   from "@features/groups/hooks/useGroupFilters";
 import { GroupFilters }     from "@features/groups/components/organisms/GroupFilters";
@@ -33,7 +33,7 @@ const PendingBadge: React.FC<{ count: number }> = ({ count }) =>
 
 const GroupsPageContent: React.FC = () => {
   usePageTitle("Grupos de WhatsApp");
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, user } = useAuthStore();
   const { data: groupStats }         = useGroupStats(!!isAdmin);
   const { data: pendingGroups = [] } = usePendingGroups(!!isAdmin);
 

@@ -10,7 +10,7 @@ import { MentionsPanel }      from './MentionsPanel';
 import { LayoutModal }        from '@components/templates/LayoutModal';
 import { Button }             from '@/components/ui/Button';
 import type { ForumTab }      from '../../types/forum';
-import { useAuth }            from '@/context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 
 const TABS: { id: ForumTab; label: string }[] = [
   { id: 'para-ti',    label: 'Para ti' },
@@ -29,7 +29,7 @@ export const ForumFeed: React.FC = () => {
     setComposing, refresh, silentRefresh
   } = useForum();
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
   const bottomRef           = useRef<HTMLDivElement>(null);
   const topSentinelRef      = useRef<HTMLDivElement>(null);
   const firstRenderRef      = useRef(true);

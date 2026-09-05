@@ -1,6 +1,6 @@
 import React from "react";
-import type { User } from "@/context/AuthContext";
-import { SUPER_ADMIN_EMAIL } from "@/context/AuthContext";
+import type { User } from '@/stores/authStore';
+import { SUPER_ADMIN_EMAIL } from '@/stores/authStore';
 import type { UseMutationResult } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 

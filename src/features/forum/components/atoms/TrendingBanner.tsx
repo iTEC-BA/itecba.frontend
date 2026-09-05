@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Pencil, Trash2, Check } from 'lucide-react';
 import { LayoutModal }    from '@components/templates/LayoutModal';
 import { Button }         from '@/components/ui/Button';
-import { useAuth }        from '@context/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 import { forumService }   from '../../services/forumService';
 import type { ForumBanner } from '../../types/forum';
 
@@ -296,7 +296,7 @@ const AdminBannerPanel: React.FC<{
 
 // ── Export principal ─────────────────────────────────────────────────────────
 export const TrendingBanner: React.FC = () => {
-  const { isAdmin }               = useAuth();
+  const { isAdmin }               = useAuthStore();
   const [banners, setBanners]     = useState<ForumBanner[]>([]);
   const [adminOpen, setAdminOpen] = useState(false);
 

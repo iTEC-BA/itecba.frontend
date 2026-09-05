@@ -6,7 +6,7 @@ import { Input } from "@components/ui/Input";
 import { Select } from "@components/ui/Select";
 import { Button } from "@components/ui/Button";
 import { Icons } from "@components/ui/icons/Icons";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { CARRERAS_OPTIONS, NIVEL_OPTIONS } from "../../types/groups";
 import { groupsService, type GroupData } from "../../services/groupsService";
 import { useSubmitGroup } from "../../hooks/useGroups";
@@ -27,7 +27,7 @@ export const AddGroupModal: React.FC<Props> = ({
   isAdmin,
   existingGroups,
 }) => {
-  const { user, isAuthenticated, loginWithGoogle } = useAuth();
+  const { user, isAuthenticated, loginWithGoogle } = useAuthStore();
   const submitMutation = useSubmitGroup();
   const {
     form,

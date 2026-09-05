@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { Icons } from "@components/ui/icons/Icons";
 import { ChartLine, ChevronRight, GraduationCap, Star } from "lucide-react";
 
 export const WelcomeWidget: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
   const firstName = user?.name ? user.name.split(" ")[0] : null;
 
   const hour = new Date().getHours();

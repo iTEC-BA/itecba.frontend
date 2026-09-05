@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { MainLayout } from "@components/templates/MainLayout";
 import { Button } from "@components/ui/Button";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { useTrueketec } from "@features/trueketec/hooks/useTrueketec";
 import { TrueketecFiltersBar } from "@features/trueketec/components/molecules/TrueketecFilters";
 import { TrueketecCard } from "@features/trueketec/components/molecules/TrueketecCard";
@@ -20,7 +20,7 @@ import { PASOS_COMO_FUNCIONA, SOPORTE, MENSAJES, getCarreraValue } from "@featur
 import { subjectsService } from "@services/subjectsService";
 
 export const TruekeTECPage: React.FC = () => {
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuthStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [myPostsModalOpen, setMyPostsModalOpen] = useState(false);
 

@@ -141,3 +141,30 @@ Para separar visualmente elementos superpuestos, se debe utilizar la superposici
 * Elemento base: `bg-itec-box border border-itec-border`
 * Elemento superpuesto (Modal/Toast): `bg-itec-card border border-white/10`
 * Ningún componente de la carpeta `@components/ui/` o `@components/organisms/` tiene excepciones a esta regla.
+
+---
+
+## 3. Estado Global (Zustand)
+El proyecto está en proceso de migración de React Context a **Zustand** para la gestión del estado global, dividiendo las responsabilidades en múltiples stores independientes para optimizar re-renders.
+
+### `useAuthStore` (Autenticación y Usuario)
+Maneja la sesión de Firebase, los datos del perfil y los roles. Reemplaza gradualmente a `AuthContext`.
+```tsx
+import { useAuthStore } from '@/stores/authStore';
+
+// Ya no necesita Provider superior.
+const { user, isAuthenticated, loginWithGoogle, logout } = useAuthStore();
+
+---
+
+## 3. Estado Global Centralizado (Zustand)
+El proyecto ha sido migrado completamente de React Context a **Zustand** para optimizar el rendimiento y extraer la lógica de negocio de los componentes.
+
+### `useAuthStore` (Autenticación y Reglas de Negocio)
+Gestiona la sesión y calcula el estado derivado global en base a los datos del usuario.
+```tsx
+import { useAuthStore } from '@/stores/authStore';
+
+// hasTarjetec y needsProfileCompletion se calculan automáticamente
+// en el backend del store sin ensuciar los componentes visuales.
+const { user, isAuthenticated, hasTarjetec, isAdmin } = useAuthStore();

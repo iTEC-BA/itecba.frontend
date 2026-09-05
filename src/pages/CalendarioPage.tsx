@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, lazy, Suspense } from "react";
 import { MainLayout } from "@components/templates/MainLayout";
 import { PageHeader } from "@components/ui/PageHeader";
 import { Button } from "@components/ui/Button";
-import { useAuth } from "@context/AuthContext";
+import { useAuthStore } from '@/stores/authStore';
 import { usePageTitle } from "@hooks/usePageTitle";
 import { useCalendarEvents, EventType, CalendarEvent } from "@features/calendar/hooks/useCalendarEvents";
 import { CalendarSkeleton } from "@features/calendar/components/CalendarSkeleton";
@@ -26,7 +26,7 @@ const FILTER_TYPES: (EventType | "Todos")[] = ["Todos","examen","institucional",
 
 export const CalendarioPage: React.FC = () => {
   usePageTitle("Calendario Académico");
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuthStore();
   const { events, loading, error, createEvent, updateEvent, deleteEvent } = useCalendarEvents();
   
   const [filter, setFilter] = useState<EventType | "Todos">("Todos");
