@@ -15,8 +15,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
       {/* Logo / Avatar IA */}
       <div className="relative mb-8">
         <div className="relative w-30 h-30 rounded-xl flex items-center justify-center">
-          <img src="https://raw.githubusercontent.com/iTEC-BA/recursos/refs/heads/main/PNGs/mapache.png?token=GHSAT0AAAAAAEHZAJKR76W7F6BTEYR6EJZ22U2HV7Q" alt="" className="absolute inset-0 z-10 w-full h-full object-contain"/>
-          <img src="https://raw.githubusercontent.com/iTEC-BA/recursos/refs/heads/main/PNGs/mano1.png?token=GHSAT0AAAAAAEHZAJKRRFREZ7XVM4UXTVI42U2HZUA" alt="" className="absolute inset-0 z-20 w-full h-full object-contain"/>
+          <img src="mascot/TEC-Notebook.webp" alt="" className="absolute inset-0 z-10 w-full h-full object-contain"/>
         </div>
         <div className="absolute z-20 -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#111113] shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
       </div>
