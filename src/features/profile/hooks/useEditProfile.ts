@@ -71,7 +71,7 @@ export const useEditProfile = (onSuccess?: () => void) => {
       try {
         const token = (await auth.currentUser?.getIdToken()) ?? "";
 
-        // Solo adjuntamos bio y github si NO están vacíos para evitar que express-validator falle
+        // Solo adjuntamos bio y github si NO están vacíos para evitar que express-validator falle con URL
         const payload = {
           displayName: form.name.trim(),
           dni:         form.dni.trim(),

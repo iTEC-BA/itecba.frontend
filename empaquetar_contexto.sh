@@ -10,28 +10,58 @@ FEATURE_NAME=$1
 OUTPUT="contexto_frontend_seccion_${FEATURE_NAME}.txt"
 
 echo "🚀 Generando contexto maestro para el feature: $FEATURE_NAME..."
-> $OUTPUT
+> "$OUTPUT"
+
+# Array para almacenar las carpetas a ignorar
+EXCLUDES=()
+
+# Función para agregar carpetas a la lista de ignoradas
+ignorar_carpeta() {
+  local dir_name=$1
+  # Añade la sintaxis de exclusión para el comando 'find'
+  EXCLUDES+=("-name" "$dir_name" "-prune" "-o")
+  echo "🚫 Ignorando carpeta: $dir_name"
+}
+
+# Carpetas ignoradas por defecto (agregá las que necesites)
+ignorar_carpeta "node_modules"
+ignorar_carpeta "dist"
+ignorar_carpeta ".git"
+ignorar_carpeta ".cache"
 
 # Función para volcar un archivo al consolidado
 agregar_archivo() {
   local file=$1
   if [ -f "$file" ]; then
-    echo "==================================================" >> $OUTPUT
-    echo "ARCHIVO: $file" >> $OUTPUT
-    echo "==================================================" >> $OUTPUT
-    cat "$file" >> $OUTPUT
-    echo -e "\n\n" >> $OUTPUT
+    echo "==================================================" >> "$OUTPUT"
+    echo "ARCHIVO: $file" >> "$OUTPUT"
+    echo "==================================================" >> "$OUTPUT"
+    cat "$file" >> "$OUTPUT"
+    echo -e "\n\n" >> "$OUTPUT"
   fi
 }
 
-# Función para volcar una carpeta completa (Recursiva)
+# Función para volcar una carpeta completa (Recursiva) con su contenido
 agregar_carpeta() {
   local dir=$1
   if [ -d "$dir" ]; then
-    find "$dir" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.json" \) \
-      | while read file; do
+    find "$dir" "${EXCLUDES[@]}" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.json" \) -print \
+      | while read -r file; do
           agregar_archivo "$file"
       done
+  fi
+}
+
+# Función para listar SOLO los nombres de los archivos en una carpeta
+agregar_carpeta_nombres() {
+  local dir=$1
+  if [ -d "$dir" ]; then
+    echo "==================================================" >> "$OUTPUT"
+    echo "📂 ESTRUCTURA (Solo nombres): $dir" >> "$OUTPUT"
+    echo "==================================================" >> "$OUTPUT"
+    # Busca e imprime solo la ruta de los archivos, excluyendo las carpetas ignoradas
+    find "$dir" "${EXCLUDES[@]}" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.json" \) -print >> "$OUTPUT"
+    echo -e "\n\n" >> "$OUTPUT"
   fi
 }
 
@@ -47,7 +77,8 @@ agregar_archivo "src/index.css"
 agregar_archivo "./tsconfig.app.json"
 
 echo "3/5 Agregando Componentes universales"
-agregar_carpeta "src/components/"
+# Ejemplo: usar agregar_carpeta_nombres para no saturar el contexto con todo UI
+agregar_carpeta_nombres "public/mascot/"
 agregar_carpeta "src/hooks/"
 agregar_carpeta "src/lib/"
 agregar_carpeta "src/services/"
@@ -61,12 +92,8 @@ agregar_carpeta "src/features/$FEATURE_NAME"
 agregar_carpeta "src/features/profile"
 agregar_archivo "src/pages/profilePage.tsx"
 
-# agregar_carpeta "src/features/admin/"
-# agregar_archivo "src/pages/AdminPanel.tsx"
-
-
-
 # Agregar la página (View) principal del feature
+# La sintaxis ${FEATURE_NAME^} pone la primera letra en mayúscula
 PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"
 if [ -f "$PAGE_FILE" ]; then
   agregar_archivo "$PAGE_FILE"

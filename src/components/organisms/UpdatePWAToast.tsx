@@ -30,8 +30,8 @@ export const UpdatePWAToast: React.FC = () => {
                  bg-itec-bg/95 border border-itec-border rounded-xl shadow-2xl backdrop-blur-md
                  animate-in slide-in-from-top-4 fade-in duration-300 w-[calc(100vw-2rem)] sm:w-auto sm:min-w-[340px]"
     >
-      <div className="shrink-0 w-10 h-10 rounded-xl bg-itec-blue-skye/10 flex items-center justify-center border border-itec-blue-skye/20">
-        <RefreshCw className="w-5 h-5 text-itec-blue-skye" strokeWidth={2.5} />
+      <div className="shrink-0 w-10 h-10 rounded-xl bg-itec-red-skye/10 flex items-center justify-center border border-itec-red-skye/20">
+        <RefreshCw className="w-5 h-5 text-itec-red-skye" strokeWidth={2.5} />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -52,7 +52,7 @@ export const UpdatePWAToast: React.FC = () => {
         </button>
         <button
           onClick={() => updateServiceWorker(true)}
-          className="px-4 py-2 rounded-xl bg-itec-blue-skye hover:bg-itec-blue-skye/90 text-white text-xs font-bold transition-all active:scale-95 focus:outline-none cursor-pointer"
+          className="px-4 py-2 rounded-xl bg-itec-red-skye hover:bg-itec-red-skye/90 text-white text-xs font-bold transition-all active:scale-95 focus:outline-none cursor-pointer"
         >
           Recargar
         </button>

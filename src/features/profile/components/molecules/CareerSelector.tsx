@@ -35,7 +35,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
     profileService.getDbCareers()
       .then(carreras => {
         const mapped = carreras.map((c, i) => ({ 
-          code: `${c.substring(0, 3).toUpperCase()}${i}`, // Garantizamos un código único
+          code: `${c.substring(0, 3).toUpperCase()}${i}`, // Código interno
           name: c 
         }));
         setDbCareers(mapped);
@@ -48,7 +48,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
   );
 
   const toggle = (career: CareerOption) => {
-    // Usamos el nombre exacto como identificador para evitar la colisión ELE
+    // Comparar siempre por name para ser únicos
     if (value.find((v) => v.name === career.name)) {
       onChange(value.filter((v) => v.name !== career.name));
     } else if (value.length < max) {
@@ -65,7 +65,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
         className={cn(
           "min-h-[40px] w-full bg-itec-surface border border-itec-border rounded-xl",
           "flex flex-wrap gap-1.5 p-2 cursor-pointer transition-all",
-          "focus-within:border-itec-border",
+          "focus-within:border-itec-red-skye",
           disabled && "opacity-50 cursor-not-allowed"
         )}
       >
@@ -99,7 +99,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
       {open && (
         <div className={cn(
           "absolute z-50 top-full mt-1.5 w-full",
-          "bg-itec-box border border-itec-border rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
+          "bg-itec-box border border-itec-border rounded-xl shadow-xl",
           "overflow-hidden max-h-56 flex flex-col"
         )}>
           <div className="p-2 border-b border-itec-border shrink-0">
@@ -109,7 +109,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
               placeholder="Buscar carrera..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-itec-surface border border-itec-border text-itec-text text-sm px-3 py-2 rounded-xl outline-none placeholder:text-itec-muted"
+              className="w-full bg-itec-surface border border-itec-border text-itec-text text-sm px-3 py-2 rounded-xl outline-none focus:border-itec-red-skye placeholder:text-itec-muted"
             />
           </div>
           <div className="overflow-y-auto custom-scrollbar">
@@ -125,14 +125,14 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-all",
                     sel
-                      ? "bg-itec-sky/10 text-itec-sky"
+                      ? "bg-itec-red/10 text-itec-red-skye"
                       : "text-itec-text hover:bg-itec-surface",
                     atMax && "opacity-30 cursor-not-allowed"
                   )}
                 >
                   <span className={cn(
                     "w-4 h-4 rounded border flex items-center justify-center text-[10px] shrink-0",
-                    sel ? "bg-itec-sky border-itec-border" : "border-itec-border"
+                    sel ? "bg-itec-red-skye border-itec-border text-white" : "border-itec-border"
                   )}>
                     {sel && "✓"}
                   </span>

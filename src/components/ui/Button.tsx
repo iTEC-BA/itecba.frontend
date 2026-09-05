@@ -97,7 +97,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const baseStyles = [
     "inline-flex items-center justify-center gap-2 cursor-pointer",
-    "px-3 py-2 text-xs font-semibold rounded-[10px]",
+    "px-2 py-1.5 text-xs font-semibold rounded-[10px]",
     "transition-all duration-200 outline-none"
   ].join(" ");
 
