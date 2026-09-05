@@ -1,10 +1,3 @@
-// src/features/points/components/PointsHistoryWidget.tsx
-//
-// Muestra el historial de los últimos 50 otorgamientos del usuario.
-// Añadir en el perfil del usuario:
-//   import { PointsHistoryWidget } from "@features/points/components/PointsHistoryWidget";
-//   <PointsHistoryWidget />
-
 import React, { useState, useEffect } from "react";
 import { getAuth }          from "firebase/auth";
 import { getPointHistory }  from "../services/points.service";
@@ -51,7 +44,7 @@ export const PointsHistoryWidget: React.FC = () => {
     <div className="flex flex-col gap-1">
       {logs.map((entry) => (
         <div
-          key={entry._id}
+          key={entry.id || entry.activityKey + entry.createdAt}
           className="flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-white/3 transition-colors"
         >
           <div className="flex flex-col">

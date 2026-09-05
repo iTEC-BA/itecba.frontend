@@ -4,6 +4,7 @@ import { useAuth } from "@context/AuthContext";
 import { Icons } from "@/components/ui/icons/Icons";
 import { MainLayout } from "@/components/templates/MainLayout";
 import LoadingState from "@/components/ui/LoadingState";
+import { Button } from "@/components/ui/Button"; // Componente UI Obligatorio
 
 const FormLogin: React.FC = () => {
   const { loginWithGoogle, isAuthenticated, loading } = useAuth();
@@ -18,41 +19,55 @@ const FormLogin: React.FC = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="bg-itec-box border border-itec-box/10 rounded-[2.5rem] p-8 sm:p-12 max-w-120 text-center shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)] relative group overflow-hidden flex flex-col items-center gap-4">
-        <img
-          src={logoItec}
-          alt="Logo ITEC"
-          className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500 relative z-10 text-center"
-        />
-        <div className="flex flex-col gap-2">
-          <h2 className="text-3xl sm:text-4xl font-bold text-itec-text-reverse tracking-tight">
-            Portal ITEC
-          </h2>
-          <p className="text-slate-400 text-sm leading-relaxed px-2">
-            Accedé a tus beneficios y credencial, organiza tus materias, descarga apuntes y conecta con tus compañeros. usando tu cuenta de la facultad. 
-          </p>
-        </div>
-
-        <button
-          onClick={loginWithGoogle}
-          className="w-full bg-itec-red hover:bg-itec-red text-itec-textfont-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 shadow-[0_0_20px_rgba(212,19,19,0.15)] hover:-translate-y-1 border border-itec-border hover:border-white/20 cursor-pointer relative overflow-hidden"
-        >
-          <div className="w-6 h-6">
-            <Icons type="google" />
+      <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 w-full">
+        {/* Contenedor principal Flat Design (Sin sombras, bordes sólidos de opacidad controlada) */}
+        <div className="bg-itec-box border border-itec-border rounded-[2rem] p-8 sm:p-12 w-full max-w-md flex flex-col items-center gap-8 text-center transition-all">
+          
+          {/* Logo sin drop-shadow para cumplir con restricción visual */}
+          <div className="flex justify-center w-full">
+            <img
+              src={logoItec}
+              alt="Logo ITEC"
+              className="w-24 h-24 sm:w-28 sm:h-28 object-contain transition-transform duration-500 hover:scale-105"
+            />
           </div>
-          Iniciar sesión con @frba
-        </button>
 
-        <div className=" flex items-center justify-center gap-2 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span>
-          Plataforma exclusiva UTN.BA
+          {/* Textos institucionales con variables de color del theme */}
+          <div className="flex flex-col gap-3">
+            <h1 className="text-3xl sm:text-4xl font-bold text-itec-text tracking-tight">
+              Portal iTEC <span className="text-itec-red">BA</span>
+            </h1>
+            <p className="text-itec-description text-sm leading-relaxed">
+              Accedé a tus beneficios, organizá tus materias, descargá apuntes y conectá con la comunidad usando tu cuenta institucional.
+            </p>
+          </div>
+
+          {/* Uso del componente Button obligatorio */}
+          <div className="w-full flex flex-col gap-5">
+            <Button
+              onClick={loginWithGoogle}
+              variant="danger"
+              hierarchy="solid"
+              fullWidth
+              className="py-4 text-sm font-bold"
+              icon={<div className="w-5 h-5"><Icons type="google" /></div>}
+              text="Iniciar sesión con @frba"
+            />
+
+            {/* Indicador de estado usando colores strictos (itec-groups para el verde) */}
+            <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-itec-gray uppercase tracking-widest mt-2">
+              <span className="w-2 h-2 rounded-full bg-itec-groups"></span>
+              Plataforma exclusiva UTN.BA
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Fallback de carga post-login
   return (
-    <div className="flex h-64 items-center justify-center w-full bg-itec-box rounded-xl border border-itec-box/5">
+    <div className="flex h-64 items-center justify-center w-full bg-itec-box rounded-xl border border-itec-border">
       <p className="text-itec-gray font-medium animate-pulse">
         Entrando a tu campus...
       </p>

@@ -1,7 +1,5 @@
-// src/features/points/points.types.ts
-
 export interface PointActivity {
-  _id?: string;
+  id?: string;
   key: string;
   name: string;
   points: number;
@@ -25,7 +23,7 @@ export interface GrantResult {
 }
 
 export interface PointLogEntry {
-  _id: string;
+  id: string;
   activityKey: string;
   activityName: string;
   pointsAwarded: number;

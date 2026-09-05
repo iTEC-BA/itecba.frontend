@@ -65,7 +65,7 @@ agregar_carpeta "src/features/$FEATURE_NAME"
 
 
 # Agregar la página (View) principal del feature
-PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"
+# PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"
 if [ -f "$PAGE_FILE" ]; then
   agregar_archivo "$PAGE_FILE"
 fi
