@@ -106,7 +106,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Función para sumar puntos en tiempo real
   // Función para sumar/restar puntos en tiempo real
   const addPoints = async (pointsToAdd: number, updateDatabase: boolean = false) => {
     if (!auth.currentUser) return;

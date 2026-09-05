@@ -134,31 +134,6 @@ vez de reinventar la validación.
 
 ---
 
-## 3. Modelo Académico
-
-### 3.1 De `User.specialty` a las materias de una carrera
-
-Esta cadena conecta tres archivos distintos y es la única forma "oficial" de saber
-la carrera o las materias de un alumno — no inventar mapeos propios por substring:
-
-```
-User.specialty (string libre, ej: "SISTEMAS")
-        │
-        ▼  buscar coincidencia en ESPECIALIDADES_DB (src/data/specialties.ts)
-Specialty.carreraValue (ej: "sistemas")
-        │
-        ▼  usar como key de CAREERS_DATA (src/data/carreras.ts)
-SubjectDef[]  → materias, códigos, correlatividades de esa carrera
-```
-
-- `specialty` es el dato que guarda el usuario en su perfil (`AuthContext` → `User`).
-- `ESPECIALIDADES_DB` es el diccionario que traduce ese string al `carreraValue`
-  normalizado que usa el resto del sistema.
-- `CAREERS_DATA[carreraValue]` da el plan de estudios completo (`SubjectDef[]`).
-
-Cualquier feature que necesite "materias de la carrera del alumno" o "departamento
-del alumno" debe pasar por esta cadena.
-
 
 ### 1.ter Simulación de Profundidad (Estricto Flat Design)
 Queda **completamente prohibido** el uso de `shadow-*`, `drop-shadow-*` o `backdrop-blur-*` en cualquier componente (incluyendo Modales, Toasts, Loaders y Banners). 
