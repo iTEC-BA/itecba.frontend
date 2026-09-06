@@ -118,9 +118,7 @@ export const NavbarTop = () => {
                 </Suspense>
               </div>
               {/* Puntos de recompensa */}
-              <div className="px-2.5 py-1">
-                <PointsWidget />
-              </div>
+              <PointsWidget />
             </div>
           )}
           {/* Foto de perfil / login */}

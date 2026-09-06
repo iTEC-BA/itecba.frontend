@@ -2,6 +2,7 @@ import React from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@components/ui/Button";
 import { Icons } from "@/components/ui/icons/Icons";
+import { MarkdownTextarea } from "@/components/ui/MarkdownTextarea";
 import { Star } from "lucide-react";
 import type { Section, Lesson } from "../../types/Course";
 
@@ -102,11 +103,11 @@ export const CourseCurriculumEditor: React.FC<Props> = ({ sections, setSections 
                     />
                   )}
 
-                  <textarea
-                    placeholder="Apuntes de la clase (Soporta Markdown y LaTeX $$x^2$$)..."
+                  <MarkdownTextarea
+                    placeholder="Apuntes de la clase..."
                     value={les.description || ""}
-                    onChange={(e) => updateLesson(sIdx, lIdx, "description", e.target.value)}
-                    className="w-full bg-itec-box border border-transparent rounded-lg px-3 py-2 text-xs text-itec-text placeholder-itec-gray/40 outline-none focus:border-itec-section-courses/50 min-h-[60px] resize-y custom-scrollbar"
+                    onChange={(val) => updateLesson(sIdx, lIdx, "description", val)}
+                    textareaClassName="border-transparent"
                   />
                   <button type="button" onClick={() => removeLesson(sIdx, lIdx)} className="absolute -top-3 -right-3 bg-red-500 text-white p-1.5 rounded-lg opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all shadow-sm">
                     <Icons type="close" className="w-3.5 h-3.5" />
@@ -127,3 +128,5 @@ export const CourseCurriculumEditor: React.FC<Props> = ({ sections, setSections 
     </div>
   );
 };
+
+

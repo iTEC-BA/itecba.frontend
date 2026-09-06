@@ -1,21 +1,19 @@
 import { Star } from "lucide-react";
-import { useAuthStore } from '@/stores/authStore';
-import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/authStore";
 
 export const PointsWidget = () => {
   const { user } = useAuthStore();
   const points = user?.points || 0;
 
   return (
-    <div 
-      className={cn(
-        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all select-none",
-        "bg-itec-rewards/10 border-itec-rewards/20 text-itec-rewards"
-      )}
+    <div
+      className="flex items-center gap-1 transition-all select-none text-itec-rewards"
       title="Puntos acumulados"
     >
-      <Star className="w-3.5 h-3.5 fill-itec-rewards text-itec-rewards shrink-0" />
-      <span className="text-[11px] font-bold font-mono tracking-wide mt-0.5">{points} pts</span>
+      <Star className="size-4 fill-itec-rewards text-itec-rewards shrink-0" />
+      <span className="text-[12px] font-bold font-mono tracking-wide mt-0.5">
+        {points}
+      </span>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/Input";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { Button } from "@/components/ui/Button";
+import { MarkdownTextarea } from "@/components/ui/MarkdownTextarea";
 import { UploadCloud, Users, X, Plus, ImageOff } from "lucide-react";
 import { useToast } from "@features/notifications/components/atoms/Toast";
 import { coursesService } from "../../services/coursesService";
@@ -85,7 +86,7 @@ export const CourseGeneralData: React.FC<Props> = ({
     setProfesores(profesores.filter((_, i) => i !== idx));
   };
 
-  const handleProfesorKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleProfesorKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       addProfesor();
@@ -165,13 +166,14 @@ export const CourseGeneralData: React.FC<Props> = ({
         <div className="flex flex-col">
           <label className={LABEL_CLS}>Profesores / Docentes</label>
           <div className="flex flex-col sm:flex-row gap-2">
-            <Input
-              fullWidth
+            <MarkdownTextarea
               placeholder="Nombre y apellido, luego Enter..."
               value={profesorInput}
-              onChange={(e) => setProfesorInput(e.target.value)}
+              onChange={setProfesorInput}
               onKeyDown={handleProfesorKeyDown}
-              className="bg-itec-box border-itec-border focus:border-itec-section-courses/60 py-2.5 rounded-xl flex-1"
+              className="flex-1"
+              textareaClassName="bg-itec-box border-itec-border focus:border-itec-section-courses/60 py-2.5 rounded-xl min-h-[42px]"
+              hint=""
             />
             <Button type="button" variant="primary" hierarchy="outline" onClick={addProfesor} className="px-4 py-2.5 shrink-0">
               <Plus className="w-4 h-4 text-itec-section-courses" />
@@ -185,7 +187,7 @@ export const CourseGeneralData: React.FC<Props> = ({
                   className="flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-itec-section-courses/15 border border-itec-section-courses/30 text-itec-section-courses text-xs font-bold max-w-full"
                 >
                   <Users className="w-3 h-3 shrink-0" />
-                  <span className="truncate max-w-[10rem]">{p}</span>
+                  <span className="truncate max-w-40">{p}</span>
                   <button
                     type="button"
                     onClick={() => removeProfesor(idx)}
@@ -204,9 +206,16 @@ export const CourseGeneralData: React.FC<Props> = ({
 
         <div className="md:col-span-2 flex flex-col">
           <label className={LABEL_CLS}>Descripción corta</label>
-          <textarea placeholder="Breve resumen del curso..." value={desc} onChange={(e) => setDesc(e.target.value)} className="w-full bg-itec-box border border-itec-border rounded-xl px-3 py-2.5 text-sm text-itec-text placeholder-itec-gray/40 outline-none focus:border-itec-section-courses/60 min-h-[80px] resize-y custom-scrollbar" />
+          <MarkdownTextarea
+            placeholder="Breve resumen del curso..."
+            value={desc}
+            onChange={setDesc}
+            textareaClassName="rounded-xl py-2.5 min-h-[80px]"
+          />
         </div>
       </div>
     </div>
   );
 };
+
+
