@@ -9,11 +9,10 @@ import { CoursePlaylist } from "@features/courses/components/organisms/CoursePla
 import { useCourseById, useDeleteCourse } from "@features/courses/hooks/useCourses";
 import { useResources } from "@features/resources/hooks/useResources";
 
-// Nuevos componentes integrados
 import { CourseBreadcrumb } from "@features/courses/components/molecules/CourseBreadcrumb";
-import { CourseProgressBadge } from "@features/courses/components/atoms/CourseProgressBadge";
 import { ReportVideoModal } from "@features/courses/components/organisms/ReportVideoModal";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Trash, AlertTriangle } from "lucide-react";
+import type { Lesson } from "../../types/Course";
 
 const CourseAddResourceModal = React.lazy(() =>
   import("@features/courses/components/organisms/CourseAddResourceModal").then((m) => ({ default: m.CourseAddResourceModal }))
@@ -27,7 +26,7 @@ export const CourseDetail: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAdmin } = useAuthStore();
 
-  const { data: course, isLoading } = useCourseById(id ?? "");
+  const { data: course, isLoading, isError } = useCourseById(id ?? "");
   const { data: allResources = [] } = useResources();
   const deleteMutation = useDeleteCourse();
 
@@ -40,13 +39,21 @@ export const CourseDetail: React.FC = () => {
 
   const courseId = course?.id || (course as unknown as { _id?: string })?._id || "";
 
+  // ── Extraer todas las lecciones en orden lineal (Planing) ──
+  const flatLessons = useMemo<Lesson[]>(() => {
+    if (!course) return [];
+    if (course.sections && course.sections.length > 0) {
+      return course.sections.flatMap(s => s.lessons || []);
+    }
+    return course.videos || []; // Fallback legacy
+  }, [course]);
+
   useEffect(() => {
     if (courseId && user?.id) {
       try {
         const raw = localStorage.getItem(`itec_course_progress_${user.id}_${courseId}`);
         if (raw) setWatched(new Set(JSON.parse(raw)));
       } catch (e) {
-        // ignore JSON / storage errors
         void e;
       }
     }
@@ -57,17 +64,8 @@ export const CourseDetail: React.FC = () => {
     if (!courseId || !user?.id) return;
     setWatched((prev) => {
       const next = new Set(prev);
-      if (next.has(videoId)) {
-        next.delete(videoId);
-      } else {
-        next.add(videoId);
-      }
-      try {
-        localStorage.setItem(`itec_course_progress_${user.id}_${courseId}`, JSON.stringify([...next]));
-      } catch (e) {
-        // ignore storage errors
-        void e;
-      }
+      next.has(videoId) ? next.delete(videoId) : next.add(videoId);
+      try { localStorage.setItem(`itec_course_progress_${user.id}_${courseId}`, JSON.stringify([...next])); } catch (e) { void e; }
       return next;
     });
   };
@@ -86,87 +84,63 @@ export const CourseDetail: React.FC = () => {
   const relatedResources = useMemo(() => {
     if (!course || !allResources.length) return [];
     const clean = (course.title || "").toLowerCase().replace("curso de ", "").trim();
-    return allResources.filter((r: unknown) => {
-      const item = r as { materia?: string; title?: string };
-      return item.materia === course.materia || (item.title || "").toLowerCase().includes(clean);
-    });
+    return allResources.filter((r: any) => r.materia === course.materia || (r.title || "").toLowerCase().includes(clean));
   }, [course, allResources]);
 
-  const activeVideo = course?.videos?.[videoIndex];
-  
-  // Cálculo de progreso para el CourseProgressBadge
-  const progressPercent = course?.videos?.length 
-    ? Math.round((watched.size / course.videos.length) * 100) 
-    : 0;
+  const activeVideo = flatLessons[videoIndex];
+  const hasNext = videoIndex < flatLessons.length - 1;
+  const hasPrev = videoIndex > 0;
 
   if (isLoading) return (
     <MainLayout>
-      <div className="flex items-center justify-center h-[60vh]">
-        <div className="w-10 h-10 border-2 border-itec-gray/30 border-t-itec-blue-skye rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="w-10 h-10 border-2 border-itec-gray/30 border-t-itec-section-courses rounded-full animate-spin" />
       </div>
     </MainLayout>
   );
 
-  if (!course) return (
+  if (isError || !course) return (
     <MainLayout>
-      <div className="flex flex-col items-center justify-center h-[60vh] gap-3 text-itec-gray">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-itec-gray">
         <span className="text-4xl opacity-40">😕</span>
         <p className="font-bold text-sm">Curso no encontrado</p>
-        <Link to="/cursos" className="text-xs text-itec-blue-skye hover:underline">Volver a cursos</Link>
+        <Link to="/cursos" className="text-xs text-itec-section-courses hover:underline">Volver a cursos</Link>
       </div>
     </MainLayout>
   );
 
   return (
     <MainLayout>
-      <div className="max-w-6xl mx-auto px-2 pb-10">
-
-        {/* Breadcrumb + admin actions */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-          <CourseBreadcrumb crumbs={[{ label: 'Cursos', href: '/cursos' }, { label: course.title }]} />
+      <div className="max-w-[1400px] mx-auto w-full px-2 lg:px-6 pb-12">
+        
+        {/* ── Header ── */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <CourseBreadcrumb 
+            crumbs={[
+              { label: 'Cursos', href: '/cursos' }, 
+              { label: course.title, href: `/cursos/${courseId}` },
+              { label: activeVideo?.title || "Reproductor" }
+            ]} 
+          />
           
           {isAdmin && (
             <div className="flex items-center gap-2">
               <Link to={`/cursos/editar/${courseId}`}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-itec-border text-itec-gray hover:text-itec-text text-xs font-bold transition-all">
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-itec-box border border-itec-border text-itec-gray hover:text-white hover:border-white/20 text-xs font-bold transition-all">
                 <Edit className="size-4" /> Editar
               </Link>
-              <Button
-                onClick={handleDelete}
-                variant="danger"
-                hierarchy="solid"
-                className="px-3 py-1.5 rounded-lg text-xs font-bold"
-                icon={<Trash className="size-4" />}
-              >
+              <Button onClick={handleDelete} variant="danger" hierarchy="solid" className="px-3 py-1.5 rounded-lg text-xs font-bold" icon={<Trash className="size-4" />}>
                 Eliminar
               </Button>
             </div>
           )}
         </div>
 
-        {/* Título + badges */}
-        <div className="flex flex-wrap items-start gap-2 mb-6">
-          <h1 className="text-xl md:text-2xl font-bold text-itec-text leading-snug flex-1">{course.title}</h1>
+        {/* ── Layout Principal: Grid adaptativo ── */}
+        <div className="grid lg:grid-cols-[1fr_332px] xl:grid-cols-[1fr_380px] gap-6 lg:gap-8 items-start">
           
-          {/* Badge de Progreso Visual */}
-          {progressPercent > 0 && (
-            <div className="mt-0.5">
-              <CourseProgressBadge percent={progressPercent} />
-            </div>
-          )}
-
-          {course.categoria === "Oficial" && (
-            <span className="shrink-0 mt-0.5 bg-itec-blue/20 text-itec-blue-skye border border-itec-blue-skye/30 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest">
-              Oficial
-            </span>
-          )}
-          {course.materia && <span className="w-full text-xs text-itec-gray">{course.materia}</span>}
-        </div>
-
-        {/* Layout: player + playlist */}
-        <div className="flex flex-col lg:flex-row gap-5">
-          {/* Player — ocupa todo el ancho en mobile, 2/3 en desktop */}
-          <div className="flex-1 min-w-0">
+          {/* Columna Izquierda: Reproductor */}
+          <div className="flex flex-col min-w-0 w-full gap-6">
             <CourseVideoPlayer
               course={course}
               activeVideo={activeVideo}
@@ -176,42 +150,43 @@ export const CourseDetail: React.FC = () => {
               onToggleWatched={toggleWatched}
               onOpenMaterialModal={() => setMaterialOpen(true)}
               onShare={handleShare}
+              onNext={() => hasNext && setVideoIndex(videoIndex + 1)}
+              onPrev={() => hasPrev && setVideoIndex(videoIndex - 1)}
+              hasNext={hasNext}
+              hasPrev={hasPrev}
             />
             
-            {/* Botón de reporte integrado debajo del reproductor */}
-            <div className="flex justify-end mt-2">
-              <button 
-                onClick={() => setReportOpen(true)}
-                className="flex items-center gap-1.5 text-xs text-itec-gray hover:text-itec-red transition-colors"
-              >
-                🚩 Reportar video
+            {/* Reportar en Desktop inferior */}
+            <div className="flex justify-end border-t border-itec-border pt-4">
+              <button onClick={() => setReportOpen(true)} className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-itec-gray hover:text-itec-red transition-colors">
+                <AlertTriangle className="size-3.5" /> Reportar video
               </button>
             </div>
-
-            {/* Botón "Ver recursos de la clase" en mobile */}
+            
+            {/* Botón de añadir recurso en mobile */}
             {isAdmin && (
               <button onClick={() => setAddResOpen(true)}
-                className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-itec-border text-itec-gray hover:text-itec-text hover:border-white/20 text-xs font-semibold transition-all lg:hidden">
-                <Icons type="plus" className="w-3.5 h-3.5" /> Añadir recurso
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-itec-border bg-itec-box text-itec-gray hover:text-white hover:border-white/20 text-xs font-semibold transition-all lg:hidden">
+                <Icons type="plus" className="size-4" /> Añadir recurso a la materia
               </button>
             )}
           </div>
 
-          {/* Playlist */}
-          <div className="lg:w-80 xl:w-96 shrink-0">
+          {/* Columna Derecha: Playlist (Sticky en Desktop) */}
+          <aside className="lg:sticky lg:top-24 flex flex-col gap-4">
             <CoursePlaylist
-              videos={course.videos}
+              sections={course.sections}
               currentIndex={videoIndex}
               onSelectVideo={setVideoIndex}
               watchedVideos={watched}
             />
             {isAdmin && (
               <button onClick={() => setAddResOpen(true)}
-                className="hidden lg:flex mt-3 w-full items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-itec-border text-itec-gray hover:text-itec-text hover:border-white/20 text-xs font-semibold transition-all">
-                <Icons type="plus" className="w-3.5 h-3.5" /> Añadir recurso
+                className="hidden lg:flex w-full items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-itec-border bg-itec-box text-itec-gray hover:text-white hover:border-white/20 text-xs font-semibold transition-all">
+                <Icons type="plus" className="size-4" /> Añadir recurso
               </button>
             )}
-          </div>
+          </aside>
         </div>
       </div>
 
@@ -221,16 +196,15 @@ export const CourseDetail: React.FC = () => {
         {isAdmin && <CourseAddResourceModal isOpen={isAddResOpen} onClose={() => setAddResOpen(false)} courseTitle={course.title} materia={course.materia ?? ""} />}
       </Suspense>
 
-      {/* Modal de Reporte */}
-          {activeVideo && (
-            <ReportVideoModal
-              isOpen={reportOpen}
-              onClose={() => setReportOpen(false)}
-              courseId={courseId}
-              videoId={(activeVideo as unknown as { _id?: string; id?: string })._id || (activeVideo as any).id}
-              videoTitle={(activeVideo as any).title}
-            />
-          )}
+      {activeVideo && (
+        <ReportVideoModal
+          isOpen={reportOpen}
+          onClose={() => setReportOpen(false)}
+          courseId={courseId}
+          videoId={activeVideo.id || (activeVideo as any)._id || ""}
+          videoTitle={activeVideo.title}
+        />
+      )}
     </MainLayout>
   );
 };

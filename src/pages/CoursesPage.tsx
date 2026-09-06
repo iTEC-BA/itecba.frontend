@@ -1,6 +1,3 @@
-// src/pages/CoursesPage.tsx
-// Pagina de cursos: busqueda normalizada, filtros, paginacion y modales admin.
-// Debe estar envuelta en <ToastProvider> (lo hace App.tsx).
 import React, { useState, useEffect } from "react";
 
 import { MainLayout }     from "@/components/templates/MainLayout";
@@ -8,7 +5,7 @@ import { PageHeader }     from "@/components/ui/PageHeader";
 import { PaginationBar }  from "@/components/ui/PaginationBar";
 import { usePagination }  from "@/hooks/usePagination";
 import { usePageTitle }   from "@/hooks/usePageTitle";
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore }   from '@/stores/authStore';
 import { useToast }       from "@/features/notifications/components/atoms/Toast";
 
 import { useCourses, useDeleteCourse }  from "@/features/courses/hooks/useCourses";
@@ -21,7 +18,6 @@ import {
 } from "@/features/courses/components/organisms/CourseGrid";
 import { AddCourseModal }    from "@/features/courses/components/organisms/AddCourseModal";
 import { BrokenVideosModal } from "@/features/courses/components/organisms/BrokenVideosModal";
-import { CourseResultsInfo } from "@/features/courses/components/atoms/CourseResultsInfo";
 import type { CourseData }   from "@/features/courses/services/coursesService";
 
 const PAGE_SIZE = 9;
@@ -70,7 +66,7 @@ export const CoursesPage: React.FC = () => {
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    if (!window.confirm("Eliminar este curso permanentemente?")) return;
+    if (!window.confirm("¿Eliminar este curso permanentemente?")) return;
     deleteMutation.mutate(id, {
       onSuccess: () => toast.success("Curso eliminado"),
       onError:   () => toast.error("Error al eliminar el curso"),
@@ -83,10 +79,10 @@ export const CoursesPage: React.FC = () => {
   return (
     <MainLayout>
       <PageHeader
-        title="Cursos"
-        description="Explora el contenido educativo creado por la comunidad iTEC y el equipo oficial."
+        title="Todos los cursos de la Academia"
+        description="Explora rutas de aprendizaje, preparate para los exámenes y domina nuevas tecnologías."
         iconType="video"
-        colorTheme="blue"
+        colorTheme="course"
       >
         {isAdmin && (
           <CourseAdminBar
@@ -96,24 +92,26 @@ export const CoursesPage: React.FC = () => {
         )}
       </PageHeader>
 
-      <CourseFilters filters={filters} isLoading={isLoading} />
+      <div className="max-w-7xl mx-auto w-full">
+        <CourseFilters filters={filters} isLoading={isLoading} />
 
-      <CourseResultsInfo
-        total={filteredCourses.length}
-        page={page}
-        totalPages={totalPages}
-        pageSize={PAGE_SIZE}
-      />
+        <div className="flex items-center justify-between mb-4 mt-2">
+          <p className="text-xs text-itec-gray whitespace-nowrap">
+            Mostrando <span className="text-itec-text font-bold">{filteredCourses.length}</span> cursos disponibles
+          </p>
+          <div className="flex-1 hidden sm:block border-t border-dashed border-white/10 mx-4"></div>
+        </div>
 
-      <CourseGrid
-        courses={pagedWithProgress}
-        isLoading={isLoading}
-        isAdmin={isAdmin}
-        onDelete={handleDelete}
-        onEdit={isAdmin ? handleEdit : undefined}
-      />
+        <CourseGrid
+          courses={pagedWithProgress}
+          isLoading={isLoading}
+          isAdmin={isAdmin}
+          onDelete={handleDelete}
+          onEdit={isAdmin ? handleEdit : undefined}
+        />
 
-      <PaginationBar page={page} totalPages={totalPages} onChange={setPage} />
+        <PaginationBar page={page} totalPages={totalPages} onChange={setPage} />
+      </div>
 
       {isAdmin && (
         <>

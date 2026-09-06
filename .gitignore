@@ -27,6 +27,8 @@ dist-ssr
 *.sh
 *.env
 .env
+*.bak
+*.tsbuildinfo
 .vercel
 empaquetar_contexto.sh
 empaquetar.sh

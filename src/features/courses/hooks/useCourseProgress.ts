@@ -1,4 +1,5 @@
 // src/features/courses/hooks/useCourseProgress.ts
+import { useShallow } from "zustand/shallow";
 //
 // Encapsula toda la lógica de progreso (marcar vistos, persistir, leer)
 // que antes vivía dentro de CourseDetail.tsx (264 líneas).
@@ -16,7 +17,7 @@ export const useCourseProgress = (course: CourseData | null | undefined, userId:
     toggleWatched,
     loadWatchedFromStorage,
     persistWatched,
-  } = useCourseStore(selectPlayer);
+  } = useCourseStore(useShallow(selectPlayer));
 
   const courseId = course?.id || (course as any)?._id || "";
   const watchedForCourse = courseId ? (watchedVideos[courseId] ?? new Set<string>()) : new Set<string>();

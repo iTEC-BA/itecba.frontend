@@ -1,13 +1,10 @@
-// src/features/courses/components/organisms/AddCourseModal.tsx
-// Modal para crear/editar cursos. Solo para admins.
-// Usa LayoutModal global, iconos lucide-react y notificaciones Toast.
 import React, { useState, useEffect } from "react";
 import { LayoutModal }    from "@/components/templates/LayoutModal";
 import { Button }         from "@/components/ui/Button";
 import { useToast }       from "@/features/notifications/components/atoms/Toast";
-import { coursesService, type CourseData } from "../../services/coursesService";
+import type { CourseData, Section, Lesson } from "../../types/Course";
 import { CourseGeneralData }   from "../molecules/CourseGeneralData";
-import { CourseVideoListEditor, type VideoItem } from "./CourseVideoListEditor";
+import { CourseCurriculumEditor } from "./CourseCurriculumEditor";
 import { useAddCourse, useUpdateCourse } from "../../hooks/useCourses";
 
 interface Props {
@@ -15,11 +12,6 @@ interface Props {
   onClose:         () => void;
   existingCourse?: CourseData | null;
 }
-
-const BLANK_VIDEO: VideoItem = { title: "", youtubeId: "", duration: "" };
-
-const toVideoItems = (videos: CourseData["videos"]): VideoItem[] =>
-  videos?.map((v) => ({ title: v.title, youtubeId: v.youtubeId, duration: v.duration ?? "0:00" })) ?? [BLANK_VIDEO];
 
 export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCourse }) => {
   const { toast } = useToast();
@@ -29,10 +21,9 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
   const [image,       setImage]       = useState("");
   const [materia,     setMateria]     = useState("");
   const [categoria,   setCategoria]   = useState("Comunidad");
-  const [videos,      setVideos]      = useState<VideoItem[]>([BLANK_VIDEO]);
-  const [mode,        setMode]        = useState<"manual" | "youtube">("manual");
-  const [playlistUrl, setPlaylistUrl] = useState("");
-  const [isFetching,  setIsFetching]  = useState(false);
+  const [status,      setStatus]      = useState<"draft"|"approved"|"archived">("approved");
+  const [sections,    setSections]    = useState<Section[]>([]);
+  const [profesores,  setProfesores]  = useState<string[]>([]);
   const [error,       setError]       = useState("");
 
   const addMutation    = useAddCourse();
@@ -47,52 +38,53 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
       setImage(existingCourse.imageUrl ?? "");
       setMateria(existingCourse.materia ?? "");
       setCategoria(existingCourse.categoria ?? "Comunidad");
-      setVideos(toVideoItems(existingCourse.videos));
+      setStatus((existingCourse.status as any) ?? "approved");
+      setProfesores(Array.isArray(existingCourse.profesores) ? [...existingCourse.profesores] : []);
+      
+      if (existingCourse.sections && existingCourse.sections.length > 0) {
+        setSections(existingCourse.sections);
+      } else if (existingCourse.videos && existingCourse.videos.length > 0) {
+        setSections([{ title: "Contenido General", orderIndex: 0, lessons: existingCourse.videos as any }]);
+      } else {
+        setSections([{ title: "Módulo 1", orderIndex: 0, lessons: [{ title: "", youtubeId: "", duration: "0:00" }] }]);
+      }
     } else {
       setTitle(""); setDesc(""); setImage(""); setMateria("");
-      setCategoria("Comunidad"); setVideos([BLANK_VIDEO]);
-      setPlaylistUrl(""); setMode("manual");
+      setCategoria("Comunidad"); setStatus("approved"); setProfesores([]);
+      setSections([{ title: "Módulo 1", orderIndex: 0, lessons: [{ title: "", youtubeId: "", duration: "0:00" }] }]);
     }
     setError("");
   }, [isOpen, existingCourse]);
-
-  const handleFetchPlaylist = async () => {
-    if (!playlistUrl) return;
-    setIsFetching(true); setError("");
-    try {
-      const data = await coursesService.fetchPlaylistDetails(playlistUrl);
-      if (!title && data.title) setTitle(data.title);
-      const vids = (data.videos ?? []).map((v: any) => ({
-        title: v.title ?? "", youtubeId: v.youtubeId ?? v.id ?? "", duration: v.duration ?? "0:00",
-      }));
-      if (vids.length) {
-        setVideos(vids);
-        if (!image) setImage(`https://i.ytimg.com/vi/${vids[0].youtubeId}/hqdefault.jpg`);
-      } else {
-        setError("La playlist fue leída pero está vacía.");
-      }
-    } catch (e: any) {
-      setError(e.message ?? "Error al conectar con YouTube.");
-    } finally {
-      setIsFetching(false);
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isPending) return;
     setError("");
-    const cleanVids = videos.filter((v) => v.title.trim() && v.youtubeId.trim());
-    if (!title || !desc || !materia || !cleanVids.length) {
-      setError("Completá título, descripción, materia y al menos un video válido."); return;
+    
+    const cleanSections = sections.map((sec, i) => ({
+      ...sec,
+      orderIndex: i,
+      lessons: sec.lessons.filter(l => l.title.trim() && l.youtubeId.trim()).map((l: Lesson, j: number) => ({ ...l, orderIndex: j }))
+    })).filter(sec => sec.lessons.length > 0 && sec.title.trim());
+
+    const cleanProfesores = profesores.map((p) => p.trim()).filter(Boolean);
+
+    if (!title || !desc || !materia || !cleanSections.length) {
+      setError("Completá título, descripción, materia y al menos un módulo con un video válido."); return;
     }
+
+    const firstValidVideo = cleanSections[0].lessons[0].youtubeId;
+
     const payload = {
       title, description: desc,
-      imageUrl: image || `https://i.ytimg.com/vi/${cleanVids[0].youtubeId}/hqdefault.jpg`,
-      materia, categoria,
-      videos: cleanVids.map((v, i) => ({ id: `v_${Date.now()}_${i}`, ...v, duration: v.duration || "0:00" })),
+      imageUrl: image || `https://i.ytimg.com/vi/${firstValidVideo}/hqdefault.jpg`,
+      materia, categoria, status,
+      profesores: cleanProfesores,
+      sections: cleanSections
     };
-    const editId = existingCourse?.id ?? (existingCourse as any)?._id;
+
+    const editId = existingCourse?.id || existingCourse?._id;
+    
     if (editId) {
       updateMutation.mutate(
         { id: editId, courseData: payload },
@@ -101,7 +93,7 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
       );
     } else {
       addMutation.mutate(
-        { ...payload, progress: 0, playlistId: mode === "youtube" ? playlistUrl : `custom_${Date.now()}` } as any,
+        { ...payload, progress: 0, playlistId: "" } as any,
         { onSuccess: () => { toast.success("Curso publicado"); onClose(); },
           onError:   () => setError("Error al publicar el curso.") }
       );
@@ -113,35 +105,32 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
       isOpen={isOpen}
       onClose={onClose}
       title={existingCourse ? "Editar curso" : "Nuevo curso"}
-      description={existingCourse ? "Modificá la información o los videos." : "Completá los datos y publicá el contenido."}
-      maxWidth="max-w-2xl"
+      description={existingCourse ? "Modificá la información o los módulos." : "Completá los datos y publicá el contenido."}
+      maxWidth="max-w-4xl"
     >
       <form onSubmit={handleSubmit} className="flex flex-col">
         {error && (
-          <div className="mx-5 mt-4 bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold p-3 rounded-xl">
+          <div className="mx-4 sm:mx-6 mt-4 bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold p-3 rounded-xl">
             {error}
           </div>
         )}
-        <div className="p-5 space-y-6 overflow-y-auto max-h-[60vh]">
+        <div className="p-4 sm:p-6 space-y-8 overflow-y-auto max-h-[65vh] sm:max-h-[75vh]">
           <CourseGeneralData
             title={title} setTitle={setTitle}
             image={image} setImage={setImage}
             desc={desc}   setDesc={setDesc}
             materia={materia} setMateria={setMateria}
             categoria={categoria} setCategoria={setCategoria}
+            status={status} setStatus={setStatus}
+            profesores={profesores} setProfesores={setProfesores}
           />
-          <CourseVideoListEditor
-            videos={videos} setVideos={setVideos}
-            mode={mode} setMode={setMode}
-            playlistUrl={playlistUrl} setPlaylistUrl={setPlaylistUrl}
-            onFetchPlaylist={handleFetchPlaylist} isFetching={isFetching}
-          />
+          <CourseCurriculumEditor sections={sections} setSections={setSections} />
         </div>
-        <div className="flex gap-3 p-5 border-t border-white/8 shrink-0">
-          <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} disabled={isPending} className="flex-1">
+        <div className="flex flex-col sm:flex-row gap-3 p-4 sm:p-6 border-t border-white/10 shrink-0 bg-itec-box">
+          <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} disabled={isPending} className="flex-1 py-3">
             Cancelar
           </Button>
-          <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isPending}>
+          <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={isPending} className="py-3 bg-itec-section-courses hover:bg-itec-section-courses/90">
             {existingCourse ? "Guardar cambios" : "Publicar curso"}
           </Button>
         </div>

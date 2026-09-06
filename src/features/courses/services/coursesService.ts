@@ -16,7 +16,13 @@ export interface CourseData {
   progress: number;
   imageUrl: string;
   playlistId: string;
-  videos: Video[];
+  /** @deprecated usar `sections`. Se mantiene para cursos legacy no migrados. */
+  videos?: Video[];
+  sections?: import("../types/Course").Section[];
+  /** Uno o más profesores/docentes a cargo del curso. */
+  profesores?: string[];
+  status?: "draft" | "approved" | "archived";
+  createdBy?: string;
   createdAt?: Date | string;
   materia?: string;
   categoria?: string;
@@ -31,6 +37,20 @@ const getToken = async () => {
 };
 
 export const coursesService = {
+  uploadCover: async (file: File): Promise<string> => {
+    const token = await getToken();
+    const formData = new FormData();
+    formData.append("cover", file);
+    const res = await fetch(`${API_URL}/upload-cover`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Error al subir la portada");
+    return data.url;
+  },
+
 
   // -------------------------------------------------------------------------
   // GET /api/courses

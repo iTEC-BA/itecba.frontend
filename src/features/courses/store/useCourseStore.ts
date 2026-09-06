@@ -114,6 +114,12 @@ export const useCourseStore = create<CourseUIState>((set, get) => ({
 }));
 
 // ── Selectores derivados (evitan re-renders innecesarios) ─────────────────────
+// IMPORTANTE: estos selectores devuelven un objeto NUEVO en cada llamada.
+// SIEMPRE deben consumirse envueltos en useShallow (zustand/shallow):
+//   const x = useCourseStore(useShallow(selectPlayer));
+// Usarlos sin useShallow provoca renders infinitos
+// ("Maximum update depth exceeded").
+
 export const selectFilters = (s: CourseUIState) => ({
   searchQuery: s.searchQuery,
   selectedMateria: s.selectedMateria,

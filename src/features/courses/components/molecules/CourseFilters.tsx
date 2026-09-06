@@ -1,9 +1,6 @@
-// src/features/courses/components/molecules/CourseFilters.tsx
-// Filtros de cursos: búsqueda normalizada + materia + pills de categoría.
 import React from "react";
 import { X } from "lucide-react";
 import { CourseSearchInput } from "../atoms/CourseSearchInput";
-// import { MateriaSelect }     from "../atoms/MateriaSelect";
 import { CategoryPill }      from "../atoms/CategoryPill";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 
@@ -40,26 +37,34 @@ export const CourseFilters: React.FC<Props> = ({ filters, isLoading }) => {
   const hasActive = searchQuery !== "" || selectedMateria !== "" || selectedCategoria !== "";
 
   return (
-    <div className="mb-6 space-y-3">
-      {/* Fila 1: búsqueda + materia */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        <CourseSearchInput value={searchQuery} onChange={setSearchQuery} disabled={isLoading} />
-        {materiasDisponibles.length > 0 && (
-          <CustomSelect 
-            value={selectedMateria}
-            options={materiasDisponibles.map((materia) => ({
-              label: materia,
-              value: materia,
-            }))}
-            onChange={setSelectedMateria}
-            disabled={isLoading}
-            placeholder="Todas las materias"
+    <div className="mb-6 flex flex-col gap-4">
+      {/* ── Fila de Buscador y Selectores (Estilo Midudev adaptado a Flat) ── */}
+      <div className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="w-full sm:flex-1">
+          <CourseSearchInput 
+            value={searchQuery} 
+            onChange={setSearchQuery} 
+            disabled={isLoading} 
+            placeholder="Buscar cursos por título, tecnología o descripción..."
           />
+        </div>
+        
+        {materiasDisponibles.length > 0 && (
+          <div className="w-full sm:w-56 shrink-0 relative z-10">
+            <CustomSelect 
+              value={selectedMateria}
+              options={materiasDisponibles.map((materia) => ({ label: materia, value: materia }))}
+              onChange={setSelectedMateria}
+              disabled={isLoading}
+              placeholder="Todas las materias"
+              className="py-3"
+            />
+          </div>
         )}
       </div>
 
-      {/* Fila 2: pills de categoría + limpiar */}
-      <div className="flex items-center justify-between gap-3">
+      {/* ── Fila de Pills y Limpiar Filtros ── */}
+      <div className="flex items-center justify-between gap-3 relative z-0">
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
           {CATEGORIAS.map((cat) => (
             <CategoryPill
@@ -70,13 +75,13 @@ export const CourseFilters: React.FC<Props> = ({ filters, isLoading }) => {
             />
           ))}
         </div>
+        
         {hasActive && (
           <button
             onClick={handleClearFilters}
-            className="shrink-0 flex items-center gap-1.5 text-xs text-itec-gray hover:text-itec-text transition-colors font-medium"
+            className="shrink-0 flex items-center gap-1.5 text-xs text-itec-gray hover:text-white bg-itec-box border border-itec-border px-3 py-1.5 rounded-lg transition-colors font-bold"
           >
-            <X className="size-3" />
-            Limpiar
+            <X className="size-3.5" /> Limpiar
           </button>
         )}
       </div>

@@ -8,6 +8,7 @@ export const BenefitsPage      = lazy(() => import("@pages/BenefitsPage").then(m
 export const CourseEditDetail  = lazy(() => import("@/features/courses/pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
 export const HomePage          = lazy(() => import("@pages/HomePage").then(m => ({ default: m.HomePage })));
 export const CoursesPage       = lazy(() => import("@pages/CoursesPage").then(m => ({ default: m.CoursesPage })));
+export const CourseLandingPage = lazy(() => import("@/features/courses/pages/CourseLandingPage").then(m => ({ default: m.CourseLandingPage })));
 export const CourseDetail      = lazy(() => import("@/features/courses/pages/CourseDetail").then(m => ({ default: m.CourseDetail })));
 export const ResourcesPage     = lazy(() => import("@pages/ResourcesPage").then(m => ({ default: m.ResourcesPage })));
 export const FaqsPage          = lazy(() => import("@pages/FaqsPage").then(m => ({ default: m.FaqsPage })));

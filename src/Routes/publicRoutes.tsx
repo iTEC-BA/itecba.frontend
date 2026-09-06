@@ -29,6 +29,7 @@ import {
   CalendarioPage,
   PluginsPage,
   TerminosPage,
+  CourseLandingPage,
 } from "./lazyPages";
 
 export const PublicRoutes = (
@@ -39,7 +40,8 @@ export const PublicRoutes = (
     <Route path="/foro/:postId" element={<PageSuspense><ForumThreadPage /></PageSuspense>} />
     <Route path="/login" element={<PageSuspense><LoginPage /></PageSuspense>} />
     <Route path="/cursos" element={<PageSuspense><PageGate path="/cursos"><CoursesPage /></PageGate></PageSuspense>} />
-    <Route path="/cursos/:id" element={<PageSuspense><CourseDetail /></PageSuspense>} />
+    <Route path="/cursos/:id" element={<PageSuspense><CourseLandingPage /></PageSuspense>} />
+    <Route path="/cursos/:id/clase" element={<PageSuspense><CourseDetail /></PageSuspense>} />
     <Route path="/faqs" element={<PageSuspense><PageGate path="/faqs"><FaqsPage /></PageGate></PageSuspense>} />
     <Route path="/ingreso" element={<PageSuspense><AdmissionPage /></PageSuspense>} />
     <Route path="/grado" element={<PageSuspense><PageGate path="/grado"><GradePage /></PageGate></PageSuspense>} />

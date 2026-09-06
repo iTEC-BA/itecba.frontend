@@ -92,9 +92,9 @@ agregar_carpeta "src/features/notifications/"
 
 echo "5/5 Agregando el Feature específico: $FEATURE_NAME..."
 agregar_carpeta "src/features/$FEATURE_NAME"
-agregar_carpeta "src/features/profile"
-agregar_archivo "src/pages/profilePage.tsx"
-# agregar_archivo "src/pages/ErrorPage.tsx"
+# agregar_carpeta "src/features/profile"
+# agregar_archivo "src/pages/profilePage.tsx"
+# agregar_archivo "src/pages/CourseLandingPage.tsx"
 
 # Agregar la página (View) principal del feature
 PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"
