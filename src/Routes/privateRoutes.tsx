@@ -8,7 +8,6 @@ import { PageGate } from "@features/pageAccess/components/PageGate";
 import { PageSuspense } from "./PageSuspense";
 import {
   TruekeTECPage,
-  CourseEditDetail,
   BenefitsPage,
   ResourcesPage,
   ProgressPage,
@@ -20,7 +19,6 @@ import {
 export const PrivateRoutes = (
   <>
     <Route path="/trueketec" element={<PageSuspense><PageGate path="/trueketec"><TruekeTECPage /></PageGate></PageSuspense>} />
-    <Route path="/cursos/editar/:id" element={<PageSuspense><CourseEditDetail /></PageSuspense>} />
     <Route path="/beneficios" element={<PageSuspense><PageGate path="/beneficios"><BenefitsPage /></PageGate></PageSuspense>} />
     <Route path="/recursos" element={<PageSuspense><PageGate path="/recursos"><ResourcesPage /></PageGate></PageSuspense>} />
     <Route path="/progreso" element={<PageSuspense><PageGate path="/progreso"><ProgressPage /></PageGate></PageSuspense>} />

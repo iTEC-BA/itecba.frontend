@@ -48,7 +48,7 @@ export const NotificationBanner: React.FC = () => {
   if (!currentAnn) return null;
 
   return (
-    <div className="relative w-full mb-8">
+    <div className="relative w-full">
       {/* Contenedor del Banner */}
       <div className="relative rounded-2xl overflow-hidden shadow-lg border border-white/5">
         <AnnouncementBanner

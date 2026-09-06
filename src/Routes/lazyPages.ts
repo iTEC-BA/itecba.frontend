@@ -5,7 +5,6 @@
 import { lazy } from "react";
 
 export const BenefitsPage      = lazy(() => import("@pages/BenefitsPage").then(m => ({ default: m.BenefitsPage })));
-export const CourseEditDetail  = lazy(() => import("@/features/courses/pages/CourseEditDetail").then(m => ({ default: m.CourseEditDetail })));
 export const HomePage          = lazy(() => import("@pages/HomePage").then(m => ({ default: m.HomePage })));
 export const CoursesPage       = lazy(() => import("@pages/CoursesPage").then(m => ({ default: m.CoursesPage })));
 export const CourseLandingPage = lazy(() => import("@/features/courses/pages/CourseLandingPage").then(m => ({ default: m.CourseLandingPage })));

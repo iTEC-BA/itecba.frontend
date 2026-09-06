@@ -1,6 +1,7 @@
 import React from "react";
-import { Clock, List, LayoutGrid, CheckCircle, Users } from "lucide-react";
+import { Clock, List, LayoutGrid, Users } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { MarkdownContent } from "@/components/ui/MarkdownContent";
 import type { CourseData } from "../../types/Course";
 
 interface Props {
@@ -42,11 +43,13 @@ export const CourseSidebar: React.FC<Props> = ({ course, progressPercent, onStar
             <dd className="font-bold text-itec-text">{course.categoria || "Comunidad"}</dd>
           </div>
           {profesores.length > 0 && (
-            <div className="flex items-start justify-between gap-3 text-xs">
+            <div className="flex flex-col gap-1.5 text-xs pt-1 border-t border-itec-border/60">
               <dt className="flex items-center gap-2 text-itec-gray font-medium shrink-0">
                 <Users className="size-4" /> {profesores.length > 1 ? "Profesores" : "Profesor"}
               </dt>
-              <dd className="font-bold text-itec-text text-right break-words">{profesores.join(", ")}</dd>
+              <dd className="text-right">
+                <MarkdownContent content={profesores.join(", ")} className="[&_p]:text-right [&_p]:font-bold [&_p]:text-itec-text [&_p]:mb-0" />
+              </dd>
             </div>
           )}
         </dl>

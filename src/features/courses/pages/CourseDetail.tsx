@@ -11,8 +11,9 @@ import { useResources } from "@features/resources/hooks/useResources";
 
 import { CourseBreadcrumb } from "@features/courses/components/molecules/CourseBreadcrumb";
 import { ReportVideoModal } from "@features/courses/components/organisms/ReportVideoModal";
+import { AddCourseModal } from "@features/courses/components/organisms/AddCourseModal";
 import { Edit, Trash, AlertTriangle } from "lucide-react";
-import type { Lesson } from "../../types/Course";
+import type { Lesson } from "../types/Course";
 
 const CourseAddResourceModal = React.lazy(() =>
   import("@features/courses/components/organisms/CourseAddResourceModal").then((m) => ({ default: m.CourseAddResourceModal }))
@@ -36,6 +37,7 @@ export const CourseDetail: React.FC = () => {
   const [isAddResOpen, setAddResOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [copyOk, setCopyOk] = useState(false);
+  const [isEditOpen, setEditOpen] = useState(false);
 
   const courseId = course?.id || (course as unknown as { _id?: string })?._id || "";
 
@@ -125,10 +127,12 @@ export const CourseDetail: React.FC = () => {
           
           {isAdmin && (
             <div className="flex items-center gap-2">
-              <Link to={`/cursos/editar/${courseId}`}
+              <button
+                type="button"
+                onClick={() => setEditOpen(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-itec-box border border-itec-border text-itec-gray hover:text-white hover:border-white/20 text-xs font-bold transition-all">
                 <Edit className="size-4" /> Editar
-              </Link>
+              </button>
               <Button onClick={handleDelete} variant="danger" hierarchy="solid" className="px-3 py-1.5 rounded-lg text-xs font-bold" icon={<Trash className="size-4" />}>
                 Eliminar
               </Button>
@@ -203,6 +207,14 @@ export const CourseDetail: React.FC = () => {
           courseId={courseId}
           videoId={activeVideo.id || (activeVideo as any)._id || ""}
           videoTitle={activeVideo.title}
+        />
+      )}
+
+      {isAdmin && (
+        <AddCourseModal
+          isOpen={isEditOpen}
+          onClose={() => setEditOpen(false)}
+          existingCourse={course}
         />
       )}
     </MainLayout>

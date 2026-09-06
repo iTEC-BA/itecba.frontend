@@ -101,9 +101,16 @@ export const CourseVideoPlayer: React.FC<Props> = ({
           <div className="w-12 h-12 rounded-xl bg-itec-sidebar border border-itec-border flex items-center justify-center overflow-hidden shrink-0">
             <Icons type="user" className="w-6 h-6 text-itec-gray" />
           </div>
-          <div className="flex flex-col">
-            <h4 className="font-bold text-itec-text leading-tight">{course.createdBy || "Equipo iTEC BA"}</h4>
-            <p className="text-xs text-itec-gray mt-0.5">Docente del curso</p>
+          <div className="flex flex-col min-w-0">
+            {course.profesores && course.profesores.length > 0 ? (
+              <MarkdownContent
+                content={course.profesores.join(", ")}
+                className="[&_p]:font-bold [&_p]:text-itec-text [&_p]:mb-0 [&_p]:leading-tight"
+              />
+            ) : (
+              <h4 className="font-bold text-itec-text leading-tight">{course.createdBy || "Equipo iTEC BA"}</h4>
+            )}
+            <p className="text-xs text-itec-gray mt-0.5">{course.profesores && course.profesores.length > 1 ? "Docentes del curso" : "Docente del curso"}</p>
           </div>
         </div>
 

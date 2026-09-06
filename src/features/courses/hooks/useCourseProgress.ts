@@ -38,11 +38,14 @@ export const useCourseProgress = (course: CourseData | null | undefined, userId:
   };
 
   const progressPercent = (() => {
-    const total = course?.videos?.length || 0;
+    const lessons = course?.sections?.length
+      ? course.sections.flatMap((s) => s.lessons || [])
+      : course?.videos || [];
+    const total = lessons.length;
     if (total === 0) return 0;
-    const watched = course?.videos?.filter(
-      (v) => watchedForCourse.has(v.youtubeId || v.id || "")
-    ).length || 0;
+    const watched = lessons.filter(
+      (l: any) => watchedForCourse.has(l.youtubeId || l._id || l.id || "")
+    ).length;
     return Math.round((watched / total) * 100);
   })();
 

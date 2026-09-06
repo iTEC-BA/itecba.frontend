@@ -1,17 +1,24 @@
 import React, { useMemo } from "react";
 import { Icons } from "@/components/ui/icons/Icons";
 import { ProgressBar } from "../atoms/ProgressBar";
-import type { Video } from "../../services/coursesService";
+import type { Section, Lesson } from "../../types/Course";
 
-interface Props { videos?: Video[]; currentIndex: number; onSelectVideo: (i: number) => void; watchedVideos?: Set<string>; }
+interface Props { sections?: Section[]; currentIndex: number; onSelectVideo: (i: number) => void; watchedVideos?: Set<string>; }
 
-export const CoursePlaylist: React.FC<Props> = ({ videos = [], currentIndex, onSelectVideo, watchedVideos = new Set() }) => {
+// Aplana secciones -> lecciones en orden, manteniendo el índice global
+// que usan CourseDetail.tsx / CourseVideoPlayer para saber "cuál se está viendo".
+const flattenLessons = (sections: Section[]): Lesson[] =>
+  sections.flatMap((s) => s.lessons || []);
+
+export const CoursePlaylist: React.FC<Props> = ({ sections = [], currentIndex, onSelectVideo, watchedVideos = new Set() }) => {
+  const lessons = useMemo(() => flattenLessons(sections), [sections]);
+
   const { total, watchedCount, pct } = useMemo(() => {
-    const total = videos.length;
+    const total = lessons.length;
     if (!total) return { total: 0, watchedCount: 0, pct: 0 };
-    const watchedCount = videos.filter((v) => watchedVideos.has(v.youtubeId || v.id || "")).length;
+    const watchedCount = lessons.filter((l) => watchedVideos.has(l.youtubeId || l._id || "")).length;
     return { total, watchedCount, pct: Math.round((watchedCount / total) * 100) };
-  }, [videos, watchedVideos]);
+  }, [lessons, watchedVideos]);
 
   if (!total) return (
     <div className="flex flex-col items-center justify-center py-16 border border-dashed border-itec-border rounded-xl text-itec-gray">
@@ -32,13 +39,13 @@ export const CoursePlaylist: React.FC<Props> = ({ videos = [], currentIndex, onS
         <ProgressBar progress={pct} variant={pct === 100 ? "green" : "blue"} />
       </div>
       <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
-        {videos.map((video, i) => {
-          const vid = video.youtubeId || video.id || "";
+        {lessons.map((lesson, i) => {
+          const vid = lesson.youtubeId || lesson._id || "";
           const isActive = i === currentIndex;
           const isWatched = vid ? watchedVideos.has(vid) : false;
           return (
             <button
-              key={i}
+              key={lesson._id || i}
               onClick={() => onSelectVideo(i)}
               className={`w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl mb-1 transition-colors ${
                 isActive
@@ -56,11 +63,11 @@ export const CoursePlaylist: React.FC<Props> = ({ videos = [], currentIndex, onS
               <div className="flex-1 overflow-hidden">
                 <p className={`text-xs font-semibold line-clamp-2 leading-snug transition-colors ${isActive ? "text-itec-section-courses" : isWatched ? "text-itec-gray" : "text-itec-text"}`}>
                   <span className="text-itec-gray mr-1">{i + 1}.</span>
-                  {video.title || "Lección sin título"}
+                  {lesson.title || "Lección sin título"}
                 </p>
-                {video.duration && (
+                {lesson.duration && (
                   <p className={`text-[10px] mt-0.5 font-medium ${isActive ? "text-itec-section-courses/70" : "text-itec-gray"}`}>
-                    {video.duration}
+                    {lesson.duration}
                   </p>
                 )}
               </div>
