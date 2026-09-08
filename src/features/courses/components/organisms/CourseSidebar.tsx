@@ -54,7 +54,41 @@ export const CourseSidebar: React.FC<Props> = ({ course, progressPercent, onStar
           )}
         </dl>
       </div>
-
+      <div>
+        <h3 className="text-sm font-bold text-itec-text uppercase tracking-widest border-b border-itec-border pb-3 mb-4">
+          Resumen del Curso
+        </h3>
+        <dl className="space-y-4">
+          <div className="flex items-center justify-between text-xs">
+            <dt className="flex items-center gap-2 text-itec-gray font-medium">
+              <List className="size-4" /> Capítulos
+            </dt>
+            <dd className="font-bold text-itec-text">{totalSections}</dd>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <dt className="flex items-center gap-2 text-itec-gray font-medium">
+              <Clock className="size-4" /> Clases
+            </dt>
+            <dd className="font-bold text-itec-text">{totalLessons}</dd>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <dt className="flex items-center gap-2 text-itec-gray font-medium">
+              <LayoutGrid className="size-4" /> Categoría
+            </dt>
+            <dd className="font-bold text-itec-text">{course.categoria || "Comunidad"}</dd>
+          </div>
+          {profesores.length > 0 && (
+            <div className="flex flex-col gap-1.5 text-xs pt-1 border-t border-itec-border/60">
+              <dt className="flex items-center gap-2 text-itec-gray font-medium shrink-0">
+                <Users className="size-4" /> {profesores.length > 1 ? "Profesores" : "Profesor"}
+              </dt>
+              <dd className="text-right">
+                <MarkdownContent content={profesores.join(", ")} className="[&_p]:text-right [&_p]:font-bold [&_p]:text-itec-text [&_p]:mb-0" />
+              </dd>
+            </div>
+          )}
+        </dl>
+      </div>
       <div className="flex flex-col gap-2">
         <Button
           onClick={onStartCourse}

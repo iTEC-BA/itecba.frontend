@@ -94,12 +94,11 @@ export const CourseCurriculumEditor: React.FC<Props> = ({ sections, setSections 
                   </div>
 
                   {(les.type === "article" || les.type === "exam") && (
-                    <Input
-                      fullWidth
+                    <MarkdownTextarea
                       placeholder="URL del material (PDF, artículo, examen)..."
                       value={les.mediaUrl || ""}
-                      onChange={(e) => updateLesson(sIdx, lIdx, "mediaUrl", e.target.value)}
-                      className="bg-itec-box border-transparent focus:border-itec-section-courses/50 text-xs py-2"
+                      onChange={(val) => updateLesson(sIdx, lIdx, "mediaUrl", val)}
+                      textareaClassName="bg-itec-box border-transparent focus:border-itec-section-courses/50 text-xs py-2"
                     />
                   )}
 

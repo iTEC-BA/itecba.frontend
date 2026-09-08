@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, PlayCircle, FileText, CheckCircle, Lock } from "lucide-react";
+import { ChevronDown, PlayCircle, FileText, CheckCircle, Lock, Trophy } from "lucide-react";
 import type { Section, Lesson } from "../../types/Course";
 
 interface Props {
@@ -17,9 +17,10 @@ export const CurriculumAccordion: React.FC<Props> = ({ sections, watchedVideos =
   };
 
   const getLessonIcon = (lesson: Lesson, isWatched: boolean) => {
-    if (lesson.isPremium) return <Lock className="size-6 text-itec-gray" />;
+    if (lesson.isPremium) return <Lock className="size-6 text-itec-section-courses" />;
     if (isWatched) return <CheckCircle className="size-6 text-emerald-400" />;
-    if (lesson.type === "article") return <FileText className="size-4 text-itec-gray" />;
+    if (lesson.type === "article") return <FileText className="size-6 text-itec-section-courses" />;
+    if (lesson.type === "exam") return <Trophy className="size-6 text-itec-section-courses" />;
     return <PlayCircle className="size-6 text-itec-section-courses" />;
   };
 
@@ -34,10 +35,10 @@ export const CurriculumAccordion: React.FC<Props> = ({ sections, watchedVideos =
           <div key={key} className="border-b border-itec-border last:border-b-0">
             <button
               onClick={() => toggleSection(key)}
-              className="w-full flex items-center justify-between p-4 bg-itec-section-courses/33 hover:bg-itec-section-courses/17.5 transition-colors focus:outline-none cursor-pointer"
+              className="w-full flex items-center justify-between p-4 bg-itec-section-courses/10 hover:bg-itec-section-courses/30 transition-colors focus:outline-none cursor-pointer"
             >
               <div className="flex flex-col items-start text-left gap-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-itec-section-courses">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-itec-text">
                   Módulo {(sIdx + 1).toString().padStart(2, "0")}
                 </span>
                 <span className="text-sm font-bold text-itec-text">{section.title}</span>

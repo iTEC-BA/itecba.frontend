@@ -116,12 +116,20 @@ export const CourseVideoPlayer: React.FC<Props> = ({
 
         {/* ── Descripciones Markdown (LaTeX soportado) ── */}
         <div className="bg-itec-box border border-itec-border rounded-xl p-5 mt-2 flex flex-col gap-6">
+          {activeVideo.mediaUrl && (
+            <div>
+              <p className="text-[10px] font-bold text-itec-blue-skye uppercase tracking-widest mb-3">
+                Parcial
+              </p>
+              <MarkdownContent content={activeVideo.mediaUrl || "No se registro el parcial, Reportar asi se pondra el parcial"} />
+            </div>
+          )}
           {activeVideo.description && (
             <div>
               <p className="text-[10px] font-bold text-itec-blue-skye uppercase tracking-widest mb-3">
                 Apuntes de la lección
               </p>
-              <MarkdownContent content={activeVideo.description} />
+              <MarkdownContent content={activeVideo.description } />
             </div>
           )}
           

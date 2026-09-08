@@ -66,7 +66,11 @@ export const CourseDetail: React.FC = () => {
     if (!courseId || !user?.id) return;
     setWatched((prev) => {
       const next = new Set(prev);
-      next.has(videoId) ? next.delete(videoId) : next.add(videoId);
+      if (next.has(videoId)) {
+        next.delete(videoId);
+      } else {
+        next.add(videoId);
+      }
       try { localStorage.setItem(`itec_course_progress_${user.id}_${courseId}`, JSON.stringify([...next])); } catch (e) { void e; }
       return next;
     });
@@ -178,6 +182,7 @@ export const CourseDetail: React.FC = () => {
 
           {/* Columna Derecha: Playlist (Sticky en Desktop) */}
           <aside className="lg:sticky lg:top-24 flex flex-col gap-4">
+            
             <CoursePlaylist
               sections={course.sections}
               currentIndex={videoIndex}
