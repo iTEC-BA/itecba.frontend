@@ -1,60 +1,43 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Star, Clock, Target, Pencil } from "lucide-react";
-import { auth } from "@/lib/firebase";
 import { LayoutModal } from "@components/templates/LayoutModal";
+import { Input } from "@components/ui/Input";
 import { Button } from "@components/ui/Button";
 import { useToast } from "@features/notifications/components/atoms/Toast";
-import { updateActivity } from "../services/points.service";
+import { getAdminActivities, updateActivity } from "../services/points.service";
 import type { PointActivity } from "../points.types";
-import { cn } from "@/lib/utils";
 
-export const PointsActivityManager = () => {
+export const PointsActivityManager: React.FC = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const [editing, setEditing] = useState<PointActivity | null>(null);
-  
-  const [form, setForm] = useState({
-    points: 0,
-    cooldownMinutes: 0,
-    dailyCap: 0,
-    isActive: true,
-  });
+  const [editingAct, setEditingAct] = useState<PointActivity | null>(null);
+  const [form, setForm] = useState({ points: 0, cooldownMinutes: 0, dailyCap: 0, isActive: true });
 
   const { data: activities = [], isLoading } = useQuery({
     queryKey: ["adminPointsActivities"],
-    queryFn: async () => {
-      const token = await auth.currentUser?.getIdToken();
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/points/activities/admin`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      return res.json();
-    }
+    queryFn: getAdminActivities,
   });
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      const token = await auth.currentUser?.getIdToken();
-      if (!token || !editing?.id) throw new Error("Error de sesión o ID");
-      return updateActivity(editing.id, form, token);
-    },
+  const updateMutation = useMutation({
+    mutationFn: (payload: Partial<PointActivity>) => updateActivity(editingAct!.key, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminPointsActivities"] });
-      toast.success("Regla de puntos actualizada.");
-      setEditing(null);
+      toast.success("Reglas actualizadas correctamente");
+      setEditingAct(null);
     },
-    onError: (err: any) => {
-      toast.error(err.message || "Error al actualizar la regla.");
+    onError: (err: Error) => {
+      toast.error(err.message || "No se pudo actualizar la actividad");
     }
   });
 
-  const openEdit = (act: PointActivity) => {
-    setEditing(act);
-    setForm({
-      points: act.points,
-      cooldownMinutes: act.cooldownMinutes,
-      dailyCap: act.dailyCap,
-      isActive: act.isActive ?? true,
+  const handleEdit = (act: PointActivity) => {
+    setEditingAct(act);
+    setForm({ 
+      points: act.points, 
+      cooldownMinutes: act.cooldownMinutes, 
+      dailyCap: act.dailyCap, 
+      isActive: act.isActive ?? true
     });
   };
 
@@ -67,15 +50,15 @@ export const PointsActivityManager = () => {
           <tr>
             <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Actividad</th>
             <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Puntos</th>
-            <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Espera (Min)</th>
+            <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Cooldown</th>
             <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Límite Diario</th>
             <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Estado</th>
             <th className="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-white/40">Acción</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
-          {activities.map((act: PointActivity) => (
-            <tr key={act.id} className="hover:bg-white/2 transition-colors">
+          {activities.map((act) => (
+            <tr key={act.key} className="hover:bg-white/2 transition-colors">
               <td className="px-4 py-3">
                 <p className="font-bold text-white text-sm">{act.name}</p>
                 <p className="text-[10px] text-white/40 font-mono mt-0.5">{act.key}</p>
@@ -105,11 +88,10 @@ export const PointsActivityManager = () => {
               </td>
               <td className="px-4 py-3 text-right">
                 <button 
-                  onClick={() => openEdit(act)} 
-                  className="h-8 w-8 rounded-lg border border-white/10 bg-transparent text-white/60 hover:bg-white/10 flex items-center justify-center ml-auto transition-colors"
-                  title="Editar regla"
+                  onClick={() => handleEdit(act)} 
+                  className="p-1.5 text-white/60 hover:text-itec-blue-skye hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
                 >
-                  <Pencil className="w-3.5 h-3.5" />
+                  <Pencil className="w-4 h-4" />
                 </button>
               </td>
             </tr>
@@ -117,83 +99,54 @@ export const PointsActivityManager = () => {
         </tbody>
       </table>
 
-      {editing && (
-        <LayoutModal 
-          isOpen={!!editing} 
-          onClose={() => setEditing(null)} 
-          title="Editar Regla de Puntos" 
-          description={`Modificando la actividad: ${editing.name}`}
-          maxWidth="max-w-md"
-        >
-          <form 
-            className="flex flex-col gap-5 p-6" 
-            onSubmit={(e) => { e.preventDefault(); mutation.mutate(); }}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-white/50">Puntos a otorgar</label>
-                <input 
-                  type="number" 
-                  min={0}
-                  value={form.points} 
-                  onChange={e => setForm(f => ({ ...f, points: Number(e.target.value) }))} 
-                  className="rounded-xl border border-itec-rewards/30 bg-itec-rewards/5 px-4 py-3 text-sm font-bold text-itec-rewards outline-none focus:border-itec-rewards/60" 
-                />
-              </div>
+      <LayoutModal isOpen={!!editingAct} onClose={() => setEditingAct(null)} title="Editar Reglas de Puntos" description={editingAct?.name} maxWidth="max-w-md">
+        <form onSubmit={(e) => { e.preventDefault(); updateMutation.mutate(form); }} className="p-6 flex flex-col gap-5">
+          
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest pl-1">Puntos a otorgar</label>
+            <Input 
+              type="number" min="0" required fullWidth
+              value={form.points} 
+              onChange={e => setForm({...form, points: Number(e.target.value)})} 
+              className="bg-itec-box border-itec-border focus:border-itec-blue-skye/50 py-2.5 rounded-xl font-mono text-itec-rewards font-bold"
+            />
+          </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-white/50">Límite Diario</label>
-                <input 
-                  type="number" 
-                  min={0}
-                  value={form.dailyCap} 
-                  onChange={e => setForm(f => ({ ...f, dailyCap: Number(e.target.value) }))} 
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-white/30" 
-                  placeholder="0 = Sin límite"
-                />
-              </div>
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest pl-1">Minutos de Cooldown (0 = Sin espera)</label>
+            <Input 
+              type="number" min="0" required fullWidth
+              value={form.cooldownMinutes} 
+              onChange={e => setForm({...form, cooldownMinutes: Number(e.target.value)})} 
+              className="bg-itec-box border-itec-border focus:border-itec-blue-skye/50 py-2.5 rounded-xl"
+            />
+          </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-white/50">Tiempo de espera (Minutos)</label>
-              <input 
-                type="number" 
-                min={0}
-                value={form.cooldownMinutes} 
-                onChange={e => setForm(f => ({ ...f, cooldownMinutes: Number(e.target.value) }))} 
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-white/30" 
-                placeholder="Ej: 60 (1 hora)"
-              />
-              <p className="text-[10px] text-white/30">Minutos obligatorios entre una recompensa y otra. 0 para desactivar.</p>
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold text-itec-gray uppercase tracking-widest pl-1">Límite Diario (0 = Ilimitado)</label>
+            <Input 
+              type="number" min="0" required fullWidth
+              value={form.dailyCap} 
+              onChange={e => setForm({...form, dailyCap: Number(e.target.value)})} 
+              className="bg-itec-box border-itec-border focus:border-itec-blue-skye/50 py-2.5 rounded-xl"
+            />
+          </div>
 
-            <div className="flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5 mt-2">
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-white">Habilitar regla</span>
-                <span className="text-[10px] text-white/40">Si se apaga, no dará puntos temporalmente.</span>
-              </div>
-              <button 
-                type="button" 
-                onClick={() => setForm(f => ({ ...f, isActive: !f.isActive }))} 
-                className={cn(
-                  "relative inline-flex h-5 w-9 items-center rounded-full transition-colors outline-none", 
-                  form.isActive ? "bg-itec-emerald" : "bg-white/10"
-                )}
-              >
-                <span className={cn(
-                  "inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform", 
-                  form.isActive ? "translate-x-4" : "translate-x-1"
-                )} />
-              </button>
-            </div>
+          <div className="flex items-center gap-3 pt-2">
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} className="sr-only peer" />
+              <div className="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-itec-blue-skye"></div>
+              <span className="ml-3 text-xs font-bold text-white uppercase tracking-widest">Actividad Habilitada</span>
+            </label>
+          </div>
 
-            <div className="mt-4 flex gap-3 pt-2">
-              <Button type="button" variant="slate" hierarchy="outline" onClick={() => setEditing(null)} text="Cancelar" fullWidth />
-              <Button type="submit" variant="primary" hierarchy="solid" isLoading={mutation.isPending} text="Guardar cambios" fullWidth className="bg-itec-rewards text-black hover:bg-itec-rewards/90 border-transparent" />
-            </div>
-          </form>
-        </LayoutModal>
-      )}
+          <div className="flex gap-3 pt-4 border-t border-white/5 mt-2">
+            <Button type="button" variant="slate" hierarchy="ghost" onClick={() => setEditingAct(null)} fullWidth text="Cancelar" disabled={updateMutation.isPending} />
+            <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={updateMutation.isPending} text="Guardar Cambios" className="bg-itec-blue-skye hover:bg-itec-blue-skye/80 text-white border-transparent" />
+          </div>
+
+        </form>
+      </LayoutModal>
     </>
   );
 };

@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import Raccoon from "../ui/icons/Raccoon";
 import { Icons } from "../ui/icons/Icons";
 import { useAuthStore } from '@/stores/authStore';
 
@@ -32,11 +31,11 @@ export const NavbarBottom = () => {
         {/* FAB central — Chatbot / Raccoon */}
         <Link to="/faqs" className="relative flex items-center justify-center flex-col flex-1">
           <span className="relative flex items-center justify-center h-6">
-            <span className="absolute bottom-0 size-14 flex flex-col items-center justify-center">
-              <Raccoon size={55} fill1="#888888" fill2="#ffffff" fill3="#0C1014" />
+            <span className="absolute -bottom-1 size-15 flex flex-col items-center justify-center">
+              <img src="/mascot/TEChead.svg" alt="ChatItec" className="size-15 object-contain" />
             </span>
           </span>
-          <span className="text-[9px] font-medium text-[#9aa3b0]">ChatItec</span>
+          <span className="text-[9px] font-medium text-[#9aa3b0]">ChatTEC</span>
         </Link>
 
         {/* Grupos */}

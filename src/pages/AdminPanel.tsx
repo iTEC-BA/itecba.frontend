@@ -10,6 +10,7 @@ const NewsManagement = lazy(() => import("@features/admin/pages/NewsManagement")
 const BenefitManagement = lazy(() => import("@features/admin/pages/BenefitManagement").then(m => ({ default: m.BenefitManagement })));
 const AdminRedemptions = lazy(() => import("@features/admin/pages/AdminRedemptions").then(m => ({ default: m.AdminRedemptions })));
 const PageAccessManagement = lazy(() => import("@features/admin/pages/PageAccessManagement").then(m => ({ default: m.PageAccessManagement })));
+
 const ContentModeration = lazy(() => import("@features/admin/pages/ContentModeration").then(m => ({ default: m.ContentModeration })));
 const TutoriasSection = lazy(() => import("@features/admin/pages/TutoriasSection").then(m => ({ default: m.TutoriasSection })));
 

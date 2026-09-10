@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export type AdminSection = "dashboard" | "users" | "news" | "benefits" | "redemptions" | "tutorias" | "pages" | "moderation";
+export type AdminSection = "dashboard" | "users" | "news" | "benefits" | "redemptions" | "tutorias" | "pages" | "moderation" ;
 
 export interface SidebarLink {
   id: AdminSection;

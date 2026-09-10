@@ -18,7 +18,7 @@ export const UserManagement: React.FC = () => {
           Usuarios
         </h2>
         <p className="text-xs text-itec-muted mt-1">
-          Buscá alumnos y administrá sus permisos de acceso al panel de control.
+          Buscá alumnos y administrá sus permisos para dar accesos a la plataforma.
         </p>
       </div>
 
