@@ -91,16 +91,21 @@ echo "4/5 Agregando Feature globales"
 agregar_carpeta "src/features/notifications/"
 
 echo "5/5 Agregando el Feature específico: $FEATURE_NAME..."
+agregar_archivo "src/pages/AdminPanel.tsx"
 agregar_carpeta "src/features/$FEATURE_NAME"
-agregar_carpeta "src/features/profile"
-agregar_archivo "src/pages/adminPage.tsx"
-# agregar_archivo "src/pages/CourseLandingPage.tsx"
 
-# Agregar la página (View) principal del feature
-PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"
-if [ -f "$PAGE_FILE" ]; then
-  agregar_archivo "$PAGE_FILE"
-fi
+agregar_archivo "src/pages/LoginPage.tsx"
+agregar_carpeta "src/features/login"
+
+# agregar_archivo "src/pages/ProfilePage.tsx"
+# agregar_carpeta "src/features/profile"
+
+
+# # Agregar la página (View) principal del feature
+# PAGE_FILE="src/pages/${FEATURE_NAME^}Page.tsx"
+# if [ -f "$PAGE_FILE" ]; then
+#   agregar_archivo "$PAGE_FILE"
+# fi
 
 echo "============================================="
 echo "✅ ¡Listo! El ADN de tu UI y el Feature están en: $OUTPUT"
