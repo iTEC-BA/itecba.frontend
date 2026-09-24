@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { materiasService } from '@features/groups/services/materiasService';
+import { subjectsService, type SubjectRow } from '@services/subjectsService';
 
 export const useResourceMaterias = (
   carrera: string,
@@ -28,17 +28,19 @@ export const useResourceMaterias = (
       try {
         // Si no hay carrera seleccionada, traemos todas para el buscador libre
         if (!carrera) {
-          const data = await materiasService.getMaterias();
+          const data: SubjectRow[] = await subjectsService.getSubjects();
           setSupabaseMaterias(data.map(d => d.materia));
           return;
         }
 
         // Si hay carrera, preparamos la petición específica
-        const peticiones = [materiasService.getMaterias(carrera, nivel || undefined)];
+        const peticiones: Promise<SubjectRow[]>[] = [
+          subjectsService.getSubjects(carrera, nivel || undefined),
+        ];
 
         // Mezclamos homogéneas si es ingeniería de 1er o 2do año
         if (carrera !== 'homogeneas' && carrera !== 'ingreso' && (nivel === '1' || nivel === '2')) {
-          peticiones.push(materiasService.getMaterias('homogeneas', nivel));
+          peticiones.push(subjectsService.getSubjects('homogeneas', nivel));
         }
 
         const resultados = await Promise.all(peticiones);

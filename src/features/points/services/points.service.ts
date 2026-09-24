@@ -21,13 +21,30 @@ export const getActivities = async (): Promise<PointActivity[]> => {
       const { data, ts } = JSON.parse(cached);
       if (Date.now() - ts < CACHE_TTL_MS) return data;
     }
-  } catch (e) {}
+  } catch {
+    console.warn("[points] No se pudo leer la caché de actividades; se consultará la API.");
+  }
 
   const res = await fetch(`${API_URL}/points/activities`);
   if (!res.ok) throw new Error("Error al cargar actividades públicas");
   const data = await res.json();
   localStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() }));
   return data;
+};
+
+export const getActivityFromCache = (activityKey: string): PointActivity | null => {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!cached) return null;
+    const { data, ts } = JSON.parse(cached) as {
+      data?: PointActivity[];
+      ts?: number;
+    };
+    if (!data || !ts || Date.now() - ts >= CACHE_TTL_MS) return null;
+    return data.find((activity) => activity.key === activityKey) ?? null;
+  } catch {
+    return null;
+  }
 };
 
 // Admin
@@ -51,7 +68,10 @@ export const updateActivity = async (key: string, data: Partial<PointActivity>):
 };
 
 // Autenticadas
-export const grantPointsAPI = async (activityKey: string, context: any = {}): Promise<GrantResult> => {
+export const grantPointsAPI = async (
+  activityKey: string,
+  context: Record<string, unknown> = {},
+): Promise<GrantResult> => {
   const res = await fetch(`${API_URL}/points/grant`, {
     method: "POST",
     headers: await getHeaders(),

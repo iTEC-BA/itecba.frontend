@@ -14,7 +14,6 @@ import { usePointsStore } from '@/stores/pointsStore';
 
 import { useCallback } from "react";
 import { useAuthStore } from '@/stores/authStore';
-import { getAuth }     from "firebase/auth";
 import { getActivityFromCache, grantPointsAPI, getActivities } from "../services/points.service";
 import type { GrantResult } from "../points.types";
 
@@ -50,20 +49,9 @@ export const usePointsGrant = () => {
       addPoints(activity.points);
 
       // ── 4. Llamar al backend (necesitamos el token fresco) ─────────────────
-      let token: string;
-      try {
-        const fbUser = getAuth().currentUser;
-        if (!fbUser) throw new Error("no_user");
-        token = await fbUser.getIdToken();
-      } catch {
-        // No pudimos obtener token → revertir
-        addPoints(-activity.points);
-        return { granted: false, reason: "not_authenticated" };
-      }
-
       let result: GrantResult;
       try {
-        result = await grantPointsAPI(activityKey, token, context);
+        result = await grantPointsAPI(activityKey, context);
       } catch {
         // Error de red → revertir
         addPoints(-activity.points);

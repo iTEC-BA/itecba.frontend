@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useAuthStore } from '@/stores/authStore';
+import type { User } from '@/stores/authStore';
 import { auth } from "@/lib/firebase";
 import { profileService } from "@features/profile/services/profileService";
 import type { CareerOption } from "@features/profile/components/molecules/CareerSelector";
@@ -14,9 +15,11 @@ interface ProfileForm {
   startYear?: number;
 }
 
-const getInitialCareers = (user: ReturnType<typeof useAuth>["user"]): CareerOption[] => {
+type ProfileUser = User;
+
+const getInitialCareers = (user: ProfileUser | null): CareerOption[] => {
   if (!user) return [];
-  const rawCareers = (user as any).careers;
+  const rawCareers = user.careers;
   if (Array.isArray(rawCareers) && rawCareers.length > 0) {
     return rawCareers.map((c: { code: string; name: string }) => ({
       code: c.code, 
@@ -39,10 +42,10 @@ export const useEditProfile = (onSuccess?: () => void) => {
     name:      user?.name      ?? "",
     dni:       user?.dni       ?? "",
     legajo:    user?.legajo    ?? "",
-    phone:     (user as any)?.phone     ?? "",
-    bio:       (user as any)?.bio       ?? "",
-    github:    (user as any)?.github    ?? "",
-    startYear: (user as any)?.startYear ?? undefined,
+    phone:     user?.phone     ?? "",
+    bio:       user?.bio       ?? "",
+    github:    user?.github    ?? "",
+    startYear: user?.startYear ?? undefined,
   });
 
   const [careers, setCareers] = useState<CareerOption[]>(() => getInitialCareers(user));
@@ -91,12 +94,14 @@ export const useEditProfile = (onSuccess?: () => void) => {
           dni:       payload.dni,
           legajo:    payload.legajo,
           specialty: payload.specialty,
-          ...(payload as any),
+          bio: payload.bio,
+          github: payload.github,
+          startYear: payload.startYear,
         });
 
         onSuccess?.();
-      } catch (err: any) {
-        setError(err.message ?? "Error al guardar. Intentá de nuevo.");
+      } catch (err: unknown) {
+          setError(err instanceof Error ? err.message : "Error al guardar. Intentá de nuevo.");
       } finally {
         setSaving(false);
       }

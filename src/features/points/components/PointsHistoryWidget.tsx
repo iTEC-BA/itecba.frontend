@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getAuth }          from "firebase/auth";
 import { getPointHistory }  from "../services/points.service";
 import type { PointLogEntry } from "../points.types";
 
@@ -11,10 +10,7 @@ export const PointsHistoryWidget: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const fbUser = getAuth().currentUser;
-        if (!fbUser) return;
-        const token = await fbUser.getIdToken();
-        const data  = await getPointHistory(token);
+        const data  = await getPointHistory();
         setLogs(data);
       } catch (err) {
         setError((err as Error).message);

@@ -20,6 +20,10 @@ export interface User {
   legajo?: string;
   specialty?: string;
   phone?: string;
+  careers?: { code: string; name: string }[];
+  bio?: string;
+  github?: string;
+  startYear?: number;
   role: Role;
   authorized: boolean;
   isExternalAuthorization?: boolean;
