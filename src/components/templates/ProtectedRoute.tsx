@@ -21,3 +21,15 @@ export const ProtectedRoute: React.FC = () => {
   // Si está logueado, renderiza la ruta hija (ej: ProfilePage, ResourcesPage)
   return <Outlet />;
 };
+
+export const AdminRoute: React.FC = () => {
+  const { canAccessAdminPanel, loading } = useAuthStore();
+  const location = useLocation();
+
+  if (loading) return <LoadingState />;
+  if (!canAccessAdminPanel) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  return <Outlet />;
+};

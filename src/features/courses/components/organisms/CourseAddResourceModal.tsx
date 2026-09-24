@@ -41,11 +41,11 @@ export const CourseAddResourceModal: React.FC<Props> = ({ isOpen, onClose, cours
         {error && <p className="text-itec-red text-xs font-bold bg-itec-red/10 border border-itec-red/30 p-3 rounded-xl">{error}</p>}
         <div>
           <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-widest mb-1.5">Nombre del archivo</label>
-          <Input fullWidth required placeholder="Ej: Diapositivas Clase 1" value={title} onChange={(e: any) => setTitle(e.target.value)} className="bg-itec-box border-itec-border focus:border-itec-section-courses py-2.5" />
+          <Input fullWidth required placeholder="Ej: Diapositivas Clase 1" value={title} onChange={(e: any) => setTitle(e.target.value)} className="bg-itec-box border-itec-border/50 focus:border-itec-section-courses py-2.5" />
         </div>
         <div>
           <label className="block text-[10px] font-bold text-itec-gray uppercase tracking-widest mb-1.5">Enlace (Drive, PDF...)</label>
-          <Input fullWidth type="url" required placeholder="https://drive.google.com/..." value={driveUrl} onChange={(e: any) => setDriveUrl(e.target.value)} className="bg-itec-box border-itec-border focus:border-itec-section-courses py-2.5" />
+          <Input fullWidth type="url" required placeholder="https://drive.google.com/..." value={driveUrl} onChange={(e: any) => setDriveUrl(e.target.value)} className="bg-itec-box border-itec-border/50 focus:border-itec-section-courses py-2.5" />
         </div>
         <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={mutation.isPending} className="mt-2 bg-itec-section-courses hover:bg-itec-section-courses/90 border-none text-white">
           {mutation.isPending ? "Guardando..." : "Vincular archivo"}

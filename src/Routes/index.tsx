@@ -4,11 +4,11 @@
 // qué URL está acá, separada en públicas/privadas para que cada archivo se
 // pueda leer de un vistazo.
 import { Routes, Route } from "react-router-dom";
-import { ProtectedRoute } from "@components/templates/ProtectedRoute";
+import { AdminRoute, ProtectedRoute } from "@components/templates/ProtectedRoute";
 import { PageSuspense } from "./PageSuspense";
 import { PublicRoutes } from "./publicRoutes";
 import { PrivateRoutes } from "./privateRoutes";
-import { ErrorPage } from "./lazyPages";
+import { AdminPanel, ErrorPage } from "./lazyPages";
 
 export const AppRoutes = () => (
   <Routes>
@@ -17,6 +17,9 @@ export const AppRoutes = () => (
 
     {/* RUTAS PRIVADAS */}
     <Route element={<ProtectedRoute />}>
+      <Route element={<AdminRoute />}>
+        <Route path="/admin/*" element={<PageSuspense><AdminPanel /></PageSuspense>} />
+      </Route>
       {PrivateRoutes}
     </Route>
 

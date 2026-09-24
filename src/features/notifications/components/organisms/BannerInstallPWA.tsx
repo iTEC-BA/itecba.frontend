@@ -13,7 +13,7 @@ export const BannerInstallPWA: React.FC = () => {
   return (
     <div
       role="banner"
-      className="fixed bottom-20 left-0 right-0 z-9999 mx-auto overflow-hidden border border-white/10 bg-itec-card/85 px-4 py-4 text-white bg-itec-card border-white/10 animate-fade-in-up sm:bottom-6 sm:left-6 sm:right-6 sm:max-w-md sm:rounded-xl sm:px-5 sm:py-5"
+      className="fixed top-20 left-0 right-0 z-9999 mx-auto overflow-hidden border border-itec-border/50 bg-itec-card px-4 py-4 text-white animate-fade-in-up sm:top-6 sm:left-6 sm:right-6 sm:max-w-md sm:rounded-xl sm:px-5 sm:py-5"
       style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}
     >
       <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -23,7 +23,7 @@ export const BannerInstallPWA: React.FC = () => {
           </div>
 
           <div className="flex-1">
-            <div className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70">
+            <div className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-itec-border/50 bg-white/5 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70">
               <Sparkles className="h-3 w-3 text-itec-accent" />
               App recomendada
             </div>
@@ -36,7 +36,7 @@ export const BannerInstallPWA: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 sm:justify-end">
+        <div className="flex items-center flex-col gap-3 sm:justify-end">
           <Button
             onClick={() => setDismissed(true)}
             aria-label="Cerrar banner de instalación"
@@ -47,6 +47,7 @@ export const BannerInstallPWA: React.FC = () => {
           />
 
           <Button
+            className="px-6 py-2"
             onClick={install}
             isLoading={isInstalling}
             variant="danger"

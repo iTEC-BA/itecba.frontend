@@ -48,7 +48,7 @@ export const PROJECTS_DATA = {
       description: "Plataforma segura para buscar y acordar intercambios de comisiones entre estudiantes. Cuenta con un algoritmo inteligente de matches perfectos, privacidad de datos y notificaciones en tiempo real.",
       imageUrl: "/logo.png", // Podés cambiarla por una captura real en /public
       tags: [
-        { name: "Módulo Nativo", colorClass: "text-itec-text border-itec-border" },
+        { name: "Módulo Nativo", colorClass: "text-itec-text border-itec-border/50" },
         { name: "Tiempo Real", colorClass: "text-itec-emerald border-itec-emerald/20 bg-itec-emerald/10" }
       ],
       links: [
@@ -61,7 +61,7 @@ export const PROJECTS_DATA = {
       description: "Miles de resúmenes, finales y guías resueltas organizadas por especialidad y materia. Todo el material es subido y validado por la propia comunidad estudiantil para garantizar su vigencia y calidad.",
       imageUrl: "/logo.png",
       tags: [
-        { name: "Storage Optimizado", colorClass: "text-itec-text border-itec-border" },
+        { name: "Storage Optimizado", colorClass: "text-itec-text border-itec-border/50" },
         { name: "Validación Comunitaria", colorClass: "text-itec-sky border-itec-sky/20 bg-itec-sky/10" }
       ],
       links: [
@@ -74,7 +74,7 @@ export const PROJECTS_DATA = {
       description: "Espacio de discusión estudiantil sin fricción. Utiliza pseudónimos deterministas generados criptográficamente para proteger la identidad de los alumnos, promoviendo el debate libre y seguro.",
       imageUrl: "/logo.png",
       tags: [
-        { name: "SQLite Edge", colorClass: "text-itec-text border-itec-border" },
+        { name: "SQLite Edge", colorClass: "text-itec-text border-itec-border/50" },
         { name: "Full Anónimo", colorClass: "text-itec-rewards border-itec-rewards/20 bg-itec-rewards/10" }
       ],
       links: [

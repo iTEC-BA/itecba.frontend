@@ -18,9 +18,9 @@ import { CARRERAS_OPTIONS, NIVEL_OPTIONS }   from "../../types/groups";
 interface Props { isOpen: boolean; onClose: () => void }
 
 const INPUT_CLS =
-  "bg-itec-bg border border-white/10 text-itec-text text-xs px-3 py-2 rounded-xl outline-none focus:border-itec-groups/50 placeholder:text-itec-gray/60 transition-colors";
+  "bg-itec-bg border border-itec-border/50 text-itec-text text-xs px-3 py-2 rounded-xl outline-none focus:border-itec-groups/50 placeholder:text-itec-gray/60 transition-colors";
 const SELECT_CLS =
-  "bg-itec-bg border border-white/10 text-itec-text text-xs px-3 py-2 rounded-xl outline-none focus:border-itec-groups/50 cursor-pointer transition-colors";
+  "bg-itec-bg border border-itec-border/50 text-itec-text text-xs px-3 py-2 rounded-xl outline-none focus:border-itec-groups/50 cursor-pointer transition-colors";
 
 // ── MateriaFormModal ──────────────────────────────────────────────────────────
 
@@ -150,7 +150,7 @@ const MateriaFormModal: React.FC<MateriaFormModalProps> = ({ editing, onClose, o
             className="flex items-center gap-2 px-5 py-2 text-xs font-bold bg-itec-groups hover:bg-emerald-500 text-white rounded-xl transition-all disabled:opacity-50 active:scale-95"
           >
             {saving ? (
-              <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Guardando...</>
+              <><span className="w-3.5 h-3.5 border-2 border-itec-border/50 border-t-white rounded-full animate-spin" />Guardando...</>
             ) : editing ? (
               <><Pencil className="size-3.5" />Guardar cambios</>
             ) : (
@@ -173,7 +173,7 @@ const MateriasToolbar: React.FC<ToolbarProps> = ({
   searchQ, filterCarrera, filterNivel,
   onSearch, onCarrera, onNivel, onNuevaMateria,
 }) => (
-  <div className="px-5 py-3 border-b border-white/6 shrink-0 flex flex-wrap gap-2 items-center">
+  <div className="px-5 py-3 border-b border-itec-border/50 shrink-0 flex flex-wrap gap-2 items-center">
     <div className="relative flex-1 min-w-40">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-itec-gray/50 pointer-events-none" />
       <input className={`${INPUT_CLS} w-full pl-8`} placeholder="Buscar por nombre o código..." value={searchQ} onChange={(e) => onSearch(e.target.value)} />
@@ -199,7 +199,7 @@ const MateriasToolbar: React.FC<ToolbarProps> = ({
 
 interface MateriaListItemProps { materia: SubjectRow; onEdit: (m: SubjectRow) => void; onDelete: (m: SubjectRow) => void }
 const MateriaListItem: React.FC<MateriaListItemProps> = ({ materia: m, onEdit, onDelete }) => (
-  <div className="bg-itec-bg border border-white/7 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-white/12 transition-colors group">
+  <div className="bg-itec-bg border border-itec-border/50 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-itec-border/50 transition-colors group">
     {m.codigo && (
       <span className="font-mono text-[11px] font-bold text-emerald-400 bg-itec-groups/10 px-2 py-0.5 rounded border border-itec-groups/20 shrink-0">
         {m.codigo}
@@ -299,7 +299,7 @@ export const AdminMateriasModal: React.FC<Props> = ({ isOpen, onClose }) => {
       <div className="flex-1 overflow-auto p-4">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-16 gap-3">
-                <div className="w-6 h-6 border-2 border-itec-border border-t-itec-groups rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-itec-border/50 border-t-itec-groups rounded-full animate-spin" />
                 <p className="text-itec-gray text-sm">Cargando materias...</p>
               </div>
             ) : loadError ? (
@@ -322,7 +322,7 @@ export const AdminMateriasModal: React.FC<Props> = ({ isOpen, onClose }) => {
               </div>
             )}
           </div>
-      <div className="px-5 py-3 border-t border-white/6 shrink-0 flex items-center justify-between gap-4">
+      <div className="px-5 py-3 border-t border-itec-border/50 shrink-0 flex items-center justify-between gap-4">
         <p className="text-[11px] text-itec-gray">{displayed.length} materia{displayed.length !== 1 ? "s" : ""} encontradas</p>
         <PaginationBar page={page} totalPages={totalPages} onChange={setPage} />
         <button onClick={onClose} className="text-xs font-semibold bg-itec-blue-skye hover:bg-itec-blue text-white px-5 py-2 rounded-xl transition-colors">

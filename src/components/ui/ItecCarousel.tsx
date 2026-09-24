@@ -279,7 +279,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ item }) => {
             <div
               className={cn(
                 "w-16 h-16 rounded-full flex items-center justify-center shadow-2xl",
-                "bg-black/70 border border-white/20",
+                "bg-black/70 border border-itec-border/50",
                 "group-hover/play:bg-itec-blue-skye group-hover/play:scale-110",
                 "transition-all duration-200"
               )}
@@ -310,7 +310,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ item }) => {
             </span>
           )}
           {isGoogleDrive(item.url) && (
-            <span className="absolute top-3 right-3 bg-white/10 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest border border-white/20">
+            <span className="absolute top-3 right-3 bg-white/10 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest border border-itec-border/50">
               Drive
             </span>
           )}
@@ -396,7 +396,7 @@ const ThumbnailButton: React.FC<ThumbnailProps> = ({
         "relative shrink-0 w-16 h-11 rounded-lg overflow-hidden border-2 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-itec-blue-skye focus-visible:outline-none",
         isActive
           ? "border-itec-blue-skye scale-105 shadow-[0_0_10px_rgba(0,74,173,0.45)]"
-          : "border-transparent opacity-50 hover:opacity-80 hover:border-itec-border"
+          : "border-transparent opacity-50 hover:opacity-80 hover:border-itec-border/50"
       )}
       aria-label={`Ir a media ${index + 1}${item.title ? `: ${item.title}` : ""}`}
       aria-pressed={isActive}
@@ -580,7 +580,7 @@ export const ItecMediaSlider: React.FC<ItecMediaSliderProps> = ({
 
   if (total === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 h-56 rounded-xl bg-itec-surface border border-itec-border text-itec-muted">
+      <div className="flex flex-col items-center justify-center gap-3 h-56 rounded-xl bg-itec-surface border border-itec-border/50 text-itec-muted">
         <ImageIcon size={32} className="opacity-30" />
         <span className="text-sm">{emptyLabel}</span>
       </div>
@@ -597,7 +597,7 @@ export const ItecMediaSlider: React.FC<ItecMediaSliderProps> = ({
         <div
           className={cn(
             "relative w-full rounded-xl overflow-hidden select-none",
-            "bg-black border border-itec-border",
+            "bg-black border border-itec-border/50",
             aspectClass
           )}
           onTouchStart={handleTouchStart}
@@ -650,7 +650,7 @@ export const ItecMediaSlider: React.FC<ItecMediaSliderProps> = ({
                   "absolute left-2 top-1/2 -translate-y-1/2 z-20",
                   "hidden md:flex items-center justify-center",
                   "w-9 h-9 rounded-full",
-                  "bg-black/60 text-white border border-white/10",
+                  "bg-black/60 text-white border border-itec-border/50",
                   "hover:bg-black/85 hover:scale-105",
                   "transition-all duration-150 shadow-lg",
                   "focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
@@ -665,7 +665,7 @@ export const ItecMediaSlider: React.FC<ItecMediaSliderProps> = ({
                   "absolute right-2 top-1/2 -translate-y-1/2 z-20",
                   "hidden md:flex items-center justify-center",
                   "w-9 h-9 rounded-full",
-                  "bg-black/60 text-white border border-white/10",
+                  "bg-black/60 text-white border border-itec-border/50",
                   "hover:bg-black/85 hover:scale-105",
                   "transition-all duration-150 shadow-lg",
                   "focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
@@ -857,7 +857,7 @@ export const ItecCarousel = ({
             className={cn(
               "absolute -left-5 top-[calc(50%-1.25rem)] z-10",
               "w-10 h-10 rounded-full shadow-lg",
-              "bg-itec-box border border-itec-border text-itec-text",
+              "bg-itec-box border border-itec-border/50 text-itec-text",
               "hidden md:flex items-center justify-center",
               "transition-all duration-300",
               "opacity-0 group-hover:opacity-100",
@@ -876,7 +876,7 @@ export const ItecCarousel = ({
             className={cn(
               "absolute -right-5 top-[calc(50%-1.25rem)] z-10",
               "w-10 h-10 rounded-full shadow-lg",
-              "bg-itec-box border border-itec-border text-itec-text",
+              "bg-itec-box border border-itec-border/50 text-itec-text",
               "hidden md:flex items-center justify-center",
               "transition-all duration-300",
               "opacity-0 group-hover:opacity-100",

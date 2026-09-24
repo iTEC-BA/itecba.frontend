@@ -15,7 +15,7 @@ const ALL_CAREER_IDS = ['sistemas', 'electronica', 'industrial', 'civil', 'elect
 const CAREER_COLOR: Record<string, string> = {
   sistemas:    'border-itec-blue-skye/40 hover:border-itec-blue-skye hover:bg-itec-blue/5',
   electronica: 'border-itec-red/40 hover:border-itec-red-skye hover:bg-itec-red/5',
-  default:     'border-itec-border hover:border-itec-border/80 hover:bg-itec-card',
+  default:     'border-itec-border/50 hover:border-itec-border/50/80 hover:bg-itec-card',
 };
 
 export const GradePage: React.FC = () => {
@@ -65,7 +65,7 @@ export const GradePage: React.FC = () => {
               placeholder="Buscar carrera..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-itec-box border border-itec-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-itec-text placeholder-itec-description focus:border-itec-blue-skye transition-colors"
+              className="w-full bg-itec-box border border-itec-border/50 rounded-xl pl-9 pr-4 py-2.5 text-sm text-itec-text placeholder-itec-description focus:border-itec-blue-skye transition-colors"
             />
           </div>
 
@@ -79,14 +79,14 @@ export const GradePage: React.FC = () => {
                   key={id}
                   onClick={() => available && navigate(`/grado/${id}`)}
                   className={`bg-itec-box border rounded-xl p-4 flex flex-col gap-2 transition-all duration-200 ${
-                    available ? `${colorCls} cursor-pointer hover:-translate-y-0.5` : 'border-itec-border/30 opacity-50 cursor-not-allowed'
+                    available ? `${colorCls} cursor-pointer hover:-translate-y-0.5` : 'border-itec-border/50/30 opacity-50 cursor-not-allowed'
                   }`}
                 >
                   <div className="flex justify-between items-start">
                     <span className="text-xl">📘</span>
                     {available
                       ? <span className="text-[10px] font-bold text-itec-groups bg-itec-groups/10 border border-itec-groups/20 px-2 py-0.5 rounded-full">Disponible</span>
-                      : <span className="text-[10px] font-bold text-itec-description bg-itec-card border border-itec-border px-2 py-0.5 rounded-full">Próximamente</span>
+                      : <span className="text-[10px] font-bold text-itec-description bg-itec-card border border-itec-border/50 px-2 py-0.5 rounded-full">Próximamente</span>
                     }
                   </div>
                   <div>

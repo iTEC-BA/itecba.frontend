@@ -47,7 +47,7 @@ interface AddButtonProps {
 const AddButton: React.FC<AddButtonProps> = ({ onClick }) => (
   <button
     onClick={onClick}
-    className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-white/15 rounded-xl text-sm font-semibold text-itec-gray hover:text-itec-text hover:border-white/25 transition-all"
+    className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-itec-border/50 rounded-xl text-sm font-semibold text-itec-gray hover:text-itec-text hover:border-itec-border/50 transition-all"
   >
     <Icons type="plus" className="w-4 h-4" />
     Agregar nuevo link
@@ -73,7 +73,7 @@ const LinkListSection: React.FC<LinkListSectionProps> = ({
     </p>
     {isLoading ? (
       <div className="flex items-center justify-center py-6">
-        <div className="w-5 h-5 border-2 border-itec-border border-t-itec-blue-skye rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-itec-border/50 border-t-itec-blue-skye rounded-full animate-spin" />
       </div>
     ) : links.length === 0 ? (
       <p className="text-center py-6 text-itec-gray text-sm">
@@ -99,7 +99,7 @@ interface ModalFooterProps {
 }
 
 const ModalFooter: React.FC<ModalFooterProps> = ({ onClose }) => (
-  <div className="px-5 py-3 border-t border-white/6 shrink-0 flex justify-end">
+  <div className="px-5 py-3 border-t border-itec-border/50 shrink-0 flex justify-end">
     <button
       onClick={onClose}
       className="text-sm font-semibold bg-itec-blue-skye hover:bg-itec-blue text-white px-5 py-2 rounded-xl transition-colors"

@@ -8,7 +8,7 @@ import { useAuthStore } from '@/stores/authStore';
 
 const LoginPrompt: React.FC = () => (
   <div className="flex flex-col items-center justify-center gap-5 px-4 py-24 text-center">
-    <div className="flex h-20 w-20 items-center justify-center rounded-xl border border-itec-border bg-itec-surface">
+    <div className="flex h-20 w-20 items-center justify-center rounded-xl border border-itec-border/50 bg-itec-surface">
       <Lock className="h-8 w-8 text-itec-muted" />
     </div>
     <div>

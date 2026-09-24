@@ -62,10 +62,10 @@ export const ContentModeration: React.FC = () => {
 
       {/* Aportes Pendientes */}
       <div className="flex flex-col gap-3">
-        <h3 className="text-sm font-bold text-white border-b border-white/10 pb-2">Aportes Pendientes ({data?.resources.length})</h3>
-        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-white/5 bg-itec-box">
+        <h3 className="text-sm font-bold text-white border-b border-itec-border/50 pb-2">Aportes Pendientes ({data?.resources.length})</h3>
+        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-itec-border/50 bg-itec-box">
           <table className="w-full min-w-[700px] text-left text-xs whitespace-nowrap">
-            <thead className="bg-white/5 border-b border-white/10">
+            <thead className="bg-white/5 border-b border-itec-border/50">
               <tr>
                 <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Título</th>
                 <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Materia</th>
@@ -98,10 +98,10 @@ export const ContentModeration: React.FC = () => {
 
       {/* Videos Reportados */}
       <div className="flex flex-col gap-3">
-        <h3 className="text-sm font-bold text-white border-b border-white/10 pb-2">Videos Reportados ({data?.videos.length})</h3>
-        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-white/5 bg-itec-box">
+        <h3 className="text-sm font-bold text-white border-b border-itec-border/50 pb-2">Videos Reportados ({data?.videos.length})</h3>
+        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-itec-border/50 bg-itec-box">
           <table className="w-full min-w-[700px] text-left text-xs whitespace-nowrap">
-            <thead className="bg-white/5 border-b border-white/10">
+            <thead className="bg-white/5 border-b border-itec-border/50">
               <tr>
                 <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Curso</th>
                 <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Video</th>
@@ -132,10 +132,10 @@ export const ContentModeration: React.FC = () => {
 
       {/* Grupos Reportados */}
       <div className="flex flex-col gap-3">
-        <h3 className="text-sm font-bold text-white border-b border-white/10 pb-2">Grupos Reportados ({data?.groups.length})</h3>
-        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-white/5 bg-itec-box">
+        <h3 className="text-sm font-bold text-white border-b border-itec-border/50 pb-2">Grupos Reportados ({data?.groups.length})</h3>
+        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-itec-border/50 bg-itec-box">
           <table className="w-full min-w-[700px] text-left text-xs whitespace-nowrap">
-            <thead className="bg-white/5 border-b border-white/10">
+            <thead className="bg-white/5 border-b border-itec-border/50">
               <tr>
                 <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Materia</th>
                 <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Comisión</th>

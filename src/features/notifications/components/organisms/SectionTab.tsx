@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const SectionTab: React.FC<Props> = ({ active, tabs, onChange }) => (
-  <div className="flex bg-white/3 border border-white/6 rounded-xl p-1 gap-1">
+  <div className="flex bg-white/3 border border-itec-border/50 rounded-xl p-1 gap-1">
     {tabs.map((tab) => (
       <button
         key={tab.id}
@@ -26,7 +26,7 @@ export const SectionTab: React.FC<Props> = ({ active, tabs, onChange }) => (
           relative flex-1 flex items-center justify-center gap-2
           py-2.5 px-3 rounded-xl text-xs font-bold transition-all duration-200
           ${active === tab.id
-            ? "bg-itec-card border border-white/8 text-itec-text"
+            ? "bg-itec-card border border-itec-border/50 text-itec-text"
             : "text-itec-text/45 hover:text-itec-text/70"
           }
         `}

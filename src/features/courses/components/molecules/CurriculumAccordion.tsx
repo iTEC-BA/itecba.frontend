@@ -25,17 +25,17 @@ export const CurriculumAccordion: React.FC<Props> = ({ sections, watchedVideos =
   };
 
   return (
-    <div className="flex flex-col border border-itec-border bg-itec-box rounded-xl overflow-hidden">
+    <div className="flex flex-col border border-itec-border/50 bg-itec-box rounded-xl overflow-hidden">
       {sections.map((section, sIdx) => {
         const key = section._id || sIdx;
         const isOpen = openSections[key] ?? false;
         const lessonsCount = section.lessons?.length || 0;
 
         return (
-          <div key={key} className="border-b border-itec-border last:border-b-0">
+          <div key={key} className="border-b border-itec-border/50 last:border-b-0">
             <button
               onClick={() => toggleSection(key)}
-              className="w-full flex items-center justify-between p-4 bg-itec-section-courses/10 hover:bg-itec-section-courses/30 transition-colors focus:outline-none cursor-pointer"
+              className="w-full flex items-center justify-between p-4 bg-itec-section-courses/50 focus:outline-none cursor-pointer"
             >
               <div className="flex flex-col items-start text-left gap-0.5">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-itec-text">
@@ -48,7 +48,7 @@ export const CurriculumAccordion: React.FC<Props> = ({ sections, watchedVideos =
             </button>
 
             {isOpen && (
-              <ul className="bg-itec-sidebar border-t border-itec-border py-1.5">
+              <ul className="bg-itec-sidebar border-t border-itec-border/50 py-1.5">
                 {section.lessons?.map((lesson: Lesson, lIdx: number) => {
                   const vidId = lesson.youtubeId || lesson._id || "";
                   const isWatched = vidId ? watchedVideos.has(vidId) : false;
@@ -58,7 +58,7 @@ export const CurriculumAccordion: React.FC<Props> = ({ sections, watchedVideos =
                       key={lesson._id || lIdx}
                       className="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 transition-colors cursor-pointer"
                     >
-                      <div className="shrink-0 flex items-center justify-center size-8 bg-white rounded-full">
+                      <div className="shrink-0 flex items-center justify-center size-8 rounded-full">
                         {getLessonIcon(lesson, isWatched)}
                       </div>
                       <div className="flex-1 min-w-0">

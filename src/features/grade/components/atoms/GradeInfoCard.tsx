@@ -5,7 +5,7 @@ import type { InfoItem } from '../../types/grade.types';
 interface Props { item: InfoItem }
 
 export const GradeInfoCard: React.FC<Props> = ({ item }) => (
-  <div className="bg-itec-card border border-itec-border rounded-xl p-4 flex items-start gap-3 hover:border-itec-blue-skye/30 transition-colors duration-200">
+  <div className="bg-itec-card border border-itec-border/50 rounded-xl p-4 flex items-start gap-3 hover:border-itec-blue-skye/30 transition-colors duration-200">
     <span className="text-2xl flex-shrink-0">{item.icono}</span>
     <div>
       <h4 className="text-sm font-bold text-itec-text mb-1">{item.titulo}</h4>

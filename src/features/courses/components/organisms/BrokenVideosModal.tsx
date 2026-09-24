@@ -80,7 +80,7 @@ export const BrokenVideosModal: React.FC<Props> = ({ isOpen, onClose }) => {
         ))}
 
         {totalPages > 1 && (
-          <div className="pt-2 border-t border-white/6">
+          <div className="pt-2 border-t border-itec-border/50">
             <PaginationBar page={page} totalPages={totalPages} onChange={setPage} />
           </div>
         )}

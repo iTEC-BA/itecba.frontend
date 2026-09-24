@@ -12,7 +12,7 @@ const SOURCE_CLS: Record<string, string> = {
   news:     "bg-blue-500/10 text-blue-400 border-blue-500/15",
   rewards:  "bg-itec-rewards/10 text-itec-rewards border-itec-rewards/15",
   points:   "bg-green-500/10 text-green-400 border-green-500/15",
-  system:   "bg-white/5 text-itec-text/50 border-white/8",
+  system:   "bg-white/5 text-itec-text/50 border-itec-border/50",
   calendar: "bg-purple-500/10 text-purple-400 border-purple-500/15",
 };
 
@@ -34,7 +34,7 @@ export const NotificationItem: React.FC<Props> = ({ item, onClick }) => {
       className={`
         w-full text-left px-3 py-3 rounded-xl border transition-colors duration-150 active:scale-[0.99]
         ${!item.read
-          ? "bg-white/3 border-white/8"
+          ? "bg-white/3 border-itec-border/50"
           : "bg-transparent border-transparent hover:bg-white/2"
         }
       `}

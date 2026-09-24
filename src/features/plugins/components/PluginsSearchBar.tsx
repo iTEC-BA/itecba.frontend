@@ -21,9 +21,9 @@ export const PluginsSearchBar: React.FC<Props> = ({ value, onChange }) => (
       // font-size 16px evita que iOS haga zoom al enfocar el input
       style={{ fontSize: "16px" }}
       className="
-        w-full bg-itec-card border border-white/7 rounded-xl
+        w-full bg-itec-card border border-itec-border/50 rounded-xl
         pl-10 pr-10 py-2.5 text-itec-text placeholder-[#5a6475]
-        focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10
+        focus:outline-none focus:border-itec-border/50 focus:ring-1 focus:ring-white/10
         transition-colors
       "
     />

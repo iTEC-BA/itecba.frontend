@@ -50,7 +50,7 @@ export const NotificationBanner: React.FC = () => {
   return (
     <div className="relative w-full">
       {/* Contenedor del Banner */}
-      <div className="relative rounded-2xl overflow-hidden shadow-lg border border-white/5">
+      <div className="relative rounded-2xl overflow-hidden shadow-lg border border-itec-border/50">
         <AnnouncementBanner
           key={currentAnn.id} // El key fuerza el re-render y la animación al cambiar
           title={currentAnn.title}

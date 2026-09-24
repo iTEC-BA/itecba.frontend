@@ -42,10 +42,10 @@ export const CourseCurriculumEditor: React.FC<Props> = ({ sections, setSections 
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xs font-bold text-itec-section-courses uppercase tracking-widest border-b border-white/10 pb-2">Temario y Apuntes</h3>
+      <h3 className="text-xs font-bold text-itec-section-courses uppercase tracking-widest border-b border-itec-border/50 pb-2">Temario y Apuntes</h3>
       <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
         {sections.map((sec, sIdx) => (
-          <div key={sIdx} className="bg-itec-box border border-itec-border rounded-[1.2rem] p-4 flex flex-col gap-4">
+          <div key={sIdx} className="bg-itec-box border border-itec-border/50 rounded-[1.2rem] p-4 flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <span className="text-[10px] font-bold text-white bg-itec-section-courses px-2.5 py-1 rounded-md uppercase tracking-widest shrink-0">Módulo {sIdx + 1}</span>
               <Input fullWidth placeholder="Título del módulo..." value={sec.title} onChange={(e) => updateSectionTitle(sIdx, e.target.value)} className="bg-white/5 border-transparent focus:border-itec-section-courses/50 text-sm py-2" />
@@ -56,7 +56,7 @@ export const CourseCurriculumEditor: React.FC<Props> = ({ sections, setSections 
 
             <div className="flex flex-col gap-4 pl-3 sm:pl-5 border-l-[3px] border-itec-section-courses/30 ml-2">
               {sec.lessons.map((les, lIdx) => (
-                <div key={lIdx} className="flex flex-col gap-3 bg-itec-sidebar border border-itec-border hover:border-itec-section-courses/60 rounded-xl p-4 group relative transition-colors shadow-sm">
+                <div key={lIdx} className="flex flex-col gap-3 bg-itec-sidebar border border-itec-border/50 hover:border-itec-section-courses/60 rounded-xl p-4 group relative transition-colors shadow-sm">
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
                     <Input placeholder="Título de la clase..." value={les.title} onChange={(e) => updateLesson(sIdx, lIdx, "title", e.target.value)} className="md:col-span-6 bg-itec-box border-transparent focus:border-itec-section-courses/50 text-sm py-2" />
                     <Input placeholder="ID YouTube" value={les.youtubeId} onChange={(e) => updateLesson(sIdx, lIdx, "youtubeId", e.target.value)} className="md:col-span-4 bg-itec-box border-transparent focus:border-itec-section-courses/50 text-xs font-mono py-2" />
@@ -64,7 +64,7 @@ export const CourseCurriculumEditor: React.FC<Props> = ({ sections, setSections 
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <div className="flex bg-itec-box border border-itec-border rounded-lg p-1">
+                    <div className="flex bg-itec-box border border-itec-border/50 rounded-lg p-1">
                       {LESSON_TYPES.map((t) => (
                         <button
                           key={t.value}
@@ -86,7 +86,7 @@ export const CourseCurriculumEditor: React.FC<Props> = ({ sections, setSections 
                       className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wide border transition-all ${
                         les.isPremium
                           ? "bg-amber-500/15 border-amber-500/40 text-amber-400"
-                          : "bg-itec-box border-itec-border text-itec-gray hover:text-itec-text"
+                          : "bg-itec-box border-itec-border/50 text-itec-gray hover:text-itec-text"
                       }`}
                     >
                       <Star className="w-3 h-3" /> {les.isPremium ? "Premium" : "Gratuito"}

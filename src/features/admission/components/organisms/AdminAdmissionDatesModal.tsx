@@ -35,10 +35,10 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
       <div className="p-5">
         <div className="mb-6 max-h-40 overflow-y-auto custom-scrollbar space-y-2 pr-2">
           {events.length === 0 ? (
-            <p className="text-xs text-itec-gray text-center py-4 bg-white/5 rounded-xl border border-white/10">No hay eventos guardados.</p>
+            <p className="text-xs text-itec-gray text-center py-4 bg-white/5 rounded-xl border border-itec-border/50">No hay eventos guardados.</p>
           ) : (
             events.map(ev => (
-              <div key={ev.id} className="bg-itec-bg border border-white/10 p-3 rounded-xl flex justify-between items-center shadow-md hover:border-purple-500/50 transition-colors">
+              <div key={ev.id} className="bg-itec-bg border border-itec-border/50 p-3 rounded-xl flex justify-between items-center shadow-md hover:border-purple-500/50 transition-colors">
                 <div>
                   <p className="text-sm font-bold text-white">{ev.eventName}</p>
                   <p className="text-[10px] text-purple-400">{new Date(ev.targetDate).toLocaleString()}</p>
@@ -50,11 +50,11 @@ export const AdminAdmissionDatesModal: React.FC<Props> = ({ isOpen, onClose, eve
             ))
           )}
         </div>
-        <form onSubmit={handleAdd} className="bg-itec-bg/50 p-4 rounded-xl border border-white/10">
+        <form onSubmit={handleAdd} className="bg-itec-bg/50 p-4 rounded-xl border border-itec-border/50">
           <h4 className="text-xs font-bold text-purple-400 mb-3">Nuevo Evento</h4>
           <div className="space-y-3">
             <Input placeholder="Ej: Primer Parcial" value={eventName} onChange={e => setEventName(e.target.value)} fullWidth className="text-sm py-2" />
-            <input type="datetime-local" value={targetDate} onChange={e => setTargetDate(e.target.value)} className="w-full bg-itec-box border border-white/10 text-white px-4 py-2 rounded-xl focus:outline-none focus:border-purple-500 text-sm transition-colors" />
+            <input type="datetime-local" value={targetDate} onChange={e => setTargetDate(e.target.value)} className="w-full bg-itec-box border border-itec-border/50 text-white px-4 py-2 rounded-xl focus:outline-none focus:border-purple-500 text-sm transition-colors" />
             <Button type="submit" variant="purple" hierarchy="solid" fullWidth isLoading={isSubmitting} disabled={!eventName || !targetDate}>Agregar Evento</Button>
           </div>
         </form>

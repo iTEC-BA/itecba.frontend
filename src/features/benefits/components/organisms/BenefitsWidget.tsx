@@ -34,7 +34,7 @@ export const BenefitsWidget: React.FC = () => {
         <p className="text-xs text-itec-text/40 text-center py-4">Sin recompensas aún</p>
       ) : (
         benefits.slice(0,4).map((b: any) => (
-          <Link to="/beneficios" key={b._id} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+          <Link to="/beneficios" key={b._id} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-itec-border/50 hover:bg-white/10 transition-colors">
             <div className="min-w-0 flex-1 pr-3">
               <p className="text-xs font-bold text-itec-text truncate">{b.title}</p>
               <p className="text-[10px] text-itec-muted truncate capitalize">{b.category}</p>

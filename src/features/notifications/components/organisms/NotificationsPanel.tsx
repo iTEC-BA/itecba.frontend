@@ -62,7 +62,7 @@ export const NotificationsPanel: React.FC<Props> = ({ items, isLoading, onMarkRe
           <Skeleton />
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-14 gap-3 text-center">
-            <div className="w-12 h-12 rounded-xl bg-white/4 border border-white/6 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-white/4 border border-itec-border/50 flex items-center justify-center">
               <Icons type="bell" className="size-5 text-itec-text/20" />
             </div>
             <p className="text-sm font-bold text-itec-text/35">Sin notificaciones</p>

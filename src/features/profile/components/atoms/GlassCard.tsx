@@ -25,11 +25,11 @@ const GLOW_MAP: Record<GlowColor, string> = {
 };
 
 const VARIANT_MAP: Record<GlassVariant, string> = {
-  default: "bg-itec-box border border-itec-border",
-  elevated: "bg-itec-surface border border-itec-border",
-  sunken: "bg-black/20 border border-white/5",
-  outlined: "bg-transparent border border-itec-border",
-  solid: "bg-itec-box border border-itec-border",
+  default: "bg-itec-box border border-itec-border/50",
+  elevated: "bg-itec-surface border border-itec-border/50",
+  sunken: "bg-black/20 border border-itec-border/50",
+  outlined: "bg-transparent border border-itec-border/50",
+  solid: "bg-itec-box border border-itec-border/50",
 };
 
 export const GlassCard: React.FC<GlassCardProps> = ({ children, className = "", glow = "none", hover = false, onClick, variant = "default", as = "div", style }) => {

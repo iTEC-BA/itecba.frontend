@@ -51,16 +51,16 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
     return Array.from(nombres).sort((a, b) => a.localeCompare(b, "es")).map(m => ({ value: m, label: m }));
   }, [subjectsData, nivel]);
 
-  const inputCls = "w-full bg-itec-box border border-itec-border rounded px-3 py-2 text-sm focus:border-itec-section-trueketec";
+  const inputCls = "w-full bg-itec-box border border-itec-border/50 rounded px-3 py-2 text-sm focus:border-itec-section-trueketec";
 
   return (
     <LayoutModal isOpen={isOpen} onClose={onClose} title="Registro de Permuta" description="Ingreso de solicitud al sistema de gestión." maxWidth="max-w-lg">
       <div className="flex flex-col gap-6 px-6 py-6">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-itec-border bg-itec-box rounded-lg p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-itec-border/50 bg-itec-box rounded-lg p-4">
           <div className="flex flex-col gap-1.5 sm:col-span-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Departamento Académico</label>
-            <CustomSelect value={form.departamento} onChange={val => set("departamento", val)} options={deptoOptions} placeholder="Seleccionar" className="w-full bg-itec-box border-itec-border py-2 text-sm" />
+            <CustomSelect value={form.departamento} onChange={val => set("departamento", val)} options={deptoOptions} placeholder="Seleccionar" className="w-full bg-itec-box border-itec-border/50 py-2 text-sm" />
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Nivel</label>
@@ -69,7 +69,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
               onChange={val => { setNivel(val); set("materia", ""); }} 
               options={nivelOptions} 
               placeholder="Seleccionar Nivel" 
-              className="w-full bg-itec-box border-itec-border py-2 text-sm" 
+              className="w-full bg-itec-box border-itec-border/50 py-2 text-sm" 
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -80,20 +80,20 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
               options={materiaSelectOptions}
               placeholder={!nivel ? "Elija Nivel primero" : materiaSelectOptions.length ? "Seleccionar materia" : "Sin materias"}
               disabled={materiaSelectOptions.length === 0 || !nivel}
-              className="w-full bg-itec-box border-itec-border py-2 text-sm"
+              className="w-full bg-itec-box border-itec-border/50 py-2 text-sm"
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border border-itec-border bg-itec-box rounded-lg p-4">
-          <div className="grid grid-cols-2 gap-4 border-b border-itec-border pb-4">
+        <div className="flex flex-col gap-4 border border-itec-border/50 bg-itec-box rounded-lg p-4">
+          <div className="grid grid-cols-2 gap-4 border-b border-itec-border/50 pb-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Comisión Actual</label>
               <Input placeholder="K1021" value={form.comision_actual} onChange={e => set("comision_actual", e.target.value.toUpperCase())} fullWidth className={`${inputCls} font-mono`} />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Turno Asignado</label>
-              <CustomSelect value={form.turno_actual} onChange={val => set("turno_actual", val)} options={turnoOptions} placeholder="Turno" className="w-full bg-itec-box border-itec-border py-2 text-sm" />
+              <CustomSelect value={form.turno_actual} onChange={val => set("turno_actual", val)} options={turnoOptions} placeholder="Turno" className="w-full bg-itec-box border-itec-border/50 py-2 text-sm" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 pt-2">
@@ -111,7 +111,7 @@ export const TrueketecPublishModal: React.FC<Props> = ({ isOpen, onClose, onPubl
         {error && <p className="text-[10px] font-bold uppercase tracking-widest text-itec-red text-center">{error}</p>}
 
         <div className="flex justify-end gap-3 pt-2">
-          <Button variant="slate" hierarchy="outline" text="Cancelar" onClick={onClose} className="rounded border-itec-border bg-itec-surface" />
+          <Button variant="slate" hierarchy="outline" text="Cancelar" onClick={onClose} className="rounded border-itec-border/50 bg-itec-surface" />
           <Button variant="primary" hierarchy="solid" text="Procesar Solicitud" isLoading={saving} onClick={handleSubmit} className="rounded px-6 bg-itec-section-trueketec text-white hover:bg-itec-section-trueketec/80" />
         </div>
       </div>

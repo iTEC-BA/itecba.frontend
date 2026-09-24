@@ -41,16 +41,16 @@ export const CourseLandingPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <div className="max-w-6xl mx-auto px-4 w-full grid lg:grid-cols-[1fr_332px] gap-6 lg:gap-10 pb-12">
+      <div className="mx-auto px-4 w-full grid lg:grid-cols-[1fr_350px] gap-4 pb-12">
         
         {/* ── Columna Izquierda: Información y Temario ── */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 mx-auto w-full">
           <CourseBreadcrumb
             crumbs={[{ label: "Cursos", href: "/cursos" }, { label: course.title }]}
             className="mb-2"
           />
 
-          <div className="relative w-full aspect-video rounded-2xl border border-itec-border overflow-hidden bg-itec-sidebar">
+          <div className="relative w-full aspect-video rounded-2xl border border-itec-border/50 overflow-hidden bg-itec-sidebar">
             {course.imageUrl ? (
               <img
                 src={course.imageUrl}
@@ -85,12 +85,12 @@ export const CourseLandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="mt-6 border-t border-itec-border pt-8">
+          <div className="mt-6 border-t border-itec-border/50 pt-8">
             <h2 className="text-lg font-bold text-itec-text mb-6">Contenido del curso</h2>
             {course.sections && course.sections.length > 0 ? (
               <CurriculumAccordion sections={course.sections} watchedVideos={watchedVideos} />
             ) : (
-              <div className="p-8 border border-dashed border-itec-border rounded-xl text-center bg-itec-box">
+              <div className="p-8 border border-dashed border-itec-border/50 rounded-xl text-center bg-itec-box">
                 <p className="text-sm font-medium text-itec-gray">No hay clases publicadas todavía.</p>
               </div>
             )}
@@ -98,7 +98,7 @@ export const CourseLandingPage: React.FC = () => {
         </div>
 
         {/* ── Columna Derecha: Sidebar Sticky ── */}
-        <aside className="lg:sticky lg:top-24 self-start order-first lg:order-last mb-6 lg:mb-0">
+        <aside className="md:sticky md:top-0 self-start">
           <CourseSidebar
             course={course}
             progressPercent={progressPercent}

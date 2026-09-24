@@ -67,7 +67,7 @@ export const LinkFormInline: React.FC<Props> = ({
           <input
             value={form.icon}
             onChange={(e) => setForm((p) => ({ ...p, icon: e.target.value }))}
-            className="w-full bg-itec-box border border-itec-border text-itec-text rounded-lg px-2 py-2 text-sm text-center outline-none"
+            className="w-full bg-itec-box border border-itec-border/50 text-itec-text rounded-lg px-2 py-2 text-sm text-center outline-none"
           />
         </div>
         <div className="col-span-10 sm:col-span-5">
@@ -78,7 +78,7 @@ export const LinkFormInline: React.FC<Props> = ({
             value={form.title}
             onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
             placeholder="Ej: SIU Guaraní..."
-            className="w-full bg-itec-box border border-itec-border text-itec-text rounded-lg px-3 py-2 text-sm outline-none"
+            className="w-full bg-itec-box border border-itec-border/50 text-itec-text rounded-lg px-3 py-2 text-sm outline-none"
           />
         </div>
         <div className="col-span-12 sm:col-span-5">
@@ -89,7 +89,7 @@ export const LinkFormInline: React.FC<Props> = ({
             value={form.url}
             onChange={(e) => setForm((p) => ({ ...p, url: e.target.value }))}
             placeholder="https://..."
-            className="w-full bg-itec-box border border-itec-border text-itec-text rounded-lg px-3 py-2 text-sm outline-none "
+            className="w-full bg-itec-box border border-itec-border/50 text-itec-text rounded-lg px-3 py-2 text-sm outline-none "
           />
         </div>
       </div>
@@ -108,7 +108,7 @@ export const LinkFormInline: React.FC<Props> = ({
           className="flex items-center gap-1.5 text-xs font-semibold bg-itec-blue-skye hover:bg-itec-blue text-white px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
         >
           {saving ? (
-            <span className="w-3 h-3 border border-white/40 border-t-white rounded-full animate-spin" />
+            <span className="w-3 h-3 border border-itec-border/50 border-t-white rounded-full animate-spin" />
           ) : (
             <Icons type="check" className="w-3 h-3" />
           )}

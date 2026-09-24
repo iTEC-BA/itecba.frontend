@@ -49,21 +49,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-5 border border-white/5 rounded-xl bg-itec-box flex flex-col">
+        <div className="p-5 border border-itec-border/50 rounded-xl bg-itec-box flex flex-col">
           <h3 className="text-xs font-bold text-white mb-4 uppercase tracking-widest text-itec-muted">Estado del Sistema</h3>
           <div className="w-full flex flex-col gap-2">
-            <div className="flex items-center justify-between p-3 rounded-lg border border-white/5 bg-white/[0.02]">
+            <div className="flex items-center justify-between p-3 rounded-lg border border-itec-border/50 bg-white/[0.02]">
               <span className="text-[11px] text-itec-muted font-bold uppercase tracking-widest">API Server</span>
               <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-md border border-emerald-400/20">{stats.serverStatus}</span>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg border border-white/5 bg-white/[0.02]">
+            <div className="flex items-center justify-between p-3 rounded-lg border border-itec-border/50 bg-white/[0.02]">
               <span className="text-[11px] text-itec-muted font-bold uppercase tracking-widest">Base de Datos</span>
               <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-md border border-emerald-400/20">{stats.dbStatus}</span>
             </div>
           </div>
         </div>
 
-        <div className="p-5 border border-white/5 rounded-xl bg-itec-box flex flex-col">
+        <div className="p-5 border border-itec-border/50 rounded-xl bg-itec-box flex flex-col">
           <h3 className="text-xs font-bold text-white mb-4 uppercase tracking-widest text-itec-muted">Reportes Pendientes</h3>
           <div className="w-full flex items-center gap-4 p-4 rounded-xl border border-rose-500/20 bg-rose-500/10 h-full">
             <div className="p-2 rounded-lg bg-rose-500/20 text-rose-400">
@@ -85,7 +85,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
               key={idx}
               onClick={() => onNavigate(a.section)}
               className={cn(
-                "flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-white/5 bg-itec-box transition-colors hover:bg-white/[0.02]",
+                "flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-itec-border/50 bg-itec-box transition-colors hover:bg-white/[0.02]",
                 a.border
               )}
             >

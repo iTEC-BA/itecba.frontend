@@ -12,8 +12,8 @@ export const FolderCard: React.FC<Props> = ({ folder, onClick }) => (
     onClick={onClick}
     className="
       w-full flex items-center gap-3 p-4 text-left
-      bg-itec-card border border-white/7 rounded-xl
-      hover:border-white/16 hover:bg-white/3
+      bg-itec-card border border-itec-border/50 rounded-xl
+      hover:border-itec-border/50 hover:bg-white/3
       active:scale-[0.98] transition-all duration-150 cursor-pointer
     "
     aria-label={`Abrir carpeta ${folder.label}`}

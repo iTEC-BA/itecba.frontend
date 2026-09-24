@@ -27,7 +27,7 @@ export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
   return (
     <div className="flex items-start gap-3 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
       {/* Avatar asistente */}
-      <div className="w-8 h-8 rounded-xl bg-white/2 border border-white/5 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+      <div className="w-8 h-8 rounded-xl bg-white/2 border border-itec-border/50 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
         <img
           src="/mascot/TEC-respuesta.png"
           alt="Asistente TEC de ITEC.ba"
@@ -37,16 +37,16 @@ export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
 
       <div className="flex-1 min-w-0">
         {msg.isLoading ? (
-          <div className="bg-white/[0.06] border border-white/8 rounded-xl rounded-tl-sm px-4 py-3">
+          <div className="bg-white/[0.06] border border-itec-border/50 rounded-xl rounded-tl-sm px-4 py-3">
             <TypingDots />
           </div>
         ) : (
           <>
             <div className={`bg-white/[0.06] border rounded-xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed text-white/90 ${
-              msg.isAI ? "border-violet-500/20" : "border-white/8"
+              msg.isAI ? "border-violet-500/20" : "border-itec-border/50"
             }`}>
               {msg.isAI && (
-                <div className="flex items-center gap-1.5 mb-2 pb-2 border-b border-white/8">
+                <div className="flex items-center gap-1.5 mb-2 pb-2 border-b border-itec-border/50">
                   <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
                   <span className="text-[10px] font-bold text-violet-400 uppercase tracking-wider">IA Avanzada</span>
                 </div>
@@ -81,7 +81,7 @@ export const ChatMessage: React.FC<Props> = ({ msg, onSuggestionClick }) => {
                 {msg.suggestions.map((s, i) => (
                   <button
                     key={i}
-                    className="text-[11px] text-white/50 bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/15 px-3 py-1 rounded-full transition-all active:scale-95"
+                    className="text-[11px] text-white/50 bg-white/5 hover:bg-white/10 border border-itec-border/50 hover:border-itec-border/50 px-3 py-1 rounded-full transition-all active:scale-95"
                     onClick={() => {
                       if (onSuggestionClick) {
                         onSuggestionClick(s);

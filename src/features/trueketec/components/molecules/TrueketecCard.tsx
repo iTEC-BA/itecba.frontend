@@ -14,7 +14,7 @@ export const TrueketecCard: React.FC<Props> = ({ post, onContact }) => {
 
   return (
     <article className={cn(
-      "flex flex-col rounded-2xl p-4 gap-4 transition-colors duration-200 h-full border border-itec-border",
+      "flex flex-col rounded-2xl p-4 gap-4 transition-colors duration-200 h-full border border-itec-border/50",
       isPerfect ? "bg-itec-section-trueketec/10 border-itec-section-trueketec/30" : "bg-itec-box hover:bg-itec-surface",
       isCompleted && "opacity-50 grayscale"
     )}>
@@ -41,7 +41,7 @@ export const TrueketecCard: React.FC<Props> = ({ post, onContact }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 mt-auto bg-itec-surface rounded-xl p-3 border border-itec-border">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 mt-auto bg-itec-surface rounded-xl p-3 border border-itec-border/50">
         <div className="flex flex-col gap-1 text-center">
           <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Posee</span>
           <span className="font-mono text-sm font-bold text-white">{post.comision_actual}</span>
@@ -72,7 +72,7 @@ export const TrueketecCard: React.FC<Props> = ({ post, onContact }) => {
               "py-2 px-4 text-[10px] uppercase tracking-wider rounded-lg",
               isPerfect
                 ? "bg-itec-section-trueketec text-white border-transparent hover:bg-itec-section-trueketec/80"
-                : "bg-itec-surface text-itec-text border-itec-border hover:bg-itec-bg"
+                : "bg-itec-surface text-itec-text border-itec-border/50 hover:bg-itec-bg"
             )}
           />
         )}

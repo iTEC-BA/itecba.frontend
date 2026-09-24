@@ -29,7 +29,7 @@ export const PadronSearchForm: React.FC<Props> = ({ onSearch, isLoading }) => {
           placeholder="Ej. 12345678"
           required
           fullWidth
-          className="bg-itec-bg border-2 border-itec-border focus:border-itec-sky rounded-xl p-4 text-lg transition-colors"
+          className="bg-itec-bg border-2 border-itec-border/50 focus:border-itec-sky rounded-xl p-4 text-lg transition-colors"
         />
       </div>
 

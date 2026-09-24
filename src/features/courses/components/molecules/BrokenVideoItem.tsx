@@ -20,7 +20,7 @@ export const BrokenVideoItem: React.FC<Props> = ({ item, onFix, onDelete, onClea
   const handleDelete = async () => { if (!window.confirm("¿Eliminar este video del curso?")) return; await onDelete(item.courseId, item.video._id); };
 
   return (
-    <div className="bg-itec-sidebar border border-itec-border rounded-xl p-4 space-y-3">
+    <div className="bg-itec-sidebar border border-itec-border/50 rounded-xl p-4 space-y-3">
       <div className="flex items-start justify-between gap-2">
         <div>
           <Link to={`/cursos/${item.courseId}`} className="text-xs font-bold text-itec-text hover:text-itec-section-courses transition-colors">{item.courseTitle}</Link>
@@ -30,7 +30,7 @@ export const BrokenVideoItem: React.FC<Props> = ({ item, onFix, onDelete, onClea
           {item.video.isBroken ? "Roto" : `${item.video.reportCount} reporte${item.video.reportCount > 1 ? "s" : ""}`}
         </span>
       </div>
-      <div className="bg-itec-box border border-itec-border rounded-lg p-3 flex items-center gap-3">
+      <div className="bg-itec-box border border-itec-border/50 rounded-lg p-3 flex items-center gap-3">
         <img src={`https://img.youtube.com/vi/${item.video.youtubeId}/default.jpg`} alt="" className="w-16 aspect-video object-cover rounded-md shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-itec-text truncate">{item.video.title}</p>
@@ -42,12 +42,12 @@ export const BrokenVideoItem: React.FC<Props> = ({ item, onFix, onDelete, onClea
       </div>
       {isEditing ? (
         <div className="flex gap-2">
-          <input type="text" placeholder="Nuevo ID de YouTube" value={newYtId} onChange={(e) => setNewYtId(e.target.value)} className="flex-1 bg-itec-box border border-itec-border rounded-lg px-3 py-2 text-xs text-itec-text outline-none focus:border-itec-section-courses transition-colors" />
+          <input type="text" placeholder="Nuevo ID de YouTube" value={newYtId} onChange={(e) => setNewYtId(e.target.value)} className="flex-1 bg-itec-box border border-itec-border/50 rounded-lg px-3 py-2 text-xs text-itec-text outline-none focus:border-itec-section-courses transition-colors" />
           <Button onClick={handleSave} disabled={saving || !newYtId.trim()} variant="primary" className="bg-itec-section-courses border-none text-white">{saving ? "..." : "Guardar"}</Button>
           <Button onClick={() => { setIsEditing(false); setNewYtId(item.video.youtubeId); }} variant="slate" hierarchy="ghost">Cancelar</Button>
         </div>
       ) : (
-        <div className="flex flex-wrap gap-2 border-t border-itec-border pt-3">
+        <div className="flex flex-wrap gap-2 border-t border-itec-border/50 pt-3">
           <Button onClick={() => setIsEditing(true)} variant="slate" hierarchy="outline" icon={<Icons type="edit" className="w-3 h-3" />} className="text-xs">Corregir ID</Button>
           <Button onClick={handleDelete} variant="danger" hierarchy="outline" icon={<Icons type="trash" className="w-3 h-3" />} className="text-xs">Eliminar</Button>
           <Button onClick={() => onClearReports(item.courseId, item.video._id)} variant="slate" hierarchy="outline" icon={<Icons type="check" className="w-3 h-3" />} className="text-xs">Limpiar reportes</Button>

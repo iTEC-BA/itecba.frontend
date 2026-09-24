@@ -44,7 +44,7 @@ export const QuickLinksWidget: React.FC = () => {
             href={link.url}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-colors group"
+            className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.02] border border-itec-border/50 hover:bg-white/[0.05] hover:border-itec-border/50 transition-colors group"
           >
             <span className="text-[11px] font-bold text-itec-text group-hover:text-white">
               {link.label}
@@ -54,7 +54,7 @@ export const QuickLinksWidget: React.FC = () => {
         ))}
 
         {/* Acordeón: Aulas por Categoría */}
-        <div className="flex flex-col rounded-lg border border-white/5 bg-white/[0.01] overflow-hidden mt-1">
+        <div className="flex flex-col rounded-lg border border-itec-border/50 bg-white/[0.01] overflow-hidden mt-1">
           <button 
             onClick={() => toggle("campus")}
             className="flex items-center justify-between p-2.5 text-[11px] font-bold text-itec-muted hover:text-white hover:bg-white/[0.02] transition-colors"
@@ -64,7 +64,7 @@ export const QuickLinksWidget: React.FC = () => {
           </button>
           
           {openSection === "campus" && (
-            <div className="flex flex-col p-1.5 border-t border-white/5 bg-itec-box">
+            <div className="flex flex-col p-1.5 border-t border-itec-border/50 bg-itec-box">
               {CAMPUS_LINKS.map((link, idx) => (
                 <a key={idx} href={link.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/5 transition-colors group">
                   <link.icon size={10} className="text-itec-muted group-hover:text-itec-sky" />
@@ -76,7 +76,7 @@ export const QuickLinksWidget: React.FC = () => {
         </div>
 
         {/* Acordeón: Autogestión */}
-        <div className="flex flex-col rounded-lg border border-white/5 bg-white/[0.01] overflow-hidden">
+        <div className="flex flex-col rounded-lg border border-itec-border/50 bg-white/[0.01] overflow-hidden">
           <button 
             onClick={() => toggle("auto")}
             className="flex items-center justify-between p-2.5 text-[11px] font-bold text-itec-muted hover:text-white hover:bg-white/[0.02] transition-colors"
@@ -86,7 +86,7 @@ export const QuickLinksWidget: React.FC = () => {
           </button>
           
           {openSection === "auto" && (
-            <div className="flex flex-col p-1.5 border-t border-white/5 bg-itec-box">
+            <div className="flex flex-col p-1.5 border-t border-itec-border/50 bg-itec-box">
               {AUTOGESTION_LINKS.map((link, idx) => (
                 <a key={idx} href={link.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/5 transition-colors group">
                   <div className="w-1 h-1 rounded-full bg-itec-muted group-hover:bg-itec-sky" />

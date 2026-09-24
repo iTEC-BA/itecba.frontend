@@ -74,7 +74,7 @@ export const AulasPage: React.FC = () => {
             placeholder="Buscá por número, nombre, carrera..."
             value={filters.texto ?? ""}
             onChange={(e) => setFilters({ ...filters, texto: e.target.value })}
-            className="w-full pl-9 pr-4 py-2 text-sm rounded-xl bg-itec-surface border border-itec-border text-itec-text focus:outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60"
+            className="w-full pl-9 pr-4 py-2 text-sm rounded-xl bg-itec-surface border border-itec-border/50 text-itec-text focus:outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60"
           />
           {/* Reload / invalidar caché */}
           <Button
@@ -83,7 +83,7 @@ export const AulasPage: React.FC = () => {
             hierarchy="solid"
             icon={<RotateCcw size={14} />}
             title="Actualizar lista"
-            className="w-10 h-10 p-0 rounded-xl shrink-0 bg-itec-surface border border-itec-border text-itec-muted hover:text-white hover:border-white/20"
+            className="w-10 h-10 p-0 rounded-xl shrink-0 bg-itec-surface border border-itec-border/50 text-itec-muted hover:text-white hover:border-itec-border/50"
           />
         </div>
         

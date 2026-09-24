@@ -5,8 +5,6 @@ import { VoteButton }      from '../atoms/VoteButton';
 import { RichText }        from '../atoms/RichText';
 import { ReplyCard }       from '../molecules/ReplyCard';
 import { ComposeBox }      from '../atoms/ComposeBox';
-import { LayoutModal }     from '@components/templates/LayoutModal';
-import { Button }          from '@/components/ui/Button';
 import type { ForumPost }  from '../../types/forum';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -26,34 +24,25 @@ interface Props {
   onVote:     (id: number, v: 1 | -1) => void;
   onRepost:   (id: number) => void;
   onDelete:   (id: number) => void;
-  onReply:    (parentId: number, body: string) => Promise<void>;
+  onReply:    (parentId: number, body: string) => Promise<ForumPost>;
+  onOpenReply: (id: number) => void;
 }
 
 export const ThreadView: React.FC<Props> = ({
-  post, replies, loading, onClose, onVote, onRepost, onDelete, onReply,
+  post, replies, loading, onClose, onVote, onRepost, onDelete, onReply, onOpenReply,
 }) => {
   const { isAuthenticated } = useAuthStore();
   const [replying,     setReplying]     = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
-  const [deleting,     setDeleting]     = useState(false);
 
   const handleReply = async (body: string) => {
     await onReply(post.id, body);
     setReplying(false);
   };
 
-  const requestDelete = (id: number) => setDeleteTarget(id);
-  const confirmDelete = async () => {
-    if (deleteTarget === null) return;
-    setDeleting(true);
-    try { onDelete(deleteTarget); }
-    finally { setDeleting(false); setDeleteTarget(null); }
-  };
-
   return (
     <div className="flex flex-col bg-itec-bg min-h-full">
       {/* Header */}
-      <header className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3 bg-itec-bg/85 backdrop-blur-md border-b border-itec-border">
+      <header className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3 bg-itec-bg/85 backdrop-blur-md border-b border-itec-border/50">
         <button
           onClick={onClose}
           className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/8 text-itec-muted hover:text-itec-text transition-colors"
@@ -64,7 +53,7 @@ export const ThreadView: React.FC<Props> = ({
       </header>
 
       {/* Post principal */}
-      <div className="px-4 pt-4 pb-3 border-b border-itec-border">
+      <div className="px-4 pt-4 pb-3 border-b border-itec-border/50">
         <div className="flex items-start gap-3 mb-3">
           <AnonAvatar pseudonym={post.pseudonym} size="lg" />
           <div>
@@ -83,7 +72,7 @@ export const ThreadView: React.FC<Props> = ({
         <p className="text-xs text-itec-muted mb-3">{timeAgo(post.created_at)}</p>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 py-3 border-y border-itec-border text-xs text-itec-text">
+        <div className="flex items-center gap-4 py-3 border-y border-itec-border/50 text-xs text-itec-text">
           <span><strong>{post.reposts || 0}</strong> <span className="text-itec-muted">Reposts</span></span>
           <span><strong>{post.upvotes}</strong> <span className="text-itec-muted">Likes</span></span>
           <span><strong>{post.views || 0}</strong> <span className="text-itec-muted">Vistas</span></span>
@@ -105,7 +94,7 @@ export const ThreadView: React.FC<Props> = ({
           </button>
           {(post.is_author) && (
             <button
-              onClick={() => requestDelete(post.id)}
+              onClick={() => onDelete(post.id)}
               className="p-2 text-itec-muted hover:text-itec-red hover:bg-itec-red/10 rounded-full transition-colors text-xs"
             >
               Eliminar post
@@ -117,7 +106,7 @@ export const ThreadView: React.FC<Props> = ({
       {/* Respuestas */}
       {loading ? (
         <div className="flex justify-center py-8">
-          <div className="w-5 h-5 border-2 border-itec-border border-t-itec-red rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-itec-border/50 border-t-itec-red rounded-full animate-spin" />
         </div>
       ) : (
         <div className="flex-1">
@@ -127,7 +116,8 @@ export const ThreadView: React.FC<Props> = ({
               reply={r}
               isLast={i === replies.length - 1}
               onVote={onVote}
-              onDelete={requestDelete}
+              onDelete={onDelete}
+              onOpen={onOpenReply}
             />
           ))}
           {replies.length === 0 && (
@@ -141,14 +131,14 @@ export const ThreadView: React.FC<Props> = ({
       {/* Compose reply */}
       {isAuthenticated && (
         replying ? (
-          <div className="border-t border-itec-border">
+          <div className="border-t border-itec-border/50">
             <ComposeBox onSubmit={handleReply} compact />
           </div>
         ) : (
-          <div className="border-t border-itec-border px-4 py-3">
+          <div className="border-t border-itec-border/50 px-4 py-3">
             <button
               onClick={() => setReplying(true)}
-              className="w-full text-left text-xs text-itec-muted bg-white/4 rounded-xl px-4 py-2.5 hover:bg-white/8 transition-colors border border-itec-border"
+              className="w-full text-left text-xs text-itec-muted bg-white/4 rounded-xl px-4 py-2.5 hover:bg-white/8 transition-colors border border-itec-border/50"
             >
               Responder al hilo…
             </button>
@@ -156,28 +146,6 @@ export const ThreadView: React.FC<Props> = ({
         )
       )}
 
-      {/* Modal confirmar borrado */}
-      <LayoutModal
-        isOpen={deleteTarget !== null}
-        onClose={() => setDeleteTarget(null)}
-        title="Eliminar publicación"
-        description="Esta acción es permanente y no se puede deshacer."
-        maxWidth="max-w-sm"
-      >
-        <div className="px-6 pb-6 flex items-center justify-end gap-3">
-          <Button variant="secondary" hierarchy="ghost" onClick={() => setDeleteTarget(null)}>
-            Cancelar
-          </Button>
-          <Button
-            variant="danger"
-            hierarchy="solid"
-            onClick={confirmDelete}
-            isLoading={deleting}
-          >
-            Sí, eliminar
-          </Button>
-        </div>
-      </LayoutModal>
     </div>
   );
 };

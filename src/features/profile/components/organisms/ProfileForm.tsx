@@ -76,7 +76,7 @@ export const ProfileForm: React.FC = () => {
   const inputClass = "w-full bg-white/5 border border-transparent text-itec-text rounded-xl pl-10 py-2.5 outline-none focus:border-itec-red-skye transition-colors";
 
   return (
-    <div className="w-full bg-itec-box border border-itec-border rounded-[2rem] overflow-hidden shadow-sm">
+    <div className="w-full bg-itec-box border border-itec-border/50 rounded-[2rem] overflow-hidden shadow-sm">
       <div className="flex flex-col md:flex-row h-full">
         
         {/* Lado izquierdo: Mascota y contexto */}
@@ -99,7 +99,7 @@ export const ProfileForm: React.FC = () => {
             
             {/* --- Sección 1: Datos Personales --- */}
             <div>
-              <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
+              <div className="flex items-center gap-2 mb-4 border-b border-itec-border/50 pb-2">
                 <User className="w-4 h-4 text-itec-red-skye" />
                 <h3 className="text-xs font-bold text-white uppercase tracking-widest">Datos Personales</h3>
               </div>
@@ -130,7 +130,7 @@ export const ProfileForm: React.FC = () => {
 
             {/* --- Sección 2: Información Académica --- */}
             <div>
-              <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
+              <div className="flex items-center gap-2 mb-4 border-b border-itec-border/50 pb-2">
                 <BookOpen className="w-4 h-4 text-itec-red-skye" />
                 <h3 className="text-xs font-bold text-white uppercase tracking-widest">Perfil Académico</h3>
               </div>
@@ -159,7 +159,7 @@ export const ProfileForm: React.FC = () => {
               </div>
             )}
 
-            <div className="flex justify-end pt-2 border-t border-white/5">
+            <div className="flex justify-end pt-2 border-t border-itec-border/50">
               <Button variant="danger" hierarchy="solid" type="submit" isLoading={isSaving} className="px-8 py-3 text-sm">
                 Generar TarjeTEC
               </Button>

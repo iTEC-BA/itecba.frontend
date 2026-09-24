@@ -3,7 +3,7 @@
 import React from "react";
 
 export const CourseSkeleton: React.FC = () => (
-  <div className="bg-itec-card rounded-xl overflow-hidden border border-itec-border animate-pulse">
+  <div className="bg-itec-card rounded-xl overflow-hidden border border-itec-border/50 animate-pulse">
     {/* Thumbnail */}
     <div className="w-full aspect-video bg-white/5" />
 

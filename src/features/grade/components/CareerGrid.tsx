@@ -21,7 +21,7 @@ export const CareerGrid: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="max-w-md flex bg-itec-box border-itec-border">
+      <div className="max-w-md flex bg-itec-box border-itec-border/50">
         <div className="flex items-center pointer-events-none text-itec-muted">
           <Search className="w-4 h-4" />
         </div>
@@ -43,10 +43,10 @@ export const CareerGrid: React.FC = () => {
             disabled={career.status !== 'available'}
             className={`flex items-center gap-4 p-5 rounded-xl border text-left transition-all duration-200
               ${career.status === 'available' 
-                ? 'bg-itec-box border-itec-border hover:border-itec-blue-skye hover:bg-itec-surface cursor-pointer' 
-                : 'bg-itec-bg border-itec-border/40 opacity-60 cursor-not-allowed'}`}
+                ? 'bg-itec-box border-itec-border/50 hover:border-itec-blue-skye hover:bg-itec-surface cursor-pointer' 
+                : 'bg-itec-bg border-itec-border/50/40 opacity-60 cursor-not-allowed'}`}
           >
-            <div className="p-3 bg-itec-surface rounded-lg border border-itec-border">
+            <div className="p-3 bg-itec-surface rounded-lg border border-itec-border/50">
               <BookOpen className="w-5 h-5 text-itec-text" />
             </div>
             <div>

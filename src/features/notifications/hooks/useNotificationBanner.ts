@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { adminService } from '@features/admin/services/adminService';
+import { adminService } from '@/features/admin/services/admin.service';
 
 interface Announcement {
   id: string;

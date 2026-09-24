@@ -1,5 +1,10 @@
 export { NotificationBell } from './components/organisms/NotificationBell';
+export { NotificationsPage } from './NotificationsPage';
+export * from './hooks/useInbox';
 export { usePushNotifications } from './hooks/usePushNotifications';
 export { useNotificationCenter } from './hooks/useNotificationCenter';
+export * from './hooks/useNotificationBanner';
+export * from './hooks/useUnreadCount';
+export * from './services/inboxService';
 export { notificationService } from './services/notificationService';
 export type * from './types/notification';

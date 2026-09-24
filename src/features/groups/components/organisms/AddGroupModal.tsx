@@ -153,9 +153,9 @@ export const AddGroupModal: React.FC<Props> = ({
           if (e.target === e.currentTarget) onClose();
         }}
       >
-        <div className="bg-itec-box border border-white/8 rounded-t-3xl sm:rounded-xl w-full sm:max-w-lg shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
+        <div className="bg-itec-box border border-itec-border/50 rounded-t-3xl sm:rounded-xl w-full sm:max-w-lg shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-white/6 shrink-0">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-itec-border/50 shrink-0">
             <div>
               <h2 className="text-base font-bold text-itec-text">
                 Aportar Grupo de WhatsApp
@@ -218,7 +218,7 @@ export const AddGroupModal: React.FC<Props> = ({
                       options={CARRERAS_OPTIONS}
                       value={form.carrera}
                       onChange={(e) => handleCarreraChange(e.target.value)}
-                      className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all"
+                      className="text-sm py-2.5 bg-itec-bg border-itec-border/50 focus:border-itec-groups/50 transition-all"
                     />
                   </div>
                   <div>
@@ -231,7 +231,7 @@ export const AddGroupModal: React.FC<Props> = ({
                       options={NIVEL_OPTIONS}
                       value={form.nivel}
                       onChange={(e) => handleNivelChange(e.target.value)}
-                      className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all disabled:opacity-40"
+                      className="text-sm py-2.5 bg-itec-bg border-itec-border/50 focus:border-itec-groups/50 transition-all disabled:opacity-40"
                     />
                   </div>
                 </div>
@@ -270,10 +270,10 @@ export const AddGroupModal: React.FC<Props> = ({
                       setShowDropdown(true);
                     }}
                     onFocus={() => setShowDropdown(true)}
-                    className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all disabled:opacity-40"
+                    className="text-sm py-2.5 bg-itec-bg border-itec-border/50 focus:border-itec-groups/50 transition-all disabled:opacity-40"
                   />
                   {showDropdown && materiasDisponibles.length > 0 && (
-                    <ul className="absolute z-50 w-full mt-1 bg-itec-box border border-itec-border rounded-xl shadow-2xl max-h-52 overflow-y-auto">
+                    <ul className="absolute z-50 w-full mt-1 bg-itec-box border border-itec-border/50 rounded-xl shadow-2xl max-h-52 overflow-y-auto">
                       {materiasDisponibles
                         .filter((m) =>
                           m.toLowerCase().includes(form.materia.toLowerCase()),
@@ -285,7 +285,7 @@ export const AddGroupModal: React.FC<Props> = ({
                               setForm({ ...form, materia: m });
                               setShowDropdown(false);
                             }}
-                            className="cursor-pointer px-4 py-2.5 text-sm text-itec-gray hover:bg-itec-groups/10 hover:text-itec-text border-b border-white/5 last:border-0 whitespace-normal leading-tight transition-colors"
+                            className="cursor-pointer px-4 py-2.5 text-sm text-itec-gray hover:bg-itec-groups/10 hover:text-itec-text border-b border-itec-border/50 last:border-0 whitespace-normal leading-tight transition-colors"
                           >
                             {m}
                           </li>
@@ -310,7 +310,7 @@ export const AddGroupModal: React.FC<Props> = ({
                           comision: e.target.value.toUpperCase(),
                         })
                       }
-                      className="text-sm py-2.5 uppercase bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all"
+                      className="text-sm py-2.5 uppercase bg-itec-bg border-itec-border/50 focus:border-itec-groups/50 transition-all"
                     />
                   </div>
                   <div>
@@ -324,7 +324,7 @@ export const AddGroupModal: React.FC<Props> = ({
                       onChange={(e) =>
                         setForm({ ...form, link: e.target.value })
                       }
-                      className="text-sm py-2.5 bg-itec-bg border-white/8 focus:border-itec-groups/50 transition-all"
+                      className="text-sm py-2.5 bg-itec-bg border-itec-border/50 focus:border-itec-groups/50 transition-all"
                     />
                   </div>
                 </div>
@@ -348,7 +348,7 @@ export const AddGroupModal: React.FC<Props> = ({
                           tipo: e.target.value as "Alumnos" | "Oficial",
                         })
                       }
-                      className="text-sm py-2 bg-itec-bg border-white/8 focus:border-itec-blue-skye"
+                      className="text-sm py-2 bg-itec-bg border-itec-border/50 focus:border-itec-blue-skye"
                     />
                   </div>
                 )}

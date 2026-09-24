@@ -22,7 +22,7 @@ export const GradeAnioModal: React.FC<Props> = ({ anio, onClose, byCode = {} }) 
     <div className="px-4 pb-4 space-y-4">
       {/* Video introductorio */}
       {anio.videoUrl && (
-        <div className="aspect-video rounded-xl overflow-hidden border border-itec-border bg-itec-bg mt-4">
+        <div className="aspect-video rounded-xl overflow-hidden border border-itec-border/50 bg-itec-bg mt-4">
           <iframe
             src={anio.videoUrl}
             title={`Video ${anio.label}`}
@@ -45,7 +45,7 @@ export const GradeAnioModal: React.FC<Props> = ({ anio, onClose, byCode = {} }) 
       </div>
 
       {/* Leyenda */}
-      <div className="flex gap-4 pt-1 border-t border-itec-border">
+      <div className="flex gap-4 pt-1 border-t border-itec-border/50">
         <span className="flex items-center gap-1.5 text-[11px] text-itec-blue-skye">
           <span className="w-3 h-px bg-itec-blue-skye rounded" /> Para cursar
         </span>

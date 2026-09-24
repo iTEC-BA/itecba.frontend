@@ -12,7 +12,7 @@ export const IngresoHighlightActions: React.FC<Props> = ({ actions }) => {
           key={action.id}
           href={action.url} 
           target="_blank" rel="noopener noreferrer"
-          className="relative bg-itec-box border border-white/10 hover:border-purple-500/60 p-6 rounded-2xl flex items-center justify-between group transition-all duration-300 shadow-lg overflow-hidden hover:-translate-y-1.5"
+          className="relative bg-itec-box border border-itec-border/50 hover:border-purple-500/60 p-6 rounded-2xl flex items-center justify-between group transition-all duration-300 shadow-lg overflow-hidden hover:-translate-y-1.5"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           
@@ -26,7 +26,7 @@ export const IngresoHighlightActions: React.FC<Props> = ({ actions }) => {
             <p className="text-xs text-white/60 group-hover:text-purple-200/80 transition-colors font-medium">{action.subtitle}</p>
           </div>
           
-          <div className="relative z-10 bg-white/5 p-3.5 rounded-xl text-white/70 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300 shadow-sm border border-white/10 group-hover:border-purple-500 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] group-hover:scale-110">
+          <div className="relative z-10 bg-white/5 p-3.5 rounded-xl text-white/70 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300 shadow-sm border border-itec-border/50 group-hover:border-purple-500 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] group-hover:scale-110">
             <div className="w-6 h-6"><Icons type="edit" /></div>
           </div>
         </a>

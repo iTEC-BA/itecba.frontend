@@ -78,7 +78,7 @@ export const GroupCard: React.FC<Props> = ({ group }) => {
             <input
               value={newLink}
               onChange={e => setNewLink(e.target.value)}
-              className="flex-1 bg-itec-bg border border-itec-border text-itec-text text-[11px] px-2.5 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
+              className="flex-1 bg-itec-bg border border-itec-border/50 text-itec-text text-[11px] px-2.5 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
               placeholder="https://chat.whatsapp.com/..."
             />
             <button
@@ -104,7 +104,7 @@ export const GroupCard: React.FC<Props> = ({ group }) => {
             <select
               value={reportReason}
               onChange={e => setReportReason(e.target.value)}
-              className="bg-itec-box border border-itec-border text-itec-text text-xs px-2.5 py-1.5 rounded-lg outline-none focus:border-itec-red"
+              className="bg-itec-box border border-itec-border/50 text-itec-text text-xs px-2.5 py-1.5 rounded-lg outline-none focus:border-itec-red"
             >
               <option value="link-invalido">Link inválido / caído</option>
               <option value="link-incorrecto">Link incorrecto</option>
@@ -162,7 +162,7 @@ export const GroupCard: React.FC<Props> = ({ group }) => {
         {!reported && !showReportForm && (
           <button
             onClick={() => setShowReportForm(true)}
-            className="w-9 flex items-center justify-center bg-white/5 hover:bg-itec-red/10 border border-white/8 hover:border-itec-red/25 rounded-xl text-itec-gray hover:text-itec-red transition-colors"
+            className="w-9 flex items-center justify-center bg-white/5 hover:bg-itec-red/10 border border-itec-border/50 hover:border-itec-red/25 rounded-xl text-itec-gray hover:text-itec-red transition-colors"
             title="Reportar link caído"
           >
             <Icons type="info" className="w-3.5 h-3.5" />

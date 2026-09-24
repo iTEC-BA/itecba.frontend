@@ -16,7 +16,7 @@ export const CourseMaterialModal: React.FC<Props> = ({ isOpen, onClose, relatedR
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-14 border border-dashed border-itec-border rounded-xl text-itec-gray">
+          <div className="flex flex-col items-center justify-center py-14 border border-dashed border-itec-border/50 rounded-xl text-itec-gray">
             <span className="text-3xl mb-3 opacity-40">📂</span>
             <p className="text-xs font-bold uppercase tracking-widest">Sin archivos aún</p>
           </div>

@@ -63,10 +63,16 @@ Queda **completamente prohibido** el uso de `shadow-*`, `drop-shadow-*` o
 Loaders y Banners). Para separar visualmente elementos superpuestos, se debe
 utilizar la superposición de colores de fondo combinada con bordes sutiles:
 
-* Elemento base: `bg-itec-box border border-itec-border`
-* Elemento superpuesto (Modal/Toast): `bg-itec-card border border-white/10`
+* Elemento base: `bg-itec-box border border-itec-border/50`
+* Elemento superpuesto (Modal/Toast): `bg-itec-card border border-itec-border/50`
 * Ningún componente de la carpeta `@components/ui/` o
   `@components/organisms/` tiene excepciones a esta regla.
+
+> **Nota — deuda de diseño detectada:** hoy hay usos reales de `shadow-*`
+> incumpliendo esta regla (ej. `TutoriasSection.tsx` usa `shadow-lg` en su
+> `<Card>`, `HamburgerButton.tsx` usa `shadow-[0_12px_30px_rgba(...)]`,
+> `PointsActivityManager` referencia `shadow-inner`). Si tocás alguno de
+> esos archivos, corregilo como parte del mismo cambio.
 
 ### 1.3 Colores por Módulo (Feature Colors)
 
@@ -149,13 +155,19 @@ son de uso obligatorio en lugar de sus equivalentes nativos:
 | `<select>`                | `@components/ui/CustomSelect`         |
 | `<input>`                 | `@components/ui/Input`                |
 | `fixed` + overlay manual  | `@components/templates/LayoutModal`   |
-| `alert(...)`              | `useToast()` (ver 2.7)                |
+| `alert(...)` / `confirm(...)` | `useToast()` (ver 2.7)            |
 
 **Limitación conocida de `CustomSelect`:** no tiene búsqueda ni filtro por
 texto, es un dropdown que lista todas las opciones al abrir. Para listas
 largas (30+ ítems, ej. materias de una carrera completa) la experiencia se
 degrada. En esos casos evaluar `@components/molecules/AutocompleteInput`, o
 agrupar/paginar las opciones dentro del propio `CustomSelect`.
+
+> **Nota — deuda detectada en `admin/`:** varias páginas del panel de admin
+> (`NewsFeed`, `UserSearchBox`, `BenefitManagement`, `PageAccessManagement`,
+> `ContentModeration`) todavía usan `window.confirm(...)` nativo para
+> confirmaciones destructivas. Si
+> tocás alguno de esos archivos, migrarlo al mismo tiempo.
 
 ### 2.3 Estructura obligatoria de una feature (`src/features/<nombre>/`)
 
@@ -186,6 +198,11 @@ una página fuera de `features/` (dentro de `src/pages/`) tiene datos
 estáticos grandes (listas, tablas de datos fijos), crear igualmente un
 `data.ts` junto a esa página en vez de dejarlos inline — es la misma regla,
 aplicada también fuera de `features/`.
+
+> **Nota:** `admin/pages/PageAccessManagement.tsx` tiene `KNOWN_PAGES`
+> (array de rutas conocidas de la plataforma) hardcodeado inline — es un
+> caso claro de la regla anterior, mover a `admin/data.ts` cuando se toque
+> ese archivo.
 
 ### 2.4 Capa de datos: quién llama a qué
 
@@ -229,6 +246,11 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
 > tal cual, sin variaciones (mismo orden de headers, mismo mensaje de
 > error).
 
+> **Nota — deuda detectada:** `admin.service.ts` y `useAdminData.ts` no
+> siguen este patrón al pie de la letra: llaman a `auth.currentUser?.getIdToken()`
+> directo (sin `authStateReady()` primero) y no siempre validan `if (!token)`
+> antes de usarlo. Alinear cuando se toquen.
+
 ### 2.6 Restricción de dominio institucional
 
 Ciertas páginas/funcionalidades son exclusivas para cuentas
@@ -249,18 +271,24 @@ montado en `App.tsx`) para mostrar errores, confirmaciones y avisos.
 **No usar `alert()` ni `confirm()` nativos** en código nuevo — rompen el
 diseño flat y bloquean el hilo principal.
 
+`useToast()` devuelve un objeto `toast` con un método por variante
+(`success`, `error`, `warning`, `info`) — no un único `showToast(msg, tipo)`:
+
 ```tsx
 import { useToast } from "@features/notifications/components/atoms/Toast";
 
-const { showToast } = useToast();
+const { toast } = useToast();
 // ...
 catch (err) {
-  showToast(err instanceof Error ? err.message : "Error al guardar", "error");
+  toast.error(err instanceof Error ? err.message : "Error al guardar");
 }
 ```
 
-Si encontrás un `alert(...)` en código existente al tocar ese archivo,
-migrarlo a `useToast()` como parte del mismo cambio.
+Si encontrás un `alert(...)` o `confirm(...)` en código existente al tocar
+ese archivo, migrarlo a `useToast()` como parte del mismo cambio (para
+confirmaciones destructivas, mientras no exista un modal de confirmación
+propio, `window.confirm(...)` sigue siendo tolerado — pero el feedback de
+resultado siempre va por `toast`, nunca por `alert`).
 
 ---
 
@@ -287,7 +315,7 @@ Query. Si es efímero y vive solo en esta sesión de UI, es Zustand.
 El proyecto **ya completó la migración** de React Context a Zustand para
 estado global de sesión — `AuthContext` no existe más. `@context/*` (el
 alias) sigue reservado para contextos puntuales que son legítimamente
-contextos de React y no estado global (ver 3.3).
+contextos de React y no estado global (ver 3.4).
 
 ### 3.1 `useAuthStore` (Autenticación y Reglas de Negocio)
 
@@ -305,6 +333,26 @@ const { user, isAuthenticated, hasTarjetec, isAdmin, loginWithGoogle, logout } =
 
 El listener de Firebase (`initAuthListener`) se inicializa una sola vez, en
 `App.tsx`. No volver a llamarlo desde ningún componente.
+
+El modelo de roles es explícito y no debe derivarse en los componentes:
+
+* `admin`: administrador pleno (`isAdmin === true`).
+* `moderator`: puede acceder al panel administrativo, pero no se considera
+  administrador pleno (`canAccessAdminPanel === true`, `isAdmin === false`).
+* `student`, `ingresante`, `afiliado` y `profesor`: usuarios sin acceso al
+  panel administrativo.
+
+Las rutas privadas se protegen con `ProtectedRoute` y `/admin/*` agrega un
+guard de roles (`AdminRoute`). Ocultar el enlace del panel en el sidebar es
+solo una mejora de UX; la autorización real debe permanecer en el guard y en
+el backend.
+
+El campo canónico de autorización es `authorized`. El store lee también el
+campo legado mal escrito `authtorized` para mantener compatibilidad con
+documentos existentes, pero todo dato nuevo debe persistirse como
+`authorized`. Para cuentas externas, la existencia del documento no alcanza:
+el listener de Firebase exige que uno de esos campos sea `true`, por lo que
+revocar la autorización impide iniciar sesión.
 
 ### 3.2 `usePointsStore` (Puntos del usuario)
 
@@ -342,6 +390,13 @@ export const useCourseStore = create<CourseUIState>((set, get) => ({
 No crear un store global nuevo en `src/stores/` para esto — si el estado es
 de una sola feature, el store vive dentro de esa feature.
 
+> La migración a TanStack Query en `admin` está completa:
+> `useAdminData.ts` es el hook único de datos administrativos para
+> `AdminDashboard`, `UserManagement` y `NewsManagement`. No agregar hooks
+> paralelos con `useState` + `useEffect` para esas entidades: duplican caché,
+> estados de carga y mutaciones. Los hooks legacy `useAdminUsers.ts` y
+> `useAnnouncements.ts` fueron eliminados porque no tenían consumidores.
+
 ### 3.4 `PageAccessContext`: por qué sigue siendo Context y no Zustand
 
 `PageAccessContext` (`@features/pageAccess`) es la única excepción
@@ -350,6 +405,63 @@ deliberada: se mantiene como React Context porque expone un hook
 re-renderice **solo** cuando cambia el estado de esa página puntual, algo
 que ya resuelve bien con `useMemo` + Context. No migrarlo a Zustand sin una
 razón concreta — no es deuda técnica, es una decisión de diseño.
+
+### 3.5 Autorización por capacidades de negocio
+
+Los componentes no deben decidir permisos con combinaciones de estado como
+`isAdmin && !noEditar`. Esa forma mezcla el rol global con reglas propias de
+la feature y hace que la lógica se copie en varias pantallas.
+
+La capa común es [`useAuthorization`](./src/hooks/useAuthorization.ts), que
+expone capacidades de negocio mediante `can(permission)`. Las capacidades
+actuales son:
+
+| Capacidad | Roles |
+|-----------|-------|
+| `admin.panel` | `admin`, `moderator` |
+| `courses.edit` | `admin`, `moderator` |
+| `courses.manage` | `admin` |
+| `resources.manage` | `admin` |
+| `users.manage` | `admin`, `moderator` |
+
+Las reglas que dependen del recurso viven junto a la feature. Por ejemplo,
+Cursos agrega [`useCoursePermissions`](./src/features/courses/hooks/useCoursePermissions.ts)
+y [`coursePermissions.ts`](./src/features/courses/utils/coursePermissions.ts):
+
+```tsx
+const { canManageCourses, canEditCourse } = useCoursePermissions();
+
+{canManageCourses && <CourseAdminBar ... />}
+
+{canEditCourse(course) && (
+  <Button onClick={() => setEditOpen(true)}>Editar</Button>
+)}
+```
+
+`canEditCourses` permite a `admin` y `moderator` editar cursos que no estén
+protegidos. `canManageCourses` expresa la capacidad exclusiva de `admin`
+para crear cursos, revisar videos reportados y administrar recursos.
+`canDeleteCourse(course)` usa esa capacidad y aplica la misma protección para
+la eliminación. `canEditCourse(course)` además aplica la regla del dominio:
+los cursos oficiales y los IDs protegidos
+(`arquitectura`, `podcast`, `seminario` y `analisis`) no se pueden editar ni
+eliminar desde la grilla o el detalle.
+
+Al agregar una acción nueva:
+
+1. Definir una capacidad con nombre de negocio en `useAuthorization` solo si
+   aplica a más de una feature.
+2. Crear un hook/policy dentro de la feature si necesita inspeccionar el
+   recurso o sus datos.
+3. Consumir el resultado en el componente: `canEditCourse(course)`,
+   `canManageCourses`, etc.
+4. Mantener la validación equivalente en el backend o en las reglas de
+   Firebase; ocultar un botón nunca constituye autorización de seguridad.
+
+`isAdmin` y `canAccessAdminPanel` siguen disponibles en `useAuthStore` para
+compatibilidad y guards globales. En componentes nuevos se debe preferir la
+API de capacidades. No crear condiciones alternativas basadas en emails,
+nombres de rol o flags locales.
 
 ---
 
@@ -364,9 +476,9 @@ razón concreta — no es deuda técnica, es una decisión de diseño.
   caché.
 * Las `queryFn` llaman siempre a una función de `services/`, nunca a
   `fetch` directo dentro del hook — la única excepción tolerada hoy es
-  cuando se necesita `Promise.allSettled` sobre varios endpoints en
-  paralelo (ver `useAdminData.ts`), y ahí igual cada `fetch` sigue el patrón
-  de headers de 2.5.
+  cuando se necesita `Promise.allSettled`/`Promise.all` sobre varios
+  endpoints en paralelo (ver `useAdminData.ts` y `ContentModeration.tsx`), y
+  ahí igual cada `fetch` sigue el patrón de headers de 2.5.
 * Mutaciones (`useMutation`) invalidan las queries relacionadas con
   `queryClient.invalidateQueries({ queryKey: [...] })` en su `onSuccess` —
   no actualizar el estado a mano combinando `useState` con la respuesta de
@@ -424,6 +536,28 @@ pasar por `AnalyticsTracker`.
 `.env` y `.env.local` no se commitean (ver `.gitignore`). Al agregar una
 variable nueva, documentarla en esta tabla en el mismo cambio.
 
+### 7.1 Reglas de Firestore
+
+Las reglas desplegadas deben incluir el archivo [`firestore.rules`](./firestore.rules).
+La colección `users_autorized` no puede quedar sin un bloque `match`: por
+defecto Firestore deniega toda lectura y escritura. Las reglas incluidas
+permiten que `admin` y `moderator` gestionen autorizaciones y que una cuenta
+externa lea únicamente su propio registro autorizado durante el login.
+Las consultas de autenticación deben filtrar por `email` y
+`authorized == true`; esto permite que Firestore demuestre que la consulta es
+compatible con sus reglas de seguridad.
+
+Después de publicar cambios en las reglas, verificar en Firebase Console que
+el proyecto seleccionado coincida con `VITE_FIREBASE_PROJECT_ID`. Las reglas
+del repositorio no se aplican automáticamente hasta desplegarlas con Firebase
+CLI o copiarlas en la sección Firestore Database > Rules.
+
+El primer usuario configurado en `VITE_SUPER_ADMIN_EMAIL` debe tener creado
+manualmente su documento en `users/{uid}` con `role: "admin"` (el UID se
+obtiene desde Firebase Authentication). Esto es un bootstrap intencional:
+las reglas no deben permitir que el cliente cree arbitrariamente usuarios
+administradores.
+
 ---
 
 ## 8. Scripts
@@ -434,3 +568,175 @@ npm run build     # tsc -b && vite build — chequea tipos antes de buildear
 npm run lint      # ESLint sobre todo el proyecto
 npm run preview   # sirve el build de producción localmente
 ```
+
+## 9. Puesta en marcha local
+
+### 9.1 Requisitos
+
+- Node.js compatible con Vite 7 y npm.
+- Un proyecto Firebase con Authentication (Google) y Firestore habilitados.
+- Acceso a la API REST de iTEC BA, o una instancia local equivalente.
+
+### 9.2 Instalación
+
+```bash
+npm install
+copy .env.example .env.local
+npm run dev
+```
+
+El repositorio no incluye un `.env.example` actualmente. Si no existe en tu
+copia, crea `.env.local` manualmente usando la tabla de variables de la
+sección 7. Nunca subas `.env` ni `.env.local` al repositorio.
+
+Vite expone al navegador únicamente variables que comienzan con `VITE_`.
+Las claves de Firebase no deben considerarse secretos: la protección real
+depende de Firebase Authentication, las reglas de Firestore y las
+restricciones del backend.
+
+### 9.3 Verificación antes de abrir un PR
+
+Ejecutar, en este orden:
+
+```bash
+npm run lint
+npm run build
+```
+
+`npm run build` ejecuta primero `tsc -b`, por lo que también funciona como
+verificación de tipos. Si falla por una deuda preexistente, no ocultar el
+error: indicar los archivos afectados en la descripción del cambio y
+confirmar que los archivos modificados no agregan errores nuevos.
+
+## 10. Mapa del proyecto
+
+```
+src/
+├── components/       # UI reutilizable y layouts globales
+├── features/         # módulos de negocio, organizados por dominio
+├── hooks/             # hooks compartidos entre features
+├── lib/               # integraciones base, como Firebase
+├── routes/            # árbol de rutas públicas, privadas y de error
+├── services/          # servicios compartidos
+├── stores/            # estado global de sesión y puntos
+├── types/             # tipos compartidos
+└── App.tsx            # providers globales e inicialización de la aplicación
+```
+
+Las features disponibles actualmente son:
+
+`about`, `admin`, `admission`, `aulas`, `benefits`, `calendar`, `courses`,
+`error`, `faqs`, `forum`, `grade`, `groups`, `home`, `login`,
+`notifications`, `padron`, `pageAccess`, `plugins`, `points`, `profile`,
+`progress`, `resources` y `trueketec`.
+
+Las features que tienen `index.ts` en su raíz pueden consumirse desde el
+alias `@features/<feature>` sin importar archivos internos. Los componentes
+internos siguen siendo privados salvo que se exporten explícitamente desde
+ese índice.
+
+### 10.1 Rutas principales
+
+El árbol se define en `src/routes/index.tsx` y se divide en:
+
+- **Públicas:** `/`, `/login`, `/foro/*`, `/cursos`, `/faqs`, `/ingreso`,
+  `/grado`, `/nosotros`, `/grupos`, `/aulas`, `/guiatec`, `/calendario`,
+  `/plugins`, `/terminos` y sus rutas paramétricas.
+- **Privadas:** se montan dentro de `ProtectedRoute` y requieren una sesión
+  de Firebase.
+- **Administración:** `/admin/*` requiere `AdminRoute`; pueden entrar
+  `admin` y `moderator`, aunque solo `admin` tiene `isAdmin === true`.
+
+`PageGate` controla si una sección está habilitada desde la configuración de
+acceso a páginas. No reemplaza a `ProtectedRoute`, `AdminRoute` ni a las
+reglas de seguridad del backend.
+
+## 11. Foro
+
+El foro usa la API REST propia para publicaciones, respuestas, votos,
+reposts, borrado y banners. La UI mantiene el estilo visual de iTEC y usa
+una línea temporal para relacionar publicaciones y respuestas.
+
+Las rutas de hilo son anidadas:
+
+```text
+/foro                  # feed
+/foro/10               # publicación 10
+/foro/10/22            # respuesta 22 dentro de la publicación 10
+/foro/10/22/35         # siguiente nivel de respuesta
+```
+
+Al abrir una respuesta se agrega su ID a la URL. Al publicar una respuesta,
+la aplicación navega al nuevo nivel del hilo. `ForumThreadPage` carga cada
+ancestro para mostrar breadcrumbs y usa el último ID como publicación activa.
+
+Responsabilidades principales:
+
+- `ForumFeed`: tabs, carga incremental, creación de publicaciones y feed.
+- `PostCard`: representación de una publicación, acciones y reposts.
+- `ThreadView`: publicación activa, respuestas y composición de respuestas.
+- `ReplyCard`: respuesta navegable hacia el siguiente nivel.
+- `forumService.ts`: contrato con la API; no mover llamadas `fetch` a los
+  componentes.
+
+El backend debe aceptar IDs de respuestas en `getThread` y `createReply`.
+Si la API devuelve solo publicaciones raíz, la navegación visual puede abrir
+la URL pero no podrá reconstruir correctamente el hilo.
+
+## 12. Autenticación y usuarios externos
+
+El acceso comienza con Google Authentication. Después, `authStore` resuelve
+el perfil en `users/{uid}`. Las cuentas que no terminan en
+`@frba.utn.edu.ar` solo pueden ingresar si tienen una autorización activa en
+`users_autorized`.
+
+Flujo de una cuenta externa:
+
+1. Un `admin` o `moderator` crea una autorización con el email normalizado.
+2. El documento conserva `authorized: true` como campo canónico.
+3. El usuario inicia sesión con Google.
+4. El listener consulta la autorización por `email` y `authorized == true`.
+5. Se crea o completa `users/{uid}` con rol `student` si todavía no existe.
+6. Revocar `authorized` impide futuros accesos.
+
+`authtorized` es un nombre legado que se lee únicamente por compatibilidad.
+No debe utilizarse al crear o actualizar documentos nuevos. El cliente no
+puede autoasignarse los roles `admin` o `moderator`; el primer administrador
+debe configurarse manualmente en Firestore y las reglas deben estar
+publicadas antes de probar el panel.
+
+## 13. Despliegue y caché
+
+La configuración de Vercel está en `vercel.json`. El build de producción
+genera los assets de Vite y el service worker mediante
+`vite-plugin-pwa`. `dev-dist/` y `dist/` son artefactos generados: no deben
+editarse manualmente ni utilizarse como fuente de código.
+
+Después de publicar una nueva versión:
+
+1. Verificar que el build terminó correctamente.
+2. Confirmar que el service worker recibió la actualización.
+3. Probar una navegación directa a rutas profundas, especialmente
+   `/foro/10/22`, para confirmar el fallback SPA del hosting.
+4. Verificar en Firebase Console que las reglas publicadas coincidan con
+   [`firestore.rules`](./firestore.rules).
+
+## 14. Estado técnico conocido
+
+El repositorio contiene deuda técnica que no debe confundirse con fallos
+introducidos por cada cambio:
+
+- `points`: hay firmas desalineadas entre hooks y servicios, incluyendo una
+  referencia a `getActivityFromCache` que no está exportada.
+- `profile`: `useEditProfile.ts` referencia un `useAuth` que no existe en el
+  estado actual basado en Zustand.
+- `resources`: `useResourceMaterias.ts` importa un servicio inexistente y
+  tiene parámetros sin tipar.
+- Algunas superficies antiguas del panel admin todavía usan
+  `window.confirm`; migrarlas a `LayoutModal`/`useToast` cuando se modifiquen.
+- Persisten usos de `shadow-*` y `backdrop-blur-*` en componentes existentes,
+  aunque el diseño institucional nuevo los prohíbe.
+
+Estas incidencias deben resolverse en cambios separados o junto con el
+archivo directamente afectado. No silenciar errores con casts amplios,
+`catch` vacíos ni desactivar reglas de TypeScript o ESLint.

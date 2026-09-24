@@ -79,7 +79,7 @@ export const CourseFilters: React.FC<Props> = ({ filters, isLoading }) => {
         {hasActive && (
           <button
             onClick={handleClearFilters}
-            className="shrink-0 flex items-center gap-1.5 text-xs text-itec-gray hover:text-white bg-itec-box border border-itec-border px-3 py-1.5 rounded-lg transition-colors font-bold"
+            className="shrink-0 flex items-center gap-1.5 text-xs text-itec-gray hover:text-white bg-itec-box border border-itec-border/50 px-3 py-1.5 rounded-lg transition-colors font-bold"
           >
             <X className="size-3.5" /> Limpiar
           </button>

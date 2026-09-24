@@ -49,10 +49,10 @@ interface SidebarProtectProps {
 }
 
 export const SidebarProtect = ({ children, requireAuth, requireAdmin }: SidebarProtectProps) => {
-  const { isAuthenticated, isAdmin } = useAuthStore();
+  const { isAuthenticated, canAccessAdminPanel } = useAuthStore();
 
   // Si la ruta es solo para admins y el usuario no lo es, ocultamos el ítem
-  if (requireAdmin && !isAdmin) return null;
+  if (requireAdmin && !canAccessAdminPanel) return null;
 
   // Si la ruta requiere estar logueado y el usuario no lo está, ocultamos el ítem
   if (requireAuth && !isAuthenticated) return null;

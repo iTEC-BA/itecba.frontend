@@ -38,7 +38,7 @@ export const FAQSuggestions: React.FC<Props> = ({ topFaqs, loading, onSelect }) 
             <button
               key={i}
               onClick={() => onSelect(q)}
-              className="group flex items-center gap-3 text-left bg-white/[0.05] hover:bg-white/[0.09] border border-white/8 hover:border-white/15 rounded-xl px-4 py-3 transition-all active:scale-[0.98] duration-150"
+              className="group flex items-center gap-3 text-left bg-white/[0.05] hover:bg-white/[0.09] border border-itec-border/50 hover:border-itec-border/50 rounded-xl px-4 py-3 transition-all active:scale-[0.98] duration-150"
             >
               <div className="w-7 h-7 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/40">

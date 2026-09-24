@@ -58,10 +58,10 @@ export const LayoutModal: React.FC<LayoutModalProps> = ({
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-itec-bg/80 backdrop-blur-sm p-0 sm:p-3"
     >
       <div
-        className={`w-full flex flex-col rounded-t-4xl sm:rounded-xl border border-itec-border bg-itec-box max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-500 ${MAX_WIDTH_CLASS[maxWidth] ?? maxWidth}`}
+        className={`w-full flex flex-col rounded-t-4xl sm:rounded-xl border border-itec-border/50 bg-itec-box max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-500 ${MAX_WIDTH_CLASS[maxWidth] ?? maxWidth}`}
       >
         {/* Encabezado fijo (Sticky) */}
-        <div className="shrink-0 flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3">
+        <div className="shrink-0 flex items-center justify-between gap-4 border-b border-itec-border/50 px-4 py-3">
           <div>
             <h2 className="text-xl font-bold text-white">{title}</h2>
             {description && (

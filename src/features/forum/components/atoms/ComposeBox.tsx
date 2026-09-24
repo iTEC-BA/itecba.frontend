@@ -86,7 +86,7 @@ export const ComposeBox: React.FC<Props> = ({ onSubmit, compact = false }) => {
   };
 
   return (
-    <div className={`flex gap-3 bg-itec-bg border-b border-itec-border text-xs ${compact ? 'p-3' : 'p-4'}`}>
+    <div className={`flex gap-3 bg-itec-bg border-b border-itec-border/50 text-xs ${compact ? 'p-3' : 'p-4'}`}>
       <AnonAvatar pseudonym={user?.email || 'Anon'} size={compact ? 'sm' : 'md'} />
       <div className="flex-1 min-w-0">
         <textarea

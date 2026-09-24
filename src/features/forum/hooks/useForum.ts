@@ -7,7 +7,7 @@
  * • Modal de confirmación para eliminar (no window.confirm)
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePointsGrant }    from '@features/points/hooks/usePointsGrant';
+import { useNavigate } from 'react-router-dom';
 import { forumService }                              from '../services/forumService';
 import type { ForumPost, ForumTab, ForumView }       from '../types/forum';
 import type React from 'react';
@@ -31,7 +31,7 @@ interface UseForumReturn {
   closeThread:   () => void;
   setActiveTab:  (tab: ForumTab) => void;
   submitPost:    (body: string) => Promise<void>;
-  submitReply:   (parentId: number, body: string) => Promise<void>;
+  submitReply:   (parentId: number, body: string) => Promise<ForumPost>;
   handleVote:    (id: number, v: 1 | -1) => void;
   handleRepost:  (id: number) => void;
   /** Pide confirmación (abre modal en ForumFeed) */
@@ -50,6 +50,7 @@ interface UseForumReturn {
 }
 
 export const useForum = (): UseForumReturn => {
+  const navigate = useNavigate();
   const [posts,        setPosts]        = useState<ForumPost[]>([]);
   const [activeThread, setActiveThread] = useState<ActiveThread | null>(null);
   const [view,         setView]         = useState<ForumView>('feed');
@@ -60,8 +61,6 @@ export const useForum = (): UseForumReturn => {
   const [activeTab,    setActiveTabSt]  = useState<ForumTab>('para-ti');
   const [composing,    setComposing]    = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
-  const { grant }                        = usePointsGrant();
-  const showToast = useCallback(() => {}, []);
   const toastNode = null;
 
   const pageRef    = useRef(1);
@@ -129,20 +128,12 @@ export const useForum = (): UseForumReturn => {
 
   // ── Thread ─────────────────────────────────────────────────────────────
   const openThread = useCallback(async (id: number) => {
-    setView('thread');
-    try {
-      const data = await forumService.getThread(id);
-      setActiveThread({ post: data.post, replies: data.replies });
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error al cargar el hilo');
-      setView('feed');
-    }
-  }, [grant, showToast]);
+    navigate(`/foro/${id}`);
+  }, [navigate]);
 
   const closeThread = useCallback(() => {
-    setView('feed');
-    setActiveThread(null);
-  }, [grant, showToast]);
+    navigate('/foro');
+  }, [navigate]);
 
   // ── Crear post (optimistic) ─────────────────────────────────────────────
   const submitPost = useCallback(async (body: string) => {
@@ -180,6 +171,7 @@ export const useForum = (): UseForumReturn => {
         : p
       )
     );
+    return reply;
   }, []);
 
   // ── Voto optimista (SOLO SUMA — nunca resta) ────────────────────────────

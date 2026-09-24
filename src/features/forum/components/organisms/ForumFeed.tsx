@@ -70,6 +70,7 @@ export const ForumFeed: React.FC = () => {
         onRepost={handleRepost}
         onDelete={requestDelete}
         onReply={submitReply}
+        onOpenReply={openThread}
       />
     );
   }
@@ -78,7 +79,7 @@ export const ForumFeed: React.FC = () => {
     <div className="flex flex-col bg-itec-bg min-h-full relative">
 
       {/* Header fijo */}
-      <header className="sticky top-0 z-20 bg-itec-bg/85 backdrop-blur-md border-b border-itec-border">
+      <header className="sticky top-0 z-20 bg-itec-bg/85 backdrop-blur-md border-b border-itec-border/50">
         <div className="flex items-center justify-between px-4 py-3">
           <h1 className="text-lg font-bold text-itec-text">Foro Anónimo</h1>
           <button
@@ -101,7 +102,7 @@ export const ForumFeed: React.FC = () => {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-150 ${
                 activeTab === t.id
                   ? 'bg-itec-red border-itec-red-skye text-white shadow-sm'
-                  : 'border-itec-border text-itec-muted hover:border-itec-red/40 hover:text-itec-red-skye bg-transparent'
+                  : 'border-itec-border/50 text-itec-muted hover:border-itec-red/40 hover:text-itec-red-skye bg-transparent'
               }`}
             >
               {activeTab === t.id && <span className="w-1.5 h-1.5 rounded-full bg-white/70" />}
@@ -156,7 +157,7 @@ export const ForumFeed: React.FC = () => {
 
               {loadingMore && (
                 <div className="flex justify-center py-6">
-                  <div className="w-5 h-5 border-2 border-itec-border border-t-itec-red rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-itec-border/50 border-t-itec-red rounded-full animate-spin" />
                 </div>
               )}
 

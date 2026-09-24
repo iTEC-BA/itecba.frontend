@@ -37,7 +37,7 @@ export const AdminPendingResourcesModal: React.FC<Props> = ({ isOpen, onClose })
           ) : pending.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-itec-bg border-b border-itec-border sticky top-0 z-10">
+                <thead className="bg-itec-bg border-b border-itec-border/50 sticky top-0 z-10">
                   <tr>
                     {['Título / Materia', 'Carrera', 'Tipo', 'Acciones'].map((h, i) => (
                       <th key={h}

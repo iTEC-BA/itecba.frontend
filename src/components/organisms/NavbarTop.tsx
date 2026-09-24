@@ -11,11 +11,11 @@ import { NotificationBell } from "@/features/notifications/components/organisms/
 import { Settings } from "lucide-react";
 
 export const NavbarTop = () => {
-  const { user, isAuthenticated, isAdmin } = useAuthStore();
+  const { user, isAuthenticated, canAccessAdminPanel } = useAuthStore();
   const { toggle } = useSidebarMobile();
 
   return (
-    <header className="shrink-0 z-30 h-16 flex items-center px-4 bg-itec-sidebar border-b border-white/5">
+    <header className="shrink-0 z-30 h-16 flex items-center px-4 bg-itec-sidebar border-b border-itec-border/50">
       <div className="w-full mx-auto flex items-center gap-3">
         {/* ── Izquierda: hamburguesa (solo mobile) + logo ── */}
         <div className="flex items-center gap-2 shrink-0">
@@ -98,9 +98,9 @@ export const NavbarTop = () => {
           {isAuthenticated && (
             <div className="flex items-center justify-between gap-2">
               {/* Categoría */}
-              {isAdmin && (
+              {canAccessAdminPanel && (
                 <Link
-                className="relative bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer flex items-center justify-center text-gray-400 hover:text-white"
+                className="relative bg-itec-box/50 border border-itec-border/50 rounded-xl hover:bg-itec-border transition-colors cursor-pointer flex items-center justify-center text-gray-400 hover:text-white"
                 to="/admin"
                 aria-label="Panel de administraci�n"
               >
@@ -108,7 +108,7 @@ export const NavbarTop = () => {
               </Link>
               )}
               {/* Notificaciones */}
-              <div className="relative bg-itec-box/50 border border-white/5 rounded-xl hover:bg-itec-border transition-colors cursor-pointer">
+              <div className="relative bg-itec-box/50 border border-itec-border/50 rounded-xl hover:bg-itec-border transition-colors cursor-pointer">
                 <Suspense
                   fallback={
                     <div className="w-7 h-7 rounded-full bg-white/10 animate-pulse" />
@@ -127,7 +127,7 @@ export const NavbarTop = () => {
             {user?.photoURL ? (
               <Link
                 to="/perfil"
-                className="size-6.5 rounded-lg overflow-hidden flex cursor-pointer hover:opacity-80 transition-opacity border border-itec-border"
+                className="size-6.5 rounded-lg overflow-hidden flex cursor-pointer hover:opacity-80 transition-opacity border border-itec-border/50"
               >
                 <img
                   src={user.photoURL}
@@ -138,7 +138,7 @@ export const NavbarTop = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-itec-border font-medium transition-colors bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-itec-border/50 font-medium transition-colors bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
               >
                 <Icons type="google" className="size-4" />
                 <span className="">Iniciar sesión</span>

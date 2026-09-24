@@ -5,6 +5,20 @@ import { useSidebarLinks } from "@hooks/useSidebarLinks";
 import { SidebarItem } from "@components/molecules/SidebarItem";
 import { SidebarLabel, SidebarDivider, SidebarProtect } from "@components/atoms/SidebarState";
 import { useSidebarMobile } from "@hooks/useSidebarMobile";
+import type { ElementType } from "react";
+
+type SidebarLink = {
+  path: string;
+  label: string;
+  icon: ElementType;
+  requireAuth?: boolean;
+  requireAdmin?: boolean;
+  badge?: string;
+  tag?: {
+    text: string | number;
+    color: "green" | "gold";
+  };
+};
  
 export const Sidebar = () => {
   const { user, isAuthenticated } = useAuthStore();
@@ -23,7 +37,7 @@ export const Sidebar = () => {
     };
   }, [isOpen]);
  
-  const getSidebarMeta = (link: any) => ({
+  const getSidebarMeta = (link: SidebarLink) => ({
     requireAuth: typeof link.requireAuth === "boolean" ? link.requireAuth : undefined,
     requireAdmin: typeof link.requireAdmin === "boolean" ? link.requireAdmin : undefined,
     badge: typeof link.badge === "string" ? link.badge : undefined,
@@ -34,7 +48,7 @@ export const Sidebar = () => {
   });
  
   const SidebarContent = () => (
-    <aside className="w-55 h-full flex flex-col bg-itec-sidebar border-r border-white/5 overflow-y-auto py-4 custom-scrollbar">
+    <aside className="w-55 h-full flex flex-col bg-itec-sidebar border-r border-itec-border/50 overflow-y-auto py-4 custom-scrollbar">
       {/* TarjeTEC solo visible si está autenticado */}
       <nav className="px-2.5 mb-3.5">
         {isAuthenticated && user && (
@@ -46,7 +60,7 @@ export const Sidebar = () => {
         {sections.map((section, idx) => (
           <div key={idx} className="flex flex-col mb-1">
             <SidebarLabel>{section.title}</SidebarLabel>
-            {section.links.map((link: any) => {
+            {section.links.map((link: SidebarLink) => {
               const { requireAuth, requireAdmin, badge, tag } = getSidebarMeta(link);
               return (
                 <SidebarProtect
@@ -70,7 +84,7 @@ export const Sidebar = () => {
         <SidebarDivider />
  
         <div className="flex flex-col">
-          {footerLinks.map((link: any) => {
+          {footerLinks.map((link: SidebarLink) => {
             const { requireAuth, requireAdmin, badge, tag } = getSidebarMeta(link);
             return (
               <SidebarProtect

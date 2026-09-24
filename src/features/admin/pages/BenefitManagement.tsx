@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Trash2, Plus, Search, Gift, Star, Ticket } from "lucide-react";
 import { LayoutModal } from "@components/templates/LayoutModal";
 import { auth } from "@/lib/firebase";
-import { adminService } from "../services/adminService";
+import { adminService } from "../services/admin.service";
 import { PointsActivityManager } from "@features/points/components/PointsActivityManager";
 import type { Benefit, BenefitFormData, BenefitCategory } from "@features/benefits/types/benefits";
 import { isFreeBenefit, CATEGORY_CONFIG } from "@features/benefits/types/benefits";
@@ -73,12 +73,12 @@ export const BenefitManagement: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-          <input type="text" placeholder="Buscar por nombre..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-sm text-white outline-none focus:border-white/30" />
+          <input type="text" placeholder="Buscar por nombre..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-xl border border-itec-border/50 bg-white/5 py-3 pl-10 pr-4 text-sm text-white outline-none focus:border-itec-border/50" />
         </div>
 
-        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-white/10 bg-white/5">
+        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-itec-border/50 bg-white/5">
           <table className="w-full min-w-175 text-left text-xs whitespace-nowrap">
-            <thead className="bg-white/2 border-b border-white/10">
+            <thead className="bg-white/2 border-b border-itec-border/50">
               <tr>
                 <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Ítem</th>
                 <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Costo</th>
@@ -100,7 +100,7 @@ export const BenefitManagement: React.FC = () => {
                     <tr key={b._id} className="hover:bg-white/2 transition-colors">
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 p-1.5">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-itec-border/50 bg-white/5 p-1.5">
                             {b.img ? <img src={b.img} alt="" className="h-full w-full object-contain" /> : <Gift className="h-4 w-4 text-white/40" />}
                           </div>
                           <div>
@@ -120,8 +120,8 @@ export const BenefitManagement: React.FC = () => {
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button onClick={() => openModal(b)} className="h-8 w-8 rounded-lg border border-white/10 bg-transparent text-white/60 hover:bg-white/10 flex items-center justify-center"><Pencil className="w-3.5 h-3.5" /></button>
-                          <button onClick={() => { if(window.confirm("¿Desactivar beneficio?")) deleteMutation.mutate(b._id); }} className="h-8 w-8 rounded-lg border border-white/10 bg-transparent text-itec-red/60 hover:bg-itec-red/10 flex items-center justify-center"><Trash2 className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => openModal(b)} className="h-8 w-8 rounded-lg border border-itec-border/50 bg-transparent text-white/60 hover:bg-white/10 flex items-center justify-center"><Pencil className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => { if(window.confirm("¿Desactivar beneficio?")) deleteMutation.mutate(b._id); }} className="h-8 w-8 rounded-lg border border-itec-border/50 bg-transparent text-itec-red/60 hover:bg-itec-red/10 flex items-center justify-center"><Trash2 className="w-3.5 h-3.5" /></button>
                         </div>
                       </td>
                     </tr>
@@ -135,19 +135,19 @@ export const BenefitManagement: React.FC = () => {
 
       <div className="mt-4 flex flex-col gap-4">
         <h3 className="text-sm font-bold text-white flex items-center gap-2"><Star className="w-4 h-4 text-itec-rewards" /> Sistema de Puntos Automático</h3>
-        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-white/10 bg-white/5 p-6 shadow-inner"><PointsActivityManager /></div>
+        <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-itec-border/50 bg-white/5 p-6 shadow-inner"><PointsActivityManager /></div>
       </div>
 
       <LayoutModal isOpen={isModalOpen} onClose={closeModal} title={editId ? "Editar Beneficio" : "Nuevo Beneficio"} maxWidth="max-w-2xl">
         <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(); }} className="p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="flex flex-col gap-1.5"><label className="text-[10px] font-bold uppercase text-white/50">Título *</label><input required value={form.title} onChange={e => setForm((p) => ({ ...p, title: e.target.value }))} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white" /></div>
-            <div className="flex flex-col gap-1.5"><label className="text-[10px] font-bold uppercase text-white/50">Sede *</label><select value={form.category} onChange={e => setForm((p) => ({ ...p, category: e.target.value as BenefitCategory }))} className="appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white"><option value="medrano">Medrano</option><option value="campus">Campus</option><option value="digital">Digital</option></select></div>
-            <div className="flex flex-col gap-1.5 sm:col-span-2"><label className="text-[10px] font-bold uppercase text-white/50">Descripción</label><textarea rows={2} value={form.description} onChange={e => setForm((p) => ({ ...p, description: e.target.value }))} className="resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white" /></div>
-            <div className="flex flex-col gap-1.5"><label className="text-[10px] font-bold uppercase text-white/50">Descuento Promocional</label><input value={form.discount} onChange={e => setForm((p) => ({ ...p, discount: e.target.value }))} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white" /></div>
+            <div className="flex flex-col gap-1.5"><label className="text-[10px] font-bold uppercase text-white/50">Título *</label><input required value={form.title} onChange={e => setForm((p) => ({ ...p, title: e.target.value }))} className="rounded-xl border border-itec-border/50 bg-white/5 px-4 py-3 text-sm text-white" /></div>
+            <div className="flex flex-col gap-1.5"><label className="text-[10px] font-bold uppercase text-white/50">Sede *</label><select value={form.category} onChange={e => setForm((p) => ({ ...p, category: e.target.value as BenefitCategory }))} className="appearance-none rounded-xl border border-itec-border/50 bg-white/5 px-4 py-3 text-sm text-white"><option value="medrano">Medrano</option><option value="campus">Campus</option><option value="digital">Digital</option></select></div>
+            <div className="flex flex-col gap-1.5 sm:col-span-2"><label className="text-[10px] font-bold uppercase text-white/50">Descripción</label><textarea rows={2} value={form.description} onChange={e => setForm((p) => ({ ...p, description: e.target.value }))} className="resize-none rounded-xl border border-itec-border/50 bg-white/5 px-4 py-3 text-sm text-white" /></div>
+            <div className="flex flex-col gap-1.5"><label className="text-[10px] font-bold uppercase text-white/50">Descuento Promocional</label><input value={form.discount} onChange={e => setForm((p) => ({ ...p, discount: e.target.value }))} className="rounded-xl border border-itec-border/50 bg-white/5 px-4 py-3 text-sm text-white" /></div>
             <div className="flex flex-col gap-1.5"><label className="text-[10px] font-bold uppercase text-white/50">Costo (0 = Gratis)</label><input type="number" min={0} value={form.pointsCost} onChange={e => setForm((p) => ({ ...p, pointsCost: Number(e.target.value) }))} className="rounded-xl border border-itec-rewards/30 bg-itec-rewards/5 px-4 py-3 text-sm font-bold text-itec-rewards" /></div>
           </div>
-          <div className="mt-8 flex gap-3 border-t border-white/10 pt-5">
+          <div className="mt-8 flex gap-3 border-t border-itec-border/50 pt-5">
             <button type="button" onClick={closeModal} className="w-1/3 rounded-xl bg-white/5 py-3 text-sm font-bold text-white border border-transparent">Cancelar</button>
             <button type="submit" disabled={saveMutation.isPending || !form.title.trim()} className="w-2/3 rounded-xl bg-itec-rewards py-3 text-sm font-bold text-black disabled:opacity-50">Guardar</button>
           </div>

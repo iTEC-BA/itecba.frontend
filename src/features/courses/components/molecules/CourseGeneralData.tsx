@@ -95,20 +95,20 @@ export const CourseGeneralData: React.FC<Props> = ({
 
   return (
     <div className="space-y-5">
-      <h3 className="text-xs font-bold text-itec-section-courses uppercase tracking-widest border-b border-white/10 pb-2">
+      <h3 className="text-xs font-bold text-itec-section-courses uppercase tracking-widest border-b border-itec-border/50 pb-2">
         Datos de Publicación
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="flex flex-col">
           <label className={LABEL_CLS}>Título del curso</label>
-          <Input fullWidth placeholder="Ej: Clase de Paradigmas..." value={title} onChange={(e) => setTitle(e.target.value)} className="bg-itec-box border-itec-border focus:border-itec-section-courses/60 py-2.5 rounded-xl" />
+          <Input fullWidth placeholder="Ej: Clase de Paradigmas..." value={title} onChange={(e) => setTitle(e.target.value)} className="bg-itec-box border-itec-border/50 focus:border-itec-section-courses/60 py-2.5 rounded-xl" />
         </div>
 
         <div className="flex flex-col">
           <label className={LABEL_CLS}>Portada (Enlace o Subida)</label>
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="flex gap-2 flex-1 min-w-0">
-              <Input fullWidth placeholder="https://..." value={image} onChange={(e) => setImage(e.target.value)} className="bg-itec-box border-itec-border focus:border-itec-section-courses/60 py-2.5 rounded-xl flex-1 min-w-0" />
+              <Input fullWidth placeholder="https://..." value={image} onChange={(e) => setImage(e.target.value)} className="bg-itec-box border-itec-border/50 focus:border-itec-section-courses/60 py-2.5 rounded-xl flex-1 min-w-0" />
               <div className="relative shrink-0 flex items-center justify-center">
                 <input type="file" accept="image/*" onChange={handleUpload} disabled={isUploading} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                 <Button type="button" variant="primary" hierarchy="outline" isLoading={isUploading} className="h-full px-3 py-0">
@@ -117,7 +117,7 @@ export const CourseGeneralData: React.FC<Props> = ({
               </div>
             </div>
             {image && (
-              <div className="shrink-0 w-full sm:w-14 h-14 rounded-xl overflow-hidden border border-itec-border bg-itec-box flex items-center justify-center">
+              <div className="shrink-0 w-full sm:w-14 h-14 rounded-xl overflow-hidden border border-itec-border/50 bg-itec-box flex items-center justify-center">
                 {imgBroken ? (
                   <ImageOff className="w-4 h-4 text-itec-gray" />
                 ) : (
@@ -172,7 +172,7 @@ export const CourseGeneralData: React.FC<Props> = ({
               onChange={setProfesorInput}
               onKeyDown={handleProfesorKeyDown}
               className="flex-1"
-              textareaClassName="bg-itec-box border-itec-border focus:border-itec-section-courses/60 py-2.5 rounded-xl min-h-[42px]"
+              textareaClassName="bg-itec-box border-itec-border/50 focus:border-itec-section-courses/60 py-2.5 rounded-xl min-h-[42px]"
               hint=""
             />
             <Button type="button" variant="primary" hierarchy="outline" onClick={addProfesor} className="px-4 py-2.5 shrink-0">

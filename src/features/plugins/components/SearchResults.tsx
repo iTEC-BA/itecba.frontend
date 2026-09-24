@@ -40,7 +40,7 @@ function flattenSections(sections: SectionData[], query: string): FlatResult[] {
 // ─── tarjeta de resultado ─────────────────────────────────────────────────────
 const ResultCard: React.FC<{ r: FlatResult }> = ({ r }) => {
   const inner = (
-    <div className="flex items-start gap-3 bg-itec-card border border-white/7 rounded-xl p-4 hover:border-white/14 transition-colors group">
+    <div className="flex items-start gap-3 bg-itec-card border border-itec-border/50 rounded-xl p-4 hover:border-itec-border/50 transition-colors group">
       <div className="w-8 h-8 rounded-lg bg-white/6 flex items-center justify-center shrink-0 text-[#9aa3b0]">
         <div className="w-4 h-4">
           <Icons type={r.iconName ?? "externalLink"} className="w-full h-full" />

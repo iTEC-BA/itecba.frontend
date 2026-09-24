@@ -25,10 +25,10 @@ export const RedeemBenefitModal: React.FC<Props> = ({ benefit, userPoints, isLoa
 
   return (
     <div className="fixed inset-0 z-[300] flex items-end justify-center bg-black/80 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-itec-bg sm:max-w-md sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-t-3xl border border-itec-border/50 bg-itec-bg sm:max-w-md sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
         
         {/* Cabecera */}
-        <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+        <div className="flex items-center justify-between border-b border-itec-border/50 px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-itec-amber/10 border border-itec-amber/20">
               <Gift className="h-5 w-5 text-itec-amber" />
@@ -45,7 +45,7 @@ export const RedeemBenefitModal: React.FC<Props> = ({ benefit, userPoints, isLoa
 
         {step === "info" ? (
           <div className="flex flex-col px-6 py-6">
-            <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-5 text-center">
+            <div className="mb-6 rounded-2xl border border-itec-border/50 bg-white/5 p-5 text-center">
               <span className="text-xs font-bold uppercase tracking-widest text-white/50 mb-1 block">Costo del canje</span>
               <div className="flex items-center justify-center gap-2 text-3xl font-black text-itec-amber">
                 <Star className="h-6 w-6" fill="currentColor" />
@@ -75,11 +75,11 @@ export const RedeemBenefitModal: React.FC<Props> = ({ benefit, userPoints, isLoa
             <div className="space-y-4 mb-8">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-white/50">Email o Teléfono *</label>
-                <input required type="text" placeholder="tucorreo@frba.utn.edu.ar" value={contact} onChange={e => setContact(e.target.value)} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-itec-amber/50 transition-colors" />
+                <input required type="text" placeholder="tucorreo@frba.utn.edu.ar" value={contact} onChange={e => setContact(e.target.value)} className="rounded-xl border border-itec-border/50 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-itec-amber/50 transition-colors" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-white/50">Notas (opcional)</label>
-                <textarea rows={2} placeholder="Algo que quieras aclarar..." value={notes} onChange={e => setNotes(e.target.value)} className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-itec-amber/50 transition-colors" />
+                <textarea rows={2} placeholder="Algo que quieras aclarar..." value={notes} onChange={e => setNotes(e.target.value)} className="w-full resize-none rounded-xl border border-itec-border/50 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-itec-amber/50 transition-colors" />
               </div>
             </div>
 
@@ -88,7 +88,7 @@ export const RedeemBenefitModal: React.FC<Props> = ({ benefit, userPoints, isLoa
                 Atrás
               </button>
               <button type="submit" disabled={isLoading || !contact} className="w-2/3 flex items-center justify-center gap-2 rounded-xl bg-itec-emerald py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                {isLoading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : "Confirmar canje"}
+                {isLoading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-itec-border/50 border-t-white" /> : "Confirmar canje"}
               </button>
             </div>
           </form>

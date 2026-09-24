@@ -43,7 +43,7 @@ export const QuickStatsRow: React.FC = () => (
           <Link
             key={a.href}
             to={a.href}
-            className="group flex flex-col items-center gap-2 p-3 rounded-xl border border-white/6 hover:border-white/15 transition-all duration-150 text-center hover:-translate-y-0.5"
+            className="group flex flex-col items-center gap-2 p-3 rounded-xl border border-itec-border/50 hover:border-itec-border/50 transition-all duration-150 text-center hover:-translate-y-0.5"
           >
             <div
               className={`w-9 h-9 rounded-xl flex items-center justify-center ${a.bg} group-hover:scale-105 transition-transform`}

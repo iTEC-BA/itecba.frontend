@@ -24,7 +24,7 @@ export const ProfileHeader: React.FC = () => {
 
   return (
     <>
-      <div className="w-full bg-itec-box border border-itec-border rounded-[2rem] mb-6 shadow-sm overflow-hidden">
+      <div className="w-full bg-itec-box border border-itec-border/50 rounded-[2rem] mb-6 shadow-sm overflow-hidden">
         <div className="flex flex-col md:flex-row gap-0 h-full">
           
           {/* Lado Izquierdo: Solo Avatar y Acciones */}

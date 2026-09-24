@@ -9,7 +9,7 @@ export const InboxMessageCard: React.FC<{ msg: InboxMessage; onRead: (id: string
       onClick={() => !msg.isRead && onRead(msg._id)}
       className={cn(
         "flex flex-col gap-2 p-4 rounded-xl border transition-all cursor-pointer",
-        msg.isRead ? "bg-white/[0.02] border-white/5 opacity-70" : "bg-itec-box border-itec-border shadow-md"
+        msg.isRead ? "bg-white/[0.02] border-itec-border/50 opacity-70" : "bg-itec-box border-itec-border/50 shadow-md"
       )}
     >
       <div className="flex items-start justify-between gap-3">

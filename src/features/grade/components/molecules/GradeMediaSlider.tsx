@@ -10,7 +10,7 @@ export const GradeMediaSlider: React.FC<Props> = ({ media }) => {
 
   return (
     <div className="w-full">
-      <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-itec-border shadow-lg bg-itec-bg">
+      <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-itec-border/50 shadow-lg bg-itec-bg">
         {current.tipo === 'video' ? (
           <iframe
             key={current.url}
@@ -43,7 +43,7 @@ export const GradeMediaSlider: React.FC<Props> = ({ media }) => {
               className={`relative flex-shrink-0 w-14 h-10 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                 i === activeIdx
                   ? 'border-itec-blue-skye shadow-[0_0_8px_rgba(0,74,173,0.5)]'
-                  : 'border-itec-border hover:border-itec-blue-skye/50'
+                  : 'border-itec-border/50 hover:border-itec-blue-skye/50'
               }`}
             >
               {item.tipo === 'video' ? (

@@ -44,7 +44,7 @@ interface StatMiniProps {
 }
 
 const StatMini: React.FC<StatMiniProps> = ({ label, value, accent, bgAccent, borderAccent, icon: Icon, loading = false, sublabel }) => (
-  <div className={`group relative overflow-hidden rounded-2xl border border-itec-border bg-itec-box p-5 flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 hover:${borderAccent}`}>
+  <div className={`group relative overflow-hidden rounded-2xl border border-itec-border/50 bg-itec-box p-5 flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 hover:${borderAccent}`}>
     <div className="flex items-center justify-between">
       <span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">{label}</span>
       <span className={`flex items-center justify-center w-8 h-8 rounded-xl border ${bgAccent} ${borderAccent} ${accent}`}>

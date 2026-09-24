@@ -14,7 +14,7 @@ export const NavbarBottom = () => {
     }`;
 
   return (
-    <nav className="h-16 w-full bg-itec-sidebar border-t border-white/5 sticky bottom-0 z-30 flex items-center justify-around px-2 shrink-0 pb-safe">
+    <nav className="h-16 w-full bg-itec-sidebar border-t border-itec-border/50 sticky bottom-0 z-30 flex items-center justify-around px-2 shrink-0 pb-safe">
       <div className="flex gap-1 justify-around w-full items-center">
         {/* Inicio */}
         <Link to="/" className={linkClass("/")}>

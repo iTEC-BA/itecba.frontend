@@ -30,7 +30,7 @@ export const BenefitCard: React.FC<Props> = ({ benefit, userPoints, onSelect }) 
       <div className="flex flex-1 flex-col p-5">
         {/* Cabecera: Logo + Badge de Costo */}
         <div className="mb-4 flex items-start justify-between gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 p-2">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-itec-border/50 bg-white/5 p-2">
             {benefit.img ? (
               <img src={benefit.img} alt="logo" className="h-full w-full object-contain" />
             ) : (
@@ -47,7 +47,7 @@ export const BenefitCard: React.FC<Props> = ({ benefit, userPoints, onSelect }) 
                 "flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest",
                 canAfford
                   ? "border-itec-amber/20 bg-itec-amber/10 text-itec-amber"
-                  : "border-white/10 bg-white/5 text-white/40"
+                  : "border-itec-border/50 bg-white/5 text-white/40"
               )}
             >
               <Ticket className="h-3 w-3" /> {benefit.pointsCost} pts
@@ -80,7 +80,7 @@ export const BenefitCard: React.FC<Props> = ({ benefit, userPoints, onSelect }) 
 
       {/* Pie: Ubicación y Botón (Separados por línea punteada tipo ticket) */}
       <div className="mt-auto px-5 pb-5 pt-0">
-        <div className="flex flex-col gap-4 border-t border-dashed border-white/10 pt-4">
+        <div className="flex flex-col gap-4 border-t border-dashed border-itec-border/50 pt-4">
           {benefit.location && benefit.location !== "-" && (
             <p className="flex items-center gap-1.5 truncate text-[11px] font-medium text-white/40">
               <MapPin className="h-3.5 w-3.5 shrink-0" />
@@ -96,7 +96,7 @@ export const BenefitCard: React.FC<Props> = ({ benefit, userPoints, onSelect }) 
                 ? "bg-itec-rewards/10 text-white hover:bg-white/20 border border-transparent"
                 : canAfford
                 ? "bg-itec-rewards/10 text-white hover:bg-white/20 border border-transparent"
-                : "cursor-not-allowed border border-white/10 bg-transparent text-white/30"
+                : "cursor-not-allowed border border-itec-border/50 bg-transparent text-white/30"
             )}
           >
             {free ? "Ver instrucciones" : canAfford ? "Canjear recompensa" : "Puntos insuficientes"}

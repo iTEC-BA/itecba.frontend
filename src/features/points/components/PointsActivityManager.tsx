@@ -41,12 +41,12 @@ export const PointsActivityManager: React.FC = () => {
     });
   };
 
-  if (isLoading) return <div className="animate-pulse h-20 bg-white/5 rounded-xl border border-white/10" />;
+  if (isLoading) return <div className="animate-pulse h-20 bg-white/5 rounded-xl border border-itec-border/50" />;
 
   return (
     <>
       <table className="w-full text-left text-xs whitespace-nowrap">
-        <thead className="border-b border-white/10">
+        <thead className="border-b border-itec-border/50">
           <tr>
             <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Actividad</th>
             <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Puntos</th>
@@ -83,7 +83,7 @@ export const PointsActivityManager: React.FC = () => {
               <td className="px-4 py-3">
                 {act.isActive ? 
                   <span className="text-itec-emerald font-bold uppercase text-[10px] bg-itec-emerald/10 border border-itec-emerald/20 px-2 py-0.5 rounded">Activo</span> : 
-                  <span className="text-white/30 font-bold uppercase text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded">Inactivo</span>
+                  <span className="text-white/30 font-bold uppercase text-[10px] bg-white/5 border border-itec-border/50 px-2 py-0.5 rounded">Inactivo</span>
                 }
               </td>
               <td className="px-4 py-3 text-right">
@@ -108,7 +108,7 @@ export const PointsActivityManager: React.FC = () => {
               type="number" min="0" required fullWidth
               value={form.points} 
               onChange={e => setForm({...form, points: Number(e.target.value)})} 
-              className="bg-itec-box border-itec-border focus:border-itec-blue-skye/50 py-2.5 rounded-xl font-mono text-itec-rewards font-bold"
+              className="bg-itec-box border-itec-border/50 focus:border-itec-blue-skye/50 py-2.5 rounded-xl font-mono text-itec-rewards font-bold"
             />
           </div>
 
@@ -118,7 +118,7 @@ export const PointsActivityManager: React.FC = () => {
               type="number" min="0" required fullWidth
               value={form.cooldownMinutes} 
               onChange={e => setForm({...form, cooldownMinutes: Number(e.target.value)})} 
-              className="bg-itec-box border-itec-border focus:border-itec-blue-skye/50 py-2.5 rounded-xl"
+              className="bg-itec-box border-itec-border/50 focus:border-itec-blue-skye/50 py-2.5 rounded-xl"
             />
           </div>
 
@@ -128,19 +128,19 @@ export const PointsActivityManager: React.FC = () => {
               type="number" min="0" required fullWidth
               value={form.dailyCap} 
               onChange={e => setForm({...form, dailyCap: Number(e.target.value)})} 
-              className="bg-itec-box border-itec-border focus:border-itec-blue-skye/50 py-2.5 rounded-xl"
+              className="bg-itec-box border-itec-border/50 focus:border-itec-blue-skye/50 py-2.5 rounded-xl"
             />
           </div>
 
           <div className="flex items-center gap-3 pt-2">
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} className="sr-only peer" />
-              <div className="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-itec-blue-skye"></div>
+              <div className="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-itec-border/50 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-itec-blue-skye"></div>
               <span className="ml-3 text-xs font-bold text-white uppercase tracking-widest">Actividad Habilitada</span>
             </label>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-white/5 mt-2">
+          <div className="flex gap-3 pt-4 border-t border-itec-border/50 mt-2">
             <Button type="button" variant="slate" hierarchy="ghost" onClick={() => setEditingAct(null)} fullWidth text="Cancelar" disabled={updateMutation.isPending} />
             <Button type="submit" variant="primary" hierarchy="solid" fullWidth isLoading={updateMutation.isPending} text="Guardar Cambios" className="bg-itec-blue-skye hover:bg-itec-blue-skye/80 text-white border-transparent" />
           </div>

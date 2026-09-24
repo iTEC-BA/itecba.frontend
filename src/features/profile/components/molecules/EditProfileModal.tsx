@@ -74,8 +74,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ onClose }) =
         </div>
 
         {/* Sección de Datos Editables (Rojo Dominante) */}
-        <div className="bg-itec-box border border-itec-border rounded-2xl p-6">
-          <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-3">
+        <div className="bg-itec-box border border-itec-border/50 rounded-2xl p-6">
+          <div className="flex items-center gap-2 mb-6 border-b border-itec-border/50 pb-3">
             <User className="w-5 h-5 text-itec-red-skye" />
             <h3 className="text-sm font-bold text-white">Información Pública</h3>
           </div>

@@ -20,7 +20,7 @@ export const TutoriasSection: React.FC = () => {
 
       {/* Estado: Próximamente */}
       <Card className="flex min-h-[360px] flex-col items-center justify-center gap-4 p-10 text-center shadow-lg">
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-itec-border bg-itec-surface text-itec-muted">
+        <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-itec-border/50 bg-itec-surface text-itec-muted">
           <Icons type="clock" className="h-6 w-6" />
         </div>
         <div className="flex flex-col gap-1.5">

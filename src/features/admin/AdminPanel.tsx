@@ -26,7 +26,7 @@ const AdminLayout: React.FC = () => {
       <AdminSidebar active={active} onNavigate={navigate} isOpen={isOpen} onClose={close} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-        <header className="md:hidden flex items-center justify-between px-5 py-4 border-b border-white/5 bg-itec-sidebar shrink-0">
+        <header className="md:hidden flex items-center justify-between px-5 py-4 border-b border-itec-border/50 bg-itec-sidebar shrink-0">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-itec-muted">Panel</p>
             <h1 className="text-sm font-bold text-white">Administración</h1>
@@ -38,7 +38,7 @@ const AdminLayout: React.FC = () => {
           <div className="mx-auto w-full max-w-6xl">
             <Suspense fallback={
               <div className="flex h-40 w-full items-center justify-center">
-                <span className="w-8 h-8 rounded-full border-2 border-white/10 border-t-white animate-spin" />
+                <span className="w-8 h-8 rounded-full border-2 border-itec-border/50 border-t-white animate-spin" />
               </div>
             }>
               <Outlet context={{ navigate }} />

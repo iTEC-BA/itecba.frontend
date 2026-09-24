@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { Icons } from "@/components/ui/icons/Icons";
 import { Button } from "@/components/ui/Button";
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from "@/stores/authStore";
 import { CourseVideoPlayer } from "@features/courses/components/organisms/CourseVideoPlayer";
 import { CoursePlaylist } from "@features/courses/components/organisms/CoursePlaylist";
 import { useCourseById, useDeleteCourse } from "@features/courses/hooks/useCourses";
@@ -14,6 +14,7 @@ import { ReportVideoModal } from "@features/courses/components/organisms/ReportV
 import { AddCourseModal } from "@features/courses/components/organisms/AddCourseModal";
 import { Edit, Trash, AlertTriangle } from "lucide-react";
 import type { Lesson } from "../types/Course";
+import { useCoursePermissions } from "../hooks/useCoursePermissions";
 
 const CourseAddResourceModal = React.lazy(() =>
   import("@features/courses/components/organisms/CourseAddResourceModal").then((m) => ({ default: m.CourseAddResourceModal }))
@@ -25,7 +26,8 @@ const CourseMaterialModal = React.lazy(() =>
 export const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuthStore();
+  const { user } = useAuthStore();
+  const { canManageCourses, canEditCourse, canDeleteCourse } = useCoursePermissions();
 
   const { data: course, isLoading, isError } = useCourseById(id ?? "");
   const { data: allResources = [] } = useResources();
@@ -129,17 +131,21 @@ export const CourseDetail: React.FC = () => {
             ]} 
           />
           
-          {isAdmin && (
+          {(canEditCourse(course) || canDeleteCourse(course)) && (
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setEditOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-itec-box border border-itec-border text-itec-gray hover:text-white hover:border-white/20 text-xs font-bold transition-all">
-                <Edit className="size-4" /> Editar
-              </button>
-              <Button onClick={handleDelete} variant="danger" hierarchy="solid" className="px-3 py-1.5 rounded-lg text-xs font-bold" icon={<Trash className="size-4" />}>
-                Eliminar
-              </Button>
+              {canEditCourse(course) && (
+                <button
+                  type="button"
+                  onClick={() => setEditOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-itec-box border border-itec-border/50 text-itec-gray hover:text-white hover:border-itec-border/50 text-xs font-bold transition-all">
+                  <Edit className="size-4" /> Editar
+                </button>
+              )}
+              {canDeleteCourse(course) && (
+                <Button onClick={handleDelete} variant="danger" hierarchy="solid" className="px-3 py-1.5 rounded-lg text-xs font-bold" icon={<Trash className="size-4" />}>
+                  Eliminar
+                </Button>
+              )}
             </div>
           )}
         </div>
@@ -165,16 +171,16 @@ export const CourseDetail: React.FC = () => {
             />
             
             {/* Reportar en Desktop inferior */}
-            <div className="flex justify-end border-t border-itec-border pt-4">
+            <div className="flex justify-end border-t border-itec-border/50 pt-4">
               <button onClick={() => setReportOpen(true)} className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-itec-gray hover:text-itec-red transition-colors">
                 <AlertTriangle className="size-3.5" /> Reportar video
               </button>
             </div>
             
             {/* Botón de añadir recurso en mobile */}
-            {isAdmin && (
+            {canManageCourses && (
               <button onClick={() => setAddResOpen(true)}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-itec-border bg-itec-box text-itec-gray hover:text-white hover:border-white/20 text-xs font-semibold transition-all lg:hidden">
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-itec-border/50 bg-itec-box text-itec-gray hover:text-white hover:border-itec-border/50 text-xs font-semibold transition-all lg:hidden">
                 <Icons type="plus" className="size-4" /> Añadir recurso a la materia
               </button>
             )}
@@ -189,9 +195,9 @@ export const CourseDetail: React.FC = () => {
               onSelectVideo={setVideoIndex}
               watchedVideos={watched}
             />
-            {isAdmin && (
+            {canManageCourses && (
               <button onClick={() => setAddResOpen(true)}
-                className="hidden lg:flex w-full items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-itec-border bg-itec-box text-itec-gray hover:text-white hover:border-white/20 text-xs font-semibold transition-all">
+                className="hidden lg:flex w-full items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-itec-border/50 bg-itec-box text-itec-gray hover:text-white hover:border-itec-border/50 text-xs font-semibold transition-all">
                 <Icons type="plus" className="size-4" /> Añadir recurso
               </button>
             )}
@@ -202,7 +208,7 @@ export const CourseDetail: React.FC = () => {
       {/* Modales */}
       <Suspense fallback={null}>
         <CourseMaterialModal isOpen={isMaterialOpen} onClose={() => setMaterialOpen(false)} relatedResources={relatedResources} />
-        {isAdmin && <CourseAddResourceModal isOpen={isAddResOpen} onClose={() => setAddResOpen(false)} courseTitle={course.title} materia={course.materia ?? ""} />}
+        {canManageCourses && <CourseAddResourceModal isOpen={isAddResOpen} onClose={() => setAddResOpen(false)} courseTitle={course.title} materia={course.materia ?? ""} />}
       </Suspense>
 
       {activeVideo && (
@@ -215,7 +221,7 @@ export const CourseDetail: React.FC = () => {
         />
       )}
 
-      {isAdmin && (
+      {canEditCourse(course) && (
         <AddCourseModal
           isOpen={isEditOpen}
           onClose={() => setEditOpen(false)}

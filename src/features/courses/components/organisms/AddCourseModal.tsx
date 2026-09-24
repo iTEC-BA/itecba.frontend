@@ -126,7 +126,7 @@ export const AddCourseModal: React.FC<Props> = ({ isOpen, onClose, existingCours
           />
           <CourseCurriculumEditor sections={sections} setSections={setSections} />
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 p-4 sm:p-6 border-t border-white/10 shrink-0 bg-itec-box">
+        <div className="flex flex-col sm:flex-row gap-3 p-4 sm:p-6 border-t border-itec-border/50 shrink-0 bg-itec-box">
           <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} disabled={isPending} className="flex-1 py-3">
             Cancelar
           </Button>

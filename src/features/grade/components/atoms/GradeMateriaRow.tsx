@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const GradeMateriaRow: React.FC<Props> = ({ materia, nombreDB }) => (
-  <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-itec-card transition-colors border border-transparent hover:border-itec-border">
+  <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-itec-card transition-colors border border-transparent hover:border-itec-border/50">
     <span className="text-[11px] font-mono font-bold text-itec-blue-skye bg-itec-blue/10 border border-itec-blue-skye/20 px-2 py-1 rounded-md min-w-[52px] text-center flex-shrink-0 mt-0.5">
       {materia.codigo}
     </span>

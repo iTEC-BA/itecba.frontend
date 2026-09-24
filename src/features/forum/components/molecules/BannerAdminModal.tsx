@@ -54,9 +54,9 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
       className="fixed inset-0 z-[400] flex items-center justify-center bg-black/70  p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-2xl bg-itec-bg border border-itec-border rounded-xl shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-2xl bg-itec-bg border border-itec-border/50 rounded-xl shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-itec-border shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-itec-border/50 shrink-0">
           <div>
             <h2 className="text-lg font-bold text-itec-text">Gestión de Banners</h2>
             <p className="text-xs text-itec-muted mt-0.5">TrendingBanner institucional</p>
@@ -89,7 +89,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <div className="space-y-2">
                   {banners.map(b => (
                     <div key={b.id}
-                      className="flex items-center gap-3 p-3 bg-itec-card border border-itec-border rounded-xl hover:border-white/20 transition-colors">
+                      className="flex items-center gap-3 p-3 bg-itec-card border border-itec-border/50 rounded-xl hover:border-itec-border/50 transition-colors">
                       {/* Estado */}
                       <div className={`shrink-0 ${b.is_active ? 'text-emerald-400' : 'text-itec-muted'}`}>
                         {b.is_active ? <CheckCircle size={16} /> : <XCircle size={16} />}
@@ -131,7 +131,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     value={form.title || ''}
                     onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
                     placeholder="Ej: Inscripciones abiertas"
-                    className="w-full bg-itec-card border border-itec-border rounded-xl px-3 py-2.5 text-sm text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors"
+                    className="w-full bg-itec-card border border-itec-border/50 rounded-xl px-3 py-2.5 text-sm text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors"
                   />
                 </div>
                 {/* Descripción */}
@@ -141,7 +141,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     value={form.description || ''}
                     onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
                     placeholder="Subtítulo opcional"
-                    className="w-full bg-itec-card border border-itec-border rounded-xl px-3 py-2.5 text-sm text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors"
+                    className="w-full bg-itec-card border border-itec-border/50 rounded-xl px-3 py-2.5 text-sm text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors"
                   />
                 </div>
                 {/* URL */}
@@ -152,7 +152,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     onChange={e => setForm(p => ({ ...p, redirect_url: e.target.value }))}
                     placeholder="https://..."
                     type="url"
-                    className="w-full bg-itec-card border border-itec-border rounded-xl px-3 py-2.5 text-sm text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors"
+                    className="w-full bg-itec-card border border-itec-border/50 rounded-xl px-3 py-2.5 text-sm text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors"
                   />
                 </div>
                 {/* SVG */}
@@ -163,11 +163,11 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     onChange={e => setForm(p => ({ ...p, svg_content: e.target.value }))}
                     placeholder={'<svg width="40" height="40" ...></svg>'}
                     rows={3}
-                    className="w-full bg-itec-card border border-itec-border rounded-xl px-3 py-2.5 text-xs font-mono text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors resize-none"
+                    className="w-full bg-itec-card border border-itec-border/50 rounded-xl px-3 py-2.5 text-xs font-mono text-itec-text placeholder:text-itec-muted outline-none focus:border-itec-red/50 transition-colors resize-none"
                   />
                   {/* Preview SVG */}
                   {form.svg_content && (
-                    <div className="mt-2 p-2 bg-itec-card border border-dashed border-itec-border rounded-xl flex items-center gap-2">
+                    <div className="mt-2 p-2 bg-itec-card border border-dashed border-itec-border/50 rounded-xl flex items-center gap-2">
                       <div className="w-10 h-10 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: form.svg_content }} />
                       <span className="text-xs text-itec-muted">Preview del SVG</span>
                     </div>
@@ -192,7 +192,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
         {/* Footer (solo en form) */}
         {view === 'form' && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-itec-border shrink-0">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-itec-border/50 shrink-0">
             <button onClick={back} className="px-4 py-2 text-sm text-itec-muted hover:text-itec-text transition-colors">
               Cancelar
             </button>
@@ -202,7 +202,7 @@ export const BannerAdminModal: React.FC<Props> = ({ isOpen, onClose }) => {
               className="flex items-center gap-2 px-5 py-2 bg-itec-red hover:bg-itec-red/80 disabled:opacity-50 text-white text-sm font-semibold rounded-full transition-all"
             >
               {saving
-                ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ? <span className="w-4 h-4 border-2 border-itec-border/50 border-t-white rounded-full animate-spin" />
                 : editId ? 'Guardar cambios' : 'Crear banner'
               }
             </button>

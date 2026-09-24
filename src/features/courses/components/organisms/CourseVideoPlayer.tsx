@@ -24,7 +24,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
   onToggleWatched, onOpenMaterialModal, onShare, onNext, onPrev, hasNext, hasPrev
 }) => {
   if (!activeVideo) return (
-    <div className="w-full aspect-video bg-itec-box border border-dashed border-itec-border rounded-xl flex items-center justify-center text-itec-gray">
+    <div className="w-full aspect-video bg-itec-box border border-dashed border-itec-border/50 rounded-xl flex items-center justify-center text-itec-gray">
       <div className="text-center">
         <span className="text-4xl block mb-2 opacity-30">🎬</span>
         <p className="text-xs font-bold uppercase tracking-widest opacity-50">Sin video</p>
@@ -39,7 +39,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
     <div className="flex flex-col gap-6">
       
       {/* ── Reproductor de Video ── */}
-      <div className="w-full aspect-video bg-black rounded-xl overflow-hidden border border-itec-border relative">
+      <div className="w-full aspect-video bg-black rounded-xl overflow-hidden border border-itec-border/50 relative">
         {activeVideo.youtubeId ? (
           <iframe 
             className="w-full h-full border-0" 
@@ -61,14 +61,14 @@ export const CourseVideoPlayer: React.FC<Props> = ({
           {activeVideo.title ?? "Lección sin título"}
         </h1>
         
-        <div className="flex flex-wrap items-center gap-3 border-b border-itec-border pb-6">
+        <div className="flex flex-wrap items-center gap-3 border-b border-itec-border/50 pb-6">
           <button 
             onClick={(e) => { if (vidId) onToggleWatched(vidId, e); }} 
             disabled={!vidId}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wide transition-all border ${
               isWatched 
                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/20" 
-                : "bg-itec-sidebar text-itec-text border-itec-border hover:border-itec-blue-skye/60"
+                : "bg-itec-sidebar text-itec-text border-itec-border/50 hover:border-itec-blue-skye/60"
             }`}
           >
             <div className="w-4 h-4">{isWatched ? <Icons type="check" /> : <Icons type="play" />}</div>
@@ -77,7 +77,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
 
           <button 
             onClick={onOpenMaterialModal} 
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wide bg-itec-sidebar text-itec-text border border-itec-border hover:border-itec-blue-skye/60 transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wide bg-itec-sidebar text-itec-text border border-itec-border/50 hover:border-itec-blue-skye/60 transition-all"
           >
             <div className="w-4 h-4"><Icons type="documentFill" /></div> Recursos
             {relatedResourcesCount > 0 && (
@@ -89,7 +89,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
 
           <button 
             onClick={onShare} 
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wide bg-itec-sidebar text-itec-text border border-itec-border hover:border-itec-blue-skye/60 transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wide bg-itec-sidebar text-itec-text border border-itec-border/50 hover:border-itec-blue-skye/60 transition-all"
           >
             <div className="w-4 h-4">{copySuccess ? <Icons type="check" className="text-emerald-400" /> : <Icons type="shareNetwork" />}</div> 
             {copySuccess ? "Copiado" : "Compartir"}
@@ -98,7 +98,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
 
         {/* ── Perfil del Docente (Estilo Flat) ── */}
         <div className="flex items-center gap-4 py-2">
-          <div className="w-12 h-12 rounded-xl bg-itec-sidebar border border-itec-border flex items-center justify-center overflow-hidden shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-itec-sidebar border border-itec-border/50 flex items-center justify-center overflow-hidden shrink-0">
             <Icons type="user" className="w-6 h-6 text-itec-gray" />
           </div>
           <div className="flex flex-col min-w-0">
@@ -115,7 +115,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
         </div>
 
         {/* ── Descripciones Markdown (LaTeX soportado) ── */}
-        <div className="bg-itec-box border border-itec-border rounded-xl p-5 mt-2 flex flex-col gap-6">
+        <div className="bg-itec-box border border-itec-border/50 rounded-xl p-5 mt-2 flex flex-col gap-6">
           {activeVideo.mediaUrl && (
             <div>
               <p className="text-[10px] font-bold text-itec-blue-skye uppercase tracking-widest mb-3">
@@ -133,7 +133,7 @@ export const CourseVideoPlayer: React.FC<Props> = ({
             </div>
           )}
           
-          <div className={activeVideo.description ? "pt-6 border-t border-itec-border" : ""}>
+          <div className={activeVideo.description ? "pt-6 border-t border-itec-border/50" : ""}>
             <p className="text-[10px] font-bold text-itec-gray uppercase tracking-widest mb-3">
               Acerca del curso: {course.title}
             </p>
@@ -147,9 +147,9 @@ export const CourseVideoPlayer: React.FC<Props> = ({
         {hasPrev ? (
           <button 
             onClick={onPrev}
-            className="group flex flex-row items-center gap-3 overflow-hidden rounded-xl border border-itec-border bg-itec-box text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-itec-blue-skye/60"
+            className="group flex flex-row items-center gap-3 overflow-hidden rounded-xl border border-itec-border/50 bg-itec-box text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-itec-blue-skye/60"
           >
-            <div className="flex shrink-0 items-center justify-center bg-itec-sidebar px-4 py-4 transition-colors border-r border-itec-border group-hover:bg-itec-blue-skye/10">
+            <div className="flex shrink-0 items-center justify-center bg-itec-sidebar px-4 py-4 transition-colors border-r border-itec-border/50 group-hover:bg-itec-blue-skye/10">
               <Icons type="arrowLeft" className="h-5 w-5 text-itec-text transition-transform group-hover:-translate-x-1" />
             </div>
             <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 py-3 pr-4">
@@ -162,13 +162,13 @@ export const CourseVideoPlayer: React.FC<Props> = ({
         {hasNext && (
           <button 
             onClick={onNext}
-            className="group flex flex-row items-center gap-3 overflow-hidden rounded-xl border border-itec-border bg-itec-box text-right transition-all duration-200 hover:-translate-y-0.5 hover:border-itec-blue-skye/60"
+            className="group flex flex-row items-center gap-3 overflow-hidden rounded-xl border border-itec-border/50 bg-itec-box text-right transition-all duration-200 hover:-translate-y-0.5 hover:border-itec-blue-skye/60"
           >
             <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 py-3 pl-4">
               <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-itec-blue-skye">Siguiente clase</span>
               <span className="truncate text-sm font-semibold text-itec-text">Avanzar lección</span>
             </div>
-            <div className="flex shrink-0 items-center justify-center bg-itec-sidebar px-4 py-4 transition-colors border-l border-itec-border group-hover:bg-itec-blue-skye/10">
+            <div className="flex shrink-0 items-center justify-center bg-itec-sidebar px-4 py-4 transition-colors border-l border-itec-border/50 group-hover:bg-itec-blue-skye/10">
               <Icons type="arrowLeft" className="h-5 w-5 rotate-180 text-itec-text transition-transform group-hover:translate-x-1" />
             </div>
           </button>

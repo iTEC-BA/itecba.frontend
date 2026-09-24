@@ -28,17 +28,16 @@ export const PostCard: React.FC<Props> = ({ post, onVote, onRepost, onDelete, on
   };
 
   return (
-    <article className="text-xs border-b border-itec-border hover:bg-white/[0.015] transition-colors duration-150">
+    <article className="text-xs border-b border-itec-border/50 hover:bg-white/[0.02] transition-colors duration-150">
       {post.is_reposted && post.reposted_by && (
         <RepostIndicator pseudonym={post.reposted_by} />
       )}
 
-      <div className="flex gap-3 px-4 pt-3 pb-2 cursor-pointer" onClick={() => onClick(post.id)}>
-        {/* Avatar + hilo */}
-        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+      <div className="flex gap-4 px-4 pt-4 pb-3 cursor-pointer" onClick={() => onClick(post.id)}>
+        <div className="relative flex w-9 flex-shrink-0 justify-center">
           <AnonAvatar pseudonym={post.pseudonym} size="md" />
           {post.reply_count > 0 && (
-            <div className="w-px flex-1 bg-itec-border/60 rounded-full my-1" />
+            <div className="absolute left-1/2 top-10 bottom-[-1rem] w-px -translate-x-1/2 bg-itec-border/70" />
           )}
         </div>
 
@@ -46,7 +45,7 @@ export const PostCard: React.FC<Props> = ({ post, onVote, onRepost, onDelete, on
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between mb-0.5">
             <div className="flex items-center gap-1 flex-wrap min-w-0">
-              <span className="font-bold text-itec-text leading-tight truncate">
+              <span className="font-semibold text-sm text-itec-text leading-tight truncate">
                 {post.pseudonym.split('#')[0]}
               </span>
               <span className="text-itec-muted text-xs font-mono truncate">
@@ -66,14 +65,14 @@ export const PostCard: React.FC<Props> = ({ post, onVote, onRepost, onDelete, on
 
           <RichText
             text={post.body}
-            className="text-itec-text leading-relaxed mb-2.5 block whitespace-pre-wrap break-words"
+            className="text-sm text-itec-text leading-relaxed mb-3 block whitespace-pre-wrap break-words"
           />
 
           {/* Quoted post */}
           {post.quoted_post && (
             <div
               onClick={e => { e.stopPropagation(); onClick(post.quoted_post!.id); }}
-              className="border border-itec-border rounded-xl p-3 mb-2.5 bg-itec-card hover:border-itec-blue-skye/30 transition-colors cursor-pointer"
+              className="border border-itec-border/50 rounded-xl p-3 mb-2.5 bg-itec-card hover:border-itec-blue-skye/30 transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-2 mb-1">
                 <AnonAvatar pseudonym={post.quoted_post.pseudonym} size="sm" />

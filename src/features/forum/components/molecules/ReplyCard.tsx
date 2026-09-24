@@ -19,27 +19,30 @@ interface Props {
   isLast:   boolean;
   onVote:   (id: number, v: 1 | -1) => void;
   onDelete: (id: number) => void;
+  onOpen: (id: number) => void;
 }
 
-export const ReplyCard: React.FC<Props> = ({ reply, isLast, onVote, onDelete }) => {
+export const ReplyCard: React.FC<Props> = ({ reply, isLast, onVote, onDelete, onOpen }) => {
   const { user, isAdmin } = useAuthStore();
   const canDelete = reply.is_author || isAdmin;
 
   return (
-    <div className="flex gap-3 px-4 py-3 group hover:bg-white/[0.015] transition-colors">
-      <div className="flex flex-col items-center flex-shrink-0">
-        <div className={`w-px ${isLast ? 'h-4' : 'h-full'} bg-itec-border`} />
+    <div
+      className="flex gap-4 px-4 py-3 group hover:bg-white/[0.02] transition-colors cursor-pointer"
+      onClick={() => onOpen(reply.id)}
+    >
+      <div className="relative flex w-9 flex-shrink-0 justify-center">
+        <div className={`absolute left-1/2 top-[-0.75rem] bottom-[-0.75rem] w-px -translate-x-1/2 bg-itec-border ${isLast ? 'bottom-5' : ''}`} />
         <AnonAvatar pseudonym={reply.pseudonym} size="sm" />
-        {!isLast && <div className="w-px flex-1 bg-itec-border mt-1" />}
       </div>
       <div className="flex-1 min-w-0 pt-0.5">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-semibold text-itec-text">{reply.pseudonym}</span>
+          <span className="text-sm font-semibold text-itec-text">{reply.pseudonym}</span>
           <span className="text-xs text-itec-muted font-mono">· {timeAgo(reply.created_at)}</span>
         </div>
         <RichText
           text={reply.body}
-          className="text-sm text-itec-text leading-relaxed block whitespace-pre-wrap break-words mb-1.5"
+          className="text-sm text-itec-text leading-relaxed block whitespace-pre-wrap break-words mb-2"
         />
         <div className="flex items-center gap-4 mt-1" onClick={e => e.stopPropagation()}>
           <VoteButton

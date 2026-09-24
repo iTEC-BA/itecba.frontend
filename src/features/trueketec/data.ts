@@ -17,8 +17,8 @@ export const ESTADOS_OPCIONES: EstadoPost[] = ["Activo", "En Negociación", "Tru
 
 export const ESTADO_CONFIG: Record<EstadoPost, { label: string; cls: string }> = {
   "Activo":            { label: "Activo",  cls: `text-${TRUEKETEC_ACCENT} border-${TRUEKETEC_ACCENT}/40` },
-  "En Negociación":    { label: "En Trámite", cls: "text-itec-text border-itec-border" },
-  "Trueque Realizado": { label: "Cerrado", cls: "text-itec-muted border-itec-border" },
+  "En Negociación":    { label: "En Trámite", cls: "text-itec-text border-itec-border/50" },
+  "Trueque Realizado": { label: "Cerrado", cls: "text-itec-muted border-itec-border/50" },
 };
 
 export const PASOS_COMO_FUNCIONA: { titulo: string; detalle: string }[] = [

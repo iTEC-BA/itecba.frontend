@@ -4,7 +4,7 @@ interface Props { progress: number; variant?: "blue" | "green"; }
 
 export const ProgressBar: React.FC<Props> = ({ progress, variant = "blue" }) => {
   const isComplete = progress >= 100;
-  const trackColor = "bg-itec-sidebar border border-itec-border";
+  const trackColor = "bg-itec-sidebar border border-itec-border/50";
   const fillColor = isComplete || variant === "green"
     ? "bg-emerald-500"
     : "bg-itec-section-courses";

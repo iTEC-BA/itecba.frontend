@@ -7,11 +7,11 @@ type InstitutionalInfoProps = {
 
 export const InstitutionalInfo: React.FC<InstitutionalInfoProps> = ({ children }) => {
   return (
-    <div className="bg-itec-box border border-itec-border rounded-xl px-4 shadow-sm">
+    <div className="bg-itec-box border border-itec-border/50 rounded-xl px-4 shadow-sm">
       <ReactMarkdown
         components={{
           h2: (props) => (
-            <h2 className="text-2xl font-bold text-white mt-5 mb-4 border-b border-itec-border pb-2" {...props} />
+            <h2 className="text-2xl font-bold text-white mt-5 mb-4 border-b border-itec-border/50 pb-2" {...props} />
           ),
           h3: (props) => (
             <h3 className="text-xl font-semibold text-white mt-8 mb-3" {...props} />

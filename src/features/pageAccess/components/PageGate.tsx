@@ -10,12 +10,12 @@ interface PageGateProps {
 }
 
 export const PageGate: React.FC<PageGateProps> = ({ path, children }) => {
-  const { isAdmin } = useAuthStore();
+  const { canAccessAdminPanel } = useAuthStore();
   const { loading } = usePageAccess();
   const state = usePageAccessState(path);
 
   // El admin tiene paso libre, la pantalla de carga no interrumpe el montaje
-  if (isAdmin) return <>{children}</>;
+  if (canAccessAdminPanel) return <>{children}</>;
   if (loading) return <>{children}</>;
 
   if (!state.enabled) return <DisabledPage label={state.label} />;

@@ -13,7 +13,6 @@ import {
   PadronPage,
   HomePage,
   ForumPage,
-  ForumThreadPage,
   LoginPage,
   CoursesPage,
   CourseDetail,
@@ -36,8 +35,7 @@ export const PublicRoutes = (
   <>
     <Route path="/padron" element={<PadronPage />} />
     <Route path="/" element={<PageSuspense><HomePage /></PageSuspense>} />
-    <Route path="/foro" element={<PageSuspense><PageGate path="/foro"><ForumPage /></PageGate></PageSuspense>} />
-    <Route path="/foro/:postId" element={<PageSuspense><ForumThreadPage /></PageSuspense>} />
+    <Route path="/foro/*" element={<PageSuspense><PageGate path="/foro"><ForumPage /></PageGate></PageSuspense>} />
     <Route path="/login" element={<PageSuspense><LoginPage /></PageSuspense>} />
     <Route path="/cursos" element={<PageSuspense><PageGate path="/cursos"><CoursesPage /></PageGate></PageSuspense>} />
     <Route path="/cursos/:id" element={<PageSuspense><CourseLandingPage /></PageSuspense>} />

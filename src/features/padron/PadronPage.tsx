@@ -283,12 +283,12 @@ const PisoTag: React.FC<{ piso?: string }> = ({ piso }) => {
   if (!piso) return null;
   const colorMap: Record<string, string> = {
     SS: "bg-itec-blue/30 text-itec-text border-itec-blue/40",
-    PB: "bg-itec-card border-itec-border text-itec-gray",
-    "1°": "bg-itec-sidebar border-itec-border text-itec-text",
-    "2°": "bg-itec-box border-itec-border text-itec-gray",
+    PB: "bg-itec-card border-itec-border/50 text-itec-gray",
+    "1°": "bg-itec-sidebar border-itec-border/50 text-itec-text",
+    "2°": "bg-itec-box border-itec-border/50 text-itec-gray",
   };
   const cls =
-    colorMap[piso] ?? "bg-itec-card border-itec-border text-itec-gray";
+    colorMap[piso] ?? "bg-itec-card border-itec-border/50 text-itec-gray";
   return (
     <span
       className={`inline-flex items-center px-1.5 py-0.5 rounded-md border text-[10px] font-bold whitespace-nowrap ${cls}`}
@@ -308,7 +308,7 @@ const TarjetaEspecialidad: React.FC<TarjetaEspecialidadProps> = ({ esp }) => {
     >
       {/* Cabecera de tarjeta */}
       <div
-        className={`${esp.bgAccentClass} border-b border-itec-border px-4 py-3 flex items-center justify-between`}
+        className={`${esp.bgAccentClass} border-b border-itec-border/50 px-4 py-3 flex items-center justify-between`}
       >
         <div className="flex items-center gap-2.5">
           <span className="text-2xl leading-none">{esp.icon}</span>
@@ -358,7 +358,7 @@ const TarjetaEspecialidad: React.FC<TarjetaEspecialidadProps> = ({ esp }) => {
       {esp.mesas.length > 3 && (
         <button
           onClick={() => setExpandida(!expandida)}
-          className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold border-t border-itec-border transition-colors ${esp.bgAccentClass} ${esp.accentClass.split(" ")[1]} hover:opacity-80`}
+          className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold border-t border-itec-border/50 transition-colors ${esp.bgAccentClass} ${esp.accentClass.split(" ")[1]} hover:opacity-80`}
         >
           {expandida ? (
             <>
@@ -395,8 +395,8 @@ export const PadronPage: React.FC = () => {
       <div className="flex flex-col gap-8 items-center">
         {/* ── Columna izquierda: IFRAME DE CLOUDFRONT + Recordatorio ─────── */}
         {/* Iframe del formulario */}
-        <div className="bg-white border-2 border-itec-border rounded-2xl overflow-hidden shadow-sm h-[500px] flex flex-col">
-          <div className="bg-itec-sidebar p-3 border-b border-itec-border flex items-center gap-2">
+        <div className="bg-white border-2 border-itec-border/50 rounded-2xl overflow-hidden shadow-sm h-[500px] flex flex-col">
+          <div className="bg-itec-sidebar p-3 border-b border-itec-border/50 flex items-center gap-2">
             <Search className="text-itec-red" size={18} />
             <h2 className="text-sm font-bold text-itec-text uppercase tracking-wider">
               Consulta Oficial
@@ -434,7 +434,7 @@ export const PadronPage: React.FC = () => {
             ].map((b, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 bg-itec-box border border-itec-border rounded-xl px-3 py-2.5"
+                className="flex items-center gap-3 bg-itec-box border border-itec-border/50 rounded-xl px-3 py-2.5"
               >
                 <CheckCircle2 size={18} className="text-itec-red shrink-0" />
                 <div>
@@ -450,7 +450,7 @@ export const PadronPage: React.FC = () => {
 
         {/* ── Columna derecha: Grilla de tarjetas por especialidad ─────── */}
         <div className="">
-          <div className="flex items-center gap-2 text-itec-red border-b border-itec-border pb-4">
+          <div className="flex items-center gap-2 text-itec-red border-b border-itec-border/50 pb-4">
             <MapPin size={22} />
             <h2 className="text-xl font-bold text-itec-text">
               Distribución de Mesas —{" "}
@@ -467,15 +467,15 @@ export const PadronPage: React.FC = () => {
               },
               {
                 label: "Planta Baja (PB)",
-                cls: "bg-itec-card border-itec-border text-itec-gray",
+                cls: "bg-itec-card border-itec-border/50 text-itec-gray",
               },
               {
                 label: "1° Piso",
-                cls: "bg-itec-sidebar border-itec-border text-itec-text",
+                cls: "bg-itec-sidebar border-itec-border/50 text-itec-text",
               },
               {
                 label: "2° Piso",
-                cls: "bg-itec-box border-itec-border text-itec-gray",
+                cls: "bg-itec-box border-itec-border/50 text-itec-gray",
               },
             ].map((p) => (
               <span

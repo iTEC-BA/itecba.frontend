@@ -12,6 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
+firestore.rules
 
 # Editor directories and files
 *.bak

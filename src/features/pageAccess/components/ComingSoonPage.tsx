@@ -19,7 +19,7 @@ export const ComingSoonPage: React.FC<ComingSoonPageProps> = ({ label }) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[85vh] px-4 w-full py-8">
-      <div className="w-full max-w-2xl bg-itec-box border border-itec-border rounded-[2rem] p-8 md:p-10 text-center relative overflow-hidden">
+      <div className="w-full max-w-2xl bg-itec-box border border-itec-border/50 rounded-[2rem] p-8 md:p-10 text-center relative overflow-hidden">
         
         {/* Línea superior flat */}
         <div className="absolute top-0 left-0 w-full h-1.5 bg-itec-red-skye" />
@@ -57,7 +57,7 @@ export const ComingSoonPage: React.FC<ComingSoonPageProps> = ({ label }) => {
                   <Link 
                     key={i} 
                     to={link.path}
-                    className="flex flex-col items-center justify-center p-4 rounded-xl bg-itec-surface border border-itec-border hover:bg-white/5 transition-colors group"
+                    className="flex flex-col items-center justify-center p-4 rounded-xl bg-itec-surface border border-itec-border/50 hover:bg-white/5 transition-colors group"
                   >
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 border ${link.bg} ${link.border} ${link.color}`}>
                       <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -70,7 +70,7 @@ export const ComingSoonPage: React.FC<ComingSoonPageProps> = ({ label }) => {
           </div>
 
           {/* Acciones */}
-          <div className="mt-8 pt-6 border-t border-white/5 w-full flex justify-center">
+          <div className="mt-8 pt-6 border-t border-itec-border/50 w-full flex justify-center">
             <Button variant="danger" hierarchy="solid" onClick={() => navigate(-1)} className="px-6 py-2.5">
               <ArrowLeft className="w-4 h-4 mr-2" /> Volver atrás
             </Button>

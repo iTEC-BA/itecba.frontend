@@ -17,7 +17,7 @@ export const CardSkeleton: React.FC<CardSkeletonProps> = ({
 }) => (
   <div
     className={cn(
-      "bg-itec-box border border-itec-border rounded-xl p-4 animate-pulse",
+      "bg-itec-box border border-itec-border/50 rounded-xl p-4 animate-pulse",
       className
     )}
   >

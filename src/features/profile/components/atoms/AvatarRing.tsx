@@ -26,7 +26,7 @@ export const AvatarRing: React.FC<AvatarRingProps> = ({ src, name, size = "md", 
   const s = SIZE_MAP[size];
   return (
     <div className={cn("relative shrink-0", className)}>
-      <div className={cn("relative overflow-hidden rounded-full flex items-center justify-center font-bold text-itec-muted bg-itec-surface border border-itec-border", ring, s.ring)}>
+      <div className={cn("relative overflow-hidden rounded-full flex items-center justify-center font-bold text-itec-muted bg-itec-surface border border-itec-border/50", ring, s.ring)}>
         {src ? (
           <img src={src} alt={name} className="h-full w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         ) : (

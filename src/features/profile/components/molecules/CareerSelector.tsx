@@ -63,7 +63,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
       <div
         onClick={() => !disabled && setOpen(!open)}
         className={cn(
-          "min-h-[40px] w-full bg-itec-surface border border-itec-border rounded-xl",
+          "min-h-[40px] w-full bg-itec-surface border border-itec-border/50 rounded-xl",
           "flex flex-wrap gap-1.5 p-2 cursor-pointer transition-all",
           "focus-within:border-itec-red-skye",
           disabled && "opacity-50 cursor-not-allowed"
@@ -78,7 +78,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
           <span
             key={c.name}
             className={cn(
-              "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border border-itec-border",
+              "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border border-itec-border/50",
               c.colorClass ?? "bg-itec-box text-itec-text"
             )}
           >
@@ -99,17 +99,17 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
       {open && (
         <div className={cn(
           "absolute z-50 top-full mt-1.5 w-full",
-          "bg-itec-box border border-itec-border rounded-xl shadow-xl",
+          "bg-itec-box border border-itec-border/50 rounded-xl shadow-xl",
           "overflow-hidden max-h-56 flex flex-col"
         )}>
-          <div className="p-2 border-b border-itec-border shrink-0">
+          <div className="p-2 border-b border-itec-border/50 shrink-0">
             <input
               autoFocus
               type="text"
               placeholder="Buscar carrera..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-itec-surface border border-itec-border text-itec-text text-sm px-3 py-2 rounded-xl outline-none focus:border-itec-red-skye placeholder:text-itec-muted"
+              className="w-full bg-itec-surface border border-itec-border/50 text-itec-text text-sm px-3 py-2 rounded-xl outline-none focus:border-itec-red-skye placeholder:text-itec-muted"
             />
           </div>
           <div className="overflow-y-auto custom-scrollbar">
@@ -132,7 +132,7 @@ export const CareerSelector: React.FC<CareerSelectorProps> = ({
                 >
                   <span className={cn(
                     "w-4 h-4 rounded border flex items-center justify-center text-[10px] shrink-0",
-                    sel ? "bg-itec-red-skye border-itec-border text-white" : "border-itec-border"
+                    sel ? "bg-itec-red-skye border-itec-border/50 text-white" : "border-itec-border/50"
                   )}>
                     {sel && "✓"}
                   </span>

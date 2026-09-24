@@ -38,9 +38,9 @@ export const PageAccessManagement: React.FC = () => {
         <p className="text-xs text-itec-muted mt-1">Activá, desactivá o marcá como "Próximamente" cualquier sección.</p>
       </div>
 
-      <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-white/5 bg-itec-box">
+      <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-itec-border/50 bg-itec-box">
         <table className="w-full min-w-[600px] text-xs text-left whitespace-nowrap">
-          <thead className="bg-white/5 border-b border-white/10">
+          <thead className="bg-white/5 border-b border-itec-border/50">
             <tr>
               <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Ruta</th>
               <th className="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-widest text-itec-muted">Habilitada</th>

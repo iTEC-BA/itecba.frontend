@@ -21,7 +21,7 @@ export const MyPostsModal: React.FC<Props> = ({ isOpen, onClose, matches, myPost
       <div className="flex flex-col gap-6 px-4 py-6 sm:px-6">
 
         {matches.length === 0 && misActivos.length === 0 ? (
-          <div className="bg-itec-surface rounded-2xl p-10 flex flex-col items-center justify-center text-center gap-3 border border-itec-border">
+          <div className="bg-itec-surface rounded-2xl p-10 flex flex-col items-center justify-center text-center gap-3 border border-itec-border/50">
             <BookMarked className="w-8 h-8 text-itec-muted opacity-50" />
             <p className="text-sm text-itec-muted font-medium">{MENSAJES.sinExpedientes}</p>
           </div>
@@ -41,9 +41,9 @@ export const MyPostsModal: React.FC<Props> = ({ isOpen, onClose, matches, myPost
 
             {misActivos.length > 0 && (
               <div className="flex flex-col gap-3 mt-2">
-                <div className="flex items-center justify-between border-b border-itec-border pb-2">
+                <div className="flex items-center justify-between border-b border-itec-border/50 pb-2">
                   <h3 className="text-[10px] font-bold text-itec-muted uppercase tracking-widest px-1">Registros Activos</h3>
-                  <span className="text-[10px] font-mono font-bold text-itec-muted bg-itec-box px-2 py-0.5 rounded border border-itec-border">{misActivos.length} / {LIMITE_SOLICITUDES_ACTIVAS} Límite</span>
+                  <span className="text-[10px] font-mono font-bold text-itec-muted bg-itec-box px-2 py-0.5 rounded border border-itec-border/50">{misActivos.length} / {LIMITE_SOLICITUDES_ACTIVAS} Límite</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {misActivos.map((p) => <TrueketecCard key={p._id} post={p} onContact={onContact} />)}

@@ -14,7 +14,7 @@ export const WelcomeWidget: React.FC = () => {
   // ── ESTADO: NO AUTENTICADO ────────────────────────────────────────────────
   if (!isAuthenticated) {
     return (
-      <section className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-2xl border border-white/10 bg-itec-box p-6 sm:p-8">
+      <section className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-2xl border border-itec-border/50 bg-itec-box p-6 sm:p-8">
         <div className="flex-1">
           <div className="mb-4 inline-flex items-center gap-1.5 rounded-lg border border-itec-emerald/20 bg-itec-emerald/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-700" />
@@ -43,17 +43,17 @@ export const WelcomeWidget: React.FC = () => {
     <div className="mb-8 grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
       
       {/* ── 1. TARJETA PRINCIPAL (Bienvenida y Perfil) - Ocupa 6 a 8 columnas ── */}
-      <section className="md:col-span-6 lg:col-span-8 flex items-center gap-4 sm:gap-5 rounded-2xl border border-white/10 bg-itec-box p-5 sm:p-6 transition-colors hover:border-white/20">
+      <section className="md:col-span-6 lg:col-span-8 flex items-center gap-4 sm:gap-5 rounded-2xl border border-itec-border/50 bg-itec-box p-5 sm:p-6 transition-colors hover:border-itec-border/50">
         {user?.photoURL ? (
           <Link to="/perfil" className="shrink-0 group">
             <img
               src={user.photoURL}
               alt="Perfil"
-              className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl border border-white/10 bg-white/5 object-cover transition-transform group-hover:scale-105"
+              className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl border border-itec-border/50 bg-white/5 object-cover transition-transform group-hover:scale-105"
             />
           </Link>
         ) : (
-          <div className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center text-white/75">
+          <div className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 rounded-2xl border border-itec-border/50 bg-white/5 flex items-center justify-center text-white/75">
             <GraduationCap className="h-8 w-8" />
           </div>
         )}
@@ -78,7 +78,7 @@ export const WelcomeWidget: React.FC = () => {
       {/* ── 2. TARJETA PUNTOS / BENEFICIOS - Ocupa 3 a 2 columnas ── */}
       <Link
         to="/beneficios"
-        className="md:col-span-3 lg:col-span-2 group flex flex-col justify-center rounded-2xl border border-white/10 bg-white/2 p-5 transition-all hover:bg-white/2 hover:border-itec-rewards/30"
+        className="md:col-span-3 lg:col-span-2 group flex flex-col justify-center rounded-2xl border border-itec-border/50 bg-white/2 p-5 transition-all hover:bg-white/2 hover:border-itec-rewards/30"
       >
         <div className="mb-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-itec-rewards/20 bg-itec-rewards/10 text-itec-rewards transition-transform group-hover:scale-110">
           <Star className="h-4 w-4" fill="currentColor" />
@@ -96,7 +96,7 @@ export const WelcomeWidget: React.FC = () => {
       {/* ── 3. TARJETA CARRERA / PROGRESO - Ocupa 3 a 2 columnas ── */}
       <Link
         to="/progreso"
-        className="md:col-span-3 lg:col-span-2 group flex flex-col justify-center rounded-2xl border border-white/10 bg-white/2 p-5 transition-all hover:bg-white/2 hover:border-itec-groups/30"
+        className="md:col-span-3 lg:col-span-2 group flex flex-col justify-center rounded-2xl border border-itec-border/50 bg-white/2 p-5 transition-all hover:bg-white/2 hover:border-itec-groups/30"
       >
         <div className="mb-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-itec-groups/20 bg-itec-groups/10 text-itec-groups transition-transform group-hover:scale-110">
           <ChartLine className="h-4 w-4" />

@@ -21,15 +21,15 @@ export const CoursePlaylist: React.FC<Props> = ({ sections = [], currentIndex, o
   }, [lessons, watchedVideos]);
 
   if (!total) return (
-    <div className="flex flex-col items-center justify-center py-16 border border-dashed border-itec-border rounded-xl text-itec-gray">
+    <div className="flex flex-col items-center justify-center py-16 border border-dashed border-itec-border/50 rounded-xl text-itec-gray">
       <span className="text-3xl mb-3 opacity-40">📭</span>
       <p className="text-xs font-bold uppercase tracking-widest">Sin lecciones publicadas</p>
     </div>
   );
 
   return (
-    <div className="flex flex-col bg-itec-box border border-itec-border rounded-xl overflow-hidden h-full max-h-[70vh] md:max-h-[600px]">
-      <div className="p-4 border-b border-itec-border shrink-0 bg-itec-sidebar">
+    <div className="flex flex-col bg-itec-box border border-itec-border/50 rounded-xl overflow-hidden h-full max-h-[70vh] md:max-h-[600px]">
+      <div className="p-4 border-b border-itec-border/50 shrink-0 bg-itec-sidebar">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-bold text-itec-text uppercase tracking-widest">Lecciones</span>
           <span className={`text-xs font-bold ${pct === 100 ? "text-emerald-400" : "text-itec-section-courses"}`}>
@@ -50,11 +50,11 @@ export const CoursePlaylist: React.FC<Props> = ({ sections = [], currentIndex, o
               className={`w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl mb-1 transition-colors ${
                 isActive
                   ? "bg-itec-sidebar border border-itec-section-courses"
-                  : "bg-transparent border border-transparent hover:bg-itec-sidebar hover:border-itec-border"
+                  : "bg-transparent border border-transparent hover:bg-itec-sidebar hover:border-itec-border/50"
               }`}
             >
               <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
-                isWatched ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500" : isActive ? "bg-itec-section-courses text-white border border-itec-section-courses" : "bg-itec-sidebar border border-itec-border text-itec-gray"
+                isWatched ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500" : isActive ? "bg-itec-section-courses text-white border border-itec-section-courses" : "bg-itec-sidebar border border-itec-border/50 text-itec-gray"
               }`}>
                 <div className="w-3.5 h-3.5">
                   {isWatched ? <Icons type="check" /> : <Icons type="play" />}

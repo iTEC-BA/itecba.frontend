@@ -35,7 +35,7 @@ export const MarkdownContent: React.FC<Props> = ({ content, className = "" }) =>
             {children}
           </a>
         ),
-        hr: () => <hr className="border-white/8 my-3" />,
+        hr: () => <hr className="border-itec-border/50 my-3" />,
       }}
     >
       {content}

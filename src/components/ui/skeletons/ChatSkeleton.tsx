@@ -4,13 +4,13 @@ import React from "react";
 export const ChatMessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false }) => (
   <div className={`flex ${isUser ? "justify-end" : "items-start gap-3"} mb-4 animate-pulse`}>
     {!isUser && (
-      <div className="w-8 h-8 rounded-xl bg-white/8 border border-white/10 shrink-0" />
+      <div className="w-8 h-8 rounded-xl bg-white/8 border border-itec-border/50 shrink-0" />
     )}
     <div
       className={`rounded-xl px-4 py-3 ${
         isUser
           ? "bg-[#1d4ed8]/30 rounded-br-sm w-48"
-          : "bg-white/5 border border-white/8 rounded-tl-sm w-72"
+          : "bg-white/5 border border-itec-border/50 rounded-tl-sm w-72"
       }`}
     >
       <div className="space-y-2">

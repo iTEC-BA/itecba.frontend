@@ -28,7 +28,7 @@ export const LoginPage: React.FC = () => {
           <FormLogin />
 
           {/* Widget social de estudiantes */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-itec-box border border-itec-border py-3 px-6 rounded-2xl">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-itec-box border border-itec-border/50 py-3 px-6 rounded-2xl">
             <div className="flex -space-x-3 shrink-0">
               <img className="w-9 h-9 rounded-full border-2 border-itec-box object-cover" src="https://i.pravatar.cc/100?img=1" alt="Estudiante" />
               <img className="w-9 h-9 rounded-full border-2 border-itec-box object-cover" src="https://i.pravatar.cc/100?img=2" alt="Estudiante" />

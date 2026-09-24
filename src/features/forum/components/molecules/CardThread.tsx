@@ -30,7 +30,7 @@ export const CardThread = ({
     n >= 1000 ? `${(n / 1000).toFixed(1).replace(".0", "")}K` : String(n);
 
   return (
-    <div className="px-4 pt-4 pb-3 border-b border-itec-border text-xs">
+    <div className="px-4 pt-4 pb-3 border-b border-itec-border/50 text-xs">
       <div className="flex items-start gap-3 mb-3">
         <AnonAvatar pseudonym={post.pseudonym} size="lg" />
         <div>
@@ -51,7 +51,7 @@ export const CardThread = ({
       <p className="text-itec-muted mb-3">{timeAgo(post.created_at)}</p>
 
       {/* Stats */}
-      <div className="flex items-center gap-4 py-3 border-y border-itec-border text-itec-text">
+      <div className="flex items-center gap-4 py-3 border-y border-itec-border/50 text-itec-text">
         <span>
           <strong className="font-bold">{fmt(post.reposts || 0)}</strong>{" "}
           <span className="text-itec-muted">Reposts</span>

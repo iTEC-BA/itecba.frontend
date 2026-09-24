@@ -41,9 +41,9 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/80  flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="bg-itec-box border border-white/[0.08] rounded-t-3xl sm:rounded-xl w-full sm:max-w-5xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
+      <div className="bg-itec-box border border-itec-border/50 rounded-t-3xl sm:rounded-xl w-full sm:max-w-5xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-300">
 
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-itec-border/50 shrink-0">
           <div>
             <h2 className="text-base font-bold text-itec-text">Panel de Moderación</h2>
             <p className="text-[11px] text-itec-gray mt-0.5">Revisá grupos antes de publicarlos.</p>
@@ -54,7 +54,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 px-5 pt-4 shrink-0 border-b border-white/[0.06]">
+        <div className="flex gap-1 px-5 pt-4 shrink-0 border-b border-itec-border/50">
           {([['pending', 'Pendientes', pendingGroups.length], ['reported', 'Reportados', reportedGroups.length]] as const).map(([t, label, count]) => (
             <button key={t} onClick={() => setTab(t)}
               className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all ${tab === t ? 'border-itec-groups text-emerald-400' : 'border-transparent text-itec-gray hover:text-itec-text'}`}>
@@ -67,7 +67,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
         <div className="flex-1 overflow-auto p-4">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
-              <div className="w-6 h-6 border-2 border-itec-border border-t-itec-groups rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-itec-border/50 border-t-itec-groups rounded-full animate-spin" />
               <p className="text-itec-gray text-sm">Cargando...</p>
             </div>
           ) : groups.length === 0 ? (
@@ -78,7 +78,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
           ) : (
             <div className="space-y-3">
               {groups.map(group => (
-                <div key={group.id} className="bg-itec-bg border border-white/[0.07] rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:border-white/12 transition-colors">
+                <div key={group.id} className="bg-itec-bg border border-itec-border/50 rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:border-itec-border/50 transition-colors">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-1.5 mb-2">
                       <GroupBadge variant="nivel">Nivel {group.nivel}</GroupBadge>
@@ -94,7 +94,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
                         <input
                           value={editLinkValue}
                           onChange={e => setEditLinkValue(e.target.value)}
-                          className="flex-1 bg-itec-box border border-itec-border text-itec-text text-xs px-3 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
+                          className="flex-1 bg-itec-box border border-itec-border/50 text-itec-text text-xs px-3 py-1.5 rounded-lg outline-none focus:border-itec-blue-skye min-w-0"
                           placeholder="https://chat.whatsapp.com/..."
                         />
                         <button onClick={() => handleSaveLink(group.id!)} disabled={updateLinkMutation.isPending}
@@ -137,7 +137,7 @@ export const AdminPendingGroupsModal: React.FC<Props> = ({ isOpen, onClose }) =>
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-white/[0.06] shrink-0 flex justify-end">
+        <div className="px-5 py-3 border-t border-itec-border/50 shrink-0 flex justify-end">
           <button onClick={onClose} className="text-xs font-semibold bg-itec-blue-skye hover:bg-itec-blue text-white px-5 py-2 rounded-xl transition-colors">
             Cerrar
           </button>

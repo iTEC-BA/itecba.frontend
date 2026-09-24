@@ -40,7 +40,7 @@ export const TruekeTECPage: React.FC = () => {
     return (
       <MainLayout>
         <div className="flex flex-col items-center justify-center gap-5 py-24 px-4 text-center max-w-md mx-auto">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-itec-surface border border-itec-border">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-itec-surface border border-itec-border/50">
             <ShieldAlert size={24} className="text-itec-red" />
           </div>
           <div>
@@ -96,7 +96,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
       <header className="flex flex-col gap-5 ">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-itec-surface border border-itec-border text-itec-section-trueketec">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-itec-surface border border-itec-border/50 text-itec-section-trueketec">
               <Handshake className="w-5 h-5" />
             </div>
             <div>
@@ -105,7 +105,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="slate" hierarchy="outline" icon={<Settings2 className="w-4 h-4"/>} text={misActivos.length > 0 ? `Mis Solicitudes (${misActivos.length})` : "Mis Solicitudes"} onClick={() => setMyPostsModalOpen(true)} className="flex-1 sm:flex-none py-2.5 rounded-xl bg-itec-surface border-itec-border" />
+            <Button variant="slate" hierarchy="outline" icon={<Settings2 className="w-4 h-4"/>} text={misActivos.length > 0 ? `Mis Solicitudes (${misActivos.length})` : "Mis Solicitudes"} onClick={() => setMyPostsModalOpen(true)} className="flex-1 sm:flex-none py-2.5 rounded-xl bg-itec-surface border-itec-border/50" />
             <Button variant="primary" hierarchy="solid" icon={<Plus className="w-4 h-4"/>} text="Cargar Solicitud" onClick={() => setModalOpen(true)} className="flex-1 sm:flex-none py-2.5 rounded-xl bg-itec-section-trueketec text-white font-bold hover:bg-itec-section-trueketec/80" />
           </div>
         </div>
@@ -124,12 +124,12 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
       </header>
 
       {error && (
-        <div className="bg-itec-box rounded-2xl p-4 flex items-center gap-3 text-xs text-itec-red font-medium border border-itec-border">
+        <div className="bg-itec-box rounded-2xl p-4 flex items-center gap-3 text-xs text-itec-red font-medium border border-itec-border/50">
           <ShieldAlert className="w-4 h-4 shrink-0" /> <p>{error}</p>
         </div>
       )}
 
-      <div className="flex items-center gap-3 bg-itec-box rounded-2xl px-5 py-3 border border-itec-border text-xs text-itec-muted">
+      <div className="flex items-center gap-3 bg-itec-box rounded-2xl px-5 py-3 border border-itec-border/50 text-xs text-itec-muted">
         <PhoneCall size={14} className="text-itec-section-trueketec shrink-0" />
         <p>Si gestión no da lugar al trueque, avisá de inmediato al <strong className="text-itec-text">{SOPORTE.telefono} ({SOPORTE.contactoNombre})</strong>.</p>
       </div>
@@ -162,7 +162,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
         <TrueketecFiltersBar initialFilters={filters} onApply={applyFilters} allowedDepts={allowedDepts} subjectsData={subjectsData} />
         <div className="mt-2">
           {!hasSearched ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-16 rounded-2xl bg-itec-box border border-itec-border">
+            <div className="flex flex-col items-center justify-center gap-4 py-16 rounded-2xl bg-itec-box border border-itec-border/50">
               <SlidersHorizontal className="w-8 h-8 text-white/20" />
               <p className="text-sm font-medium text-white/50 text-center max-w-sm px-4">
                 {MENSAJES.estadoInicial}
@@ -170,10 +170,10 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
             </div>
           ) : loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-48 rounded-2xl bg-itec-box border border-itec-border animate-pulse" />)}
+              {Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-48 rounded-2xl bg-itec-box border border-itec-border/50 animate-pulse" />)}
             </div>
           ) : posts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-16 rounded-2xl bg-itec-box border border-itec-border">
+            <div className="flex flex-col items-center justify-center gap-4 py-16 rounded-2xl bg-itec-box border border-itec-border/50">
               <Inbox className="w-8 h-8 text-white/20" />
               <p className="text-sm font-medium text-white/50 text-center">{MENSAJES.sinResultados}</p>
             </div>
@@ -181,7 +181,7 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between px-1">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Resultados del Directorio</span>
-                <span className="text-[10px] font-mono text-itec-muted bg-itec-box px-2 py-0.5 rounded border border-itec-border">Total: {total}</span>
+                <span className="text-[10px] font-mono text-itec-muted bg-itec-box px-2 py-0.5 rounded border border-itec-border/50">Total: {total}</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -190,9 +190,9 @@ const TruekeTECContent: React.FC<ContentProps> = ({ userId, specialty, modalOpen
 
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2 pt-6">
-                  <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} className="p-2 rounded-xl bg-itec-box border border-itec-border disabled:opacity-30 text-white hover:bg-itec-bg"><ChevronLeft size={16} /></button>
-                  <span className="text-xs font-mono font-bold text-white/70 px-4 py-2 bg-itec-box rounded-xl border border-itec-border">Pág {currentPage} de {totalPages}</span>
-                  <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} className="p-2 rounded-xl bg-itec-box border border-itec-border disabled:opacity-30 text-white hover:bg-itec-bg"><ChevronRight size={16} /></button>
+                  <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} className="p-2 rounded-xl bg-itec-box border border-itec-border/50 disabled:opacity-30 text-white hover:bg-itec-bg"><ChevronLeft size={16} /></button>
+                  <span className="text-xs font-mono font-bold text-white/70 px-4 py-2 bg-itec-box rounded-xl border border-itec-border/50">Pág {currentPage} de {totalPages}</span>
+                  <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} className="p-2 rounded-xl bg-itec-box border border-itec-border/50 disabled:opacity-30 text-white hover:bg-itec-bg"><ChevronRight size={16} /></button>
                 </div>
               )}
             </div>

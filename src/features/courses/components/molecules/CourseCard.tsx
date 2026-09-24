@@ -15,10 +15,10 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
   const isComplete = progress >= 100;
 
   return (
-    <article className="group relative bg-itec-box border border-itec-border hover:border-itec-section-courses/50 hover:bg-itec-section-courses/5 rounded-[1.5rem] flex flex-col h-full transition-all duration-300 cursor-pointer overflow-hidden">
+    <article className="group relative bg-itec-box border border-itec-border/50 hover:border-itec-section-courses/50 hover:bg-itec-section-courses/5 rounded-[1.5rem] flex flex-col h-full transition-all duration-300 cursor-pointer overflow-hidden">
       
       {/* ── Portada y Badges ── */}
-      <div className="relative w-full aspect-video overflow-hidden bg-itec-sidebar shrink-0 border-b border-itec-border">
+      <div className="relative w-full aspect-video overflow-hidden bg-itec-sidebar shrink-0 border-b border-itec-border/50">
         <img
           src={imageUrl}
           alt={title}
@@ -28,7 +28,7 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
         
         <div className="absolute top-3 left-3 flex gap-2 z-10">
           {isOficial && (
-            <span className="bg-itec-section-courses/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest border border-white/10">
+            <span className="bg-itec-section-courses/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest border border-itec-border/50">
               Oficial
             </span>
           )}
@@ -36,7 +36,7 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
         
         <div className="absolute top-3 right-3 flex gap-2 z-10">
           {isComplete && (
-            <span className="bg-emerald-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest border border-white/10">
+            <span className="bg-emerald-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest border border-itec-border/50">
               ✓ Listo
             </span>
           )}
@@ -61,7 +61,7 @@ export const CourseCard: React.FC<Props> = ({ title, description, progress, imag
         </p>
         
         {/* ── Pie de tarjeta (Progreso y CTA) ── */}
-        <div className="mt-auto pt-5 border-t border-white/5 flex flex-col gap-4">
+        <div className="mt-auto pt-5 border-t border-itec-border/50 flex flex-col gap-4">
           {progress > 0 && <CourseProgressBadge percent={Math.round(progress)} showLabel={false} />}
           
           <div className="flex items-center justify-between w-full">

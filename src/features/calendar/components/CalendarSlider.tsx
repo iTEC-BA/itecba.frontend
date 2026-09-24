@@ -42,9 +42,9 @@ export const CalendarSlider: React.FC = () => {
           {Array.from({ length: 7 }).map((_, i) => (
             <div
               key={i}
-              className="flex flex-col shrink-0 w-36 sm:w-40 rounded-2xl border border-white/5 bg-itec-box animate-pulse overflow-hidden snap-start"
+              className="flex flex-col shrink-0 w-36 sm:w-40 rounded-2xl border border-itec-border/50 bg-itec-box animate-pulse overflow-hidden snap-start"
             >
-              <div className="h-16 bg-white/5 border-b border-white/5 w-full flex flex-col items-center justify-center gap-1">
+              <div className="h-16 bg-white/5 border-b border-itec-border/50 w-full flex flex-col items-center justify-center gap-1">
                 <div className="h-2 w-8 bg-white/10 rounded-full" />
                 <div className="h-6 w-10 bg-white/10 rounded-md" />
               </div>
@@ -84,7 +84,7 @@ export const CalendarSlider: React.FC = () => {
                 "group flex flex-col shrink-0 w-30 sm:w-40 rounded-2xl transition-all duration-300 cursor-pointer relative overflow-hidden snap-start hover:-translate-y-1",
                 isActive
                   ? "bg-itec-red/33 border border-itec-red/20"
-                  : "bg-itec-card border border-white/5 hover:border-white/15"
+                  : "bg-itec-card border border-itec-border/50 hover:border-itec-border/50"
               )}
             >
               {/* Sección superior: FECHA */}
@@ -92,7 +92,7 @@ export const CalendarSlider: React.FC = () => {
                 "flex flex-col items-center justify-center py-3 border-b relative",
                 isActive 
                   ? "bg-gradient-to-b from-itec-red/20 border-itec-red/30" 
-                  : "bg-white/[0.02] border-white/5 group-hover:bg-white/[0.04] transition-colors"
+                  : "bg-white/[0.02] border-itec-border/50 group-hover:bg-white/[0.04] transition-colors"
               )}>
                 {/* Ping Dot superior derecho */}
                 {isActive && (

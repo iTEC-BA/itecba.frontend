@@ -97,6 +97,7 @@ agregar_carpeta "src/features/$FEATURE_NAME"
 agregar_archivo "src/pages/LoginPage.tsx"
 agregar_carpeta "src/features/login"
 
+
 # agregar_archivo "src/pages/ProfilePage.tsx"
 # agregar_carpeta "src/features/profile"
 

@@ -8,7 +8,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
   const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=112x112&data=${encodeURIComponent(qrValue || "GUEST")}`;
 
   return (
-    <div className="relative overflow-hidden rounded-[1.8rem] border border-itec-border bg-itec-box">
+    <div className="relative overflow-hidden rounded-[1.8rem] border border-itec-border/50 bg-itec-box">
       <div className="relative overflow-hidden max-h-75 w-full">
         <SvgTarjeTec className="relative h-auto w-full" />
       </div>
@@ -21,7 +21,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
             <img src={qrSrc} alt="Código QR" width={56} height={56} className="h-auto max-w-full" />
           </div>
         </div>
-        <div className="rounded-xl border border-itec-border bg-itec-surface p-3">
+        <div className="rounded-xl border border-itec-border/50 bg-itec-surface p-3">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 text-xs md:text-[14px]">
               <p className="mt-0.5 truncate text-white/60">{user?.email}</p>
@@ -30,7 +30,7 @@ export const TarjeTec: React.FC<{ user: User }> = ({ user }) => {
                 <span className="text-white/75">{user?.specialty ?? "—"}</span>
               </p>
             </div>
-            <div className="rounded-xl border border-itec-border bg-itec-card px-3 py-2 flex gap-1 text-[8px] md:text-xs uppercase">
+            <div className="rounded-xl border border-itec-border/50 bg-itec-card px-3 py-2 flex gap-1 text-[8px] md:text-xs uppercase">
               <h5>Rol:</h5>
               <p className="font-bold text-itec-groups">{user?.role}</p>
             </div>

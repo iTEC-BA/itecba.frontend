@@ -5,7 +5,6 @@ import { PageHeader }     from "@/components/ui/PageHeader";
 import { PaginationBar }  from "@/components/ui/PaginationBar";
 import { usePagination }  from "@/hooks/usePagination";
 import { usePageTitle }   from "@/hooks/usePageTitle";
-import { useAuthStore }   from '@/stores/authStore';
 import { useToast }       from "@/features/notifications/components/atoms/Toast";
 
 import { useCourses, useDeleteCourse }  from "@/features/courses/hooks/useCourses";
@@ -19,6 +18,7 @@ import {
 import { AddCourseModal }    from "@/features/courses/components/organisms/AddCourseModal";
 import { BrokenVideosModal } from "@/features/courses/components/organisms/BrokenVideosModal";
 import type { CourseData }   from "@/features/courses/services/coursesService";
+import { useCoursePermissions } from "@/features/courses/hooks/useCoursePermissions";
 
 const PAGE_SIZE = 9;
 
@@ -46,7 +46,7 @@ const enrichWithProgress = (courses: CourseData[]): CourseWithLocalProgress[] =>
 export const CoursesPage: React.FC = () => {
   usePageTitle("Cursos");
 
-  const { isAdmin }  = useAuthStore();
+  const { canEditCourses, canManageCourses, canEditCourse, canDeleteCourse } = useCoursePermissions();
   const { toast }    = useToast();
   const deleteMutation = useDeleteCourse();
 
@@ -84,7 +84,7 @@ export const CoursesPage: React.FC = () => {
         iconType="video"
         colorTheme="course"
       >
-        {isAdmin && (
+        {canManageCourses && (
           <CourseAdminBar
             onAdd={() => setAddOpen(true)}
             onBrokenVideos={() => setBrokenOpen(true)}
@@ -99,21 +99,22 @@ export const CoursesPage: React.FC = () => {
           <p className="text-xs text-itec-gray whitespace-nowrap">
             Mostrando <span className="text-itec-text font-bold">{filteredCourses.length}</span> cursos disponibles
           </p>
-          <div className="flex-1 hidden sm:block border-t border-dashed border-white/10 mx-4"></div>
+          <div className="flex-1 hidden sm:block border-t border-dashed border-itec-border/50 mx-4"></div>
         </div>
 
         <CourseGrid
           courses={pagedWithProgress}
           isLoading={isLoading}
-          isAdmin={isAdmin}
+          canEditCourse={canEditCourse}
+          canDeleteCourse={canDeleteCourse}
           onDelete={handleDelete}
-          onEdit={isAdmin ? handleEdit : undefined}
+          onEdit={canEditCourses ? handleEdit : undefined}
         />
 
         <PaginationBar page={page} totalPages={totalPages} onChange={setPage} />
       </div>
 
-      {isAdmin && (
+      {canManageCourses && (
         <>
           <AddCourseModal
             isOpen={addOpen || !!editCourse}

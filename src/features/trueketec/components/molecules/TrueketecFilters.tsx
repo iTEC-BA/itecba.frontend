@@ -68,7 +68,7 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
           </div>
           <span className="text-sm font-bold">Buscar en el Directorio</span>
         </div>
-        <div className="flex rounded-lg bg-itec-surface p-1 border border-itec-border w-full sm:w-auto">
+        <div className="flex rounded-lg bg-itec-surface p-1 border border-itec-border/50 w-full sm:w-auto">
           <button
             onClick={() => { setMode("filtros"); setError(""); }}
             className={cn(
@@ -95,11 +95,11 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Departamento</label>
-              <CustomSelect value={departamento} onChange={setDept} options={deptOptions} placeholder="Elegir" className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg" />
+              <CustomSelect value={departamento} onChange={setDept} options={deptOptions} placeholder="Elegir" className="w-full bg-itec-surface border-itec-border/50 py-2.5 text-sm rounded-lg" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Nivel</label>
-              <CustomSelect value={nivel} onChange={(val) => { setNivel(val); setMateria(""); }} options={nivelOptions} placeholder="Todos" className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg" />
+              <CustomSelect value={nivel} onChange={(val) => { setNivel(val); setMateria(""); }} options={nivelOptions} placeholder="Todos" className="w-full bg-itec-surface border-itec-border/50 py-2.5 text-sm rounded-lg" />
             </div>
             <div className="flex flex-col gap-1.5 lg:col-span-2">
               <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Materia (tu carrera)</label>
@@ -109,12 +109,12 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
                 options={materiaSelectOptions}
                 placeholder={materiaSelectOptions.length ? "Elegir materia" : "Sin materias disponibles"}
                 disabled={materiaSelectOptions.length === 0}
-                className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg"
+                className="w-full bg-itec-surface border-itec-border/50 py-2.5 text-sm rounded-lg"
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Turno</label>
-              <CustomSelect value={turno} onChange={(val) => setTurno(val as TurnoDeseado | "")} options={turnoOptions} placeholder="Elegir" className="w-full bg-itec-surface border-itec-border py-2.5 text-sm rounded-lg" />
+              <CustomSelect value={turno} onChange={(val) => setTurno(val as TurnoDeseado | "")} options={turnoOptions} placeholder="Elegir" className="w-full bg-itec-surface border-itec-border/50 py-2.5 text-sm rounded-lg" />
             </div>
           </div>
         ) : (
@@ -122,7 +122,7 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
             <label className="text-[9px] font-bold uppercase tracking-widest text-itec-muted px-1">Código de comisión</label>
             <div className="relative w-full">
               <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-itec-muted" />
-              <Input placeholder="Ej: K1094" value={comision} onChange={(e) => setComision(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && apply()} fullWidth className="w-full bg-itec-surface border-itec-border rounded-lg pl-11 pr-4 py-3 font-mono text-sm" />
+              <Input placeholder="Ej: K1094" value={comision} onChange={(e) => setComision(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && apply()} fullWidth className="w-full bg-itec-surface border-itec-border/50 rounded-lg pl-11 pr-4 py-3 font-mono text-sm" />
             </div>
           </div>
         )}
@@ -132,7 +132,7 @@ export const TrueketecFiltersBar: React.FC<Props> = ({ initialFilters, onApply, 
             {error ? <span className="text-itec-red font-bold">{error}</span> : mode === "filtros" ? MENSAJES.ayudaFiltros : MENSAJES.ayudaComision}
           </span>
           <div className="flex gap-2 shrink-0">
-            <Button variant="slate" hierarchy="ghost" text="Restablecer" onClick={clear} className="text-xs bg-itec-surface border border-itec-border rounded-lg" />
+            <Button variant="slate" hierarchy="ghost" text="Restablecer" onClick={clear} className="text-xs bg-itec-surface border border-itec-border/50 rounded-lg" />
             <Button variant="primary" hierarchy="solid" text="Buscar" icon={<Search size={12} />} onClick={apply} disabled={!canSearch} className="px-6 py-2 text-xs rounded-lg bg-itec-section-trueketec text-white font-bold hover:bg-itec-section-trueketec/80" />
           </div>
         </div>

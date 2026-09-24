@@ -24,7 +24,7 @@ const SOURCE_CLS: Record<string, string> = {
   news: "bg-blue-500/10 text-blue-400 border-blue-500/15",
   rewards: "bg-itec-rewards/10 text-itec-rewards border-itec-rewards/15",
   points: "bg-green-500/10 text-green-400 border-green-500/15",
-  system: "bg-white/5 text-itec-text/50 border-white/8",
+  system: "bg-white/5 text-itec-text/50 border-itec-border/50",
   calendar: "bg-purple-500/10 text-purple-400 border-purple-500/15",
 };
 
@@ -50,7 +50,7 @@ export const NotificationDetailModal: React.FC<Props> = ({ item, onClose }) => {
   return (
     <LayoutModal isOpen onClose={onClose} title={item.title} maxWidth="max-w-lg">
       {/* Meta: fuente + fecha */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-white/6">
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-itec-border/50">
         <span
           className={`inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border ${labelCls}`}
         >

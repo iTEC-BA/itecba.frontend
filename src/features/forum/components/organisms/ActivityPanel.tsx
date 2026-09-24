@@ -17,7 +17,7 @@ const FollowBtn: React.FC = () => {
       className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all flex-shrink-0 ${
         following
           ? 'bg-itect-red bg-itec-red text-white'
-          : 'border-itec-border text-itec-text hover:border-purple-500 hover:text-purple-400'
+          : 'border-itec-border/50 text-itec-text hover:border-purple-500 hover:text-purple-400'
       }`}
     >
       {following ? 'Siguiendo' : 'Seguir'}
@@ -32,7 +32,7 @@ export const ActivityPanel: React.FC = () => (
     </div>
 
     {/* Sistema notif */}
-    <div className="flex gap-3 px-4 py-3 border-b border-itec-border hover:bg-white/1.5 transition-colors cursor-pointer">
+    <div className="flex gap-3 px-4 py-3 border-b border-itec-border/50 hover:bg-white/1.5 transition-colors cursor-pointer">
       <div className="w-11 h-11 rounded-xl bg-itect-red/20 border border-purple-500/20 flex items-center justify-center text-lg shrink-0">
         🎓
       </div>
@@ -45,7 +45,7 @@ export const ActivityPanel: React.FC = () => (
     </div>
 
     {SUGGESTIONS.map(s => (
-      <div key={s.id} className="flex items-center gap-3 px-4 py-3 border-b border-itec-border hover:bg-white/1.5 transition-colors">
+      <div key={s.id} className="flex items-center gap-3 px-4 py-3 border-b border-itec-border/50 hover:bg-white/1.5 transition-colors">
         <AnonAvatar pseudonym={s.name} size="md" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-itec-text truncate">{s.name.split('#')[0]}</p>

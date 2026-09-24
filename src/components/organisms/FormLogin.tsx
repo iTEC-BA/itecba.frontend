@@ -20,7 +20,7 @@ const FormLogin: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[85vh] px-4 w-full py-8">
-        <div className="w-full max-w-md bg-itec-box border border-itec-border rounded-[2rem] p-8 sm:p-10 flex flex-col items-center gap-6 text-center relative overflow-hidden shadow-xl">
+        <div className="w-full max-w-md bg-itec-box border border-itec-border/50 rounded-[2rem] p-8 sm:p-10 flex flex-col items-center gap-6 text-center relative overflow-hidden shadow-xl">
           
           {/* Línea superior flat roja institucional */}
           <div className="absolute top-0 left-0 w-full h-1.5 bg-itec-red-skye" />
@@ -79,7 +79,7 @@ const FormLogin: React.FC = () => {
           </div>
 
           {/* Botón de login real */}
-          <div className="w-full flex flex-col gap-4 mt-2 pt-6 border-t border-white/5">
+          <div className="w-full flex flex-col gap-4 mt-2 pt-6 border-t border-itec-border/50">
             <Button
               onClick={loginWithGoogle}
               variant="danger"
@@ -103,7 +103,7 @@ const FormLogin: React.FC = () => {
 
   // Fallback de carga post-login
   return (
-    <div className="flex h-64 items-center justify-center w-full bg-itec-box rounded-xl border border-itec-border mt-10">
+    <div className="flex h-64 items-center justify-center w-full bg-itec-box rounded-xl border border-itec-border/50 mt-10">
       <p className="text-itec-gray font-medium animate-pulse">
         Entrando a tu campus...
       </p>

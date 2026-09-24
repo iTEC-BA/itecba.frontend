@@ -28,7 +28,7 @@ export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
   const hasFilters = !!(carrera || nivel || materia || comision);
 
   return (
-    <div className="bg-itec-box border border-white/[0.07] rounded-xl p-4 sm:p-6 mb-5 relative">
+    <div className="bg-itec-box border border-itec-border/50 rounded-xl p-4 sm:p-6 mb-5 relative">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-itec-groups/40 to-transparent" />
       <div className="flex items-center gap-3 mb-5">
         <div className="w-9 h-9 bg-itec-groups/10 border border-itec-groups/20 rounded-xl flex items-center justify-center text-emerald-400">
@@ -72,12 +72,12 @@ export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
             value={comision}
             onChange={e => setComision(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && isSearchEnabled && handleSearch()}
-            className="text-sm py-3.5 bg-itec-box/50 border-itec-border hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl uppercase"
+            className="text-sm py-3.5 bg-itec-box/50 border-itec-border/50 hover:border-emerald-500/50 focus:border-emerald-500 transition-all rounded-xl uppercase"
           />
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/[0.06]">
+      <div className="flex items-center justify-between gap-3 pt-4 border-t border-itec-border/50">
         <p className="hidden sm:block text-[11px] text-itec-gray">
           💡 Tip: &quot;Homogéneas&quot; para materias básicas comunes a todas las carreras.
         </p>
@@ -100,7 +100,7 @@ export const GroupFilters: React.FC<Props> = ({ filters, isLoading }) => {
             }`}
           >
             {isLoading
-              ? <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />Buscando...</>
+              ? <><span className="w-3.5 h-3.5 border-2 border-itec-border/50 border-t-white rounded-full animate-spin inline-block" />Buscando...</>
               : 'Buscar grupos'
             }
           </button>

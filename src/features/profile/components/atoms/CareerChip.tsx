@@ -22,7 +22,7 @@ export const CareerChip: React.FC<CareerChipProps> = ({
       sm ? "text-[10px] px-2 py-0.5" : "text-xs px-2.5 py-1",
       active && colorClass
         ? colorClass
-        : "bg-itec-surface border-itec-border text-itec-muted"
+        : "bg-itec-surface border-itec-border/50 text-itec-muted"
     )}
   >
     {code && <span className="text-[9px] font-bold opacity-60">{code}</span>}

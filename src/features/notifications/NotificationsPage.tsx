@@ -5,7 +5,7 @@ import { Bell, Mail }     from "lucide-react";
 import { MainLayout }     from "@components/templates/MainLayout";
 import { usePageTitle }   from "@hooks/usePageTitle";
 import { useNotificationCenter } from "@features/notifications/hooks/useNotificationCenter";
-import { adminService }   from "@features/admin/services/adminService";
+import { adminService }   from "@/features/admin/services/admin.service";
 import { useInbox }       from "@features/notifications/hooks/useInbox";
 import { SectionTab, type TabId } from "@/features/notifications/components/organisms/SectionTab";
 import { UnreadBadge }    from "@features/notifications/components/atoms/UnreadBadge";

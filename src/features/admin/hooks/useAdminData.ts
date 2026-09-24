@@ -1,6 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAuth } from "firebase/auth";
-import { adminService } from "../services/adminService";
+import { adminService } from "../services/admin.service";
+import { useAuthStore, type Role } from "@/stores/authStore";
+import { useToast } from "@/features/notifications/components/atoms/Toast";
+import { getErrorDetails } from "@/lib/error-utils";
 
 const getToken = async () => {
   const token = await getAuth().currentUser?.getIdToken();
@@ -13,20 +16,32 @@ const BASE_URL = API_URL.replace('/api', ''); // Para acceder a /health
 
 export const useAdminData = () => {
   const queryClient = useQueryClient();
+  const canAccessAdminPanel = useAuthStore((state) => state.canAccessAdminPanel);
+  const { toast } = useToast();
 
   const { data: admins = [], isLoading: isLoadingAdmins } = useQuery({
     queryKey: ["adminUsers"],
     queryFn:  adminService.getAdmins,
+    enabled: canAccessAdminPanel,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: authorized = [], isLoading: isLoadingAuthorized } = useQuery({
+    queryKey: ["authorizedUsers"],
+    queryFn:  adminService.getAuthorized,
+    enabled: canAccessAdminPanel,
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: announcements = [], isLoading: isLoadingAnnouncements } = useQuery({
     queryKey: ["adminAnnouncements"],
     queryFn:  adminService.getActiveAnnouncements,
+    enabled: canAccessAdminPanel,
   });
 
   const { data: dashboardStats, isLoading: isLoadingStats } = useQuery({
     queryKey: ["adminDashboardStats"],
+    enabled: canAccessAdminPanel,
     queryFn: async () => {
       const token = await getToken();
 
@@ -77,13 +92,49 @@ export const useAdminData = () => {
 
   const searchUserMutation = useMutation({
     mutationFn: (email: string) => adminService.searchUserByEmail(email),
+    onError: () => toast.error("No se pudo buscar el usuario"),
   });
 
   const toggleRoleMutation = useMutation({
-    mutationFn: ({ userId, role }: { userId: string; role: "admin" | "student" }) =>
-      adminService.updateUserRole(userId, role),
+    mutationFn: ({ userId, role }: { userId: string; role: Role }) =>
+      adminService.updateUserRole(
+        userId,
+        role as Parameters<typeof adminService.updateUserRole>[1],
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+      toast.success("Rol actualizado correctamente");
+    },
+    onError: () => toast.error("No se pudo actualizar el rol"),
+  });
+
+  const createAuthorizedMutation = useMutation({
+    mutationFn: (user: Omit<Parameters<typeof adminService.postAuthorized>[0], "id">) =>
+      adminService.postAuthorized(user),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authorizedUsers"] });
+      toast.success("Usuario autorizado creado correctamente");
+    },
+    onError: (error: unknown) => {
+      const details = getErrorDetails(error);
+      console.error("Error al crear usuario autorizado", details);
+      toast.error(details.message || "No se pudo crear el usuario autorizado");
+    },
+  });
+
+  const updateAuthorizedMutation = useMutation({
+    mutationFn: ({ userId, data }: {
+      userId: string;
+      data: Parameters<typeof adminService.updateAuthorized>[1];
+    }) => adminService.updateAuthorized(userId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authorizedUsers"] });
+      toast.success("Usuario autorizado actualizado correctamente");
+    },
+    onError: (error: unknown) => {
+      const details = getErrorDetails(error);
+      console.error("Error al actualizar usuario autorizado", details);
+      toast.error(details.message || "No se pudo actualizar el usuario autorizado");
     },
   });
 
@@ -93,7 +144,9 @@ export const useAdminData = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminAnnouncements"] });
       queryClient.invalidateQueries({ queryKey: ["announcements", "active"] });
+      toast.success("Anuncio creado correctamente");
     },
+    onError: () => toast.error("No se pudo crear el anuncio"),
   });
 
   const deleteAnnouncementMutation = useMutation({
@@ -101,7 +154,9 @@ export const useAdminData = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminAnnouncements"] });
       queryClient.invalidateQueries({ queryKey: ["announcements", "active"] });
+      toast.success("Anuncio eliminado correctamente");
     },
+    onError: () => toast.error("No se pudo eliminar el anuncio"),
   });
 
   const stats = {
@@ -124,6 +179,8 @@ export const useAdminData = () => {
   const loading = isLoadingAdmins || isLoadingAnnouncements || isLoadingStats;
 
   return {
+    authorized,
+    isLoadingAuthorized,
     admins,
     isLoadingAdmins,
     announcements,
@@ -132,6 +189,8 @@ export const useAdminData = () => {
     loading,
     searchUserMutation,
     toggleRoleMutation,
+    createAuthorizedMutation,
+    updateAuthorizedMutation,
     createAnnouncementMutation,
     deleteAnnouncementMutation,
   };

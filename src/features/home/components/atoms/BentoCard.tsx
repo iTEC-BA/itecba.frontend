@@ -28,7 +28,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
     <Tag
       onClick={onClick}
       className={[
-        'bg-itec-box border border-white/[0.07] rounded-xl',
+        'bg-itec-box border border-itec-border/50 rounded-xl',
         'transition-all duration-200',
         hover ? GLOW[glow] : '',
         onClick ? 'cursor-pointer text-left w-full' : '',

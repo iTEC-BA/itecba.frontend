@@ -21,7 +21,7 @@ export const CalendarWidget: React.FC = () => {
         </Link>
       </div>
 
-      <div className="flex flex-col rounded-xl border border-white/5 bg-white/[0.02] overflow-hidden">
+      <div className="flex flex-col rounded-xl border border-itec-border/50 bg-white/[0.02] overflow-hidden">
         {loading ? (
           <div className="p-4 space-y-3">
             {[1, 2].map((i) => (
@@ -49,7 +49,7 @@ export const CalendarWidget: React.FC = () => {
               return (
                 <div key={ev.id} className="flex items-start gap-3 p-3 transition-colors hover:bg-white/[0.02]">
                   {/* Fecha */}
-                  <div className="flex flex-col items-center justify-center bg-itec-box border border-white/10 rounded-md w-9 py-1 shrink-0">
+                  <div className="flex flex-col items-center justify-center bg-itec-box border border-itec-border/50 rounded-md w-9 py-1 shrink-0">
                     <span className="text-[8px] font-bold uppercase text-itec-muted">{month}</span>
                     <span className="text-xs font-black text-white">{day}</span>
                   </div>

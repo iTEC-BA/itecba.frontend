@@ -70,7 +70,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
       <div className="w-full sm:max-w-lg bg-itec-box border border-itec-gray/30 rounded-t-3xl sm:rounded-xl shadow-2xl shadow-black/50 flex flex-col max-h-[92dvh] sm:max-h-[90vh]">
 
         {/* Header fijo */}
-        <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-itec-border shrink-0">
+        <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-itec-border/50 shrink-0">
           <div>
             <h2 className="text-xl font-bold text-itec-text">Aportar Material</h2>
             <p className="text-xs text-itec-gray mt-0.5">
@@ -147,7 +147,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     <ul className="absolute z-50 top-full mt-1 w-full max-h-40 overflow-y-auto bg-itec-sidebar border border-itec-gray/40 rounded-xl shadow-2xl shadow-black/40">
                       {filteredOptions.map(m => (
                         <li key={m} onMouseDown={() => handleSelectMateria(m)}
-                          className="px-3 py-2.5 text-sm text-itec-text hover:bg-orange-600/80 cursor-pointer border-b border-itec-border last:border-0 transition-colors truncate">
+                          className="px-3 py-2.5 text-sm text-itec-text hover:bg-orange-600/80 cursor-pointer border-b border-itec-border/50 last:border-0 transition-colors truncate">
                           {m}
                         </li>
                       ))}
@@ -179,7 +179,7 @@ export const AddResourceModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
 
         {!successInfo && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-itec-border shrink-0">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-itec-border/50 shrink-0">
             <Button onClick={onClose} disabled={mutation.isPending}
               className="px-4 py-2 text-sm bg-transparent border border-itec-gray/40 text-itec-gray hover:text-itec-text hover:border-itec-gray transition-colors rounded-xl">
               Cancelar

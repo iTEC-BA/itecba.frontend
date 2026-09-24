@@ -41,7 +41,7 @@ export const ChatInterface: React.FC = () => {
   return (
     <div className="flex flex-col h-dvh bg-itec-bg overflow-hidden">
       {/* Header */}
-      <header className="shrink-0 flex items-center justify-between px-4 py-3 border-b border-itec-border bg-itec-box backdrop-blur-xl">
+      <header className="shrink-0 flex items-center justify-between px-4 py-3 border-b border-itec-border/50 bg-itec-box backdrop-blur-xl">
         <div className="flex items-center gap-3">
           {/* Botón volver atrás */}
           <button
@@ -116,7 +116,7 @@ export const ChatInterface: React.FC = () => {
       </div>
 
       {/* Barra inferior */}
-      <div className="shrink-0 border-t border-itec-border bg-itec-box backdrop-blur-xl pb-[env(safe-area-inset-bottom)] px-4 py-3">
+      <div className="shrink-0 border-t border-itec-border/50 bg-itec-box backdrop-blur-xl pb-[env(safe-area-inset-bottom)] px-4 py-3">
         <div className="max-w-2xl mx-auto space-y-2">
           {/* Toggle IA */}
           {isAuthenticated && (
@@ -128,8 +128,8 @@ export const ChatInterface: React.FC = () => {
                 mode === "ai"
                   ? "bg-violet-500/20 border-violet-500/40 text-violet-300"
                   : canUseAI
-                    ? "bg-white/5 border-white/10 text-white/50 hover:border-white/20 hover:text-white/70"
-                    : "bg-white/3 border-white/5 text-white/20 cursor-not-allowed"
+                    ? "bg-white/5 border-itec-border/50 text-white/50 hover:border-itec-border/50 hover:text-white/70"
+                    : "bg-white/3 border-itec-border/50 text-white/20 cursor-not-allowed"
               }`}
             >
               <span

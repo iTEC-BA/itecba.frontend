@@ -14,7 +14,7 @@ export default function ChipTarjetec({
   if (!showReminder) return null
 
   return (
-    <div className="relative flex w-full flex-col gap-3 overflow-hidden rounded-xl border border-itec-border bg-itec-box p-3 shadow-sm animate-in slide-in-from-top-2 fade-in duration-300 sm:flex-row sm:items-center sm:justify-between">
+    <div className="relative flex w-full flex-col gap-3 overflow-hidden rounded-xl border border-itec-border/50 bg-itec-box p-3 shadow-sm animate-in slide-in-from-top-2 fade-in duration-300 sm:flex-row sm:items-center sm:justify-between">
       <div className="absolute left-0 top-0 h-full w-1.5 bg-itec-red-skye" />
 
       <div className="flex items-center gap-3 pl-2">

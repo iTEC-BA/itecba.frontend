@@ -36,11 +36,11 @@ export const WhatsAppGroupsList: React.FC = () => {
             href={group.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center justify-between p-4 rounded-xl border border-white/5 bg-itec-box hover:bg-white/[0.02] hover:border-white/10 transition-all duration-200 active:scale-[0.98]"
+            className="group flex items-center justify-between p-4 rounded-xl border border-itec-border/50 bg-itec-box hover:bg-white/[0.02] hover:border-itec-border/50 transition-all duration-200 active:scale-[0.98]"
           >
             {/* Lado izquierdo: Logo WA + Título */}
             <div className="flex items-center gap-4 min-w-0">
-              <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-lg bg-white/5 border border-white/10 text-itec-muted group-hover:text-emerald-400 group-hover:border-emerald-500/30 group-hover:bg-emerald-500/10 transition-colors duration-300">
+              <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-lg bg-white/5 border border-itec-border/50 text-itec-muted group-hover:text-emerald-400 group-hover:border-emerald-500/30 group-hover:bg-emerald-500/10 transition-colors duration-300">
                 <Icons type="whatsapp" className="w-5 h-5" />
               </div>
               <div className="flex flex-col min-w-0">

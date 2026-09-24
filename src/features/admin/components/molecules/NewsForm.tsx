@@ -21,7 +21,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
   const isFormValid = form.title.trim().length > 0 && form.message.trim().length > 0;
 
   return (
-    <div className="flex flex-col gap-5 rounded-xl border border-itec-border bg-itec-box p-5 sm:p-6">
+    <div className="flex flex-col gap-5 rounded-xl border border-itec-border/50 bg-itec-box p-5 sm:p-6">
       <div className="flex flex-col gap-1">
         <h3 className="text-sm font-bold text-itec-text">Redactar aviso</h3>
         <p className="text-xs text-itec-muted">Completá los datos para enviar un mensaje masivo a todos los estudiantes.</p>
@@ -36,7 +36,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
             placeholder="Ej: Apertura de inscripciones 2026"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
-            className="w-full bg-transparent border border-itec-border rounded-lg px-4 py-3 text-sm text-itec-text focus:outline-none focus:border-white/30 transition-all placeholder:text-itec-muted/50"
+            className="w-full bg-transparent border border-itec-border/50 rounded-lg px-4 py-3 text-sm text-itec-text focus:outline-none focus:border-itec-border/50 transition-all placeholder:text-itec-muted/50"
           />
         </div>
 
@@ -47,7 +47,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
             placeholder="Detallá la información aquí..."
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
-            className="min-h-[140px] w-full resize-none bg-transparent border border-itec-border rounded-lg px-4 py-3 text-sm text-itec-text focus:outline-none focus:border-white/30 transition-all placeholder:text-itec-muted/50 custom-scrollbar"
+            className="min-h-[140px] w-full resize-none bg-transparent border border-itec-border/50 rounded-lg px-4 py-3 text-sm text-itec-text focus:outline-none focus:border-itec-border/50 transition-all placeholder:text-itec-muted/50 custom-scrollbar"
           />
         </div>
 
@@ -59,7 +59,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
             <select
               value={form.hours}
               onChange={(e) => setForm({ ...form, hours: e.target.value })}
-              className="w-full appearance-none bg-transparent border border-itec-border rounded-lg px-4 py-2.5 text-sm text-itec-text focus:outline-none focus:border-white/30 transition-all cursor-pointer"
+              className="w-full appearance-none bg-transparent border border-itec-border/50 rounded-lg px-4 py-2.5 text-sm text-itec-text focus:outline-none focus:border-itec-border/50 transition-all cursor-pointer"
             >
               <option value="5" className="bg-itec-bg">5 horas</option>
               <option value="12" className="bg-itec-bg">12 horas</option>
@@ -74,7 +74,7 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
                 "flex items-center justify-center gap-2 h-[42px] rounded-lg border cursor-pointer transition-all text-xs font-bold select-none",
                 form.isCritical 
                   ? "bg-itec-red/10 border-itec-red/30 text-itec-red" 
-                  : "bg-transparent border-itec-border text-itec-text hover:bg-white/5"
+                  : "bg-transparent border-itec-border/50 text-itec-text hover:bg-white/5"
               )}
             >
               <input
@@ -96,11 +96,11 @@ export const NewsForm: React.FC<Props> = ({ createMutation }) => {
             "mt-2 flex items-center justify-center gap-2 w-full text-xs font-bold py-3 rounded-lg transition-colors disabled:cursor-not-allowed",
             isFormValid 
               ? "bg-white/10 hover:bg-white/20 text-white border border-transparent" 
-              : "bg-transparent border border-itec-border text-itec-muted/50"
+              : "bg-transparent border border-itec-border/50 text-itec-muted/50"
           )}
         >
           {createMutation.isPending ? (
-            <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+            <span className="w-4 h-4 border-2 border-itec-border/50 border-t-white rounded-full animate-spin" />
           ) : (
             <Send className="w-4 h-4" />
           )}

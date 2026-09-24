@@ -98,7 +98,7 @@ export const GroupResults: React.FC<Props> = ({
       </div>
       <button
         onClick={onClear}
-        className="self-start sm:self-auto flex items-center gap-1.5 text-xs font-bold text-itec-gray hover:text-itec-text bg-itec-box border border-white/8 hover:border-white/20 px-4 py-2 rounded-xl transition-all active:scale-95"
+        className="self-start sm:self-auto flex items-center gap-1.5 text-xs font-bold text-itec-gray hover:text-itec-text bg-itec-box border border-itec-border/50 hover:border-itec-border/50 px-4 py-2 rounded-xl transition-all active:scale-95"
       >
         ← Volver
       </button>

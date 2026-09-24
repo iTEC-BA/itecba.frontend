@@ -28,7 +28,7 @@ export const ReportVideoModal: React.FC<Props> = ({ isOpen, onClose, courseId, v
     <LayoutModal isOpen={isOpen} onClose={handleClose} title="Reportar video" description={videoTitle} maxWidth="max-w-md">
       <div className="p-5">
         {isSuccess ? (
-          <div className="flex flex-col items-center gap-3 py-6 text-center border border-dashed border-itec-border rounded-xl bg-itec-sidebar">
+          <div className="flex flex-col items-center gap-3 py-6 text-center border border-dashed border-itec-border/50 rounded-xl bg-itec-sidebar">
             <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center">
               <Icons type="check" className="w-6 h-6 text-emerald-400" />
             </div>
@@ -44,7 +44,7 @@ export const ReportVideoModal: React.FC<Props> = ({ isOpen, onClose, courseId, v
                 <label key={r.value} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
                     reason === r.value
                       ? "border-itec-section-courses bg-itec-section-courses/10 text-itec-text"
-                      : "border-itec-border hover:border-itec-gray text-itec-gray bg-itec-box"
+                      : "border-itec-border/50 hover:border-itec-gray text-itec-gray bg-itec-box"
                   }`}>
                   <input type="radio" name="reason" value={r.value} checked={reason === r.value} onChange={() => setReason(r.value)} className="accent-itec-section-courses shrink-0" />
                   <span className="text-sm">{r.emoji} {r.label}</span>
@@ -52,7 +52,7 @@ export const ReportVideoModal: React.FC<Props> = ({ isOpen, onClose, courseId, v
               ))}
             </div>
             {isError && <p className="mb-3 text-xs text-itec-red bg-itec-red/10 border border-itec-red/20 px-3 py-2 rounded-lg">{errorMsg}</p>}
-            <div className="flex gap-2 border-t border-itec-border pt-4">
+            <div className="flex gap-2 border-t border-itec-border/50 pt-4">
               <Button variant="slate" hierarchy="ghost" onClick={handleClose} className="flex-1">Cancelar</Button>
               <Button variant="danger" hierarchy="solid" onClick={handleSubmit} isLoading={isLoading} className="flex-1">Enviar reporte</Button>
             </div>

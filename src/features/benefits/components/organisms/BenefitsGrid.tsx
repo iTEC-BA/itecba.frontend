@@ -44,7 +44,7 @@ export const BenefitsGrid: React.FC = () => {
             placeholder="Buscar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-10 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-white/30"
+            className="w-full rounded-xl border border-itec-border/50 bg-white/5 py-2.5 pl-10 pr-10 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-itec-border/50"
           />
           {search && (
             <button
@@ -67,11 +67,11 @@ export const BenefitsGrid: React.FC = () => {
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-64 animate-pulse rounded-2xl border border-white/10 bg-white/5" />
+            <div key={i} className="h-64 animate-pulse rounded-2xl border border-itec-border/50 bg-white/5" />
           ))}
         </div>
       ) : visible.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/10 bg-white/5 py-20 text-center">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-itec-border/50 bg-white/5 py-20 text-center">
           <Gift className="h-10 w-10 text-white/20" />
           <p className="text-sm font-bold text-white/60">No se encontraron resultados</p>
           <p className="text-xs text-white/40">Probá con otro término de búsqueda u otra categoría.</p>

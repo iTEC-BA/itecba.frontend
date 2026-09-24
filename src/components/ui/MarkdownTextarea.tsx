@@ -39,7 +39,7 @@ export const MarkdownTextarea: React.FC<Props> = ({
             "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide border transition-all",
             showPreview
               ? "bg-itec-section-courses text-white border-itec-section-courses"
-              : "bg-itec-box border-itec-border text-itec-gray hover:text-itec-text"
+              : "bg-itec-box border-itec-border/50 text-itec-gray hover:text-itec-text"
           )}
         >
           {showPreview ? <Pencil className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
@@ -50,7 +50,7 @@ export const MarkdownTextarea: React.FC<Props> = ({
       {showPreview ? (
         <div
           className={cn(
-            "w-full bg-itec-box border border-itec-border rounded-lg px-3 py-2 min-h-[60px] overflow-y-auto custom-scrollbar",
+            "w-full bg-itec-box border border-itec-border/50 rounded-lg px-3 py-2 min-h-[60px] overflow-y-auto custom-scrollbar",
             textareaClassName
           )}
         >
@@ -66,7 +66,7 @@ export const MarkdownTextarea: React.FC<Props> = ({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            "w-full bg-itec-box border border-itec-border rounded-lg px-3 py-2 text-xs text-itec-text placeholder-itec-gray/40 outline-none focus:border-itec-section-courses/50 min-h-[60px] resize-y custom-scrollbar",
+            "w-full bg-itec-box border border-itec-border/50 rounded-lg px-3 py-2 text-xs text-itec-text placeholder-itec-gray/40 outline-none focus:border-itec-section-courses/50 min-h-[60px] resize-y custom-scrollbar",
             textareaClassName
           )}
           {...rest}

@@ -8,7 +8,7 @@ export const TerminosPage: React.FC = () => {
   return (
     <MainLayout>
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 animate-fade-in">
-        <div className="mb-8 border-b border-itec-border pb-6">
+        <div className="mb-8 border-b border-itec-border/50 pb-6">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-itec-muted mb-2">Legal</p>
           <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Términos y Condiciones de Uso

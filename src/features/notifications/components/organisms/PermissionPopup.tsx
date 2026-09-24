@@ -47,7 +47,7 @@ export const PermissionPopup: React.FC = () => {
         />
 
         <div className="flex flex-col gap-3 w-full mb-6 text-left">
-          <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10">
+          <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-itec-border/50">
             <div className="p-2 bg-itec-red-skye/10 text-itec-red-skye rounded-lg shrink-0">
               <Bell className="w-4 h-4" />
             </div>
@@ -57,7 +57,7 @@ export const PermissionPopup: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10">
+          <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-itec-border/50">
             <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg shrink-0">
               <Database className="w-4 h-4" />
             </div>

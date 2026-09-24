@@ -49,7 +49,7 @@ export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onM
           </p>
         </div>
         {isAdmin && (
-          <button onClick={onManageClick} className="w-7 h-7 rounded-md bg-itec-sidebar border border-itec-border flex items-center justify-center text-itec-gray hover:text-itec-section-admission transition-colors cursor-pointer">
+          <button onClick={onManageClick} className="w-7 h-7 rounded-md bg-itec-sidebar border border-itec-border/50 flex items-center justify-center text-itec-gray hover:text-itec-section-admission transition-colors cursor-pointer">
             <Icons type="edit" className="w-3.5 h-3.5" />
           </button>
         )}
@@ -57,11 +57,11 @@ export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onM
 
       {nextEvent ? (
         <div className="flex gap-2 justify-between text-center">
-          <div className="bg-itec-sidebar border border-itec-border rounded-lg flex-1 py-2">
+          <div className="bg-itec-sidebar border border-itec-border/50 rounded-lg flex-1 py-2">
             <span className="block text-lg font-bold text-itec-text mb-0.5">{timeLeft.days}</span>
             <span className="text-[9px] text-itec-gray uppercase tracking-wider">Días</span>
           </div>
-          <div className="bg-itec-sidebar border border-itec-border rounded-lg flex-1 py-2">
+          <div className="bg-itec-sidebar border border-itec-border/50 rounded-lg flex-1 py-2">
             <span className="block text-lg font-bold text-itec-text mb-0.5">{timeLeft.hours}</span>
             <span className="text-[9px] text-itec-gray uppercase tracking-wider">Hrs</span>
           </div>
@@ -71,7 +71,7 @@ export const AdmissionCountdownWidget: React.FC<Props> = ({ events, isAdmin, onM
           </div>
         </div>
       ) : (
-        <div className="bg-itec-sidebar border border-itec-border rounded-lg py-3 text-center">
+        <div className="bg-itec-sidebar border border-itec-border/50 rounded-lg py-3 text-center">
           <span className="text-xs text-itec-gray">Agrega una fecha desde el panel</span>
         </div>
       )}

@@ -45,10 +45,10 @@ const GradeDetailPage: React.FC = () => {
           colorTheme="blue"
         >
           <div className="flex gap-2 flex-wrap">
-            <span className="text-[11px] bg-itec-box border border-itec-border text-itec-description font-medium px-3 py-1.5 rounded-lg">
+            <span className="text-[11px] bg-itec-box border border-itec-border/50 text-itec-description font-medium px-3 py-1.5 rounded-lg">
               🕐 {config.duracion}
             </span>
-            <span className="text-[11px] bg-itec-box border border-itec-border text-itec-description font-medium px-3 py-1.5 rounded-lg">
+            <span className="text-[11px] bg-itec-box border border-itec-border/50 text-itec-description font-medium px-3 py-1.5 rounded-lg">
               🎓 {config.grado}
             </span>
           </div>
@@ -56,7 +56,7 @@ const GradeDetailPage: React.FC = () => {
 
         {/* 2. Descripción en Markdown */}
         {config.descripcionMd && (
-          <div className="bg-itec-card border border-itec-border rounded-xl p-5">
+          <div className="bg-itec-card border border-itec-border/50 rounded-xl p-5">
             <MarkdownContent content={config.descripcionMd} />
           </div>
         )}

@@ -21,7 +21,7 @@ export const CourseSearchInput: React.FC<Props> = ({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full bg-itec-sidebar border border-itec-border text-itec-text rounded-xl pl-11 pr-10 py-3 text-sm focus:outline-none focus:border-itec-section-courses transition-colors placeholder:text-itec-gray/60 disabled:opacity-40 hover:border-itec-section-courses/60"
+      className="w-full bg-itec-sidebar border border-itec-border/50 text-itec-text rounded-xl pl-11 pr-10 py-3 text-sm focus:outline-none focus:border-itec-section-courses transition-colors placeholder:text-itec-gray/60 disabled:opacity-40 hover:border-itec-section-courses/60"
     />
     {value && !disabled && (
       <button

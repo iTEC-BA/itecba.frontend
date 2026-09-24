@@ -17,7 +17,7 @@ const TABS: { key: BenefitFilter; label: string; icon: React.ElementType }[] = [
 
 export const BenefitFilterTabs: React.FC<Props> = ({ active, onChange, counts }) => {
   return (
-    <div className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-xl border border-white/10 bg-white/5 p-1 no-scrollbar">
+    <div className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-xl border border-itec-border/50 bg-white/5 p-1 no-scrollbar">
       {TABS.map((tab) => {
         const Icon = tab.icon;
         const isActive = active === tab.key;

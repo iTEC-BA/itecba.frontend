@@ -20,7 +20,7 @@ const EMPTY_FAQ: Partial<FAQ> = {
 
 // ── Estilos reutilizables ──────────────────────────────────────────────────
 const inputCls =
-  "w-full bg-white/5 border border-white/10 text-white text-sm px-3 py-2.5 rounded-xl outline-none focus:border-white/25 transition-colors placeholder:text-white/25";
+  "w-full bg-white/5 border border-itec-border/50 text-white text-sm px-3 py-2.5 rounded-xl outline-none focus:border-itec-border/50 transition-colors placeholder:text-white/25";
 const labelCls =
   "block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5";
 const btnPrimary =
@@ -128,7 +128,7 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
       <div className="flex flex-col">
 
           {/* Tabs */}
-          <div className="flex gap-1 px-6 pt-4 shrink-0 border-b border-white/5 pb-3">
+          <div className="flex gap-1 px-6 pt-4 shrink-0 border-b border-itec-border/50 pb-3">
             {TABS.map(t => (
               <button
                 key={t.id}
@@ -240,7 +240,7 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                     {filtered.map(faq => (
                       <div
                         key={faq._id}
-                        className="group bg-white/3 border border-white/8 rounded-xl p-4 flex items-start gap-3"
+                        className="group bg-white/3 border border-itec-border/50 rounded-xl p-4 flex items-start gap-3"
                       >
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-white truncate">{faq.question}</p>
@@ -362,7 +362,7 @@ export const FAQAdminPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                 </form>
 
                 {/* Limpiar cache manualmente */}
-                <div className="border-t border-white/5 pt-4 space-y-2">
+                <div className="border-t border-itec-border/50 pt-4 space-y-2">
                   <p className="text-xs text-white/40">
                     El cache del prompt se limpia automáticamente al guardar. Usá este botón si cambiaste datos externos (FAQs, calendario).
                   </p>

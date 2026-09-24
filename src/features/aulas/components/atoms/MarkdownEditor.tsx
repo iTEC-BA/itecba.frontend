@@ -14,13 +14,13 @@ interface Props {
 
 const fieldCls =
   "w-full px-4 py-2.5 text-sm rounded-b-2xl rounded-tr-2xl bg-itec-surface " +
-  "border border-itec-border text-itec-text outline-none focus:border-itec-sky " +
+  "border border-itec-border/50 text-itec-text outline-none focus:border-itec-sky " +
   "transition-colors placeholder:text-itec-muted/60 resize-none font-mono";
 
 const tabCls = (active: boolean) =>
   `px-4 py-1.5 text-xs font-semibold rounded-t-xl transition-colors cursor-pointer select-none ${
     active
-      ? "bg-itec-surface border border-b-0 border-itec-border text-itec-text"
+      ? "bg-itec-surface border border-b-0 border-itec-border/50 text-itec-text"
       : "text-itec-muted hover:text-itec-text"
   }`;
 
@@ -78,7 +78,7 @@ export const MarkdownEditor: React.FC<Props> = ({
       {/* Panel Preview */}
       {tab === "preview" && (
         <div
-          className="w-full px-2 py-1 rounded-b-2xl rounded-tr-2xl bg-itec-surface border border-itec-border overflow-auto"
+          className="w-full px-2 py-1 rounded-b-2xl rounded-tr-2xl bg-itec-surface border border-itec-border/50 overflow-auto"
           style={{ minHeight: `${rows * 1.75}rem` }}
         >
           {value.trim() ? (
@@ -110,7 +110,7 @@ export const MarkdownEditor: React.FC<Props> = ({
                     </pre>
                   ),
                   // Separador
-                  hr:     () => <hr className="border-itec-border my-4" />,
+                  hr:     () => <hr className="border-itec-border/50 my-4" />,
                   // Blockquote
                   blockquote: ({ children }) => (
                     <blockquote className="border-l-4 border-itec-sky/50 pl-4 italic text-itec-muted/80 my-3">

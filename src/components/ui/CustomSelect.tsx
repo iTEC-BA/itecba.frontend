@@ -43,15 +43,15 @@ export const CustomSelect: React.FC<Props> = ({
           fullWidth readOnly disabled={disabled}
           placeholder={placeholder} 
           value={selectedLabel} 
-          className={cn("cursor-pointer text-xs rounded-md disabled:cursor-not-allowed select-none border border-itec-border hover:border-itec-description p-2", className)} 
+          className={cn("cursor-pointer text-xs rounded-md disabled:cursor-not-allowed select-none border border-itec-border/50 hover:border-itec-description p-2", className)} 
         />
       </div>
       {isOpen && !disabled && (
-        <ul className="absolute z-20 w-full top-full mt-2 bg-itec-card border border-itec-border rounded-md max-h-60 overflow-y-scroll">
+        <ul className="absolute z-100 w-full top-full mt-2 bg-itec-card border border-itec-border/50 rounded-md max-h-60 overflow-y-scroll">
           {options.map((opt) => (
             <li 
               key={opt.value} onClick={() => { onChange(opt.value); setIsOpen(false); }} 
-              className="cursor-pointer px-4 py-3 text-xs text-slate-300 hover:bg-itec-bg hover:text-itec-text border-b border-white/5 last:border-0 transition-colors"
+              className="cursor-pointer px-4 py-3 text-xs text-slate-300 hover:bg-itec-bg hover:text-itec-text border-b border-itec-border/50 last:border-0 transition-colors"
             >
               {opt.label}
             </li>

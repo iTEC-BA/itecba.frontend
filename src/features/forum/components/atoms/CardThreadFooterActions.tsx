@@ -22,7 +22,7 @@ export const CardThreadFooterActions: React.FC<FooterProps> = ({
 
   return (
     <div
-      className="flex items-center justify-between max-w-xs text-itec-muted mt-1"
+      className="flex items-center justify-between max-w-sm text-itec-muted mt-2"
       onClick={(e) => e.stopPropagation()}
     >
       <button
@@ -32,7 +32,7 @@ export const CardThreadFooterActions: React.FC<FooterProps> = ({
         <div className="p-1.5 group-hover/b:bg-itec-blue/10 rounded-full">
           <MessageCircle size={16} />
         </div>
-        <span className="text-xs font-mono">{post.reply_count}</span>
+        <span className="text-[11px] font-mono">{post.reply_count || 0}</span>
       </button>
 
       <button

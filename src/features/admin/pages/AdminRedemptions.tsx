@@ -5,7 +5,7 @@ import { Icons } from "@components/ui/icons/Icons";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
 import { LayoutModal } from "@components/templates/LayoutModal";
-import { adminRedemptionsService } from "../services/adminRedemptionsService";
+import { adminRedemptionsService } from "../services/adminRedemptions.service";
 import type { RedemptionRecord } from "@features/benefits/types/benefits";
 
 const getStatusInfo = (status: string) => {
@@ -31,8 +31,8 @@ const MessageModal: React.FC<{ email: string; uid: string; onClose: () => void }
   return (
     <LayoutModal isOpen onClose={onClose} title="Mensaje directo" description={email} maxWidth="max-w-md">
       <form onSubmit={(e) => { e.preventDefault(); sendMutation.mutate(); }} className="space-y-4 p-5">
-        <Input required fullWidth placeholder="Asunto" value={form.subject} onChange={e => setForm(f => ({...f, subject: e.target.value}))} className="rounded-xl border border-itec-border bg-itec-surface/80 px-4 py-2.5 text-sm" />
-        <textarea required rows={5} placeholder="Escribí el aviso..." value={form.content} onChange={e => setForm(f => ({...f, content: e.target.value}))} className="w-full resize-none rounded-xl border border-itec-border bg-itec-surface/80 px-4 py-2.5 text-sm text-itec-text outline-none" />
+        <Input required fullWidth placeholder="Asunto" value={form.subject} onChange={e => setForm(f => ({...f, subject: e.target.value}))} className="rounded-xl border border-itec-border/50 bg-itec-surface/80 px-4 py-2.5 text-sm" />
+        <textarea required rows={5} placeholder="Escribí el aviso..." value={form.content} onChange={e => setForm(f => ({...f, content: e.target.value}))} className="w-full resize-none rounded-xl border border-itec-border/50 bg-itec-surface/80 px-4 py-2.5 text-sm text-itec-text outline-none" />
         <div className="flex gap-3">
           <Button type="button" variant="slate" hierarchy="ghost" onClick={onClose} fullWidth text="Cancelar" />
           <Button type="submit" variant="primary" fullWidth isLoading={sendMutation.isPending} text="Enviar aviso" />
@@ -65,13 +65,13 @@ export const AdminRedemptions: React.FC = () => {
         </div>
         <div className="relative w-full md:w-64">
            <Icons type="search" className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
-           <input type="text" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-all" />
+           <input type="text" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-white/5 border border-itec-border/50 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-itec-border/50 transition-all" />
         </div>
       </div>
 
-      <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-white/5 bg-itec-box">
+      <div className="w-full overflow-x-auto custom-scrollbar rounded-xl border border-itec-border/50 bg-itec-box">
         <table className="w-full min-w-[600px] text-xs text-left whitespace-nowrap">
-          <thead className="bg-white/5 border-b border-white/10">
+          <thead className="bg-white/5 border-b border-itec-border/50">
             <tr>
               <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Usuario</th>
               <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-itec-muted">Beneficio</th>

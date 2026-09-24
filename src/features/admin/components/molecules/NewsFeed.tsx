@@ -1,6 +1,6 @@
 import React from "react";
 import type { UseMutationResult } from "@tanstack/react-query";
-import type { AnnouncementData } from "../../services/adminService";
+import type { AnnouncementData } from "../../services/admin.service";
 import { Trash2, Clock, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
     return (
       <div className="flex flex-col gap-3">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-28 animate-pulse rounded-xl bg-white/5 border border-itec-border" />
+          <div key={i} className="h-28 animate-pulse rounded-xl bg-white/5 border border-itec-border/50" />
         ))}
       </div>
     );
@@ -23,7 +23,7 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
 
   if (announcements.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-center rounded-xl border border-itec-border bg-transparent">
+      <div className="flex flex-col items-center justify-center p-8 text-center rounded-xl border border-itec-border/50 bg-transparent">
         <p className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Bandeja vacía</p>
         <p className="mt-1 text-xs text-itec-muted/70">No hay avisos activos en este momento.</p>
       </div>
@@ -45,7 +45,7 @@ export const NewsFeed: React.FC<Props> = ({ announcements, isLoading, deleteMuta
             key={a.id} 
             className={cn(
               "flex flex-col gap-4 p-5 rounded-xl border relative transition-colors", 
-              isCrit ? "border-itec-red/40 bg-transparent" : "border-itec-border bg-transparent hover:bg-white/[0.02]"
+              isCrit ? "border-itec-red/40 bg-transparent" : "border-itec-border/50 bg-transparent hover:bg-white/[0.02]"
             )}
           >
             <div className="flex items-start justify-between gap-4">

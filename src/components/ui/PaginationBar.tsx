@@ -15,7 +15,7 @@ export const PaginationBar: React.FC<Props> = ({ page, totalPages, onChange }) =
       <button
         onClick={() => onChange(page - 1)}
         disabled={page === 1}
-        className="w-8 h-8 flex items-center justify-center rounded-xl border border-white/8 text-itec-text/50 hover:text-itec-text hover:border-white/16 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-8 h-8 flex items-center justify-center rounded-xl border border-itec-border/50 text-itec-text/50 hover:text-itec-text hover:border-itec-border/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <ChevronLeft className="size-4" />
       </button>
@@ -29,7 +29,7 @@ export const PaginationBar: React.FC<Props> = ({ page, totalPages, onChange }) =
       <button
         onClick={() => onChange(page + 1)}
         disabled={page === totalPages}
-        className="w-8 h-8 flex items-center justify-center rounded-xl border border-white/8 text-itec-text/50 hover:text-itec-text hover:border-white/16 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-8 h-8 flex items-center justify-center rounded-xl border border-itec-border/50 text-itec-text/50 hover:text-itec-text hover:border-itec-border/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <ChevronRight className="size-4" />
       </button>

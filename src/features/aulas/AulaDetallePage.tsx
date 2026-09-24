@@ -33,7 +33,7 @@ const MarkdownContent: React.FC<{ content: string }> = ({ content }) => (
       em:         ({ children }) => <em className="italic text-itec-text/90">{children}</em>,
       code:       ({ children }) => <code className="px-1.5 py-0.5 rounded bg-white/10 text-itec-sky font-mono text-xs">{children}</code>,
       pre:        ({ children }) => <pre className="bg-white/5 rounded-xl p-3 overflow-x-auto mb-2 text-xs font-mono">{children}</pre>,
-      hr:         () => <hr className="border-itec-border my-3" />,
+      hr:         () => <hr className="border-itec-border/50 my-3" />,
       blockquote: ({ children }) => <blockquote className="border-l-4 border-itec-sky/50 pl-4 italic text-itec-muted/80 my-2">{children}</blockquote>,
       a:          ({ href, children }) => (
         <a href={href} target="_blank" rel="noopener noreferrer"
@@ -125,13 +125,13 @@ export const AulaDetallePage: React.FC = () => {
               <div className="flex gap-2 flex-shrink-0">
                 <button
                   onClick={() => setShowEdit(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-itec-surface border border-itec-border text-itec-muted hover:text-white hover:border-white/20 transition-colors text-sm"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-itec-surface border border-itec-border/50 text-itec-muted hover:text-white hover:border-itec-border/50 transition-colors text-sm"
                 >
                   <Pencil size={13} /> Editar
                 </button>
                 <button
                   onClick={() => setShowMedia(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-itec-surface border border-itec-border text-itec-muted hover:text-itec-sky hover:border-itec-sky/40 transition-colors text-sm"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-itec-surface border border-itec-border/50 text-itec-muted hover:text-itec-sky hover:border-itec-sky/40 transition-colors text-sm"
                 >
                   <ImagePlus size={13} /> Gestionar fotos
                 </button>
@@ -141,7 +141,7 @@ export const AulaDetallePage: React.FC = () => {
 
           {/* ── Datos clave ───────────────────────────────────────────────────── */}
           <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border">
+            <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border/50">
               <div className="flex items-center gap-1.5 text-xs text-itec-muted font-medium uppercase tracking-widest">
                 <Layers size={11} /> Piso
               </div>
@@ -149,7 +149,7 @@ export const AulaDetallePage: React.FC = () => {
             </div>
 
             {aula.pasillo && (
-              <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border">
+              <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border/50">
                 <div className="flex items-center gap-1.5 text-xs text-itec-muted font-medium uppercase tracking-widest">
                   <MapPin size={11} /> Pasillo
                 </div>
@@ -158,7 +158,7 @@ export const AulaDetallePage: React.FC = () => {
             )}
 
             {aula.ala && (
-              <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border">
+              <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border/50">
                 <div className="flex items-center gap-1.5 text-xs text-itec-muted font-medium uppercase tracking-widest">
                   <Navigation size={11} /> Ala
                 </div>
@@ -167,7 +167,7 @@ export const AulaDetallePage: React.FC = () => {
             )}
 
             {aula.capacidad && (
-              <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border">
+              <div className="flex flex-col gap-1 p-4 rounded-xl bg-itec-surface border border-itec-border/50">
                 <div className="flex items-center gap-1.5 text-xs text-itec-muted font-medium uppercase tracking-widest">
                   <Users size={11} /> Capacidad
                 </div>
@@ -186,7 +186,7 @@ export const AulaDetallePage: React.FC = () => {
 
           {/* ── Cómo llegar ───────────────────────────────────────────────────── */}
           {aula.referencias && (
-            <section className="flex flex-col gap-2 p-5 rounded-xl bg-itec-surface border border-itec-border">
+            <section className="flex flex-col gap-2 p-5 rounded-xl bg-itec-surface border border-itec-border/50">
               <div className="flex items-center gap-2 text-xs font-bold text-itec-muted uppercase tracking-widest">
                 <Navigation size={12} /> Cómo llegar
               </div>
@@ -196,7 +196,7 @@ export const AulaDetallePage: React.FC = () => {
 
           {/* ── Descripción ───────────────────────────────────────────────────── */}
           {aula.descripcion && (
-            <section className="flex flex-col gap-2 p-5 rounded-xl bg-itec-surface border border-itec-border">
+            <section className="flex flex-col gap-2 p-5 rounded-xl bg-itec-surface border border-itec-border/50">
               <div className="flex items-center gap-2 text-xs font-bold text-itec-muted uppercase tracking-widest">
                 <Info size={12} /> Información adicional
               </div>

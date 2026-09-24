@@ -30,7 +30,7 @@ export const NewsManagement: React.FC = () => {
               <h3 className="text-sm font-bold text-itec-text">Feed de comunicados</h3>
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted">Visibles en la plataforma</p>
             </div>
-            <span className="rounded-full border border-white/20 bg-transparent px-3 py-1 text-[10px] font-bold text-white tracking-widest uppercase">
+            <span className="rounded-full border border-itec-border/50 bg-transparent px-3 py-1 text-[10px] font-bold text-white tracking-widest uppercase">
               {announcements.length} activos
             </span>
           </div>

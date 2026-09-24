@@ -169,7 +169,7 @@ export const MediaManagerModal: React.FC<Props> = ({ isOpen, onClose, onSaved, a
 
   if (!aula) return null;
 
-  const fieldCls = "flex-1 px-3 py-2.5 text-sm rounded-xl bg-itec-bg border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/50";
+  const fieldCls = "flex-1 px-3 py-2.5 text-sm rounded-xl bg-itec-bg border border-itec-border/50 text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/50";
 
   return (
     <LayoutModal
@@ -190,7 +190,7 @@ export const MediaManagerModal: React.FC<Props> = ({ isOpen, onClose, onSaved, a
             </h3>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {aula.imagenes.map((url) => (
-                <div key={url} className="relative group aspect-square rounded-xl overflow-hidden border border-itec-border">
+                <div key={url} className="relative group aspect-square rounded-xl overflow-hidden border border-itec-border/50">
                   <img src={url} alt="Foto del aula" className="w-full h-full object-cover" />
                   <button
                     onClick={() => handleDeleteMedia("imagen", url)}
@@ -215,7 +215,7 @@ export const MediaManagerModal: React.FC<Props> = ({ isOpen, onClose, onSaved, a
               {aula.videos.map((url) => (
                 <div
                   key={url}
-                  className="flex items-center gap-3 rounded-xl bg-itec-surface border border-itec-border px-3 py-2.5"
+                  className="flex items-center gap-3 rounded-xl bg-itec-surface border border-itec-border/50 px-3 py-2.5"
                 >
                   <VideoRowThumb url={url} />
                   <div className="flex flex-col flex-1 min-w-0">
@@ -247,7 +247,7 @@ export const MediaManagerModal: React.FC<Props> = ({ isOpen, onClose, onSaved, a
 
             {/* Preview thumbnail si es YouTube */}
             {videoPreview && (
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-itec-border bg-black">
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-itec-border/50 bg-black">
                 <img src={videoPreview} alt="preview" className="w-full h-full object-cover opacity-80" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-600/90">
@@ -300,7 +300,7 @@ export const MediaManagerModal: React.FC<Props> = ({ isOpen, onClose, onSaved, a
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex items-center justify-center gap-2 h-24 rounded-xl border-2 border-dashed border-itec-border text-itec-muted hover:border-itec-sky hover:text-itec-sky transition-colors text-sm"
+              className="flex items-center justify-center gap-2 h-24 rounded-xl border-2 border-dashed border-itec-border/50 text-itec-muted hover:border-itec-sky hover:text-itec-sky transition-colors text-sm"
             >
               <Upload size={18} /> Seleccionar imágenes (máx. {10 - aula.imagenes.length - previews.length} más)
             </button>
@@ -308,7 +308,7 @@ export const MediaManagerModal: React.FC<Props> = ({ isOpen, onClose, onSaved, a
               <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {previews.map(({ url }, i) => (
-                    <div key={url} className="relative group aspect-square rounded-xl overflow-hidden border border-itec-border">
+                    <div key={url} className="relative group aspect-square rounded-xl overflow-hidden border border-itec-border/50">
                       <img src={url} alt={`preview-${i}`} className="w-full h-full object-cover" />
                       <button
                         onClick={() => removePreview(i)}
@@ -327,7 +327,7 @@ export const MediaManagerModal: React.FC<Props> = ({ isOpen, onClose, onSaved, a
           </section>
         )}
 
-        <div className="flex justify-end pt-2 border-t border-white/5">
+        <div className="flex justify-end pt-2 border-t border-itec-border/50">
           <Button variant="secondary" hierarchy="ghost" onClick={onClose}>Cerrar</Button>
         </div>
       </div>

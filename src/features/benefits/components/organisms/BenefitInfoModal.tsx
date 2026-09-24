@@ -14,12 +14,12 @@ export const BenefitInfoModal: React.FC<Props> = ({ benefit, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[300] flex items-end justify-center bg-black/80 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-itec-bg sm:max-w-md sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-t-3xl border border-itec-border/50 bg-itec-bg sm:max-w-md sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
         
         {/* Cabecera */}
-        <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+        <div className="flex items-center justify-between border-b border-itec-border/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-itec-border/50">
               {benefit.img ? <img src={benefit.img} alt="" className="h-6 w-6 object-contain" /> : <Tag className="h-5 w-5 text-white/50" />}
             </div>
             <div>
@@ -46,7 +46,7 @@ export const BenefitInfoModal: React.FC<Props> = ({ benefit, onClose }) => {
           </div>
 
           {benefit.location && benefit.location !== "-" && (
-            <div className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-4 py-2">
+            <div className="flex items-center gap-2 rounded-xl bg-white/5 border border-itec-border/50 px-4 py-2">
               <MapPin className="h-4 w-4 text-white/40" />
               <span className="text-xs font-medium text-white/70">{benefit.location}</span>
             </div>
@@ -54,7 +54,7 @@ export const BenefitInfoModal: React.FC<Props> = ({ benefit, onClose }) => {
         </div>
 
         {/* Botón cerrar */}
-        <div className="border-t border-white/10 p-4">
+        <div className="border-t border-itec-border/50 p-4">
           <button onClick={onClose} className="w-full rounded-xl bg-white/10 py-3 text-sm font-bold text-white transition-colors hover:bg-white/20">
             Entendido
           </button>

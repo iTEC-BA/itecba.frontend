@@ -18,7 +18,7 @@ export const AddDateModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4  transition-all">
-      <div className="w-full sm:max-w-sm rounded-t-[2rem] sm:rounded-xl border border-itec-border bg-itec-box p-6 shadow-2xl animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-10 duration-300">
+      <div className="w-full sm:max-w-sm rounded-t-[2rem] sm:rounded-xl border border-itec-border/50 bg-itec-box p-6 shadow-2xl animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-10 duration-300">
         
         <div className="mx-auto mb-6 h-1.5 w-12 rounded-full bg-itec-border sm:hidden" />
         
@@ -30,11 +30,11 @@ export const AddDateModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted mb-2 block">Título</label>
-            <input required value={title} onChange={e=>setTitle(e.target.value)} className="w-full rounded-xl border border-itec-border bg-itec-surface px-4 py-3 text-sm text-white outline-none focus:border-itec-sky/50 text-itec-text" />
+            <input required value={title} onChange={e=>setTitle(e.target.value)} className="w-full rounded-xl border border-itec-border/50 bg-itec-surface px-4 py-3 text-sm text-white outline-none focus:border-itec-sky/50 text-itec-text" />
           </div>
           <div>
             <label className="text-[10px] font-bold uppercase tracking-widest text-itec-muted mb-2 block">Fecha</label>
-            <input required value={date} onChange={e=>setDate(e.target.value)} className="w-full rounded-xl border border-itec-border bg-itec-surface px-4 py-3 text-sm text-white outline-none focus:border-itec-sky/50 text-itec-text" />
+            <input required value={date} onChange={e=>setDate(e.target.value)} className="w-full rounded-xl border border-itec-border/50 bg-itec-surface px-4 py-3 text-sm text-white outline-none focus:border-itec-sky/50 text-itec-text" />
           </div>
           <button type="submit" className="w-full rounded-xl bg-itec-blue hover:bg-blue-600 text-white py-3 text-sm font-bold active:scale-[0.98] transition-all mt-2">Guardar</button>
         </form>

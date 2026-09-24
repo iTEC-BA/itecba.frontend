@@ -59,8 +59,8 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
     <LayoutModal isOpen={!!post} onClose={onClose} title="Expediente de Permuta" description={`ID: ${post._id.slice(-6).toUpperCase()}`} maxWidth="max-w-md">
       <div className="flex flex-col gap-6 px-6 py-6">
 
-        <div className="flex flex-col bg-itec-box rounded-2xl p-5 gap-4 border border-itec-border">
-          <div className="flex items-start justify-between gap-4 border-b border-itec-border pb-4">
+        <div className="flex flex-col bg-itec-box rounded-2xl p-5 gap-4 border border-itec-border/50">
+          <div className="flex items-start justify-between gap-4 border-b border-itec-border/50 pb-4">
             <div className="flex flex-col min-w-0">
               <span className="text-[10px] font-bold uppercase tracking-widest text-itec-section-trueketec">{post.departamento}</span>
               <h2 className="text-base font-bold text-white mt-1 leading-tight">{post.materia}</h2>
@@ -69,12 +69,12 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
           </div>
 
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-            <div className="flex flex-col text-center bg-itec-surface p-3 rounded-xl border border-itec-border">
+            <div className="flex flex-col text-center bg-itec-surface p-3 rounded-xl border border-itec-border/50">
               <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Ofrece</span>
               <span className="font-mono text-base font-bold text-white mt-1">{post.comision_actual}</span>
             </div>
             <ArrowRight size={16} className="text-itec-muted" />
-            <div className="flex flex-col text-center bg-itec-surface p-3 rounded-xl border border-itec-border">
+            <div className="flex flex-col text-center bg-itec-surface p-3 rounded-xl border border-itec-border/50">
               <span className="text-[9px] uppercase tracking-widest text-itec-muted font-bold">Busca</span>
               <span className="font-mono text-base font-bold text-itec-section-trueketec mt-1">{post.comision_deseada}</span>
             </div>
@@ -96,14 +96,14 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
         </div>
 
         {email ? (
-          <div className="flex flex-col gap-1 bg-itec-surface p-4 rounded-xl border border-itec-border">
+          <div className="flex flex-col gap-1 bg-itec-surface p-4 rounded-xl border border-itec-border/50">
             <span className="text-[10px] font-bold uppercase tracking-widest text-itec-muted">Contacto Habilitado</span>
             <a href={`mailto:${email}`} className="flex items-center gap-2 text-sm font-mono text-white hover:text-itec-section-trueketec transition-colors mt-2">
               <Mail size={16} className="text-itec-muted" /> {email}
             </a>
           </div>
         ) : (
-          <div className="flex items-center gap-3 text-[11px] text-itec-muted bg-itec-surface p-4 rounded-xl leading-relaxed border border-itec-border">
+          <div className="flex items-center gap-3 text-[11px] text-itec-muted bg-itec-surface p-4 rounded-xl leading-relaxed border border-itec-border/50">
             <Info size={16} className="shrink-0 text-itec-section-trueketec" />
             <p>El correo institucional está protegido. Se revelará al confirmar una coincidencia bilateral.</p>
           </div>
@@ -111,9 +111,9 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
 
         {isOwn && (
           <div className="flex flex-col gap-4 mt-2">
-            <div className="flex flex-col gap-2 bg-itec-box rounded-xl p-5 border border-itec-border">
+            <div className="flex flex-col gap-2 bg-itec-box rounded-xl p-5 border border-itec-border/50">
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 px-1">Acciones Administrativas</span>
-              <div className="flex rounded-lg bg-itec-surface p-1 gap-1 border border-itec-border">
+              <div className="flex rounded-lg bg-itec-surface p-1 gap-1 border border-itec-border/50">
                 {ESTADOS_OPCIONES.map((e) => (
                   <button key={e} onClick={() => handleChangeEstado(e)} disabled={post.estado === e || savingEstado} className={`flex-1 py-2.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-colors ${post.estado === e ? "bg-itec-box text-white" : "text-itec-muted hover:text-white disabled:opacity-30"}`}>
                     {e === "Trueque Realizado" ? "Cerrar" : e}
@@ -122,19 +122,19 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 bg-itec-box rounded-xl p-5 border border-itec-border">
+            <div className="flex flex-col gap-3 bg-itec-box rounded-xl p-5 border border-itec-border/50">
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 px-1">Expedientes Interesados ({postulantes.length})</span>
               {loadingPost ? <div className="h-14 bg-itec-surface animate-pulse rounded-xl" /> : postulantes.length === 0 ? (
-                <div className="p-4 text-center text-[10px] uppercase tracking-widest text-white/30 rounded-xl bg-itec-surface border border-itec-border">{MENSAJES.sinRegistrosVinculados}</div>
+                <div className="p-4 text-center text-[10px] uppercase tracking-widest text-white/30 rounded-xl bg-itec-surface border border-itec-border/50">{MENSAJES.sinRegistrosVinculados}</div>
               ) : (
                 <div className="flex flex-col gap-2">
                   {postulantes.map(p => (
-                    <button key={p.userId} onClick={() => onOpenPostulante(p)} className="flex items-center justify-between p-4 rounded-xl bg-itec-surface hover:bg-itec-bg transition-colors text-left border border-itec-border">
+                    <button key={p.userId} onClick={() => onOpenPostulante(p)} className="flex items-center justify-between p-4 rounded-xl bg-itec-surface hover:bg-itec-bg transition-colors text-left border border-itec-border/50">
                       <div className="flex flex-col min-w-0 pr-4">
                         <span className="text-sm font-bold text-white truncate">{p.userName}</span>
                         <span className="text-[10px] font-mono text-itec-muted truncate mt-0.5">{p.userEmail}</span>
                       </div>
-                      <span className="text-[10px] font-bold text-itec-section-trueketec bg-itec-box px-3 py-1.5 rounded-lg shrink-0 border border-itec-border">{p.ofertas.length} Ofertas</span>
+                      <span className="text-[10px] font-bold text-itec-section-trueketec bg-itec-box px-3 py-1.5 rounded-lg shrink-0 border border-itec-border/50">{p.ofertas.length} Ofertas</span>
                     </button>
                   ))}
                 </div>
@@ -149,7 +149,7 @@ export const ContactModal: React.FC<Props> = ({ post, isOwn, onClose, onEstadoCh
           </div>
         )}
 
-        {feedbackMsg && <p className="text-[10px] font-bold uppercase tracking-widest text-itec-section-trueketec text-center py-3 bg-itec-surface rounded-xl border border-itec-border">{feedbackMsg}</p>}
+        {feedbackMsg && <p className="text-[10px] font-bold uppercase tracking-widest text-itec-section-trueketec text-center py-3 bg-itec-surface rounded-xl border border-itec-border/50">{feedbackMsg}</p>}
       </div>
     </LayoutModal>
   );

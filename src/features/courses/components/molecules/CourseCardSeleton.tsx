@@ -12,7 +12,7 @@ export const CourseCardSkeleton = () => {
           <div className="h-3 bg-itec-gray/33 rounded animate-pulse w-5/6" />
         </div>
 
-        <div className="mt-auto pt-2 border-t border-white/5">
+        <div className="mt-auto pt-2 border-t border-itec-border/50">
           <div className="flex justify-between items-center mb-1.5">
             <div className="h-3 bg-itec-gray/33 rounded animate-pulse w-16" />
             <div className="h-3 bg-itec-gray/33 rounded animate-pulse w-12" />

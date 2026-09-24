@@ -24,7 +24,7 @@ export const IngresoInfoAccordion: React.FC<Props> = ({ modalities }) => {
       {modalities.map((mod) => (
         <div 
           key={mod.id} 
-          className={`border rounded-xl transition-all duration-300 overflow-hidden ${openId === mod.id ? 'bg-itec-box border-itec-section-admission' : 'bg-itec-sidebar border-itec-border hover:border-itec-gray'}`}
+          className={`border rounded-xl transition-all duration-300 overflow-hidden ${openId === mod.id ? 'bg-itec-box border-itec-section-admission' : 'bg-itec-sidebar border-itec-border/50 hover:border-itec-gray'}`}
         >
           <button 
             onClick={() => toggle(mod.id)}

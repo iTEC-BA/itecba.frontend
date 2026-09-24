@@ -60,7 +60,7 @@ export const ContributorsWidget: React.FC = () => {
           {/* Lado Derecho: Banner de Colaboración Estudiantil */}
           <div className="w-full md:w-auto shrink-0">
             <div className="bg-gradient-to-br from-gray-800 to-black p-[1px] rounded-xl shadow-2xl">
-              <div className="bg-itec-bg rounded-xl p-6 md:p-8 flex flex-col items-center text-center h-full border border-white/5 relative overflow-hidden">
+              <div className="bg-itec-bg rounded-xl p-6 md:p-8 flex flex-col items-center text-center h-full border border-itec-border/50 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-300 to-red-800"></div>
                 
                 <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mb-4 border border-red-500/20">

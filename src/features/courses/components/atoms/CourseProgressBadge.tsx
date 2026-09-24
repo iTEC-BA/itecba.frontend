@@ -19,7 +19,7 @@ export const CourseProgressBadge: React.FC<Props> = ({ percent, showLabel = true
           </span>
         </div>
       )}
-      <div className="h-1.5 w-full bg-itec-sidebar border border-itec-border rounded-full overflow-hidden">
+      <div className="h-1.5 w-full bg-itec-sidebar border border-itec-border/50 rounded-full overflow-hidden">
         <div
           className={`h-full transition-all duration-300 ${color}`}
           style={{ width: `${Math.min(100, percent)}%` }}

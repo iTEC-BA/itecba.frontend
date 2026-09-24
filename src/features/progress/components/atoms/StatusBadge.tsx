@@ -9,8 +9,8 @@ const cfg: Record<SubjectStatus, { label: string; cls: string }> = {
   habilitada_rendir: { label: 'Regularizada',     cls: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
   regular_bloqueada: { label: 'Regularizada',     cls: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
   cursando:          { label: 'Cursando',         cls: 'bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20' },
-  habilitada_cursar: { label: 'Para Cursar',      cls: 'bg-white/10 text-itec-text border-white/20' },
-  bloqueada:         { label: 'Sin Cursar',       cls: 'bg-transparent text-gray-500 border-dashed border-white/10' },
+  habilitada_cursar: { label: 'Para Cursar',      cls: 'bg-white/10 text-itec-text border-itec-border/50' },
+  bloqueada:         { label: 'Sin Cursar',       cls: 'bg-transparent text-gray-500 border-dashed border-itec-border/50' },
 };
 
 export const StatusBadge: React.FC<Props> = ({ status }) => {

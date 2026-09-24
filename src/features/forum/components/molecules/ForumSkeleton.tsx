@@ -1,7 +1,7 @@
 import React from 'react';
 
 const SkeletonPost: React.FC = () => (
-  <div className="flex gap-3 px-4 py-3 border-b border-itec-border animate-pulse">
+  <div className="flex gap-3 px-4 py-3 border-b border-itec-border/50 animate-pulse">
     <div className="w-9 h-9 rounded-full bg-white/8 shrink-0" />
     <div className="flex-1 space-y-2">
       <div className="flex gap-2">

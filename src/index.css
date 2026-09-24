@@ -2,7 +2,7 @@
 
 @theme {
   /* Paleta de colores ITEC */
-  --color-itec-bg: #0C1116;
+  --color-itec-bg: #0A0A0A;
   /* --color-itec-bg: #ffffff; */
   --color-itec-text: #e5e6eA;
   /* --color-itec-text: #e5e6eA; */
@@ -22,15 +22,15 @@
   /* color de secciones */
   --color-itec-groups: #008854;
   --color-itec-rewards: #f0b100;
-  --color-itec-section-courses: #004AAD;
+  --color-itec-section-courses: #043A8A;
   --color-itec-section-admission: #A855F7;
   --color-itec-section-trueketec: #ff493b;
 
   /* Variantes sutiles para fondos de tarjetas */
-  --color-itec-box: #0c1117;
-  --color-itec-card: #111820;
-  --color-itec-border: #171717;
-  --color-itec-sidebar: #0c1117;
+  --color-itec-box: #060606;
+  --color-itec-card: #0f0f0f;
+  --color-itec-border: #111111;
+  --color-itec-sidebar: #0A0A0A;
 }
 
 body {

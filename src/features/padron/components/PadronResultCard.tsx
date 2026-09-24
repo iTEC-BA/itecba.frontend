@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const PadronResultCard: React.FC<Props> = ({ data, onReset }) => (
-  <div className="bg-itec-box rounded-xl border border-itec-border overflow-hidden">
+  <div className="bg-itec-box rounded-xl border border-itec-border/50 overflow-hidden">
     <div className="bg-itec-emerald/10 border-b border-itec-emerald/20 p-6 flex items-center gap-3">
       <CheckCircle className="text-itec-emerald h-8 w-8 shrink-0" />
       <div>
@@ -45,7 +45,7 @@ export const PadronResultCard: React.FC<Props> = ({ data, onReset }) => (
         </div>
       </div>
 
-      <div className="border-t border-itec-border pt-5 flex justify-center">
+      <div className="border-t border-itec-border/50 pt-5 flex justify-center">
         <Button variant="slate" hierarchy="ghost" onClick={onReset} icon={<User size={15} />}>
           Nueva consulta
         </Button>

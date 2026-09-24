@@ -37,7 +37,7 @@ const EMPTY: AulaFormData = {
   descripcion: "", referencias: "", videos: [],
 };
 
-const fieldCls = "w-full px-4 py-2.5 text-xs rounded-xl bg-itec-surface border border-itec-border text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
+const fieldCls = "w-full px-4 py-2.5 text-xs rounded-xl bg-itec-surface border border-itec-border/50 text-itec-text outline-none focus:border-itec-sky transition-colors placeholder:text-itec-muted/60";
 const labelCls = "text-xs font-semibold text-itec-muted";
 
 export const AulaFormModal: React.FC<Props> = ({ isOpen, onClose, onSaved, aula }) => {
@@ -222,7 +222,7 @@ export const AulaFormModal: React.FC<Props> = ({ isOpen, onClose, onSaved, aula 
         />
 
         {/* Botones */}
-        <div className="flex justify-end gap-3 pt-2 border-t border-white/5">
+        <div className="flex justify-end gap-3 pt-2 border-t border-itec-border/50">
           <Button variant="secondary" hierarchy="ghost" onClick={onClose} disabled={saving}>
             Cancelar
           </Button>
