@@ -13,6 +13,8 @@ const PageAccessManagement = lazy(() => import("@features/admin/pages/PageAccess
 
 const ContentModeration = lazy(() => import("@features/admin/pages/ContentModeration").then(m => ({ default: m.ContentModeration })));
 const TutoriasSection = lazy(() => import("@features/admin/pages/TutoriasSection").then(m => ({ default: m.TutoriasSection })));
+const HomeManagement = lazy(() => import("@features/admin/pages/HomeManagement").then(m => ({ default: m.HomeManagement })));
+const RoleManagement = lazy(() => import("@features/admin/pages/RoleManagement").then(m => ({ default: m.RoleManagement })));
 
 interface AdminOutletContext {
   navigate: (section: AdminSection) => void;
@@ -62,6 +64,8 @@ export const AdminPanel: React.FC = () => (
       <Route path="dashboard" element={<DashboardRoute />} />
       <Route path="usuarios" element={<UserManagement />} />
       <Route path="avisos" element={<NewsManagement />} />
+      <Route path="publicaciones" element={<HomeManagement />} />
+      <Route path="roles" element={<RoleManagement />} />
       <Route path="beneficios" element={<BenefitManagement />} />
       <Route path="canjes" element={<AdminRedemptions />} />
       <Route path="moderacion" element={<ContentModeration />} />

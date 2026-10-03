@@ -7,7 +7,7 @@ interface Props {
   isLoading: boolean;
 }
 
-export const AdminTable: React.FC<Props> = ({nameTable, persons, isLoading }) => {
+export const AdminTable: React.FC<Props> = ({ nameTable, persons, isLoading }) => {
   const {user} = useAuthStore();
 
   return (
@@ -29,9 +29,9 @@ export const AdminTable: React.FC<Props> = ({nameTable, persons, isLoading }) =>
           </thead>
           <tbody className="divide-y divide-white/5">
             {isLoading ? (
-              <tr><td colSpan={3} className="px-4 py-6 text-center text-itec-muted animate-pulse">Cargando datos...</td></tr>
+              <tr><td colSpan={2} className="px-4 py-6 text-center text-itec-muted animate-pulse">Cargando datos...</td></tr>
             ) : persons.length === 0 ? (
-              <tr><td colSpan={3} className="px-4 py-6 text-center text-itec-muted">Sin {nameTable}.</td></tr>
+              <tr><td colSpan={2} className="px-4 py-6 text-center text-itec-muted">Sin {nameTable}.</td></tr>
             ) : (
               persons.map((person) => {
                 const isMe = user?.email === person.email;

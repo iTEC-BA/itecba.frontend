@@ -37,7 +37,7 @@ export const useCalendarEvents = () => {
       const today = new Date().toISOString().slice(0, 10);
       
       // Normalizar la fecha de Supabase a YYYY-MM-DD para evitar fallos de filtro
-      const normalizedData = (data as CalendarEvent[]).map((e) => ({
+      const normalizedData = (data as unknown as CalendarEvent[]).map((e) => ({
         ...e,
         date: e.date.split("T")[0],
       }));

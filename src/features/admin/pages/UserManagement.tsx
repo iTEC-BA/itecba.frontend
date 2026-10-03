@@ -20,20 +20,23 @@ export const UserManagement: React.FC = () => {
     <div className="flex flex-col gap-6 animate-fade-in">
       <div>
         <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted mb-1">
-          Gestión de Roles
+          Gestión de Usuarios
         </p>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
             <Users className="w-6 h-6 text-itec-red" />
             Usuarios
           </h2>
-          <Button
-            onClick={() => setIsAddAdminOpen(true)}
-            variant="danger"
-            hierarchy="solid"
-          >
-            Gestionar acceso
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => setIsAddAdminOpen(true)}
+              variant="danger"
+              hierarchy="solid"
+              className="rounded-xl! border! border-itec-red/20! bg-itec-red/10! px-5! py-2.5! text-sm! font-bold! text-itec-red! hover:bg-itec-red/20!"
+            >
+              Gestionar acceso
+            </Button>
+          </div>
         </div>
         <p className="text-xs text-itec-muted mt-1">
           Buscá alumnos y administrá sus permisos para dar accesos a la
@@ -69,6 +72,7 @@ export const UserManagement: React.FC = () => {
           <UserSearchBox />
         </div>
       </LayoutModal>
+
     </div>
   );
 };

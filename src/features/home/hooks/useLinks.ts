@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { linksService } from '@features/home/services/linksService';
 import type { CampusLink } from '@features/home/services/linksService';
+import type { LinkSection } from '@features/home/services/linksService';
 
 export interface UseLinksReturn {
   links: CampusLink[];
@@ -11,6 +12,25 @@ export interface UseLinksReturn {
   updateLink: (id: string, link: Partial<CampusLink>) => Promise<void>;
   deleteLink: (id: string) => Promise<void>;
 }
+
+export const useHomeSections = () => {
+  const [sections, setSections] = useState<LinkSection[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const reload = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      setSections(await linksService.getSections());
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No se pudieron cargar las secciones.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+  useEffect(() => { reload(); }, [reload]);
+  return { sections, isLoading, error, reload };
+};
 
 export const useLinks = (): UseLinksReturn => {
   const [links, setLinks] = useState<CampusLink[]>([]);

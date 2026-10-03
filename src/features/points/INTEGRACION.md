@@ -1,8 +1,12 @@
 # Integración del módulo de puntos — instrucciones
 
-## 1. Warm-up de caché al iniciar la app
+## 1. Warm-up de caché y login diario
 
-En `src/App.tsx` (o el componente raíz), añadir una llamada de warm-up para
+`src/App.tsx` ya precalienta las actividades y otorga `daily_login` una vez
+por día y por usuario. El backend vuelve a validar cooldown y tope diario, por
+lo que el `sessionStorage` solo evita requests repetidos durante la sesión.
+
+Para precalentar actividades manualmente:
 que la caché de actividades esté lista antes del primer click del usuario:
 
 ```tsx

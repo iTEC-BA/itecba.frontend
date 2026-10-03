@@ -12,6 +12,7 @@ export interface PointActivity {
 export interface GrantResult {
   granted: boolean;
   points?: number;
+  warning?: "log_failed";
   reason?:
     | "activity_not_found"
     | "activity_inactive"

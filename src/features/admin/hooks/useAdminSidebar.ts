@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export type AdminSection = "dashboard" | "users" | "news" | "benefits" | "redemptions" | "tutorias" | "pages" | "moderation" ;
+export type AdminSection = "dashboard" | "users" | "news" | "publications" | "roles" | "benefits" | "redemptions" | "tutorias" | "pages" | "moderation" ;
 
 export interface SidebarLink {
   id: AdminSection;
@@ -14,6 +14,8 @@ export interface SidebarLink {
 export const SIDEBAR_LINKS: SidebarLink[] = [
   { id: "dashboard",   label: "Dashboard",    icon: "chart",    path: "dashboard",   category: "General" },
   { id: "news",        label: "Avisos",       icon: "bell",     path: "avisos",      category: "General" },
+  { id: "publications", label: "Publicaciones", icon: "folder", path: "publicaciones", category: "General" },
+  { id: "roles",       label: "Roles y permisos", icon: "lock", path: "roles", category: "Seguridad" },
   { id: "pages",       label: "Páginas",      icon: "lock",     path: "paginas",     category: "General" },
   { id: "moderation",  label: "Moderación",   icon: "verified", path: "moderacion",  category: "Contenido" },
   { id: "users",       label: "Usuarios",     icon: "users",    path: "usuarios",    category: "Comunidad" },

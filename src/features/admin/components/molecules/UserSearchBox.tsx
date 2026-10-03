@@ -1,10 +1,12 @@
 
 
-import React, { useState } from "react";
-import { Mail } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Mail, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 import { useAdminData } from "../../hooks/useAdminData";
+import { adminService, type RoleDefinition } from "../../services/admin.service";
 
 export const UserSearchBox: React.FC = () => {
   const {
@@ -12,8 +14,19 @@ export const UserSearchBox: React.FC = () => {
     toggleRoleMutation,
     createAuthorizedMutation,
     updateAuthorizedMutation,
+    deleteUserMutation,
   } = useAdminData();
   const [email, setEmail] = useState("");
+  const [roles, setRoles] = useState<RoleDefinition[]>([]);
+  const [selectedRole, setSelectedRole] = useState("student");
+
+  useEffect(() => {
+    adminService.getRoles().then(setRoles).catch((error) => console.error("No se pudieron cargar los roles:", error));
+  }, []);
+
+  useEffect(() => {
+    if (searchUserMutation.data?.role) setSelectedRole(searchUserMutation.data.role);
+  }, [searchUserMutation.data]);
 
   const isInstitutionalEmail = (value: string) =>
     value.toLowerCase().endsWith("@frba.utn.edu.ar");
@@ -52,7 +65,7 @@ export const UserSearchBox: React.FC = () => {
     toggleRoleMutation.mutate(
       {
         userId: user.id,
-        role: user.role === "admin" ? "student" : "admin",
+        role: selectedRole,
       },
       { onSuccess: refreshUser },
     );
@@ -72,6 +85,20 @@ export const UserSearchBox: React.FC = () => {
       },
       { onSuccess: refreshUser },
     );
+  };
+
+  const handleDeleteUser = () => {
+    const user = searchUserMutation.data;
+    if (!user?.id) return;
+    const isExternal = Boolean(user.isExternalAuthorization);
+    const label = isExternal ? "la autorización de este correo" : "la cuenta y todos sus datos de acceso";
+    if (!window.confirm(`¿Eliminar ${label}? Esta acción no se puede deshacer.`)) return;
+    deleteUserMutation.mutate({ userId: user.id, externalAuthorization: isExternal }, {
+      onSuccess: () => {
+        searchUserMutation.reset();
+        setEmail("");
+      },
+    });
   };
 
   return (
@@ -97,6 +124,7 @@ export const UserSearchBox: React.FC = () => {
           variant="danger" 
           hierarchy="solid"
           fullWidth
+          className="!rounded-xl !border !border-itec-red/20 !bg-itec-red/10 !px-5 !py-2.5 !text-sm !font-bold !text-itec-red hover:!bg-itec-red/20"
           disabled={!email.trim() || searchUserMutation.isPending || createAuthorizedMutation.isPending}
           text={
             searchUserMutation.isPending
@@ -130,7 +158,19 @@ export const UserSearchBox: React.FC = () => {
             fullWidth
             variant="slate"
             hierarchy="solid"
-            text={searchUserMutation.data.role === "admin" ? "Sacar admin" : "Asignar admin"}
+            className="!rounded-xl !border !border-itec-rewards/20 !bg-itec-rewards/10 !px-5 !py-2.5 !text-sm !font-bold !text-itec-rewards hover:!bg-itec-rewards/20"
+            text="Guardar rol seleccionado"
+          />
+          <CustomSelect
+            label="Rol del usuario"
+            value={selectedRole}
+            options={[
+              { value: "student", label: "Estudiante" },
+              ...roles
+                .filter((role) => role.key !== "student")
+                .map((role) => ({ value: role.key, label: role.name })),
+            ]}
+            onChange={setSelectedRole}
           />
           {!isInstitutionalEmail(searchUserMutation.data.email) && (
             <Button
@@ -139,9 +179,22 @@ export const UserSearchBox: React.FC = () => {
               fullWidth
               variant={searchUserMutation.data.authorized ? "danger" : "slate"}
               hierarchy="solid"
-              text={searchUserMutation.data.authorized ? "Revocar Autorización" : "Autorizar Usuario"}
+              className={searchUserMutation.data.authorized
+                ? "!rounded-xl !border !border-itec-red/20 !bg-itec-red/10 !px-5 !py-2.5 !text-sm !font-bold !text-itec-red hover:!bg-itec-red/20"
+                : "!rounded-xl !border !border-itec-rewards/20 !bg-itec-rewards/10 !px-5 !py-2.5 !text-sm !font-bold !text-itec-rewards hover:!bg-itec-rewards/20"}
+              text={searchUserMutation.data.authorized ? "Revocar acceso" : "Habilitar acceso"}
             />
           )}
+          <Button
+            onClick={handleDeleteUser}
+            disabled={toggleRoleMutation.isPending || updateAuthorizedMutation.isPending || deleteUserMutation.isPending}
+            fullWidth
+            variant="danger"
+            hierarchy="solid"
+            className="!rounded-xl !border !border-itec-red/30 !bg-itec-red/10 !px-5 !py-2.5 !text-sm !font-bold !text-itec-red hover:!bg-itec-red/20"
+            text={deleteUserMutation.isPending ? "Eliminando..." : "Eliminar usuario"}
+            icon={<Trash2 className="h-4 w-4" />}
+          />
         </div>
       )}
     </div>

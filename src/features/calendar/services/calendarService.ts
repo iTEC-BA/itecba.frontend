@@ -1,6 +1,7 @@
 import { auth } from "@/lib/firebase";
 
 const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/calendar`;
+let eventsRequest: Promise<CalendarEvent[]> | null = null;
 
 const getHeaders = async () => {
   const token = await auth.currentUser?.getIdToken();
@@ -16,9 +17,19 @@ interface CalendarEvent {
 
 export const calendarService = {
   getAll: async () => {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error("Error obteniendo calendario");
-    return res.json();
+    if (!eventsRequest) {
+      eventsRequest = (async () => {
+        const res = await fetch(API_URL);
+        if (!res.ok) {
+          const detail = await res.json().catch(() => null) as { message?: string } | null;
+          throw new Error(detail?.message || `Error obteniendo calendario (HTTP ${res.status})`);
+        }
+        return res.json() as Promise<CalendarEvent[]>;
+      })().finally(() => {
+        eventsRequest = null;
+      });
+    }
+    return eventsRequest;
   },
   create: async (data: CalendarEvent) => {
     const res = await fetch(API_URL, {

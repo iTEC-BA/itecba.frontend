@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { getActivities } from "@features/points/services/points.service";
+import { getActivities, grantPointsAPI } from "@features/points/services/points.service";
+import { usePointsStore } from "@/stores/pointsStore";
+import { useAuthStore } from "@/stores/authStore";
 import { initAuthListener } from '@/stores/authStore';
 import { PageAccessProvider } from "@features/pageAccess/context/PageAccessContext";
 import { ToastProvider } from "./features/notifications/components/atoms/Toast";
@@ -17,6 +19,8 @@ if (GA_MEASUREMENT_ID) {
 }
 
 export const App: React.FC = () => {
+  const user = useAuthStore((state) => state.user);
+
   useEffect(() => {
     getActivities().catch(() => {});
     initAuthListener(); // Zustand inicia la escucha de sesión aquí
@@ -37,6 +41,23 @@ export const App: React.FC = () => {
 
     requestInitialPermissions();
   }, []);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const loginKey = `itec_daily_login_${user.id}_${today}`;
+    if (sessionStorage.getItem(loginKey)) return;
+
+    const grantDailyLogin = async () => {
+      const result = await grantPointsAPI("daily_login");
+      sessionStorage.setItem(loginKey, "1");
+      if (result.granted && result.points) {
+        await usePointsStore.getState().addPoints(result.points);
+      }
+    };
+
+    grantDailyLogin().catch(() => {});
+  }, [user?.id]);
 
   return (
     <PageAccessProvider>

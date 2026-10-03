@@ -12,7 +12,10 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false, // Evita peticiones si cambias de pestaña y vuelves
       staleTime: 1000 * 60 * 5,    // Los datos se consideran "frescos" por 5 minutos (evita spam a la DB)
-      retry: 1,                    // Si falla una petición, reintenta 1 vez
+      retry: (failureCount, error) => {
+        if (error instanceof Error && /\bHTTP 429\b/.test(error.message)) return false;
+        return failureCount < 1;
+      },
     },
   },
 })

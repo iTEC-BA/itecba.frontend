@@ -4,6 +4,7 @@ import { SIDEBAR_LINKS, type AdminSection } from "@features/admin/hooks/useAdmin
 import { Icons } from "@/components/ui/icons/Icons";
 import { cn } from "@/lib/utils";
 import logo from "@assets/logo.png";
+import { useAuthorization } from "@/hooks/useAuthorization";
 
 interface AdminSidebarProps {
   active: AdminSection;
@@ -14,14 +15,16 @@ interface AdminSidebarProps {
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ active, onNavigate, isOpen, onClose }) => {
   const { user } = useAuthStore();
+  const { can } = useAuthorization();
 
   const groupedLinks = useMemo(() => {
     return SIDEBAR_LINKS.reduce((acc, link) => {
+      if (link.id === "roles" && !can("roles.manage")) return acc;
       if (!acc[link.category]) acc[link.category] = [];
       acc[link.category].push(link);
       return acc;
     }, {} as Record<string, typeof SIDEBAR_LINKS>);
-  }, []);
+  }, [can]);
 
   return (
     <>
@@ -63,7 +66,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ active, onNavigate, 
                     )}
                   >
                     <div className="w-3.5 h-3.5 shrink-0 flex items-center justify-center opacity-80">
-                      <Icons type={link.icon as any} className="w-full h-full" />
+                      <Icons type={link.icon} className="w-full h-full" />
                     </div>
                     <span>{link.label}</span>
                   </button>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
 
@@ -22,17 +23,45 @@ export const CustomSelect: React.FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, width: 0 });
+
+  const updateMenuPosition = () => {
+    const trigger = containerRef.current?.getBoundingClientRect();
+    if (!trigger) return;
+    setMenuPosition({
+      top: trigger.bottom + 8,
+      left: trigger.left,
+      width: trigger.width,
+    });
+  };
 
   // Lógica interna e independiente de click-outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node) &&
+        !menuRef.current?.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    updateMenuPosition();
+    const handleViewportChange = () => updateMenuPosition();
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, true);
+    return () => {
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange, true);
+    };
+  }, [isOpen]);
 
   const selectedLabel = options.find(o => o.value === value)?.label || '';
   return (
@@ -46,8 +75,16 @@ export const CustomSelect: React.FC<Props> = ({
           className={cn("cursor-pointer text-xs rounded-md disabled:cursor-not-allowed select-none border border-itec-border/50 hover:border-itec-description p-2", className)} 
         />
       </div>
-      {isOpen && !disabled && (
-        <ul className="absolute z-100 w-full top-full mt-2 bg-itec-card border border-itec-border/50 rounded-md max-h-60 overflow-y-scroll">
+      {isOpen && !disabled && createPortal(
+        <ul
+          ref={menuRef}
+          style={{
+            top: menuPosition.top,
+            left: menuPosition.left,
+            width: menuPosition.width,
+          }}
+          className="fixed z-[100] bg-itec-card border border-itec-border/50 rounded-md max-h-60 overflow-y-auto"
+        >
           {options.map((opt) => (
             <li 
               key={opt.value} onClick={() => { onChange(opt.value); setIsOpen(false); }} 
@@ -56,7 +93,8 @@ export const CustomSelect: React.FC<Props> = ({
               {opt.label}
             </li>
           ))}
-        </ul>
+        </ul>,
+        document.body,
       )}
     </div>
   );

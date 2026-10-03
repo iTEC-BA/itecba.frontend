@@ -90,6 +90,18 @@ Colores asignados actualmente:
 
 * **TruekeTEC:** `#ff493b`
 * **Admission / Ingreso:** `#C27AFF`
+* **Seguridad / Roles y permisos:** `itec-purple` — `#A855F7`
+* **Acciones de edición:** `itec-sky` — `#38BDF8`
+* **Acciones destructivas / alertas:** `itec-red` — `#EF4444`
+* **Beneficios:** `itec-rewards` — `#F0B100` (o `#F59E0B` en la paleta extendida)
+* **Canjes / estados exitosos:** `itec-emerald` — `#10B981`
+* **Publicaciones y enlaces:** `itec-blue` — `#2563EB`
+
+Convención del panel administrativo: Roles y permisos usa violeta, las
+acciones de edición usan celeste, las acciones destructivas usan rojo y los
+estados exitosos usan verde. Los botones deben combinar el color con `/10`
+para el fondo y `/20` o `/30` para el borde; no se deben introducir colores
+arbitrarios por componente.
 
 ### 1.4 Escala de opacidad por uso
 
@@ -246,10 +258,10 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
 > tal cual, sin variaciones (mismo orden de headers, mismo mensaje de
 > error).
 
-> **Nota — deuda detectada:** `admin.service.ts` y `useAdminData.ts` no
-> siguen este patrón al pie de la letra: llaman a `auth.currentUser?.getIdToken()`
-> directo (sin `authStateReady()` primero) y no siempre validan `if (!token)`
-> antes de usarlo. Alinear cuando se toquen.
+`admin.service.ts` usa este patrón mediante un helper compartido (`getToken`):
+espera `auth.authStateReady()` y rechaza explícitamente la operación si no hay
+token. Los servicios administrativos nuevos deben reutilizar ese helper o
+seguir exactamente el mismo flujo.
 
 ### 2.6 Restricción de dominio institucional
 
@@ -337,8 +349,9 @@ El listener de Firebase (`initAuthListener`) se inicializa una sola vez, en
 El modelo de roles es explícito y no debe derivarse en los componentes:
 
 * `admin`: administrador pleno (`isAdmin === true`).
-* `moderator`: puede acceder al panel administrativo, pero no se considera
-  administrador pleno (`canAccessAdminPanel === true`, `isAdmin === false`).
+* `moderator`: puede acceder al panel administrativo y administrar todas las
+  funcionalidades disponibles para el panel (`canAccessAdminPanel === true`,
+  `isAdmin === true`).
 * `student`, `ingresante`, `afiliado` y `profesor`: usuarios sin acceso al
   panel administrativo.
 
@@ -366,6 +379,13 @@ import { usePointsStore } from '@/stores/pointsStore';
 const addPoints = usePointsStore((s) => s.addPoints);
 await addPoints(10, /* updateDatabase */ true);
 ```
+
+El otorgamiento automático debe hacerse siempre con `usePointsGrant().grant()`,
+después de confirmar que la acción real terminó correctamente. El hook carga
+la actividad desde la API si aún no está en caché y actualiza el balance local
+solo cuando el backend confirma el otorgamiento. `App.tsx` registra
+`daily_login` una vez por usuario y día; cooldown y límite diario siguen siendo
+validados en el backend.
 
 ### 3.3 Stores por feature (`src/features/<nombre>/store/`)
 
@@ -420,9 +440,18 @@ actuales son:
 |-----------|-------|
 | `admin.panel` | `admin`, `moderator` |
 | `courses.edit` | `admin`, `moderator` |
-| `courses.manage` | `admin` |
-| `resources.manage` | `admin` |
+| `courses.manage` | `admin`, `moderator` |
+| `resources.manage` | `admin`, `moderator` |
 | `users.manage` | `admin`, `moderator` |
+| `roles.manage` | `admin`, `moderator` |
+| `publications.manage` | `admin`, `moderator` |
+| `announcements.manage` | `admin`, `moderator` |
+
+Los avisos se crean desde el panel mediante `NewsForm`. Además del título,
+mensaje y duración, pueden indicar roles y carreras separados por comas.
+El frontend envía esos filtros a `/api/announcements`; el backend decide qué
+avisos puede ver cada usuario autenticado. Un aviso sin filtros sigue siendo
+global.
 
 Las reglas que dependen del recurso viven junto a la feature. Por ejemplo,
 Cursos agrega [`useCoursePermissions`](./src/features/courses/hooks/useCoursePermissions.ts)
@@ -629,6 +658,16 @@ Las features disponibles actualmente son:
 `error`, `faqs`, `forum`, `grade`, `groups`, `home`, `login`,
 `notifications`, `padron`, `pageAccess`, `plugins`, `points`, `profile`,
 `progress`, `resources` y `trueketec`.
+
+La feature `home` consume `/api/links/sections` para renderizar secciones
+configurables por rol (`chips`, `stories` o `carousel`). La administración
+de esas secciones y sus links está disponible en `/admin/publicaciones`; los links
+existentes sin sección se muestran automáticamente en “Accesos rápidos”.
+
+El sistema de roles y permisos está documentado en
+[`../ROLES_PERMISSIONS.md`](../ROLES_PERMISSIONS.md).
+La implementación del catálogo y sus endpoints está descrita en el
+[README del módulo de roles](../itecba-backend/src/modules/roles/README.md).
 
 Las features que tienen `index.ts` en su raíz pueden consumirse desde el
 alias `@features/<feature>` sin importar archivos internos. Los componentes

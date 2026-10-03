@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAdminData } from "../hooks/useAdminData";
 import { NewsForm } from "../components/molecules/NewsForm";
 import { NewsFeed } from "../components/molecules/NewsFeed";
-import { Megaphone } from "lucide-react";
+import { LayoutModal } from "@/components/templates/LayoutModal";
+import { Button } from "@/components/ui/Button";
+import { Megaphone, Plus } from "lucide-react";
 
 export const NewsManagement: React.FC = () => {
   const { announcements, isLoadingAnnouncements, createAnnouncementMutation, deleteAnnouncementMutation } = useAdminData();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
-      <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
         <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-itec-muted mb-1">
           Comunicación Global
         </p>
@@ -20,11 +24,16 @@ export const NewsManagement: React.FC = () => {
         <p className="text-xs text-itec-muted mt-1">
           Publicá novedades, alertas o información importante para toda la comunidad estudiantil.
         </p>
+        </div>
+        <Button
+          variant="primary"
+          icon={<Plus className="w-4 h-4" />}
+          text="Agregar aviso"
+          onClick={() => setIsModalOpen(true)}
+        />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr] items-start">
-        <NewsForm createMutation={createAnnouncementMutation} />
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
               <h3 className="text-sm font-bold text-itec-text">Feed de comunicados</h3>
@@ -39,8 +48,20 @@ export const NewsManagement: React.FC = () => {
             isLoading={isLoadingAnnouncements}
             deleteMutation={deleteAnnouncementMutation}
           />
-        </div>
       </div>
+
+      <LayoutModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Agregar aviso"
+        description="Publicá una novedad, alerta o información importante para la comunidad."
+        maxWidth="max-w-xl"
+      >
+        <NewsForm
+          createMutation={createAnnouncementMutation}
+          onSuccess={() => setIsModalOpen(false)}
+        />
+      </LayoutModal>
     </div>
   );
 };

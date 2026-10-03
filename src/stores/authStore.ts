@@ -9,7 +9,7 @@ import {
 import type { User as FirebaseUser } from 'firebase/auth';
 import { collection, doc, getDoc, getDocs, limit, query, setDoc, where } from 'firebase/firestore';
 
-export type Role = 'admin' | 'student' | 'moderator' | 'ingresante' | 'afiliado' | 'profesor';
+export type Role = string;
 
 export interface User {
   id?: string;
@@ -46,10 +46,8 @@ interface AuthState {
 }
 
 export const SUPER_ADMIN_EMAIL = import.meta.env.VITE_SUPER_ADMIN_EMAIL || "";
-const ROLES: Role[] = ['admin', 'student', 'moderator', 'ingresante', 'afiliado', 'profesor'];
-
 const normalizeRole = (role: unknown): Role =>
-  typeof role === 'string' && ROLES.includes(role as Role) ? role as Role : 'student';
+  typeof role === 'string' && role.trim() ? role.trim().toLowerCase() : 'student';
 
 const normalizeUser = (user: Record<string, unknown>, firebaseUser?: FirebaseUser): User => ({
   ...user,
@@ -97,6 +95,8 @@ const isAuthorizedEmailInFirestore = async (email: string | null | undefined) =>
 const isAuthorizedEmail = async (email: string | null | undefined) =>
   isAllowedEmail(email) || isAuthorizedEmailInFirestore(email);
 
+let googleLoginRequest: Promise<void> | null = null;
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isAuthenticated: false,
@@ -118,7 +118,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
       return;
     }
-    const isAdmin = user.role === 'admin';
+    const isAdmin = user.role === 'admin' || user.role === 'moderator';
     const canAccessAdminPanel = isAdmin || user.role === 'moderator';
     const hasCard = Boolean(user.dni && user.dni.trim() !== "");
     const needsProfile = !user.specialty || user.specialty.trim() === "";
@@ -135,6 +135,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setLoading: (loading) => set({ loading }),
 
   loginWithGoogle: async () => {
+    if (googleLoginRequest) return googleLoginRequest;
+    googleLoginRequest = (async () => {
     try {
       console.log('[auth] Iniciando sesión con Google');
       const result = await signInWithPopup(auth, googleProvider);
@@ -150,6 +152,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         throw error;
       }
     }
+    })().finally(() => {
+      googleLoginRequest = null;
+    });
+    return googleLoginRequest;
   },
 
   logout: () => signOut(auth),

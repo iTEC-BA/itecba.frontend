@@ -38,30 +38,27 @@ export const usePointsGrant = () => {
       }
 
       // ── 2. Leer valor desde la caché ───────────────────────────────────────
-      const activity = getActivityFromCache(activityKey);
+      let activity = getActivityFromCache(activityKey);
       if (!activity) {
-        // Intenta calentar la caché para la próxima vez
-        warmCache();
-        return { granted: false, reason: "not_in_cache" };
+        try {
+          const activities = await getActivities();
+          activity = activities.find((item) => item.key === activityKey) ?? null;
+        } catch {
+          warmCache();
+        }
+        if (!activity) return { granted: false, reason: "not_in_cache" };
       }
 
-      // ── 3. Optimistic update ───────────────────────────────────────────────
-      addPoints(activity.points);
-
-      // ── 4. Llamar al backend (necesitamos el token fresco) ─────────────────
+      // El backend valida cooldown y tope diario; actualizar después evita
+      // mostrar puntos que luego fueron rechazados.
       let result: GrantResult;
       try {
         result = await grantPointsAPI(activityKey, context);
       } catch {
-        // Error de red → revertir
-        addPoints(-activity.points);
         return { granted: false, reason: "internal_error" };
       }
 
-      // ── 5. Si el backend rechazó → revertir ────────────────────────────────
-      if (!result.granted) {
-        addPoints(-activity.points);
-      }
+      if (result.granted && result.points) await addPoints(result.points);
 
       return result;
     },

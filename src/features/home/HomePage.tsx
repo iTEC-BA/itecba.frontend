@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MainLayout } from '@components/templates/MainLayout';
-import { UniversityLinksWidget } from '@features/home/components/organisms/UniversityLinksWidget';
+import { HomeSectionsWidget } from '@features/home/components/organisms/HomeSectionsWidget';
 import { HubNavigation } from '@features/home/components/organisms/HubNavigation';
 import { QuickStatsRow } from '@features/home/components/organisms/QuickStatsRow';
 import { usePageTitle } from '@hooks/usePageTitle';
@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/Button';
 import useSizeWindow from '@/hooks/useSizeWindow';
 import { CalendarSlider } from '@/features/calendar/components/CalendarSlider';
 
-const WelcomeWidget = React.lazy(() => import('@features/home/components/organisms/WelcomeWidget').then(module => ({ default: module.WelcomeWidget })));
 const NotificationBanner = React.lazy(() => import('@/features/notifications/components/organisms/NotificationBanner').then(module => ({ default: module.NotificationBanner })));
 const ForumFeed = React.lazy(() => import('@/features/forum/components/organisms').then(module => ({ default: module.ForumFeed })));
 
@@ -52,8 +51,7 @@ const HomeMain = () => {
     <>
       {md ? <React.Suspense fallback={<div/>}><NotificationBanner /></React.Suspense> : <></> }
       <CalendarSlider />
-      <React.Suspense fallback={<div/>}><WelcomeWidget /></React.Suspense>
-      <UniversityLinksWidget />
+      <HomeSectionsWidget />
       <QuickStatsRow />
       <HubNavigation />
     </>

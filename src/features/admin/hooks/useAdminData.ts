@@ -35,7 +35,7 @@ export const useAdminData = () => {
 
   const { data: announcements = [], isLoading: isLoadingAnnouncements } = useQuery({
     queryKey: ["adminAnnouncements"],
-    queryFn:  adminService.getActiveAnnouncements,
+    queryFn:  adminService.getAllActiveAnnouncements,
     enabled: canAccessAdminPanel,
   });
 
@@ -101,11 +101,17 @@ export const useAdminData = () => {
         userId,
         role as Parameters<typeof adminService.updateUserRole>[1],
       ),
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
-      toast.success("Rol actualizado correctamente");
+      toast.success(
+        !result.roleChanged
+          ? "El usuario ya tenía ese rol"
+          : result.emailSent
+            ? "Rol actualizado y aviso enviado por email"
+            : "Rol actualizado; no se pudo enviar el aviso por email",
+      );
     },
-    onError: () => toast.error("No se pudo actualizar el rol"),
+    onError: (error: Error) => toast.error(error.message || "No se pudo actualizar el rol"),
   });
 
   const createAuthorizedMutation = useMutation({
@@ -138,9 +144,30 @@ export const useAdminData = () => {
     },
   });
 
+  const deleteUserMutation = useMutation({
+    mutationFn: ({ userId, externalAuthorization }: { userId: string; externalAuthorization?: boolean }) =>
+      adminService.deleteUser(userId, externalAuthorization),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+      queryClient.invalidateQueries({ queryKey: ["authorizedUsers"] });
+      toast.success(variables.externalAuthorization ? "Autorización eliminada" : "Usuario eliminado correctamente");
+    },
+    onError: (error: unknown) => {
+      const details = getErrorDetails(error);
+      toast.error(details.message || "No se pudo eliminar el usuario");
+    },
+  });
+
   const createAnnouncementMutation = useMutation({
-    mutationFn: ({ title, message, hours, isCritical }: { title: string; message: string; hours: number; isCritical: boolean }) =>
-      adminService.createAnnouncement(title, message, hours, isCritical),
+    mutationFn: ({ title, message, hours, isCritical, audienceRoles, audienceCareers }: {
+      title: string;
+      message: string;
+      hours: number;
+      isCritical: boolean;
+      audienceRoles: string[];
+      audienceCareers: string[];
+    }) =>
+      adminService.createAnnouncement(title, message, hours, isCritical, audienceRoles, audienceCareers),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminAnnouncements"] });
       queryClient.invalidateQueries({ queryKey: ["announcements", "active"] });
@@ -191,6 +218,7 @@ export const useAdminData = () => {
     toggleRoleMutation,
     createAuthorizedMutation,
     updateAuthorizedMutation,
+    deleteUserMutation,
     createAnnouncementMutation,
     deleteAnnouncementMutation,
   };
